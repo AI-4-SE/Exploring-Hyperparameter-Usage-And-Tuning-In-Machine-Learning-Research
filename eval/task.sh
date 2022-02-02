@@ -27,6 +27,7 @@ wheel="$(find $2 -type f -iname "*.whl")"
 
 pip install $wheel
 pip install gitpython joblib
+pip install GitPython
 
 cd "$LOCALPATH"
 

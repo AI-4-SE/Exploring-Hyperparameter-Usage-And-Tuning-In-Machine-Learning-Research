@@ -8,18 +8,6 @@ from git import Repo
 # The folder where we store our results.
 EVALUATION_FOLDER = "out"
 
-TEST_REPOS_SMALL = [
-    "https://github.com/ibayer/PAKDD2015",
-    "https://github.com/david-klindt/NIPS2017",
-    "https://github.com/ahmedbhna/VGG_Paper",
-    "https://github.com/hdcouture/TOCCA",
-    "https://github.com/ewsheng/nlg-bias",
-    "https://github.com/TranSys2020/TranSys",
-    "https://github.com/xkianteb/ApproPO",
-    "https://github.com/JieXuUESTC/DEMVC",
-    "https://github.com/RuiLiFeng/LAE",
-]
-
 
 TEST_REPOS = [
     "https://github.com/ibayer/PAKDD2015",
@@ -289,7 +277,7 @@ def main():
     subprocess.run(["mkdir", "-p", EVALUATION_FOLDER + "/results"])
 
     index = int(sys.argv[1])
-    process_repo(TEST_REPOS_SMALL[index])
+    process_repo(TEST_REPOS[index])
 
 if __name__ == "__main__":
     main()
