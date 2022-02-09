@@ -13,3 +13,9 @@ It takes an optional parameter which is a Git tree-ish (e.g. `main`) that can be
 
 The result files will be in `results/`.
 You can find the modified repositories in `out/`.
+
+
+## Research Question
+- Are default values used for ML projects? For which ML technique?
+- When do default values diverge? Any specific scenario/task?
+- What value range is used for specific ML tecniques?
