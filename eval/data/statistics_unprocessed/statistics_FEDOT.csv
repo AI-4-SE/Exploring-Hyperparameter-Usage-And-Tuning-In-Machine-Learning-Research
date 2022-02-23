@@ -1,0 +1,433 @@
+node
+FEDOT::::.codecov.yml::::file::::.codecov.yml
+FEDOT::::.codecov.yml::::coverage::::status::::project::::default::::threshold::::1%
+FEDOT::::.codecov.yml::::coverage::::status::::patch::::false
+FEDOT::::.github/workflows/manual-build.yml::::file::::.github/workflows/manual-build.yml
+FEDOT::::.github/workflows/manual-build.yml::::name::::Manual build
+FEDOT::::.github/workflows/manual-build.yml::::jobs::::integration_test::::runs-on::::ubuntu-latest
+FEDOT::::.github/workflows/manual-build.yml::::jobs::::integration_test::::timeout-minutes::::20
+FEDOT::::.github/workflows/manual-build.yml::::jobs::::integration_test::::strategy::::matrix::::python-version::::3.7
+FEDOT::::.github/workflows/manual-build.yml::::jobs::::integration_test::::strategy::::matrix::::python-version::::3.8
+FEDOT::::.github/workflows/manual-build.yml::::jobs::::integration_test::::steps::::steps_0::::name::::Checkout branch
+FEDOT::::.github/workflows/manual-build.yml::::jobs::::integration_test::::steps::::steps_0::::uses::::actions/checkout@v2
+FEDOT::::.github/workflows/manual-build.yml::::jobs::::integration_test::::steps::::steps_1::::name::::Set up Python ${{ matrix.python-version }}
+FEDOT::::.github/workflows/manual-build.yml::::jobs::::integration_test::::steps::::steps_1::::uses::::actions/setup-python@v2
+FEDOT::::.github/workflows/manual-build.yml::::jobs::::integration_test::::steps::::steps_1::::with::::python-version::::${{ matrix.python-version }}
+FEDOT::::.github/workflows/manual-build.yml::::jobs::::integration_test::::steps::::steps_2::::name::::Install dependencies
+"FEDOT::::.github/workflows/manual-build.yml::::jobs::::integration_test::::steps::::steps_2::::run::::python -m pip install --upgrade pip
+pip install pytest
+pip install -r requirements.txt
+pip install -r examples/requirements.txt
+pip install -r fedot/utilities/profiler/requirements_memory_profiler.txt
+pip install -r fedot/utilities/profiler/requirements_time_profiler.txt
+pip install pytest-cov
+"
+FEDOT::::.github/workflows/manual-build.yml::::jobs::::integration_test::::steps::::steps_3::::name::::Test with pytest
+FEDOT::::.github/workflows/manual-build.yml::::jobs::::integration_test::::steps::::steps_3::::run::::pytest --cov=fedot -s test/integration
+FEDOT::::.github/workflows/notify.yml::::file::::.github/workflows/notify.yml
+FEDOT::::.github/workflows/notify.yml::::name::::telegram notify
+FEDOT::::.github/workflows/notify.yml::::on::::pull_request::::types::::closed
+FEDOT::::.github/workflows/notify.yml::::jobs::::merge_job::::if::::github.event.pull_request.merged == true
+FEDOT::::.github/workflows/notify.yml::::jobs::::merge_job::::runs-on::::ubuntu-latest
+FEDOT::::.github/workflows/notify.yml::::jobs::::merge_job::::steps::::steps_0::::uses::::actions/checkout@master
+FEDOT::::.github/workflows/notify.yml::::jobs::::merge_job::::steps::::steps_1::::name::::send custom message with args
+FEDOT::::.github/workflows/notify.yml::::jobs::::merge_job::::steps::::steps_1::::uses::::appleboy/telegram-action@master
+FEDOT::::.github/workflows/notify.yml::::jobs::::merge_job::::steps::::steps_1::::with::::to::::${{ secrets.CHAT_ID }}
+FEDOT::::.github/workflows/notify.yml::::jobs::::merge_job::::steps::::steps_1::::with::::token::::${{ secrets.TELEGRAM_TOKEN }}
+"FEDOT::::.github/workflows/notify.yml::::jobs::::merge_job::::steps::::steps_1::::with::::args::::The ${{github.event_name}} '${{github.event.pull_request.title}}' (#${{github.event.number}}) was merged. 
+Link: ${{github.event.pull_request.html_url}} 
+Description: ${{github.event.pull_request.body}} 
+ 
+Check it out to keep your local repository updated."
+FEDOT::::.github/workflows/notify.yml::::jobs::::close_job::::if::::github.event.pull_request.merged == false
+FEDOT::::.github/workflows/notify.yml::::jobs::::close_job::::runs-on::::ubuntu-latest
+FEDOT::::.github/workflows/notify.yml::::jobs::::close_job::::steps::::steps_0::::uses::::actions/checkout@master
+FEDOT::::.github/workflows/notify.yml::::jobs::::close_job::::steps::::steps_1::::name::::send custom message with args
+FEDOT::::.github/workflows/notify.yml::::jobs::::close_job::::steps::::steps_1::::uses::::appleboy/telegram-action@master
+FEDOT::::.github/workflows/notify.yml::::jobs::::close_job::::steps::::steps_1::::with::::to::::${{ secrets.CHAT_ID }}
+FEDOT::::.github/workflows/notify.yml::::jobs::::close_job::::steps::::steps_1::::with::::token::::${{ secrets.TELEGRAM_TOKEN }}
+FEDOT::::.github/workflows/notify.yml::::jobs::::close_job::::steps::::steps_1::::with::::args::::The ${{github.event_name}} ${{github.event.pull_request.title}} (${{github.event.number}}) was closed.
+FEDOT::::.github/workflows/publish_pypi.yml::::file::::.github/workflows/publish_pypi.yml
+FEDOT::::.github/workflows/publish_pypi.yml::::name::::Build and publish package to PyPi
+FEDOT::::.github/workflows/publish_pypi.yml::::on::::push::::branches::::release
+FEDOT::::.github/workflows/publish_pypi.yml::::jobs::::build_and_publish::::runs-on::::ubuntu-latest
+FEDOT::::.github/workflows/publish_pypi.yml::::jobs::::build_and_publish::::strategy::::matrix::::python-version::::3.7
+FEDOT::::.github/workflows/publish_pypi.yml::::jobs::::build_and_publish::::steps::::steps_0::::uses::::actions/checkout@v2
+FEDOT::::.github/workflows/publish_pypi.yml::::jobs::::build_and_publish::::steps::::steps_1::::name::::Set up Python ${{ matrix.python-version }}
+FEDOT::::.github/workflows/publish_pypi.yml::::jobs::::build_and_publish::::steps::::steps_1::::uses::::actions/setup-python@v2
+FEDOT::::.github/workflows/publish_pypi.yml::::jobs::::build_and_publish::::steps::::steps_1::::with::::python-version::::${{ matrix.python-version }}
+FEDOT::::.github/workflows/publish_pypi.yml::::jobs::::build_and_publish::::steps::::steps_2::::name::::Build package
+"FEDOT::::.github/workflows/publish_pypi.yml::::jobs::::build_and_publish::::steps::::steps_2::::run::::python -m pip install --upgrade pip
+python -m pip install --upgrade setuptools wheel
+python setup.py sdist bdist_wheel
+"
+FEDOT::::.github/workflows/publish_pypi.yml::::jobs::::build_and_publish::::steps::::steps_3::::name::::Publish package to PyPI
+FEDOT::::.github/workflows/publish_pypi.yml::::jobs::::build_and_publish::::steps::::steps_3::::uses::::pypa/gh-action-pypi-publish@master
+FEDOT::::.github/workflows/publish_pypi.yml::::jobs::::build_and_publish::::steps::::steps_3::::with::::user::::__token__
+FEDOT::::.github/workflows/publish_pypi.yml::::jobs::::build_and_publish::::steps::::steps_3::::with::::password::::${{ secrets.PYPI_PASSWORD }}
+FEDOT::::.github/workflows/publish_pypi.yml::::jobs::::build_and_publish::::steps::::steps_3::::with::::repository_url::::https://upload.pypi.org/legacy/
+FEDOT::::.github/workflows/unit-build.yml::::file::::.github/workflows/unit-build.yml
+FEDOT::::.github/workflows/unit-build.yml::::name::::Build
+FEDOT::::.github/workflows/unit-build.yml::::on::::push::::branches::::master
+FEDOT::::.github/workflows/unit-build.yml::::on::::pull_request::::branches::::master
+FEDOT::::.github/workflows/unit-build.yml::::jobs::::build::::runs-on::::ubuntu-latest
+FEDOT::::.github/workflows/unit-build.yml::::jobs::::build::::timeout-minutes::::15
+FEDOT::::.github/workflows/unit-build.yml::::jobs::::build::::strategy::::matrix::::python-version::::3.7
+FEDOT::::.github/workflows/unit-build.yml::::jobs::::build::::strategy::::matrix::::python-version::::3.8
+FEDOT::::.github/workflows/unit-build.yml::::jobs::::build::::steps::::steps_0::::uses::::actions/checkout@v2
+FEDOT::::.github/workflows/unit-build.yml::::jobs::::build::::steps::::steps_1::::name::::Set up Python ${{ matrix.python-version }}
+FEDOT::::.github/workflows/unit-build.yml::::jobs::::build::::steps::::steps_1::::uses::::actions/setup-python@v2
+FEDOT::::.github/workflows/unit-build.yml::::jobs::::build::::steps::::steps_1::::with::::python-version::::${{ matrix.python-version }}
+FEDOT::::.github/workflows/unit-build.yml::::jobs::::build::::steps::::steps_2::::name::::Install dependencies
+"FEDOT::::.github/workflows/unit-build.yml::::jobs::::build::::steps::::steps_2::::run::::python -m pip install --upgrade pip
+pip install pytest
+pip install -r requirements.txt
+pip install -r examples/requirements.txt
+pip install pytest-cov
+"
+FEDOT::::.github/workflows/unit-build.yml::::jobs::::build::::steps::::steps_3::::name::::Test with pytest
+"FEDOT::::.github/workflows/unit-build.yml::::jobs::::build::::steps::::steps_3::::run::::pytest --cov=fedot -s test/unit
+"
+FEDOT::::.github/workflows/unit-build.yml::::jobs::::build::::steps::::steps_4::::name::::Codecov-coverage
+FEDOT::::.github/workflows/unit-build.yml::::jobs::::build::::steps::::steps_4::::uses::::codecov/codecov-action@v1
+FEDOT::::.pep8speaks.yml::::file::::.pep8speaks.yml
+FEDOT::::.pep8speaks.yml::::scanner::::diff_only::::True
+FEDOT::::.pep8speaks.yml::::scanner::::linter::::pycodestyle
+FEDOT::::.pep8speaks.yml::::pycodestyle::::max-line-length::::120
+FEDOT::::.readthedocs.yml::::file::::.readthedocs.yml
+FEDOT::::.readthedocs.yml::::version::::2
+FEDOT::::.readthedocs.yml::::sphinx::::configuration::::docs/source/conf.py
+FEDOT::::.readthedocs.yml::::python::::version::::3.7
+FEDOT::::.readthedocs.yml::::python::::install::::install_0::::requirements::::docs/requirements.txt
+FEDOT::::.readthedocs.yml::::python::::install::::install_1::::requirements::::requirements.txt
+FEDOT::::.travis.yml::::file::::.travis.yml
+FEDOT::::.travis.yml::::language::::python
+FEDOT::::.travis.yml::::python::::3.7
+FEDOT::::.travis.yml::::python::::3.8
+FEDOT::::.travis.yml::::install::::pip install netcdf4
+FEDOT::::.travis.yml::::install::::pip install -r requirements.txt
+FEDOT::::.travis.yml::::install::::pip install -r extra_requirements.txt
+FEDOT::::.travis.yml::::install::::pip install coveralls
+FEDOT::::.travis.yml::::install::::pip install pytest-cov
+FEDOT::::.travis.yml::::notifications::::email::::false
+FEDOT::::.travis.yml::::script::::coverage run --source=. -m py.test -s
+FEDOT::::Dockerfile::::file::::Dockerfile
+FEDOT::::Dockerfile::::from::::ubuntu:20.04
+FEDOT::::Dockerfile::::copy::::src::::requirements.txt
+FEDOT::::Dockerfile::::copy::::dest::::/home/FEDOT/requirements.txt
+FEDOT::::Dockerfile::::copy::::src::::.
+FEDOT::::Dockerfile::::copy::::dest::::/home/FEDOT
+FEDOT::::cases/credit_scoring/credit_scoring_problem.py::::file::::cases/credit_scoring/credit_scoring_problem.py
+FEDOT::::cases/credit_scoring/credit_scoring_problem_multiobj.py::::file::::cases/credit_scoring/credit_scoring_problem_multiobj.py
+FEDOT::::cases/industrial/multivariate_forecasting.py::::file::::cases/industrial/multivariate_forecasting.py
+FEDOT::::cases/industrial/processing.py::::file::::cases/industrial/processing.py
+FEDOT::::cases/industrial/univariate_forecasting_simple.py::::file::::cases/industrial/univariate_forecasting_simple.py
+FEDOT::::cases/multi_target_levels_forecasting.py::::file::::cases/multi_target_levels_forecasting.py
+FEDOT::::cases/river_levels_prediction/river_level_case_composer.py::::file::::cases/river_levels_prediction/river_level_case_composer.py
+FEDOT::::cases/river_levels_prediction/river_level_case_composer.py::::Pipeline::::variable::::init_pipeline
+FEDOT::::cases/river_levels_prediction/river_level_case_composer.py::::Pipeline::::steps::::node_final
+FEDOT::::cases/river_levels_prediction/river_level_case_manual.py::::file::::cases/river_levels_prediction/river_level_case_manual.py
+FEDOT::::cases/river_levels_prediction/river_level_case_manual.py::::Pipeline::::variable::::init_pipeline
+FEDOT::::cases/river_levels_prediction/river_level_case_manual.py::::Pipeline::::steps::::node_final
+FEDOT::::cases/spam_detection.py::::file::::cases/spam_detection.py
+FEDOT::::cases/spam_detection.py::::Pipeline::::variable::::pipeline
+FEDOT::::cases/spam_detection.py::::Pipeline::::steps::::model_node
+FEDOT::::cases/time_series_gapfilling_case.py::::file::::cases/time_series_gapfilling_case.py
+FEDOT::::cases/time_series_gapfilling_case.py::::Pipeline::::variable::::pipeline
+FEDOT::::cases/time_series_gapfilling_case.py::::Pipeline::::steps::::node_final
+FEDOT::::cases/time_series_gapfilling_case.py::::Pipeline::::variable::::ridge_pipeline
+FEDOT::::cases/time_series_gapfilling_case.py::::Pipeline::::steps::::node_ridge
+FEDOT::::examples/advanced/automl/h2o_example.py::::file::::examples/advanced/automl/h2o_example.py
+FEDOT::::examples/advanced/automl/h2o_example.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/automl/h2o_example.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/automl/h2o_example.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/automl/h2o_example.py::::Pipeline::::steps::::node
+FEDOT::::examples/advanced/automl/h2o_example.py::::Pipeline::::steps::::node
+FEDOT::::examples/advanced/automl/h2o_example.py::::Pipeline::::steps::::node_root
+FEDOT::::examples/advanced/automl/h2o_example.py::::Pipeline::::variable::::new_pipeline
+FEDOT::::examples/advanced/automl/pipeline_from_automl.py::::file::::examples/advanced/automl/pipeline_from_automl.py
+FEDOT::::examples/advanced/automl/pipeline_from_automl.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/automl/pipeline_from_automl.py::::Pipeline::::steps::::node_rf
+FEDOT::::examples/advanced/automl/tpot_example.py::::file::::examples/advanced/automl/tpot_example.py
+FEDOT::::examples/advanced/automl/tpot_example.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/automl/tpot_example.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/automl/tpot_example.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/automl/tpot_example.py::::Pipeline::::steps::::node
+FEDOT::::examples/advanced/automl/tpot_example.py::::Pipeline::::steps::::node
+FEDOT::::examples/advanced/automl/tpot_example.py::::Pipeline::::steps::::node_root
+FEDOT::::examples/advanced/automl/tpot_example.py::::Pipeline::::variable::::new_pipeline
+FEDOT::::examples/advanced/automl/tpot_example.py::::Pipeline::::variable::::new_pipeline
+FEDOT::::examples/advanced/automl/tpot_example.py::::Pipeline::::variable::::new_pipeline
+FEDOT::::examples/advanced/automl/tpot_vs_fedot.py::::file::::examples/advanced/automl/tpot_vs_fedot.py
+FEDOT::::examples/advanced/automl/tpot_vs_fedot.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/automl/tpot_vs_fedot.py::::Pipeline::::steps::::node_rf
+FEDOT::::examples/advanced/decompose/classification_refinement_example.py::::file::::examples/advanced/decompose/classification_refinement_example.py
+FEDOT::::examples/advanced/decompose/classification_refinement_example.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/decompose/classification_refinement_example.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/decompose/classification_refinement_example.py::::Pipeline::::steps::::node_xgboost
+FEDOT::::examples/advanced/decompose/classification_refinement_example.py::::Pipeline::::steps::::node_xgboost
+FEDOT::::examples/advanced/decompose/refinement_forecast_example.py::::file::::examples/advanced/decompose/refinement_forecast_example.py
+FEDOT::::examples/advanced/decompose/refinement_forecast_example.py::::Pipeline::::variable::::pipeline_with_decompose_finish
+FEDOT::::examples/advanced/decompose/refinement_forecast_example.py::::Pipeline::::variable::::pipeline_with_decompose_finish
+FEDOT::::examples/advanced/decompose/refinement_forecast_example.py::::Pipeline::::steps::::node_dtreg
+FEDOT::::examples/advanced/decompose/refinement_forecast_example.py::::Pipeline::::steps::::node_dtreg
+FEDOT::::examples/advanced/decompose/refinement_forecast_example.py::::Pipeline::::variable::::pipeline_with_main_finish
+FEDOT::::examples/advanced/decompose/refinement_forecast_example.py::::Pipeline::::variable::::pipeline_with_main_finish
+FEDOT::::examples/advanced/decompose/refinement_forecast_example.py::::Pipeline::::steps::::node_polyfit
+FEDOT::::examples/advanced/decompose/refinement_forecast_example.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/decompose/refinement_forecast_example.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/decompose/refinement_forecast_example.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/decompose/refinement_forecast_example.py::::Pipeline::::steps::::final_node
+FEDOT::::examples/advanced/decompose/refinement_forecast_example.py::::Pipeline::::steps::::final_node
+FEDOT::::examples/advanced/decompose/refinement_forecast_example.py::::Pipeline::::steps::::final_node
+FEDOT::::examples/advanced/decompose/refinement_forecast_example.py::::Pipeline::::steps::::node_lasso
+FEDOT::::examples/advanced/decompose/regression_refinement_example.py::::file::::examples/advanced/decompose/regression_refinement_example.py
+FEDOT::::examples/advanced/decompose/regression_refinement_example.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/decompose/regression_refinement_example.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/decompose/regression_refinement_example.py::::Pipeline::::steps::::final_node
+FEDOT::::examples/advanced/decompose/regression_refinement_example.py::::Pipeline::::steps::::final_node
+FEDOT::::examples/advanced/gpu_example.py::::file::::examples/advanced/gpu_example.py
+FEDOT::::examples/advanced/gpu_example.py::::Pipeline::::variable::::preset_pipeline
+FEDOT::::examples/advanced/gpu_example.py::::Pipeline::::steps::::svc_node_with_custom_params
+FEDOT::::examples/advanced/multi_modal_pipeline.py::::file::::examples/advanced/multi_modal_pipeline.py
+FEDOT::::examples/advanced/multi_modal_pipeline.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/time_series_forecasting/composing_pipelines.py::::file::::examples/advanced/time_series_forecasting/composing_pipelines.py
+FEDOT::::examples/advanced/time_series_forecasting/custom_model_tuning.py::::file::::examples/advanced/time_series_forecasting/custom_model_tuning.py
+FEDOT::::examples/advanced/time_series_forecasting/custom_model_tuning.py::::Ridge::::variable::::reg
+FEDOT::::examples/advanced/time_series_forecasting/custom_model_tuning.py::::Ridge::::alpha::::alpha
+FEDOT::::examples/advanced/time_series_forecasting/custom_model_tuning.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/time_series_forecasting/custom_model_tuning.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/time_series_forecasting/custom_model_tuning.py::::Pipeline::::steps::::node_final
+FEDOT::::examples/advanced/time_series_forecasting/custom_model_tuning.py::::Pipeline::::steps::::node_final
+FEDOT::::examples/advanced/time_series_forecasting/exogenous.py::::file::::examples/advanced/time_series_forecasting/exogenous.py
+FEDOT::::examples/advanced/time_series_forecasting/exogenous.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/time_series_forecasting/exogenous.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/time_series_forecasting/exogenous.py::::Pipeline::::steps::::node_final
+FEDOT::::examples/advanced/time_series_forecasting/exogenous.py::::Pipeline::::steps::::node_final
+FEDOT::::examples/advanced/time_series_forecasting/nemo.py::::file::::examples/advanced/time_series_forecasting/nemo.py
+FEDOT::::examples/advanced/time_series_forecasting/nemo.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/time_series_forecasting/nemo.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/time_series_forecasting/nemo.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/time_series_forecasting/nemo.py::::Pipeline::::steps::::node_final
+FEDOT::::examples/advanced/time_series_forecasting/nemo.py::::Pipeline::::steps::::node_final
+FEDOT::::examples/advanced/time_series_forecasting/nemo.py::::Pipeline::::steps::::node_final
+FEDOT::::examples/advanced/time_series_forecasting/nemo_multiple.py::::file::::examples/advanced/time_series_forecasting/nemo_multiple.py
+FEDOT::::examples/advanced/time_series_forecasting/nemo_multiple.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/time_series_forecasting/nemo_multiple.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/time_series_forecasting/nemo_multiple.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/time_series_forecasting/nemo_multiple.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/time_series_forecasting/nemo_multiple.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/time_series_forecasting/nemo_multiple.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/advanced/time_series_forecasting/nemo_multiple.py::::Pipeline::::steps::::node_final
+FEDOT::::examples/advanced/time_series_forecasting/nemo_multiple.py::::Pipeline::::steps::::node_final
+FEDOT::::examples/advanced/time_series_forecasting/nemo_multiple.py::::Pipeline::::steps::::node_final
+FEDOT::::examples/advanced/time_series_forecasting/nemo_multiple.py::::Pipeline::::steps::::node_final
+FEDOT::::examples/advanced/time_series_forecasting/nemo_multiple.py::::Pipeline::::steps::::node_final
+FEDOT::::examples/advanced/time_series_forecasting/nemo_multiple.py::::Pipeline::::steps::::node_final
+FEDOT::::examples/advanced/time_series_forecasting/sparse_lagged_tuning.py::::file::::examples/advanced/time_series_forecasting/sparse_lagged_tuning.py
+FEDOT::::examples/simple/classification/classification_with_tuning.py::::file::::examples/simple/classification/classification_with_tuning.py
+FEDOT::::examples/simple/classification/image_classification_problem.py::::file::::examples/simple/classification/image_classification_problem.py
+FEDOT::::examples/simple/classification/multiclass_prediction.py::::file::::examples/simple/classification/multiclass_prediction.py
+FEDOT::::examples/simple/classification/resample_example.py::::file::::examples/simple/classification/resample_example.py
+FEDOT::::examples/simple/pipeline_tune.py::::file::::examples/simple/pipeline_tune.py
+FEDOT::::examples/simple/regression/regression_with_tuning.py::::file::::examples/simple/regression/regression_with_tuning.py
+FEDOT::::examples/simple/time_series_forecasting/clstm.py::::file::::examples/simple/time_series_forecasting/clstm.py
+FEDOT::::examples/simple/time_series_forecasting/clstm.py::::Pipeline::::variable::::pipeline
+FEDOT::::examples/simple/time_series_forecasting/clstm.py::::Pipeline::::steps::::node_root
+FEDOT::::examples/simple/time_series_forecasting/clstm.py::::Pipeline::::variable::::new_pipeline
+FEDOT::::examples/simple/time_series_forecasting/clstm.py::::Pipeline::::variable::::pipeline_from_dict
+FEDOT::::examples/simple/time_series_forecasting/tuning_pipelines.py::::file::::examples/simple/time_series_forecasting/tuning_pipelines.py
+FEDOT::::fedot/api/api_utils/api_composer.py::::file::::fedot/api/api_utils/api_composer.py
+FEDOT::::fedot/api/api_utils/metrics.py::::file::::fedot/api/api_utils/metrics.py
+FEDOT::::fedot/core/composer/metrics.py::::file::::fedot/core/composer/metrics.py
+FEDOT::::fedot/core/data/data_split.py::::file::::fedot/core/data/data_split.py
+FEDOT::::fedot/core/operations/evaluation/clustering.py::::file::::fedot/core/operations/evaluation/clustering.py
+FEDOT::::fedot/core/operations/evaluation/evaluation_interfaces.py::::file::::fedot/core/operations/evaluation/evaluation_interfaces.py
+FEDOT::::fedot/core/operations/evaluation/operation_implementations/data_operations/categorical_encoders.py::::file::::fedot/core/operations/evaluation/operation_implementations/data_operations/categorical_encoders.py
+FEDOT::::fedot/core/operations/evaluation/operation_implementations/data_operations/categorical_encoders.py::::LabelEncoder::::variable::::le
+FEDOT::::fedot/core/operations/evaluation/operation_implementations/data_operations/decompose.py::::file::::fedot/core/operations/evaluation/operation_implementations/data_operations/decompose.py
+FEDOT::::fedot/core/operations/evaluation/operation_implementations/data_operations/sklearn_filters.py::::file::::fedot/core/operations/evaluation/operation_implementations/data_operations/sklearn_filters.py
+FEDOT::::fedot/core/operations/evaluation/operation_implementations/data_operations/sklearn_filters.py::::StandardScaler::::with_mean::::False
+FEDOT::::fedot/core/operations/evaluation/operation_implementations/data_operations/sklearn_imbalanced_class.py::::file::::fedot/core/operations/evaluation/operation_implementations/data_operations/sklearn_imbalanced_class.py
+FEDOT::::fedot/core/operations/evaluation/operation_implementations/data_operations/sklearn_selectors.py::::file::::fedot/core/operations/evaluation/operation_implementations/data_operations/sklearn_selectors.py
+FEDOT::::fedot/core/operations/evaluation/operation_implementations/data_operations/sklearn_selectors.py::::LinearRegression::::normalize::::True
+FEDOT::::fedot/core/operations/evaluation/operation_implementations/data_operations/sklearn_transformations.py::::file::::fedot/core/operations/evaluation/operation_implementations/data_operations/sklearn_transformations.py
+FEDOT::::fedot/core/operations/evaluation/operation_implementations/data_operations/sklearn_transformations.py::::PCA::::svd_solver::::full
+FEDOT::::fedot/core/operations/evaluation/operation_implementations/data_operations/sklearn_transformations.py::::PCA::::n_components::::mle
+FEDOT::::fedot/core/operations/evaluation/operation_implementations/data_operations/sklearn_transformations.py::::PolynomialFeatures::::include_bias::::False
+FEDOT::::fedot/core/operations/evaluation/operation_implementations/data_operations/sklearn_transformations.py::::PolynomialFeatures::::include_bias::::False
+FEDOT::::fedot/core/operations/evaluation/operation_implementations/data_operations/ts_transformations.py::::file::::fedot/core/operations/evaluation/operation_implementations/data_operations/ts_transformations.py
+FEDOT::::fedot/core/operations/evaluation/operation_implementations/data_operations/ts_transformations.py::::TruncatedSVD::::variable::::svd
+FEDOT::::fedot/core/operations/evaluation/operation_implementations/data_operations/ts_transformations.py::::TruncatedSVD::::n_components::::n_components
+FEDOT::::fedot/core/operations/evaluation/operation_implementations/data_operations/ts_transformations.py::::TruncatedSVD::::n_iter::::5
+FEDOT::::fedot/core/operations/evaluation/operation_implementations/data_operations/ts_transformations.py::::TruncatedSVD::::random_state::::42
+FEDOT::::fedot/core/operations/evaluation/operation_implementations/models/discriminant_analysis.py::::file::::fedot/core/operations/evaluation/operation_implementations/models/discriminant_analysis.py
+FEDOT::::fedot/core/operations/evaluation/operation_implementations/models/keras.py::::file::::fedot/core/operations/evaluation/operation_implementations/models/keras.py
+FEDOT::::fedot/core/operations/evaluation/operation_implementations/models/keras.py::::OneHotEncoder::::variable::::le
+FEDOT::::fedot/core/operations/evaluation/operation_implementations/models/knn.py::::file::::fedot/core/operations/evaluation/operation_implementations/models/knn.py
+FEDOT::::fedot/core/operations/evaluation/operation_implementations/models/svc.py::::file::::fedot/core/operations/evaluation/operation_implementations/models/svc.py
+FEDOT::::fedot/core/operations/evaluation/operation_implementations/models/svc.py::::SVC::::kernel::::linear
+FEDOT::::fedot/core/operations/evaluation/operation_implementations/models/svc.py::::SVC::::probability::::True
+FEDOT::::fedot/core/operations/evaluation/operation_implementations/models/svc.py::::SVC::::class_weight::::balanced
+FEDOT::::fedot/core/operations/evaluation/operation_implementations/models/ts_implementations/clstm.py::::file::::fedot/core/operations/evaluation/operation_implementations/models/ts_implementations/clstm.py
+FEDOT::::fedot/core/operations/evaluation/text.py::::file::::fedot/core/operations/evaluation/text.py
+FEDOT::::fedot/core/pipelines/tuning/tuner_interface.py::::file::::fedot/core/pipelines/tuning/tuner_interface.py
+FEDOT::::fedot/core/pipelines/tuning/tuner_interface.py::::LabelEncoder::::variable::::le
+FEDOT::::fedot/core/utils.py::::file::::fedot/core/utils.py
+FEDOT::::fedot/core/validation/split.py::::file::::fedot/core/validation/split.py
+FEDOT::::fedot/core/validation/split.py::::KFold::::variable::::kf
+FEDOT::::fedot/core/validation/split.py::::KFold::::n_splits::::folds
+FEDOT::::fedot/explainability/surrogate_explainer.py::::file::::fedot/explainability/surrogate_explainer.py
+FEDOT::::fedot/explainability/surrogate_explainer.py::::Pipeline::::steps::::surrogate_node
+FEDOT::::fedot/preprocessing/categorical.py::::file::::fedot/preprocessing/categorical.py
+FEDOT::::fedot/preprocessing/categorical.py::::LabelEncoder::::variable::::encoder
+FEDOT::::fedot/preprocessing/preprocessing.py::::file::::fedot/preprocessing/preprocessing.py
+FEDOT::::fedot/preprocessing/preprocessing.py::::LabelEncoder::::variable::::target_encoder
+FEDOT::::fedot/sensitivity/operations_hp_sensitivity/one_operation_sensitivity.py::::file::::fedot/sensitivity/operations_hp_sensitivity/one_operation_sensitivity.py
+FEDOT::::fedot/utilities/define_metric_by_task.py::::file::::fedot/utilities/define_metric_by_task.py
+FEDOT::::fedot/utilities/synth_dataset_generator.py::::file::::fedot/utilities/synth_dataset_generator.py
+FEDOT::::gpu/Dockerfile::::file::::gpu/Dockerfile
+FEDOT::::gpu/Dockerfile::::from::::nvcr.io/nvidia/rapidsai/rapidsai:21.06-cuda11.2-base-ubuntu18.04
+FEDOT::::gpu/Dockerfile::::copy::::src::::requirements.txt
+FEDOT::::gpu/Dockerfile::::copy::::dest::::/home/FEDOT/requirements.txt
+FEDOT::::gpu/Dockerfile::::copy::::src::::.
+FEDOT::::gpu/Dockerfile::::copy::::dest::::/home/FEDOT
+FEDOT::::test/data/bad_log_config_file.yml::::file::::test/data/bad_log_config_file.yml
+FEDOT::::test/data/bad_log_config_file.yml::::verison::::1
+FEDOT::::test/data/bad_log_config_file.yml::::loggers::::my_module::::level::::ERROR
+FEDOT::::test/integration/quality/test_synthetic_tasks.py::::file::::test/integration/quality/test_synthetic_tasks.py
+FEDOT::::test/integration/quality/test_synthetic_tasks.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/integration/quality/test_synthetic_tasks.py::::Pipeline::::steps::::final
+FEDOT::::test/integration/real_applications/test_examples.py::::file::::test/integration/real_applications/test_examples.py
+FEDOT::::test/integration/real_applications/test_real_cases.py::::file::::test/integration/real_applications/test_real_cases.py
+FEDOT::::test/integration/real_applications/test_real_cases.py::::Pipeline::::variable::::init_pipeline
+FEDOT::::test/integration/real_applications/test_real_cases.py::::Pipeline::::steps::::node_final
+FEDOT::::test/unit/api/test_main_api.py::::file::::test/unit/api/test_main_api.py
+FEDOT::::test/unit/api/test_main_api.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/api/test_main_api.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/api/test_main_api.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/api/test_main_api.py::::Pipeline::::nodes::::PrimaryNode
+FEDOT::::test/unit/api/test_main_api.py::::Pipeline::::nodes::::PrimaryNode
+FEDOT::::test/unit/composer/test_composer.py::::file::::test/unit/composer/test_composer.py
+FEDOT::::test/unit/composer/test_composer.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/composer/test_quality_metrics.py::::file::::test/unit/composer/test_quality_metrics.py
+FEDOT::::test/unit/composer/test_quality_metrics.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/composer/test_quality_metrics.py::::Pipeline::::steps::::final
+FEDOT::::test/unit/composer/test_quality_metrics.py::::Pipeline::::variable::::simple_pipeline
+FEDOT::::test/unit/data/test_data.py::::file::::test/unit/data/test_data.py
+FEDOT::::test/unit/data/test_data.py::::Pipeline::::variable::::dummy_pipeline
+FEDOT::::test/unit/data/test_data.py::::Pipeline::::variable::::dummy_pipeline
+FEDOT::::test/unit/explainability/test_pipeline_explanation.py::::file::::test/unit/explainability/test_pipeline_explanation.py
+FEDOT::::test/unit/models/test_atomized_model.py::::file::::test/unit/models/test_atomized_model.py
+FEDOT::::test/unit/models/test_atomized_model.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/models/test_atomized_model.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/models/test_atomized_model.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/models/test_atomized_model.py::::Pipeline::::variable::::pipeline_loaded
+FEDOT::::test/unit/models/test_atomized_model.py::::Pipeline::::variable::::pipeline_loaded
+FEDOT::::test/unit/models/test_atomized_model.py::::Pipeline::::variable::::empty_pipeline
+FEDOT::::test/unit/models/test_model.py::::file::::test/unit/models/test_model.py
+FEDOT::::test/unit/models/test_model.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/models/test_model.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/models/test_model.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/models/test_model.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/models/test_model.py::::Pipeline::::steps::::node
+FEDOT::::test/unit/models/test_split_train_test.py::::file::::test/unit/models/test_split_train_test.py
+FEDOT::::test/unit/models/test_split_train_test.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/models/test_strategy.py::::file::::test/unit/models/test_strategy.py
+FEDOT::::test/unit/pipelines/test_node.py::::file::::test/unit/pipelines/test_node.py
+FEDOT::::test/unit/pipelines/test_node.py::::LogisticRegression::::variable::::test_skl_model
+FEDOT::::test/unit/pipelines/test_node.py::::LogisticRegression::::C::::10.0
+FEDOT::::test/unit/pipelines/test_node.py::::LogisticRegression::::random_state::::1
+FEDOT::::test/unit/pipelines/test_node.py::::LogisticRegression::::solver::::liblinear
+FEDOT::::test/unit/pipelines/test_node.py::::LogisticRegression::::max_iter::::10000
+FEDOT::::test/unit/pipelines/test_node.py::::LogisticRegression::::verbose::::0
+FEDOT::::test/unit/pipelines/test_node_cache.py::::file::::test/unit/pipelines/test_node_cache.py
+FEDOT::::test/unit/pipelines/test_node_cache.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/pipelines/test_node_cache.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/pipelines/test_pipeline.py::::file::::test/unit/pipelines/test_pipeline.py
+FEDOT::::test/unit/pipelines/test_pipeline.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/pipelines/test_pipeline.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/pipelines/test_pipeline.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/pipelines/test_pipeline.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/pipelines/test_pipeline.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/pipelines/test_pipeline.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/pipelines/test_pipeline.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/pipelines/test_pipeline.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/pipelines/test_pipeline.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/pipelines/test_pipeline.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/pipelines/test_pipeline.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/pipelines/test_pipeline.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/pipelines/test_pipeline.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/pipelines/test_pipeline.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/pipelines/test_pipeline.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/pipelines/test_pipeline.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/pipelines/test_pipeline.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/pipelines/test_pipeline.py::::Pipeline::::variable::::pipeline_shuffled
+FEDOT::::test/unit/pipelines/test_pipeline.py::::Pipeline::::steps::::final
+FEDOT::::test/unit/pipelines/test_pipeline.py::::Pipeline::::steps::::final
+FEDOT::::test/unit/pipelines/test_pipeline.py::::Pipeline::::steps::::final
+FEDOT::::test/unit/pipelines/test_pipeline.py::::Pipeline::::steps::::ridge_node
+FEDOT::::test/unit/pipelines/test_pipeline_ts_wrappers.py::::file::::test/unit/pipelines/test_pipeline_ts_wrappers.py
+FEDOT::::test/unit/pipelines/test_pipeline_ts_wrappers.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/pipelines/test_pipeline_ts_wrappers.py::::Pipeline::::steps::::node_final
+FEDOT::::test/unit/pipelines/test_pipeline_ts_wrappers.py::::Pipeline::::steps::::node_final
+FEDOT::::test/unit/pipelines/test_pipeline_ts_wrappers.py::::Pipeline::::steps::::node_final
+FEDOT::::test/unit/pipelines/test_pipeline_ts_wrappers.py::::Pipeline::::variable::::sparse_lagged_pipeline
+FEDOT::::test/unit/pipelines/test_pipeline_ts_wrappers.py::::Pipeline::::variable::::lagged_pipeline
+FEDOT::::test/unit/pipelines/test_pipeline_ts_wrappers.py::::Pipeline::::variable::::arima_pipeline
+FEDOT::::test/unit/pipelines/test_pipeline_tuning.py::::file::::test/unit/pipelines/test_pipeline_tuning.py
+FEDOT::::test/unit/pipelines/test_pipeline_tuning.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/pipelines/test_pipeline_tuning.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/pipelines/test_pipeline_tuning.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/pipelines/test_pipeline_tuning.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/pipelines/test_pipeline_tuning.py::::Pipeline::::steps::::final
+FEDOT::::test/unit/pipelines/test_pipeline_tuning.py::::Pipeline::::steps::::final
+FEDOT::::test/unit/pipelines/test_pipeline_tuning.py::::Pipeline::::steps::::final
+FEDOT::::test/unit/pipelines/test_pipeline_tuning.py::::Pipeline::::steps::::final
+FEDOT::::test/unit/pipelines/test_pipeline_tuning.py::::Pipeline::::variable::::ar_pipeline
+FEDOT::::test/unit/pipelines/test_pipeline_tuning.py::::Pipeline::::variable::::glm_pipeline
+FEDOT::::test/unit/tasks/test_classification.py::::file::::test/unit/tasks/test_classification.py
+FEDOT::::test/unit/tasks/test_classification.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/tasks/test_classification.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/tasks/test_classification.py::::Pipeline::::steps::::node_final
+FEDOT::::test/unit/tasks/test_classification.py::::Pipeline::::steps::::node_final
+FEDOT::::test/unit/tasks/test_forecasting.py::::file::::test/unit/tasks/test_forecasting.py
+FEDOT::::test/unit/tasks/test_forecasting.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/tasks/test_forecasting.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/tasks/test_forecasting.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/tasks/test_forecasting.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/tasks/test_forecasting.py::::Pipeline::::steps::::node_final
+FEDOT::::test/unit/tasks/test_forecasting.py::::Pipeline::::steps::::node_root
+FEDOT::::test/unit/tasks/test_forecasting.py::::Pipeline::::steps::::node_root
+FEDOT::::test/unit/tasks/test_forecasting.py::::Pipeline::::steps::::node_ar
+FEDOT::::test/unit/tasks/test_forecasting.py::::Pipeline::::steps::::node_ridge
+FEDOT::::test/unit/tasks/test_gapfilling.py::::file::::test/unit/tasks/test_gapfilling.py
+FEDOT::::test/unit/tasks/test_regression.py::::file::::test/unit/tasks/test_regression.py
+FEDOT::::test/unit/tasks/test_regression.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/tasks/test_regression.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/tasks/test_regression.py::::Pipeline::::steps::::node_root
+FEDOT::::test/unit/tasks/test_regression.py::::Pipeline::::steps::::node_root
+FEDOT::::test/unit/utilities/test_pipeline_import_export.py::::file::::test/unit/utilities/test_pipeline_import_export.py
+FEDOT::::test/unit/utilities/test_pipeline_import_export.py::::Pipeline::::variable::::pipeline_empty
+FEDOT::::test/unit/utilities/test_pipeline_import_export.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/utilities/test_pipeline_import_export.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/utilities/test_pipeline_import_export.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/utilities/test_pipeline_import_export.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/utilities/test_pipeline_import_export.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/utilities/test_pipeline_import_export.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/utilities/test_pipeline_import_export.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/utilities/test_pipeline_import_export.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/utilities/test_pipeline_import_export.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/utilities/test_pipeline_import_export.py::::Pipeline::::variable::::pipeline
+FEDOT::::test/unit/utilities/test_pipeline_import_export.py::::Pipeline::::steps::::node_knn_third
+FEDOT::::test/unit/utilities/test_pipeline_import_export.py::::Pipeline::::steps::::knn_root
+FEDOT::::test/unit/utilities/test_pipeline_import_export.py::::Pipeline::::steps::::knn_root
+FEDOT::::test/unit/utilities/test_pipeline_import_export.py::::Pipeline::::variable::::new_pipeline
+FEDOT::::test/unit/utilities/test_pipeline_import_export.py::::Pipeline::::variable::::sub_pipeline
+FEDOT::::test/unit/utilities/test_pipeline_import_export.py::::Pipeline::::steps::::root_node
+FEDOT::::test/unit/utilities/test_pipeline_import_export.py::::Pipeline::::variable::::pipeline_after
+FEDOT::::test/unit/utilities/test_pipeline_import_export.py::::Pipeline::::variable::::pipeline_after
+FEDOT::::test/unit/utilities/test_pipeline_import_export.py::::Pipeline::::variable::::single_node_pipeline
+FEDOT::::test/unit/utilities/test_pipeline_import_export.py::::Pipeline::::variable::::pipeline_loaded
+FEDOT::::test/unit/validation/test_table_cv.py::::file::::test/unit/validation/test_table_cv.py
+FEDOT::::test/unit/validation/test_time_series_cv.py::::file::::test/unit/validation/test_time_series_cv.py

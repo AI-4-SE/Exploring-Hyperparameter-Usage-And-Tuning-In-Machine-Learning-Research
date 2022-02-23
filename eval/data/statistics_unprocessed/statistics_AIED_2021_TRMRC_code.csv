@@ -1,0 +1,1104 @@
+node
+AIED_2021_TRMRC_code::::albert/albert_performance_test.py::::file::::albert/albert_performance_test.py
+AIED_2021_TRMRC_code::::bart/bart_performance_test.py::::file::::bart/bart_performance_test.py
+AIED_2021_TRMRC_code::::bert/bert_performance_test.py::::file::::bert/bert_performance_test.py
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::file::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::version::::2.1
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::orbs::::gcp-gke::::circleci/gcp-gke@1.0.4
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::orbs::::go::::circleci/go@1.3.0
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::references::::checkout_ml_testing::::run::::name::::Checkout ml-testing-accelerators
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::references::::checkout_ml_testing::::run::::command::::git clone https://github.com/GoogleCloudPlatform/ml-testing-accelerators.git
+cd ml-testing-accelerators
+git fetch origin 5e88ac24f631c27045e62f0e8d5dfcf34e425e25:stable
+git checkout stable
+"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::references::::build_push_docker::::run::::name::::Configure Docker
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::references::::build_push_docker::::run::::command::::gcloud --quiet auth configure-docker
+cd docker/transformers-pytorch-tpu
+if [ -z ""$CIRCLE_PR_NUMBER"" ]; then docker build --tag ""$GCR_IMAGE_PATH:$CIRCLE_WORKFLOW_JOB_ID"" -f Dockerfile --build-arg ""TEST_IMAGE=1"" . ; else docker build --tag ""$GCR_IMAGE_PATH:$CIRCLE_WORKFLOW_JOB_ID"" -f Dockerfile --build-arg ""TEST_IMAGE=1"" --build-arg ""GITHUB_REF=pull/$CIRCLE_PR_NUMBER/head"" . ; fi
+docker push ""$GCR_IMAGE_PATH:$CIRCLE_WORKFLOW_JOB_ID""
+"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::references::::deploy_cluster::::run::::name::::Deploy the job on the kubernetes cluster
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::references::::deploy_cluster::::run::::command::::go get github.com/google/go-jsonnet/cmd/jsonnet && \
+export PATH=$PATH:$HOME/go/bin && \
+kubectl create -f docker/transformers-pytorch-tpu/dataset.yaml || true && \
+job_name=$(jsonnet -J ml-testing-accelerators/ docker/transformers-pytorch-tpu/bert-base-cased.jsonnet --ext-str image=$GCR_IMAGE_PATH --ext-str image-tag=$CIRCLE_WORKFLOW_JOB_ID | kubectl create -f -) && \
+job_name=${job_name#job.batch/} && \
+job_name=${job_name% created} && \
+echo ""Waiting on kubernetes job: $job_name"" && \
+i=0 && \
+# 30 checks spaced 30s apart = 900s total.
+max_checks=30 && \
+status_code=2 && \
+# Check on the job periodically. Set the status code depending on what
+# happened to the job in Kubernetes. If we try max_checks times and
+# still the job hasn't finished, give up and return the starting
+# non-zero status code.
+while [ $i -lt $max_checks ]; do ((i++)); if kubectl get jobs $job_name -o jsonpath='Failed:{.status.failed}' | grep ""Failed:1""; then status_code=1 && break; elif kubectl get jobs $job_name -o jsonpath='Succeeded:{.status.succeeded}' | grep ""Succeeded:1"" ; then status_code=0 && break; else echo ""Job not finished yet""; fi; sleep 30; done && \
+echo ""Done waiting. Job status code: $status_code"" && \
+pod_name=$(kubectl get po -l controller-uid=`kubectl get job $job_name -o ""jsonpath={.metadata.labels.controller-uid}""` | awk 'match($0,!/NAME/) {print $1}') && \
+echo ""GKE pod name: $pod_name"" && \
+kubectl logs -f $pod_name --container=train
+echo ""Done with log retrieval attempt."" && \
+gcloud container images delete ""$GCR_IMAGE_PATH:$CIRCLE_WORKFLOW_JOB_ID"" --force-delete-tags && \
+exit $status_code
+"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::references::::delete_gke_jobs::::run::::name::::Delete GKE Jobs
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::references::::delete_gke_jobs::::run::::command::::# Match jobs whose age matches patterns like '1h' or '1d', i.e. any job
+# that has been around longer than 1hr. First print all columns for
+# matches, then execute the delete.
+kubectl get job | awk 'match($4,/[0-9]+[dh]/) {print $0}'
+kubectl delete job $(kubectl get job | awk 'match($4,/[0-9]+[dh]/) {print $1}')
+"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::working_directory::::~/transformers
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::docker::::docker_0::::image::::circleci/python:3.6
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::environment::::OMP_NUM_THREADS::::1
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::resource_class::::xlarge
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::parallelism::::1
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::steps::::checkout
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::steps::::steps_0::::restore_cache::::keys::::v0.3-torch_and_tf-{{ checksum ""setup.py"" }}"
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::steps::::steps_0::::restore_cache::::keys::::v0.3-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::steps::::steps_1::::run::::pip install --upgrade pip
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::steps::::steps_2::::run::::pip install git+https://github.com/huggingface/datasets
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::steps::::steps_3::::run::::pip install .[sklearn,tf-cpu,torch,testing]"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::steps::::steps_4::::run::::pip install codecov pytest-cov
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::steps::::steps_5::::save_cache::::key::::v0.3-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::steps::::steps_5::::save_cache::::paths::::~/.cache/pip
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::steps::::steps_6::::run::::python -m pytest -n 8 --dist=loadfile -rA -s ./tests/ --cov  | tee output.txt
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::steps::::steps_7::::run::::codecov
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::steps::::steps_8::::store_artifacts::::path::::~/transformers/output.txt
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::steps::::steps_8::::store_artifacts::::destination::::test_output.txt
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::working_directory::::~/transformers
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::docker::::docker_0::::image::::circleci/python:3.7
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::environment::::OMP_NUM_THREADS::::1
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::resource_class::::xlarge
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::parallelism::::1
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::steps::::checkout
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::steps::::steps_0::::restore_cache::::keys::::v0.3-torch-{{ checksum ""setup.py"" }}"
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::steps::::steps_0::::restore_cache::::keys::::v0.3-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::steps::::steps_1::::run::::pip install --upgrade pip
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::steps::::steps_2::::run::::pip install git+https://github.com/huggingface/datasets
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::steps::::steps_3::::run::::pip install .[sklearn,torch,testing]"
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::steps::::steps_4::::save_cache::::key::::v0.3-torch-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::steps::::steps_4::::save_cache::::paths::::~/.cache/pip
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::steps::::steps_5::::run::::python -m pytest -n 8 --dist=loadfile -rA -s ./tests/ | tee output.txt
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::steps::::steps_6::::store_artifacts::::path::::~/transformers/output.txt
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::steps::::steps_6::::store_artifacts::::destination::::test_output.txt
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::working_directory::::~/transformers
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::docker::::docker_0::::image::::circleci/python:3.7
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::environment::::OMP_NUM_THREADS::::1
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::resource_class::::xlarge
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::parallelism::::1
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::steps::::checkout
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::steps::::steps_0::::restore_cache::::keys::::v0.3-tf-{{ checksum ""setup.py"" }}"
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::steps::::steps_0::::restore_cache::::keys::::v0.3-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::steps::::steps_1::::run::::pip install --upgrade pip
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::steps::::steps_2::::run::::pip install git+https://github.com/huggingface/datasets
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::steps::::steps_3::::run::::pip install .[sklearn,tf-cpu,testing]"
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::steps::::steps_4::::save_cache::::key::::v0.3-tf-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::steps::::steps_4::::save_cache::::paths::::~/.cache/pip
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::steps::::steps_5::::run::::python -m pytest -n 8 --dist=loadfile -rA -s ./tests/ | tee output.txt
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::steps::::steps_6::::store_artifacts::::path::::~/transformers/output.txt
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::steps::::steps_6::::store_artifacts::::destination::::test_output.txt
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_custom_tokenizers::::working_directory::::~/transformers
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_custom_tokenizers::::docker::::docker_0::::image::::circleci/python:3.6
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_custom_tokenizers::::environment::::RUN_CUSTOM_TOKENIZERS::::yes
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_custom_tokenizers::::steps::::checkout
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_custom_tokenizers::::steps::::steps_0::::restore_cache::::keys::::v0.3-custom_tokenizers-{{ checksum ""setup.py"" }}"
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_custom_tokenizers::::steps::::steps_0::::restore_cache::::keys::::v0.3-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_custom_tokenizers::::steps::::steps_1::::run::::pip install --upgrade pip
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_custom_tokenizers::::steps::::steps_2::::run::::pip install .[ja,testing]"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_custom_tokenizers::::steps::::steps_3::::run::::python -m unidic download
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_custom_tokenizers::::steps::::steps_4::::save_cache::::key::::v0.3-custom_tokenizers-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_custom_tokenizers::::steps::::steps_4::::save_cache::::paths::::~/.cache/pip
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_custom_tokenizers::::steps::::steps_5::::run::::python -m pytest -s ./tests/test_tokenization_bert_japanese.py | tee output.txt
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_custom_tokenizers::::steps::::steps_6::::store_artifacts::::path::::~/transformers/output.txt
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_custom_tokenizers::::steps::::steps_6::::store_artifacts::::destination::::test_output.txt
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::working_directory::::~/transformers
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::docker::::docker_0::::image::::circleci/python:3.6
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::environment::::OMP_NUM_THREADS::::1
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::resource_class::::xlarge
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::parallelism::::1
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::steps::::checkout
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::steps::::steps_0::::restore_cache::::keys::::v0.3-torch_examples-{{ checksum ""setup.py"" }}"
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::steps::::steps_0::::restore_cache::::keys::::v0.3-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::steps::::steps_1::::run::::pip install --upgrade pip
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::steps::::steps_2::::run::::pip install .[sklearn,torch,testing]"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::steps::::steps_3::::run::::pip install -r examples/requirements.txt
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::steps::::steps_4::::save_cache::::key::::v0.3-torch_examples-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::steps::::steps_4::::save_cache::::paths::::~/.cache/pip
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::steps::::steps_5::::run::::python -m pytest -n 8 --dist=loadfile -rA -s ./examples/ | tee output.txt
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::steps::::steps_6::::store_artifacts::::path::::~/transformers/output.txt
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::steps::::steps_6::::store_artifacts::::destination::::test_output.txt
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::build_doc::::working_directory::::~/transformers
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::build_doc::::docker::::docker_0::::image::::circleci/python:3.6
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::build_doc::::steps::::checkout
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::build_doc::::steps::::steps_0::::restore_cache::::keys::::v0.3-build_doc-{{ checksum ""setup.py"" }}"
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::build_doc::::steps::::steps_0::::restore_cache::::keys::::v0.3-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::build_doc::::steps::::steps_1::::run::::pip install --upgrade pip
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::build_doc::::steps::::steps_2::::run::::pip install .[tf,torch,docs]"
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::build_doc::::steps::::steps_3::::save_cache::::key::::v0.3-build_doc-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::build_doc::::steps::::steps_3::::save_cache::::paths::::~/.cache/pip
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::build_doc::::steps::::steps_4::::run::::cd docs && make html SPHINXOPTS=""-W"""
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::build_doc::::steps::::steps_5::::store_artifacts::::path::::./docs/_build
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::deploy_doc::::working_directory::::~/transformers
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::deploy_doc::::docker::::docker_0::::image::::circleci/python:3.6
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::deploy_doc::::steps::::steps_0::::add_ssh_keys::::fingerprints::::5b:7a:95:18:07:8c:aa:76:4c:60:35:88:ad:60:56:71
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::deploy_doc::::steps::::checkout
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::deploy_doc::::steps::::steps_1::::restore_cache::::keys::::v0.3-deploy_doc-{{ checksum ""setup.py"" }}"
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::deploy_doc::::steps::::steps_1::::restore_cache::::keys::::v0.3-{{ checksum ""setup.py"" }}"
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::deploy_doc::::steps::::steps_2::::run::::pip install .[tf,torch,docs]"
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::deploy_doc::::steps::::steps_3::::save_cache::::key::::v0.3-deploy_doc-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::deploy_doc::::steps::::steps_3::::save_cache::::paths::::~/.cache/pip
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::deploy_doc::::steps::::steps_4::::run::::./.circleci/deploy.sh
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::working_directory::::~/transformers
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::docker::::docker_0::::image::::circleci/python:3.6
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::resource_class::::medium
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::parallelism::::1
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::steps::::checkout
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::steps::::steps_0::::restore_cache::::keys::::v0.3-code_quality-{{ checksum ""setup.py"" }}"
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::steps::::steps_0::::restore_cache::::keys::::v0.3-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::steps::::steps_1::::run::::pip install --upgrade pip
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::steps::::steps_2::::run::::pip install isort
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::steps::::steps_3::::run::::pip install .[tf,torch,quality]"
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::steps::::steps_4::::save_cache::::key::::v0.3-code_quality-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::steps::::steps_4::::save_cache::::paths::::~/.cache/pip
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::steps::::steps_5::::run::::black --check examples templates tests src utils
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::steps::::steps_6::::run::::isort --check-only examples templates tests src utils
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::steps::::steps_7::::run::::flake8 examples templates tests src utils
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::steps::::steps_8::::run::::python utils/check_copies.py
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::steps::::steps_9::::run::::python utils/check_repo.py
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::check_repository_consistency::::working_directory::::~/transformers
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::check_repository_consistency::::docker::::docker_0::::image::::circleci/python:3.6
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::check_repository_consistency::::resource_class::::small
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::check_repository_consistency::::parallelism::::1
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::check_repository_consistency::::steps::::checkout
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::check_repository_consistency::::steps::::steps_0::::run::::pip install requests
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::check_repository_consistency::::steps::::steps_1::::run::::python ./utils/link_tester.py
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::docker::::docker_0::::image::::circleci/python:3.6
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::environment::::OMP_NUM_THREADS::::1
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::resource_class::::xlarge
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::parallelism::::1
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::steps::::checkout
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::steps::::go/install
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::steps::::steps_0::::run::::name::::Checkout ml-testing-accelerators
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::steps::::steps_0::::run::::command::::git clone https://github.com/GoogleCloudPlatform/ml-testing-accelerators.git
+cd ml-testing-accelerators
+git fetch origin 5e88ac24f631c27045e62f0e8d5dfcf34e425e25:stable
+git checkout stable
+"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::steps::::gcp-gke/install
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::steps::::steps_1::::gcp-gke/update-kubeconfig-with-credentials::::cluster::::$GKE_CLUSTER
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::steps::::steps_1::::gcp-gke/update-kubeconfig-with-credentials::::perform-login::::true
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::steps::::setup_remote_docker
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::steps::::steps_2::::run::::name::::Configure Docker
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::steps::::steps_2::::run::::command::::gcloud --quiet auth configure-docker
+cd docker/transformers-pytorch-tpu
+if [ -z ""$CIRCLE_PR_NUMBER"" ]; then docker build --tag ""$GCR_IMAGE_PATH:$CIRCLE_WORKFLOW_JOB_ID"" -f Dockerfile --build-arg ""TEST_IMAGE=1"" . ; else docker build --tag ""$GCR_IMAGE_PATH:$CIRCLE_WORKFLOW_JOB_ID"" -f Dockerfile --build-arg ""TEST_IMAGE=1"" --build-arg ""GITHUB_REF=pull/$CIRCLE_PR_NUMBER/head"" . ; fi
+docker push ""$GCR_IMAGE_PATH:$CIRCLE_WORKFLOW_JOB_ID""
+"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::steps::::steps_3::::run::::name::::Deploy the job on the kubernetes cluster
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::steps::::steps_3::::run::::command::::go get github.com/google/go-jsonnet/cmd/jsonnet && \
+export PATH=$PATH:$HOME/go/bin && \
+kubectl create -f docker/transformers-pytorch-tpu/dataset.yaml || true && \
+job_name=$(jsonnet -J ml-testing-accelerators/ docker/transformers-pytorch-tpu/bert-base-cased.jsonnet --ext-str image=$GCR_IMAGE_PATH --ext-str image-tag=$CIRCLE_WORKFLOW_JOB_ID | kubectl create -f -) && \
+job_name=${job_name#job.batch/} && \
+job_name=${job_name% created} && \
+echo ""Waiting on kubernetes job: $job_name"" && \
+i=0 && \
+# 30 checks spaced 30s apart = 900s total.
+max_checks=30 && \
+status_code=2 && \
+# Check on the job periodically. Set the status code depending on what
+# happened to the job in Kubernetes. If we try max_checks times and
+# still the job hasn't finished, give up and return the starting
+# non-zero status code.
+while [ $i -lt $max_checks ]; do ((i++)); if kubectl get jobs $job_name -o jsonpath='Failed:{.status.failed}' | grep ""Failed:1""; then status_code=1 && break; elif kubectl get jobs $job_name -o jsonpath='Succeeded:{.status.succeeded}' | grep ""Succeeded:1"" ; then status_code=0 && break; else echo ""Job not finished yet""; fi; sleep 30; done && \
+echo ""Done waiting. Job status code: $status_code"" && \
+pod_name=$(kubectl get po -l controller-uid=`kubectl get job $job_name -o ""jsonpath={.metadata.labels.controller-uid}""` | awk 'match($0,!/NAME/) {print $1}') && \
+echo ""GKE pod name: $pod_name"" && \
+kubectl logs -f $pod_name --container=train
+echo ""Done with log retrieval attempt."" && \
+gcloud container images delete ""$GCR_IMAGE_PATH:$CIRCLE_WORKFLOW_JOB_ID"" --force-delete-tags && \
+exit $status_code
+"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::cleanup-gke-jobs::::docker::::docker_0::::image::::circleci/python:3.6
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::cleanup-gke-jobs::::steps::::gcp-gke/install
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::cleanup-gke-jobs::::steps::::steps_0::::gcp-gke/update-kubeconfig-with-credentials::::cluster::::$GKE_CLUSTER
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::cleanup-gke-jobs::::steps::::steps_0::::gcp-gke/update-kubeconfig-with-credentials::::perform-login::::true
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::cleanup-gke-jobs::::steps::::steps_1::::run::::name::::Delete GKE Jobs
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::jobs::::cleanup-gke-jobs::::steps::::steps_1::::run::::command::::# Match jobs whose age matches patterns like '1h' or '1d', i.e. any job
+# that has been around longer than 1hr. First print all columns for
+# matches, then execute the delete.
+kubectl get job | awk 'match($4,/[0-9]+[dh]/) {print $0}'
+kubectl delete job $(kubectl get job | awk 'match($4,/[0-9]+[dh]/) {print $1}')
+"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::workflow_filters::::filters::::branches::::only::::master
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::workflows::::version::::2
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::workflows::::build_and_test::::jobs::::check_code_quality
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::workflows::::build_and_test::::jobs::::check_repository_consistency
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::workflows::::build_and_test::::jobs::::run_examples_torch
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::workflows::::build_and_test::::jobs::::run_tests_custom_tokenizers
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::workflows::::build_and_test::::jobs::::run_tests_torch_and_tf
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::workflows::::build_and_test::::jobs::::run_tests_torch
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::workflows::::build_and_test::::jobs::::run_tests_tf
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::workflows::::build_and_test::::jobs::::build_doc
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::workflows::::build_and_test::::jobs::::jobs_0::::deploy_doc::::filters::::branches::::only::::master
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::workflows::::tpu_testing_jobs::::triggers::::triggers_0::::schedule::::cron::::0 8 * * *
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::workflows::::tpu_testing_jobs::::triggers::::triggers_0::::schedule::::filters::::branches::::only::::master
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::workflows::::tpu_testing_jobs::::jobs::::cleanup-gke-jobs
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.circleci/config.yml::::workflows::::tpu_testing_jobs::::jobs::::run_examples_tpu
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/stale.yml::::file::::ours/transformer-mrc/examples/transformers-3.3.1/.github/stale.yml
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/stale.yml::::daysUntilStale::::60
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/stale.yml::::daysUntilClose::::7
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/stale.yml::::exemptLabels::::pinned
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/stale.yml::::exemptLabels::::security
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/stale.yml::::staleLabel::::wontfix
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/stale.yml::::markComment::::This issue has been automatically marked as stale because it has not had recent activity. It will be closed if no further activity occurs. Thank you for your contributions.
+"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/stale.yml::::closeComment::::false
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/github-torch-hub.yml::::file::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/github-torch-hub.yml
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/github-torch-hub.yml::::name::::Torch hub integration
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/github-torch-hub.yml::::on::::push::::branches::::*
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::runs-on::::ubuntu-latest
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_0::::name::::Extract branch name
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_0::::run::::echo ""::set-env name=BRANCH::${GITHUB_REF#refs/heads/}"""
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_1::::name::::Check branch name
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_1::::run::::echo $BRANCH
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_2::::name::::Set up Python
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_2::::uses::::actions/setup-python@v1
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_2::::with::::python-version::::3.7
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_3::::name::::Loading cache
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_3::::uses::::actions/cache@v2
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_3::::id::::cache
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_3::::with::::path::::~/.cache/pip
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_3::::with::::key::::v0-torch_hub-${{ hashFiles('setup.py') }}
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_4::::name::::Install dependencies
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_4::::run::::pip install --upgrade pip
+pip install torch
+pip install numpy tokenizers filelock requests tqdm regex sentencepiece sacremoses packaging
+"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_5::::name::::Torch hub list
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_5::::run::::python -c ""import torch; print(torch.hub.list('huggingface/transformers:$BRANCH'))""
+"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_6::::name::::Torch hub help
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_6::::run::::python -c ""import torch; print(torch.hub.help('huggingface/transformers:$BRANCH', 'modelForSequenceClassification'))""
+"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::file::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::name::::Self-hosted runner (push)
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::on::::push::::branches::::master
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::on::::push::::paths::::src/**
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::on::::push::::paths::::tests/**
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::on::::push::::paths::::.github/**
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::runs-on::::self-hosted
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_0::::uses::::actions/checkout@v2
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_1::::name::::Python version
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_1::::run::::which python
+python --version
+pip --version
+"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_2::::name::::Current dir
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_2::::run::::pwd
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_3::::run::::nvidia-smi
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_4::::name::::Loading cache.
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_4::::uses::::actions/cache@v2
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_4::::id::::cache
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_4::::with::::path::::.env
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_4::::with::::key::::v0-tests_tf_torch_gpu-${{ hashFiles('setup.py') }}
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_5::::name::::Create new python env (on self-hosted runners we have to handle isolation ourselves)
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_5::::run::::python -m venv .env
+source .env/bin/activate
+which python
+python --version
+pip --version
+"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_6::::name::::Install dependencies
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_6::::run::::source .env/bin/activate
+pip install --upgrade pip
+pip install torch!=1.6.0
+pip install .[sklearn,testing,onnxruntime]
+pip install git+https://github.com/huggingface/datasets
+"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_7::::name::::Are GPUs recognized by our DL frameworks
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_7::::run::::source .env/bin/activate
+python -c ""import torch; print(torch.cuda.is_available())""
+"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_8::::name::::Run all non-slow tests on GPU
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_8::::env::::TF_FORCE_GPU_ALLOW_GROWTH::::true
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_8::::env::::OMP_NUM_THREADS::::1
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_8::::env::::USE_CUDA::::yes
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_8::::run::::source .env/bin/activate
+python -m pytest -n 2 --dist=loadfile -s ./tests/
+"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::file::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::name::::Self-hosted runner (scheduled)
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::on::::push::::branches::::ci_*
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::on::::schedule::::schedule_0::::cron::::0 0 * * *
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::runs-on::::self-hosted
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_0::::uses::::actions/checkout@v2
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_1::::name::::Loading cache.
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_1::::uses::::actions/cache@v2
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_1::::id::::cache
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_1::::with::::path::::.env
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_1::::with::::key::::v0-slow_tests_tf_torch_gpu-${{ hashFiles('setup.py') }}
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_2::::name::::Python version
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_2::::run::::which python
+python --version
+pip --version
+"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_3::::name::::Current dir
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_3::::run::::pwd
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_4::::run::::nvidia-smi
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_5::::name::::Create new python env (on self-hosted runners we have to handle isolation ourselves)
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_5::::if::::steps.cache.outputs.cache-hit != 'true'
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_5::::run::::python -m venv .env
+source .env/bin/activate
+which python
+python --version
+pip --version
+"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_6::::name::::Install dependencies
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_6::::run::::source .env/bin/activate
+pip install --upgrade pip
+pip install torch!=1.6.0
+pip install .[sklearn,testing,onnxruntime]
+pip install git+https://github.com/huggingface/datasets
+"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_7::::name::::Are GPUs recognized by our DL frameworks
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_7::::run::::source .env/bin/activate
+python -c ""import torch; print(torch.cuda.is_available())""
+"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_8::::name::::Run all tests on GPU
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_8::::env::::TF_FORCE_GPU_ALLOW_GROWTH::::true
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_8::::env::::OMP_NUM_THREADS::::1
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_8::::env::::RUN_SLOW::::yes
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_8::::env::::USE_CUDA::::yes
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_8::::run::::source .env/bin/activate
+python -m pytest -n 1 --dist=loadfile -s ./tests/
+"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_9::::name::::Run examples tests on GPU
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_9::::env::::TF_FORCE_GPU_ALLOW_GROWTH::::true
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_9::::env::::OMP_NUM_THREADS::::1
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_9::::env::::RUN_SLOW::::yes
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_9::::env::::USE_CUDA::::yes
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_9::::run::::source .env/bin/activate
+pip install -r examples/requirements.txt
+python -m pytest -n 1 --dist=loadfile -s examples
+"
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/codecov.yml::::file::::ours/transformer-mrc/examples/transformers-3.3.1/codecov.yml
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/codecov.yml::::coverage::::status::::project::::default::::informational::::true
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/codecov.yml::::coverage::::status::::patch::::off
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/codecov.yml::::comment::::require_changes::::true
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/codecov.yml::::comment::::require_head::::yes
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/codecov.yml::::comment::::require_base::::yes
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-cpu/Dockerfile::::file::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-cpu/Dockerfile
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-cpu/Dockerfile::::from::::ubuntu:18.04
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-cpu/Dockerfile::::copy::::src::::.
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-cpu/Dockerfile::::copy::::dest::::transformers/
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-cpu/Dockerfile::::cmd::::exec_command::::/bin/bash
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-cpu/Dockerfile::::cmd::::param0::::bin/bash
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-gpu/Dockerfile::::file::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-gpu/Dockerfile
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-gpu/Dockerfile::::from::::nvidia/cuda:10.1-cudnn7-runtime-ubuntu18.04
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-gpu/Dockerfile::::copy::::src::::.
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-gpu/Dockerfile::::copy::::dest::::transformers/
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-gpu/Dockerfile::::cmd::::exec_command::::/bin/bash
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-gpu/Dockerfile::::cmd::::param0::::bin/bash
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-cpu/Dockerfile::::file::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-cpu/Dockerfile
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-cpu/Dockerfile::::from::::ubuntu:18.04
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-cpu/Dockerfile::::copy::::src::::.
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-cpu/Dockerfile::::copy::::dest::::transformers/
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-cpu/Dockerfile::::cmd::::exec_command::::/bin/bash
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-cpu/Dockerfile::::cmd::::param0::::bin/bash
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-gpu/Dockerfile::::file::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-gpu/Dockerfile
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-gpu/Dockerfile::::from::::nvidia/cuda:10.1-cudnn7-runtime-ubuntu18.04
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-gpu/Dockerfile::::copy::::src::::.
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-gpu/Dockerfile::::copy::::dest::::transformers/
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-gpu/Dockerfile::::cmd::::exec_command::::/bin/bash
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-gpu/Dockerfile::::cmd::::param0::::bin/bash
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/Dockerfile::::file::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/Dockerfile
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/Dockerfile::::from::::google/cloud-sdk:slim
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/Dockerfile::::env::::PYTHON_VERSION::::3
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/Dockerfile::::env::::PATH::::
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/Dockerfile::::env::::python::::
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/Dockerfile::::env::::python::::
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/Dockerfile::::env::::LD_LIBRARY_PATH::::root
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/Dockerfile::::copy::::src::::docker-entrypoint.sh
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/Dockerfile::::copy::::dest::::/usr/local/bin/
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/Dockerfile::::entrypoint::::exec_command::::/usr/local/bin/docker-entrypoint.sh
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/Dockerfile::::entrypoint::::param0::::usr/local/bin/docker-entrypoint.sh
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/Dockerfile::::cmd::::exec_command::::bash
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/Dockerfile::::cmd::::param0::::bash
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::file::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::apiVersion::::v1
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::apiVersion::::v1
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::kind::::PersistentVolume
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::metadata::::name::::huggingface-cluster-disk
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::spec::::storageClassName::::
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::spec::::storageClassName::::
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::spec::::capacity::::storage::::500Gi
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::spec::::accessModes::::ReadOnlyMany
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::spec::::accessModes::::ReadOnlyMany
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::spec::::claimRef::::namespace::::default
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::spec::::claimRef::::name::::huggingface-cluster-disk-claim
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::spec::::gcePersistentDisk::::pdName::::huggingface-cluster-disk
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::spec::::gcePersistentDisk::::fsType::::ext4
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::spec::::gcePersistentDisk::::readOnly::::true
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::kind::::PersistentVolumeClaim
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::metadata::::name::::huggingface-cluster-disk-claim
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::spec::::resources::::requests::::storage::::1Ki
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-tensorflow-cpu/Dockerfile::::file::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-tensorflow-cpu/Dockerfile
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-tensorflow-cpu/Dockerfile::::from::::ubuntu:18.04
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-tensorflow-cpu/Dockerfile::::copy::::src::::.
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-tensorflow-cpu/Dockerfile::::copy::::dest::::transformers/
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-tensorflow-cpu/Dockerfile::::cmd::::exec_command::::/bin/bash
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-tensorflow-cpu/Dockerfile::::cmd::::param0::::bin/bash
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-tensorflow-gpu/Dockerfile::::file::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-tensorflow-gpu/Dockerfile
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-tensorflow-gpu/Dockerfile::::from::::nvidia/cuda:10.1-cudnn7-runtime-ubuntu18.04
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-tensorflow-gpu/Dockerfile::::copy::::src::::.
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-tensorflow-gpu/Dockerfile::::copy::::dest::::transformers/
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-tensorflow-gpu/Dockerfile::::cmd::::exec_command::::/bin/bash
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/docker/transformers-tensorflow-gpu/Dockerfile::::cmd::::param0::::bin/bash
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/examples/contrib/mm-imdb/run_mmimdb.py::::file::::ours/transformer-mrc/examples/transformers-3.3.1/examples/contrib/mm-imdb/run_mmimdb.py
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/pyproject.toml::::file::::ours/transformer-mrc/examples/transformers-3.3.1/pyproject.toml
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/pyproject.toml::::tool::::black::::line-length::::119
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/pyproject.toml::::tool::::black::::target-version::::py35
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/src/transformers/data/metrics/__init__.py::::file::::ours/transformer-mrc/examples/transformers-3.3.1/src/transformers/data/metrics/__init__.py
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::file::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::name::::Execute python examples/text-classification/run_glue.py
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::image::::pytorch/pytorch:nightly-devel-cuda10.0-cudnn7
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::command::::python /valohai/repository/utils/download_glue_data.py --data_dir=/glue_data
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::command::::pip install -e .
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::command::::pip install -r examples/requirements.txt
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::command::::python examples/text-classification/run_glue.py --do_train --data_dir=/glue_data/{parameter-value:task_name} {parameters}
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_0::::name::::model_type
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_0::::pass-as::::--model_type={v}
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_0::::type::::string
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_0::::default::::bert
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_1::::name::::model_name_or_path
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_1::::pass-as::::--model_name_or_path={v}
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_1::::type::::string
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_1::::default::::bert-base-uncased
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_2::::name::::task_name
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_2::::pass-as::::--task_name={v}
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_2::::type::::string
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_2::::default::::MRPC
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_3::::name::::max_seq_length
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_3::::pass-as::::--max_seq_length={v}
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_3::::description::::The maximum total input sequence length after tokenization. Sequences longer than this will be truncated, sequences shorter will be padded."
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_3::::type::::integer
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_3::::default::::128
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_4::::name::::per_gpu_train_batch_size
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_4::::pass-as::::--per_gpu_train_batch_size={v}
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_4::::description::::Batch size per GPU/CPU for training.
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_4::::type::::integer
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_4::::default::::8
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_5::::name::::per_gpu_eval_batch_size
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_5::::pass-as::::--per_gpu_eval_batch_size={v}
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_5::::description::::Batch size per GPU/CPU for evaluation.
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_5::::type::::integer
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_5::::default::::8
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_6::::name::::gradient_accumulation_steps
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_6::::pass-as::::--gradient_accumulation_steps={v}
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_6::::description::::Number of updates steps to accumulate before performing a backward/update pass.
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_6::::type::::integer
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_6::::default::::1
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_7::::name::::learning_rate
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_7::::pass-as::::--learning_rate={v}
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_7::::description::::The initial learning rate for Adam.
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_7::::type::::float
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_7::::default::::0.00005
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_8::::name::::adam_epsilon
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_8::::pass-as::::--adam_epsilon={v}
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_8::::description::::Epsilon for Adam optimizer.
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_8::::type::::float
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_8::::default::::0.00000001
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_9::::name::::max_grad_norm
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_9::::pass-as::::--max_grad_norm={v}
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_9::::description::::Max gradient norm.
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_9::::type::::float
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_9::::default::::1.0
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_10::::name::::num_train_epochs
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_10::::pass-as::::--num_train_epochs={v}
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_10::::description::::Total number of training epochs to perform.
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_10::::type::::integer
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_10::::default::::3
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_11::::name::::max_steps
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_11::::pass-as::::--max_steps={v}
+"AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_11::::description::::If > 0, set total number of training steps to perform. Override num_train_epochs."
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_11::::type::::integer
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_11::::default::::-1
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_12::::name::::warmup_steps
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_12::::pass-as::::--warmup_steps={v}
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_12::::description::::Linear warmup over warmup_steps.
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_12::::type::::integer
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_12::::default::::-1
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_13::::name::::logging_steps
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_13::::pass-as::::--logging_steps={v}
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_13::::description::::Log every X updates steps.
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_13::::type::::integer
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_13::::default::::25
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_14::::name::::save_steps
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_14::::pass-as::::--save_steps={v}
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_14::::description::::Save checkpoint every X updates steps.
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_14::::type::::integer
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_14::::default::::-1
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_15::::name::::output_dir
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_15::::pass-as::::--output_dir={v}
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_15::::type::::string
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_15::::default::::/valohai/outputs
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_16::::name::::evaluate_during_training
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_16::::description::::Run evaluation during training at each logging step.
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_16::::type::::flag
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml::::ours/transformer-mrc/examples/transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_16::::default::::true
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers/data/metrics/__init__.py::::file::::ours/transformer-mrc/examples/transformers/data/metrics/__init__.py
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers_electra/data/metrics/__init__.py::::file::::ours/transformer-mrc/examples/transformers_electra/data/metrics/__init__.py
+AIED_2021_TRMRC_code::::ours/transformer-mrc/examples/transformers_odd/data/metrics/__init__.py::::file::::ours/transformer-mrc/examples/transformers_odd/data/metrics/__init__.py
+AIED_2021_TRMRC_code::::roberta/roberta_performance_test.py::::file::::roberta/roberta_performance_test.py
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::file::::transformers-3.3.1/.circleci/config.yml
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::version::::2.1
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::orbs::::gcp-gke::::circleci/gcp-gke@1.0.4
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::orbs::::go::::circleci/go@1.3.0
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::references::::checkout_ml_testing::::run::::name::::Checkout ml-testing-accelerators
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::references::::checkout_ml_testing::::run::::command::::git clone https://github.com/GoogleCloudPlatform/ml-testing-accelerators.git
+cd ml-testing-accelerators
+git fetch origin 5e88ac24f631c27045e62f0e8d5dfcf34e425e25:stable
+git checkout stable
+"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::references::::build_push_docker::::run::::name::::Configure Docker
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::references::::build_push_docker::::run::::command::::gcloud --quiet auth configure-docker
+cd docker/transformers-pytorch-tpu
+if [ -z ""$CIRCLE_PR_NUMBER"" ]; then docker build --tag ""$GCR_IMAGE_PATH:$CIRCLE_WORKFLOW_JOB_ID"" -f Dockerfile --build-arg ""TEST_IMAGE=1"" . ; else docker build --tag ""$GCR_IMAGE_PATH:$CIRCLE_WORKFLOW_JOB_ID"" -f Dockerfile --build-arg ""TEST_IMAGE=1"" --build-arg ""GITHUB_REF=pull/$CIRCLE_PR_NUMBER/head"" . ; fi
+docker push ""$GCR_IMAGE_PATH:$CIRCLE_WORKFLOW_JOB_ID""
+"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::references::::deploy_cluster::::run::::name::::Deploy the job on the kubernetes cluster
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::references::::deploy_cluster::::run::::command::::go get github.com/google/go-jsonnet/cmd/jsonnet && \
+export PATH=$PATH:$HOME/go/bin && \
+kubectl create -f docker/transformers-pytorch-tpu/dataset.yaml || true && \
+job_name=$(jsonnet -J ml-testing-accelerators/ docker/transformers-pytorch-tpu/bert-base-cased.jsonnet --ext-str image=$GCR_IMAGE_PATH --ext-str image-tag=$CIRCLE_WORKFLOW_JOB_ID | kubectl create -f -) && \
+job_name=${job_name#job.batch/} && \
+job_name=${job_name% created} && \
+echo ""Waiting on kubernetes job: $job_name"" && \
+i=0 && \
+# 30 checks spaced 30s apart = 900s total.
+max_checks=30 && \
+status_code=2 && \
+# Check on the job periodically. Set the status code depending on what
+# happened to the job in Kubernetes. If we try max_checks times and
+# still the job hasn't finished, give up and return the starting
+# non-zero status code.
+while [ $i -lt $max_checks ]; do ((i++)); if kubectl get jobs $job_name -o jsonpath='Failed:{.status.failed}' | grep ""Failed:1""; then status_code=1 && break; elif kubectl get jobs $job_name -o jsonpath='Succeeded:{.status.succeeded}' | grep ""Succeeded:1"" ; then status_code=0 && break; else echo ""Job not finished yet""; fi; sleep 30; done && \
+echo ""Done waiting. Job status code: $status_code"" && \
+pod_name=$(kubectl get po -l controller-uid=`kubectl get job $job_name -o ""jsonpath={.metadata.labels.controller-uid}""` | awk 'match($0,!/NAME/) {print $1}') && \
+echo ""GKE pod name: $pod_name"" && \
+kubectl logs -f $pod_name --container=train
+echo ""Done with log retrieval attempt."" && \
+gcloud container images delete ""$GCR_IMAGE_PATH:$CIRCLE_WORKFLOW_JOB_ID"" --force-delete-tags && \
+exit $status_code
+"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::references::::delete_gke_jobs::::run::::name::::Delete GKE Jobs
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::references::::delete_gke_jobs::::run::::command::::# Match jobs whose age matches patterns like '1h' or '1d', i.e. any job
+# that has been around longer than 1hr. First print all columns for
+# matches, then execute the delete.
+kubectl get job | awk 'match($4,/[0-9]+[dh]/) {print $0}'
+kubectl delete job $(kubectl get job | awk 'match($4,/[0-9]+[dh]/) {print $1}')
+"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::working_directory::::~/transformers
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::docker::::docker_0::::image::::circleci/python:3.6
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::environment::::OMP_NUM_THREADS::::1
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::resource_class::::xlarge
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::parallelism::::1
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::steps::::checkout
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::steps::::steps_0::::restore_cache::::keys::::v0.3-torch_and_tf-{{ checksum ""setup.py"" }}"
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::steps::::steps_0::::restore_cache::::keys::::v0.3-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::steps::::steps_1::::run::::pip install --upgrade pip
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::steps::::steps_2::::run::::pip install git+https://github.com/huggingface/datasets
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::steps::::steps_3::::run::::pip install .[sklearn,tf-cpu,torch,testing]"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::steps::::steps_4::::run::::pip install codecov pytest-cov
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::steps::::steps_5::::save_cache::::key::::v0.3-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::steps::::steps_5::::save_cache::::paths::::~/.cache/pip
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::steps::::steps_6::::run::::python -m pytest -n 8 --dist=loadfile -rA -s ./tests/ --cov  | tee output.txt
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::steps::::steps_7::::run::::codecov
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::steps::::steps_8::::store_artifacts::::path::::~/transformers/output.txt
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch_and_tf::::steps::::steps_8::::store_artifacts::::destination::::test_output.txt
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::working_directory::::~/transformers
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::docker::::docker_0::::image::::circleci/python:3.7
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::environment::::OMP_NUM_THREADS::::1
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::resource_class::::xlarge
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::parallelism::::1
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::steps::::checkout
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::steps::::steps_0::::restore_cache::::keys::::v0.3-torch-{{ checksum ""setup.py"" }}"
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::steps::::steps_0::::restore_cache::::keys::::v0.3-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::steps::::steps_1::::run::::pip install --upgrade pip
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::steps::::steps_2::::run::::pip install git+https://github.com/huggingface/datasets
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::steps::::steps_3::::run::::pip install .[sklearn,torch,testing]"
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::steps::::steps_4::::save_cache::::key::::v0.3-torch-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::steps::::steps_4::::save_cache::::paths::::~/.cache/pip
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::steps::::steps_5::::run::::python -m pytest -n 8 --dist=loadfile -rA -s ./tests/ | tee output.txt
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::steps::::steps_6::::store_artifacts::::path::::~/transformers/output.txt
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_torch::::steps::::steps_6::::store_artifacts::::destination::::test_output.txt
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::working_directory::::~/transformers
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::docker::::docker_0::::image::::circleci/python:3.7
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::environment::::OMP_NUM_THREADS::::1
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::resource_class::::xlarge
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::parallelism::::1
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::steps::::checkout
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::steps::::steps_0::::restore_cache::::keys::::v0.3-tf-{{ checksum ""setup.py"" }}"
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::steps::::steps_0::::restore_cache::::keys::::v0.3-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::steps::::steps_1::::run::::pip install --upgrade pip
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::steps::::steps_2::::run::::pip install git+https://github.com/huggingface/datasets
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::steps::::steps_3::::run::::pip install .[sklearn,tf-cpu,testing]"
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::steps::::steps_4::::save_cache::::key::::v0.3-tf-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::steps::::steps_4::::save_cache::::paths::::~/.cache/pip
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::steps::::steps_5::::run::::python -m pytest -n 8 --dist=loadfile -rA -s ./tests/ | tee output.txt
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::steps::::steps_6::::store_artifacts::::path::::~/transformers/output.txt
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_tf::::steps::::steps_6::::store_artifacts::::destination::::test_output.txt
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_custom_tokenizers::::working_directory::::~/transformers
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_custom_tokenizers::::docker::::docker_0::::image::::circleci/python:3.6
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_custom_tokenizers::::environment::::RUN_CUSTOM_TOKENIZERS::::yes
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_custom_tokenizers::::steps::::checkout
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_custom_tokenizers::::steps::::steps_0::::restore_cache::::keys::::v0.3-custom_tokenizers-{{ checksum ""setup.py"" }}"
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_custom_tokenizers::::steps::::steps_0::::restore_cache::::keys::::v0.3-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_custom_tokenizers::::steps::::steps_1::::run::::pip install --upgrade pip
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_custom_tokenizers::::steps::::steps_2::::run::::pip install .[ja,testing]"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_custom_tokenizers::::steps::::steps_3::::run::::python -m unidic download
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_custom_tokenizers::::steps::::steps_4::::save_cache::::key::::v0.3-custom_tokenizers-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_custom_tokenizers::::steps::::steps_4::::save_cache::::paths::::~/.cache/pip
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_custom_tokenizers::::steps::::steps_5::::run::::python -m pytest -s ./tests/test_tokenization_bert_japanese.py | tee output.txt
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_custom_tokenizers::::steps::::steps_6::::store_artifacts::::path::::~/transformers/output.txt
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_tests_custom_tokenizers::::steps::::steps_6::::store_artifacts::::destination::::test_output.txt
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::working_directory::::~/transformers
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::docker::::docker_0::::image::::circleci/python:3.6
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::environment::::OMP_NUM_THREADS::::1
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::resource_class::::xlarge
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::parallelism::::1
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::steps::::checkout
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::steps::::steps_0::::restore_cache::::keys::::v0.3-torch_examples-{{ checksum ""setup.py"" }}"
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::steps::::steps_0::::restore_cache::::keys::::v0.3-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::steps::::steps_1::::run::::pip install --upgrade pip
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::steps::::steps_2::::run::::pip install .[sklearn,torch,testing]"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::steps::::steps_3::::run::::pip install -r examples/requirements.txt
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::steps::::steps_4::::save_cache::::key::::v0.3-torch_examples-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::steps::::steps_4::::save_cache::::paths::::~/.cache/pip
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::steps::::steps_5::::run::::python -m pytest -n 8 --dist=loadfile -rA -s ./examples/ | tee output.txt
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::steps::::steps_6::::store_artifacts::::path::::~/transformers/output.txt
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_torch::::steps::::steps_6::::store_artifacts::::destination::::test_output.txt
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::build_doc::::working_directory::::~/transformers
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::build_doc::::docker::::docker_0::::image::::circleci/python:3.6
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::build_doc::::steps::::checkout
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::build_doc::::steps::::steps_0::::restore_cache::::keys::::v0.3-build_doc-{{ checksum ""setup.py"" }}"
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::build_doc::::steps::::steps_0::::restore_cache::::keys::::v0.3-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::build_doc::::steps::::steps_1::::run::::pip install --upgrade pip
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::build_doc::::steps::::steps_2::::run::::pip install .[tf,torch,docs]"
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::build_doc::::steps::::steps_3::::save_cache::::key::::v0.3-build_doc-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::build_doc::::steps::::steps_3::::save_cache::::paths::::~/.cache/pip
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::build_doc::::steps::::steps_4::::run::::cd docs && make html SPHINXOPTS=""-W"""
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::build_doc::::steps::::steps_5::::store_artifacts::::path::::./docs/_build
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::deploy_doc::::working_directory::::~/transformers
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::deploy_doc::::docker::::docker_0::::image::::circleci/python:3.6
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::deploy_doc::::steps::::steps_0::::add_ssh_keys::::fingerprints::::5b:7a:95:18:07:8c:aa:76:4c:60:35:88:ad:60:56:71
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::deploy_doc::::steps::::checkout
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::deploy_doc::::steps::::steps_1::::restore_cache::::keys::::v0.3-deploy_doc-{{ checksum ""setup.py"" }}"
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::deploy_doc::::steps::::steps_1::::restore_cache::::keys::::v0.3-{{ checksum ""setup.py"" }}"
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::deploy_doc::::steps::::steps_2::::run::::pip install .[tf,torch,docs]"
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::deploy_doc::::steps::::steps_3::::save_cache::::key::::v0.3-deploy_doc-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::deploy_doc::::steps::::steps_3::::save_cache::::paths::::~/.cache/pip
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::deploy_doc::::steps::::steps_4::::run::::./.circleci/deploy.sh
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::working_directory::::~/transformers
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::docker::::docker_0::::image::::circleci/python:3.6
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::resource_class::::medium
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::parallelism::::1
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::steps::::checkout
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::steps::::steps_0::::restore_cache::::keys::::v0.3-code_quality-{{ checksum ""setup.py"" }}"
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::steps::::steps_0::::restore_cache::::keys::::v0.3-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::steps::::steps_1::::run::::pip install --upgrade pip
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::steps::::steps_2::::run::::pip install isort
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::steps::::steps_3::::run::::pip install .[tf,torch,quality]"
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::steps::::steps_4::::save_cache::::key::::v0.3-code_quality-{{ checksum ""setup.py"" }}"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::steps::::steps_4::::save_cache::::paths::::~/.cache/pip
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::steps::::steps_5::::run::::black --check examples templates tests src utils
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::steps::::steps_6::::run::::isort --check-only examples templates tests src utils
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::steps::::steps_7::::run::::flake8 examples templates tests src utils
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::steps::::steps_8::::run::::python utils/check_copies.py
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::check_code_quality::::steps::::steps_9::::run::::python utils/check_repo.py
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::check_repository_consistency::::working_directory::::~/transformers
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::check_repository_consistency::::docker::::docker_0::::image::::circleci/python:3.6
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::check_repository_consistency::::resource_class::::small
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::check_repository_consistency::::parallelism::::1
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::check_repository_consistency::::steps::::checkout
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::check_repository_consistency::::steps::::steps_0::::run::::pip install requests
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::check_repository_consistency::::steps::::steps_1::::run::::python ./utils/link_tester.py
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::docker::::docker_0::::image::::circleci/python:3.6
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::environment::::OMP_NUM_THREADS::::1
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::resource_class::::xlarge
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::parallelism::::1
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::steps::::checkout
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::steps::::go/install
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::steps::::steps_0::::run::::name::::Checkout ml-testing-accelerators
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::steps::::steps_0::::run::::command::::git clone https://github.com/GoogleCloudPlatform/ml-testing-accelerators.git
+cd ml-testing-accelerators
+git fetch origin 5e88ac24f631c27045e62f0e8d5dfcf34e425e25:stable
+git checkout stable
+"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::steps::::gcp-gke/install
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::steps::::steps_1::::gcp-gke/update-kubeconfig-with-credentials::::cluster::::$GKE_CLUSTER
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::steps::::steps_1::::gcp-gke/update-kubeconfig-with-credentials::::perform-login::::true
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::steps::::setup_remote_docker
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::steps::::steps_2::::run::::name::::Configure Docker
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::steps::::steps_2::::run::::command::::gcloud --quiet auth configure-docker
+cd docker/transformers-pytorch-tpu
+if [ -z ""$CIRCLE_PR_NUMBER"" ]; then docker build --tag ""$GCR_IMAGE_PATH:$CIRCLE_WORKFLOW_JOB_ID"" -f Dockerfile --build-arg ""TEST_IMAGE=1"" . ; else docker build --tag ""$GCR_IMAGE_PATH:$CIRCLE_WORKFLOW_JOB_ID"" -f Dockerfile --build-arg ""TEST_IMAGE=1"" --build-arg ""GITHUB_REF=pull/$CIRCLE_PR_NUMBER/head"" . ; fi
+docker push ""$GCR_IMAGE_PATH:$CIRCLE_WORKFLOW_JOB_ID""
+"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::steps::::steps_3::::run::::name::::Deploy the job on the kubernetes cluster
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::run_examples_tpu::::steps::::steps_3::::run::::command::::go get github.com/google/go-jsonnet/cmd/jsonnet && \
+export PATH=$PATH:$HOME/go/bin && \
+kubectl create -f docker/transformers-pytorch-tpu/dataset.yaml || true && \
+job_name=$(jsonnet -J ml-testing-accelerators/ docker/transformers-pytorch-tpu/bert-base-cased.jsonnet --ext-str image=$GCR_IMAGE_PATH --ext-str image-tag=$CIRCLE_WORKFLOW_JOB_ID | kubectl create -f -) && \
+job_name=${job_name#job.batch/} && \
+job_name=${job_name% created} && \
+echo ""Waiting on kubernetes job: $job_name"" && \
+i=0 && \
+# 30 checks spaced 30s apart = 900s total.
+max_checks=30 && \
+status_code=2 && \
+# Check on the job periodically. Set the status code depending on what
+# happened to the job in Kubernetes. If we try max_checks times and
+# still the job hasn't finished, give up and return the starting
+# non-zero status code.
+while [ $i -lt $max_checks ]; do ((i++)); if kubectl get jobs $job_name -o jsonpath='Failed:{.status.failed}' | grep ""Failed:1""; then status_code=1 && break; elif kubectl get jobs $job_name -o jsonpath='Succeeded:{.status.succeeded}' | grep ""Succeeded:1"" ; then status_code=0 && break; else echo ""Job not finished yet""; fi; sleep 30; done && \
+echo ""Done waiting. Job status code: $status_code"" && \
+pod_name=$(kubectl get po -l controller-uid=`kubectl get job $job_name -o ""jsonpath={.metadata.labels.controller-uid}""` | awk 'match($0,!/NAME/) {print $1}') && \
+echo ""GKE pod name: $pod_name"" && \
+kubectl logs -f $pod_name --container=train
+echo ""Done with log retrieval attempt."" && \
+gcloud container images delete ""$GCR_IMAGE_PATH:$CIRCLE_WORKFLOW_JOB_ID"" --force-delete-tags && \
+exit $status_code
+"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::cleanup-gke-jobs::::docker::::docker_0::::image::::circleci/python:3.6
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::cleanup-gke-jobs::::steps::::gcp-gke/install
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::cleanup-gke-jobs::::steps::::steps_0::::gcp-gke/update-kubeconfig-with-credentials::::cluster::::$GKE_CLUSTER
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::cleanup-gke-jobs::::steps::::steps_0::::gcp-gke/update-kubeconfig-with-credentials::::perform-login::::true
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::cleanup-gke-jobs::::steps::::steps_1::::run::::name::::Delete GKE Jobs
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::jobs::::cleanup-gke-jobs::::steps::::steps_1::::run::::command::::# Match jobs whose age matches patterns like '1h' or '1d', i.e. any job
+# that has been around longer than 1hr. First print all columns for
+# matches, then execute the delete.
+kubectl get job | awk 'match($4,/[0-9]+[dh]/) {print $0}'
+kubectl delete job $(kubectl get job | awk 'match($4,/[0-9]+[dh]/) {print $1}')
+"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::workflow_filters::::filters::::branches::::only::::master
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::workflows::::version::::2
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::workflows::::build_and_test::::jobs::::check_code_quality
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::workflows::::build_and_test::::jobs::::check_repository_consistency
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::workflows::::build_and_test::::jobs::::run_examples_torch
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::workflows::::build_and_test::::jobs::::run_tests_custom_tokenizers
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::workflows::::build_and_test::::jobs::::run_tests_torch_and_tf
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::workflows::::build_and_test::::jobs::::run_tests_torch
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::workflows::::build_and_test::::jobs::::run_tests_tf
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::workflows::::build_and_test::::jobs::::build_doc
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::workflows::::build_and_test::::jobs::::jobs_0::::deploy_doc::::filters::::branches::::only::::master
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::workflows::::tpu_testing_jobs::::triggers::::triggers_0::::schedule::::cron::::0 8 * * *
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::workflows::::tpu_testing_jobs::::triggers::::triggers_0::::schedule::::filters::::branches::::only::::master
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::workflows::::tpu_testing_jobs::::jobs::::cleanup-gke-jobs
+AIED_2021_TRMRC_code::::transformers-3.3.1/.circleci/config.yml::::workflows::::tpu_testing_jobs::::jobs::::run_examples_tpu
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/stale.yml::::file::::transformers-3.3.1/.github/stale.yml
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/stale.yml::::daysUntilStale::::60
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/stale.yml::::daysUntilClose::::7
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/stale.yml::::exemptLabels::::pinned
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/stale.yml::::exemptLabels::::security
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/stale.yml::::staleLabel::::wontfix
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.github/stale.yml::::markComment::::This issue has been automatically marked as stale because it has not had recent activity. It will be closed if no further activity occurs. Thank you for your contributions.
+"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/stale.yml::::closeComment::::false
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/github-torch-hub.yml::::file::::transformers-3.3.1/.github/workflows/github-torch-hub.yml
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/github-torch-hub.yml::::name::::Torch hub integration
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/github-torch-hub.yml::::on::::push::::branches::::*
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::runs-on::::ubuntu-latest
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_0::::name::::Extract branch name
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_0::::run::::echo ""::set-env name=BRANCH::${GITHUB_REF#refs/heads/}"""
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_1::::name::::Check branch name
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_1::::run::::echo $BRANCH
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_2::::name::::Set up Python
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_2::::uses::::actions/setup-python@v1
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_2::::with::::python-version::::3.7
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_3::::name::::Loading cache
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_3::::uses::::actions/cache@v2
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_3::::id::::cache
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_3::::with::::path::::~/.cache/pip
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_3::::with::::key::::v0-torch_hub-${{ hashFiles('setup.py') }}
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_4::::name::::Install dependencies
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_4::::run::::pip install --upgrade pip
+pip install torch
+pip install numpy tokenizers filelock requests tqdm regex sentencepiece sacremoses packaging
+"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_5::::name::::Torch hub list
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_5::::run::::python -c ""import torch; print(torch.hub.list('huggingface/transformers:$BRANCH'))""
+"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_6::::name::::Torch hub help
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/github-torch-hub.yml::::jobs::::torch_hub_integration::::steps::::steps_6::::run::::python -c ""import torch; print(torch.hub.help('huggingface/transformers:$BRANCH', 'modelForSequenceClassification'))""
+"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::file::::transformers-3.3.1/.github/workflows/self-push.yml
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::name::::Self-hosted runner (push)
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::on::::push::::branches::::master
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::on::::push::::paths::::src/**
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::on::::push::::paths::::tests/**
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::on::::push::::paths::::.github/**
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::runs-on::::self-hosted
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_0::::uses::::actions/checkout@v2
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_1::::name::::Python version
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_1::::run::::which python
+python --version
+pip --version
+"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_2::::name::::Current dir
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_2::::run::::pwd
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_3::::run::::nvidia-smi
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_4::::name::::Loading cache.
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_4::::uses::::actions/cache@v2
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_4::::id::::cache
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_4::::with::::path::::.env
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_4::::with::::key::::v0-tests_tf_torch_gpu-${{ hashFiles('setup.py') }}
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_5::::name::::Create new python env (on self-hosted runners we have to handle isolation ourselves)
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_5::::run::::python -m venv .env
+source .env/bin/activate
+which python
+python --version
+pip --version
+"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_6::::name::::Install dependencies
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_6::::run::::source .env/bin/activate
+pip install --upgrade pip
+pip install torch!=1.6.0
+pip install .[sklearn,testing,onnxruntime]
+pip install git+https://github.com/huggingface/datasets
+"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_7::::name::::Are GPUs recognized by our DL frameworks
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_7::::run::::source .env/bin/activate
+python -c ""import torch; print(torch.cuda.is_available())""
+"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_8::::name::::Run all non-slow tests on GPU
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_8::::env::::TF_FORCE_GPU_ALLOW_GROWTH::::true
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_8::::env::::OMP_NUM_THREADS::::1
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_8::::env::::USE_CUDA::::yes
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-push.yml::::jobs::::run_tests_torch_and_tf_gpu::::steps::::steps_8::::run::::source .env/bin/activate
+python -m pytest -n 2 --dist=loadfile -s ./tests/
+"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::file::::transformers-3.3.1/.github/workflows/self-scheduled.yml
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::name::::Self-hosted runner (scheduled)
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::on::::push::::branches::::ci_*
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::on::::schedule::::schedule_0::::cron::::0 0 * * *
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::runs-on::::self-hosted
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_0::::uses::::actions/checkout@v2
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_1::::name::::Loading cache.
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_1::::uses::::actions/cache@v2
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_1::::id::::cache
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_1::::with::::path::::.env
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_1::::with::::key::::v0-slow_tests_tf_torch_gpu-${{ hashFiles('setup.py') }}
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_2::::name::::Python version
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_2::::run::::which python
+python --version
+pip --version
+"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_3::::name::::Current dir
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_3::::run::::pwd
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_4::::run::::nvidia-smi
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_5::::name::::Create new python env (on self-hosted runners we have to handle isolation ourselves)
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_5::::if::::steps.cache.outputs.cache-hit != 'true'
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_5::::run::::python -m venv .env
+source .env/bin/activate
+which python
+python --version
+pip --version
+"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_6::::name::::Install dependencies
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_6::::run::::source .env/bin/activate
+pip install --upgrade pip
+pip install torch!=1.6.0
+pip install .[sklearn,testing,onnxruntime]
+pip install git+https://github.com/huggingface/datasets
+"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_7::::name::::Are GPUs recognized by our DL frameworks
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_7::::run::::source .env/bin/activate
+python -c ""import torch; print(torch.cuda.is_available())""
+"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_8::::name::::Run all tests on GPU
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_8::::env::::TF_FORCE_GPU_ALLOW_GROWTH::::true
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_8::::env::::OMP_NUM_THREADS::::1
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_8::::env::::RUN_SLOW::::yes
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_8::::env::::USE_CUDA::::yes
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_8::::run::::source .env/bin/activate
+python -m pytest -n 1 --dist=loadfile -s ./tests/
+"
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_9::::name::::Run examples tests on GPU
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_9::::env::::TF_FORCE_GPU_ALLOW_GROWTH::::true
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_9::::env::::OMP_NUM_THREADS::::1
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_9::::env::::RUN_SLOW::::yes
+AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_9::::env::::USE_CUDA::::yes
+"AIED_2021_TRMRC_code::::transformers-3.3.1/.github/workflows/self-scheduled.yml::::jobs::::run_all_tests_torch_and_tf_gpu::::steps::::steps_9::::run::::source .env/bin/activate
+pip install -r examples/requirements.txt
+python -m pytest -n 1 --dist=loadfile -s examples
+"
+AIED_2021_TRMRC_code::::transformers-3.3.1/codecov.yml::::file::::transformers-3.3.1/codecov.yml
+AIED_2021_TRMRC_code::::transformers-3.3.1/codecov.yml::::coverage::::status::::project::::default::::informational::::true
+AIED_2021_TRMRC_code::::transformers-3.3.1/codecov.yml::::coverage::::status::::patch::::off
+AIED_2021_TRMRC_code::::transformers-3.3.1/codecov.yml::::comment::::require_changes::::true
+AIED_2021_TRMRC_code::::transformers-3.3.1/codecov.yml::::comment::::require_head::::yes
+AIED_2021_TRMRC_code::::transformers-3.3.1/codecov.yml::::comment::::require_base::::yes
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-cpu/Dockerfile::::file::::transformers-3.3.1/docker/transformers-cpu/Dockerfile
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-cpu/Dockerfile::::from::::ubuntu:18.04
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-cpu/Dockerfile::::copy::::src::::.
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-cpu/Dockerfile::::copy::::dest::::transformers/
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-cpu/Dockerfile::::cmd::::exec_command::::/bin/bash
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-cpu/Dockerfile::::cmd::::param0::::bin/bash
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-gpu/Dockerfile::::file::::transformers-3.3.1/docker/transformers-gpu/Dockerfile
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-gpu/Dockerfile::::from::::nvidia/cuda:10.1-cudnn7-runtime-ubuntu18.04
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-gpu/Dockerfile::::copy::::src::::.
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-gpu/Dockerfile::::copy::::dest::::transformers/
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-gpu/Dockerfile::::cmd::::exec_command::::/bin/bash
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-gpu/Dockerfile::::cmd::::param0::::bin/bash
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-cpu/Dockerfile::::file::::transformers-3.3.1/docker/transformers-pytorch-cpu/Dockerfile
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-cpu/Dockerfile::::from::::ubuntu:18.04
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-cpu/Dockerfile::::copy::::src::::.
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-cpu/Dockerfile::::copy::::dest::::transformers/
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-cpu/Dockerfile::::cmd::::exec_command::::/bin/bash
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-cpu/Dockerfile::::cmd::::param0::::bin/bash
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-gpu/Dockerfile::::file::::transformers-3.3.1/docker/transformers-pytorch-gpu/Dockerfile
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-gpu/Dockerfile::::from::::nvidia/cuda:10.1-cudnn7-runtime-ubuntu18.04
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-gpu/Dockerfile::::copy::::src::::.
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-gpu/Dockerfile::::copy::::dest::::transformers/
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-gpu/Dockerfile::::cmd::::exec_command::::/bin/bash
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-gpu/Dockerfile::::cmd::::param0::::bin/bash
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/Dockerfile::::file::::transformers-3.3.1/docker/transformers-pytorch-tpu/Dockerfile
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/Dockerfile::::from::::google/cloud-sdk:slim
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/Dockerfile::::env::::PYTHON_VERSION::::3
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/Dockerfile::::env::::PATH::::
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/Dockerfile::::env::::python::::
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/Dockerfile::::env::::python::::
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/Dockerfile::::env::::LD_LIBRARY_PATH::::root
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/Dockerfile::::copy::::src::::docker-entrypoint.sh
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/Dockerfile::::copy::::dest::::/usr/local/bin/
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/Dockerfile::::entrypoint::::exec_command::::/usr/local/bin/docker-entrypoint.sh
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/Dockerfile::::entrypoint::::param0::::usr/local/bin/docker-entrypoint.sh
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/Dockerfile::::cmd::::exec_command::::bash
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/Dockerfile::::cmd::::param0::::bash
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::file::::transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::apiVersion::::v1
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::apiVersion::::v1
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::kind::::PersistentVolume
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::metadata::::name::::huggingface-cluster-disk
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::spec::::storageClassName::::
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::spec::::storageClassName::::
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::spec::::capacity::::storage::::500Gi
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::spec::::accessModes::::ReadOnlyMany
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::spec::::accessModes::::ReadOnlyMany
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::spec::::claimRef::::namespace::::default
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::spec::::claimRef::::name::::huggingface-cluster-disk-claim
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::spec::::gcePersistentDisk::::pdName::::huggingface-cluster-disk
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::spec::::gcePersistentDisk::::fsType::::ext4
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::spec::::gcePersistentDisk::::readOnly::::true
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::kind::::PersistentVolumeClaim
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::metadata::::name::::huggingface-cluster-disk-claim
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-pytorch-tpu/dataset.yaml::::spec::::resources::::requests::::storage::::1Ki
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-tensorflow-cpu/Dockerfile::::file::::transformers-3.3.1/docker/transformers-tensorflow-cpu/Dockerfile
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-tensorflow-cpu/Dockerfile::::from::::ubuntu:18.04
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-tensorflow-cpu/Dockerfile::::copy::::src::::.
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-tensorflow-cpu/Dockerfile::::copy::::dest::::transformers/
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-tensorflow-cpu/Dockerfile::::cmd::::exec_command::::/bin/bash
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-tensorflow-cpu/Dockerfile::::cmd::::param0::::bin/bash
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-tensorflow-gpu/Dockerfile::::file::::transformers-3.3.1/docker/transformers-tensorflow-gpu/Dockerfile
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-tensorflow-gpu/Dockerfile::::from::::nvidia/cuda:10.1-cudnn7-runtime-ubuntu18.04
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-tensorflow-gpu/Dockerfile::::copy::::src::::.
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-tensorflow-gpu/Dockerfile::::copy::::dest::::transformers/
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-tensorflow-gpu/Dockerfile::::cmd::::exec_command::::/bin/bash
+AIED_2021_TRMRC_code::::transformers-3.3.1/docker/transformers-tensorflow-gpu/Dockerfile::::cmd::::param0::::bin/bash
+AIED_2021_TRMRC_code::::transformers-3.3.1/examples/contrib/mm-imdb/run_mmimdb.py::::file::::transformers-3.3.1/examples/contrib/mm-imdb/run_mmimdb.py
+AIED_2021_TRMRC_code::::transformers-3.3.1/pyproject.toml::::file::::transformers-3.3.1/pyproject.toml
+AIED_2021_TRMRC_code::::transformers-3.3.1/pyproject.toml::::tool::::black::::line-length::::119
+AIED_2021_TRMRC_code::::transformers-3.3.1/pyproject.toml::::tool::::black::::target-version::::py35
+AIED_2021_TRMRC_code::::transformers-3.3.1/src/transformers/data/metrics/__init__.py::::file::::transformers-3.3.1/src/transformers/data/metrics/__init__.py
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::file::::transformers-3.3.1/valohai.yaml
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::name::::Execute python examples/text-classification/run_glue.py
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::image::::pytorch/pytorch:nightly-devel-cuda10.0-cudnn7
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::command::::python /valohai/repository/utils/download_glue_data.py --data_dir=/glue_data
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::command::::pip install -e .
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::command::::pip install -r examples/requirements.txt
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::command::::python examples/text-classification/run_glue.py --do_train --data_dir=/glue_data/{parameter-value:task_name} {parameters}
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_0::::name::::model_type
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_0::::pass-as::::--model_type={v}
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_0::::type::::string
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_0::::default::::bert
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_1::::name::::model_name_or_path
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_1::::pass-as::::--model_name_or_path={v}
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_1::::type::::string
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_1::::default::::bert-base-uncased
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_2::::name::::task_name
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_2::::pass-as::::--task_name={v}
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_2::::type::::string
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_2::::default::::MRPC
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_3::::name::::max_seq_length
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_3::::pass-as::::--max_seq_length={v}
+"AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_3::::description::::The maximum total input sequence length after tokenization. Sequences longer than this will be truncated, sequences shorter will be padded."
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_3::::type::::integer
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_3::::default::::128
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_4::::name::::per_gpu_train_batch_size
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_4::::pass-as::::--per_gpu_train_batch_size={v}
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_4::::description::::Batch size per GPU/CPU for training.
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_4::::type::::integer
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_4::::default::::8
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_5::::name::::per_gpu_eval_batch_size
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_5::::pass-as::::--per_gpu_eval_batch_size={v}
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_5::::description::::Batch size per GPU/CPU for evaluation.
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_5::::type::::integer
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_5::::default::::8
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_6::::name::::gradient_accumulation_steps
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_6::::pass-as::::--gradient_accumulation_steps={v}
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_6::::description::::Number of updates steps to accumulate before performing a backward/update pass.
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_6::::type::::integer
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_6::::default::::1
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_7::::name::::learning_rate
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_7::::pass-as::::--learning_rate={v}
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_7::::description::::The initial learning rate for Adam.
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_7::::type::::float
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_7::::default::::0.00005
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_8::::name::::adam_epsilon
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_8::::pass-as::::--adam_epsilon={v}
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_8::::description::::Epsilon for Adam optimizer.
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_8::::type::::float
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_8::::default::::0.00000001
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_9::::name::::max_grad_norm
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_9::::pass-as::::--max_grad_norm={v}
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_9::::description::::Max gradient norm.
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_9::::type::::float
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_9::::default::::1.0
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_10::::name::::num_train_epochs
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_10::::pass-as::::--num_train_epochs={v}
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_10::::description::::Total number of training epochs to perform.
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_10::::type::::integer
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_10::::default::::3
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_11::::name::::max_steps
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_11::::pass-as::::--max_steps={v}
+"AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_11::::description::::If > 0, set total number of training steps to perform. Override num_train_epochs."
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_11::::type::::integer
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_11::::default::::-1
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_12::::name::::warmup_steps
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_12::::pass-as::::--warmup_steps={v}
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_12::::description::::Linear warmup over warmup_steps.
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_12::::type::::integer
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_12::::default::::-1
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_13::::name::::logging_steps
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_13::::pass-as::::--logging_steps={v}
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_13::::description::::Log every X updates steps.
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_13::::type::::integer
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_13::::default::::25
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_14::::name::::save_steps
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_14::::pass-as::::--save_steps={v}
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_14::::description::::Save checkpoint every X updates steps.
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_14::::type::::integer
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_14::::default::::-1
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_15::::name::::output_dir
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_15::::pass-as::::--output_dir={v}
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_15::::type::::string
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_15::::default::::/valohai/outputs
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_16::::name::::evaluate_during_training
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_16::::description::::Run evaluation during training at each logging step.
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_16::::type::::flag
+AIED_2021_TRMRC_code::::transformers-3.3.1/valohai.yaml::::transformers-3.3.1/valohai.yaml_0::::step::::parameters::::parameters_16::::default::::true

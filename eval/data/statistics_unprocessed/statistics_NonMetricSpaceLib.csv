@@ -1,0 +1,407 @@
+node
+NonMetricSpaceLib::::.appveyor.yml::::file::::.appveyor.yml
+NonMetricSpaceLib::::.appveyor.yml::::version::::{build}
+NonMetricSpaceLib::::.appveyor.yml::::image::::Visual Studio 2015
+NonMetricSpaceLib::::.appveyor.yml::::platform::::x64
+NonMetricSpaceLib::::.appveyor.yml::::environment::::global::::DISTUTILS_USE_SDK::::1
+NonMetricSpaceLib::::.appveyor.yml::::environment::::global::::MSSdk::::1
+NonMetricSpaceLib::::.appveyor.yml::::environment::::global::::ARCH::::SSE2
+NonMetricSpaceLib::::.appveyor.yml::::environment::::matrix::::matrix_0::::PYTHON::::27
+NonMetricSpaceLib::::.appveyor.yml::::environment::::matrix::::matrix_1::::PYTHON::::35
+NonMetricSpaceLib::::.appveyor.yml::::environment::::matrix::::matrix_2::::PYTHON::::36
+NonMetricSpaceLib::::.appveyor.yml::::environment::::matrix::::matrix_3::::PYTHON::::37
+NonMetricSpaceLib::::.appveyor.yml::::environment::::matrix::::matrix_4::::PYTHON::::38
+NonMetricSpaceLib::::.appveyor.yml::::environment::::pypipassword::::secure::::7hxZ+XinYPLuIS1aHZbTcA==
+"NonMetricSpaceLib::::.appveyor.yml::::install::::install_0::::cmd::::""%VS140COMNTOOLS%\..\..\VC\vcvarsall.bat"" %PLATFORM%"
+NonMetricSpaceLib::::.appveyor.yml::::install::::install_1::::cmd::::git config core.symlinks true
+NonMetricSpaceLib::::.appveyor.yml::::install::::install_2::::cmd::::git reset --hard
+NonMetricSpaceLib::::.appveyor.yml::::install::::install_3::::ps::::Remove-Item -Recurse -Force C:/cygwin
+NonMetricSpaceLib::::.appveyor.yml::::install::::install_4::::ps::::Remove-Item -Recurse -Force C:/cygwin64
+"NonMetricSpaceLib::::.appveyor.yml::::install::::install_5::::ps::::if ($env:PYTHON) {
+  if ($env:PLATFORM -eq ""x64"") { $env:PYTHON = ""$env:PYTHON-x64"" }
+  $env:PATH = ""C:\Python$env:PYTHON\;C:\Python$env:PYTHON\Scripts\;$env:PATH""
+  python -m pip install --disable-pip-version-check --upgrade pip
+  python -m pip install -qq setuptools six psutil
+} elseif ($env:CONDA) {
+  if ($env:CONDA -eq ""27"") { $env:CONDA = """" }
+  if ($env:PLATFORM -eq ""x64"") { $env:CONDA = ""$env:CONDA-x64"" }
+  $env:PATH = ""C:\Miniconda$env:CONDA\;C:\Miniconda$env:CONDA\Scripts\;$env:PATH""
+  conda config --set always_yes yes --set changeps1 no
+  conda config --add channels conda-forge
+  conda update -q conda
+  conda install -q conda-build
+}
+"
+"NonMetricSpaceLib::::.appveyor.yml::::install::::install_6::::cmd::::ECHO Platform : %PLATFORM%
+ECHO Python : %PYTHON%
+ECHO PATH : %PATH%
+dir ""C:\""
+python --version
+python -m pip --version
+"
+NonMetricSpaceLib::::.appveyor.yml::::build_script::::build_script_0::::ps::::cd python_bindings
+"NonMetricSpaceLib::::.appveyor.yml::::build_script::::build_script_1::::cmd::::python -m pip install -qq -r requirements.txt
+python setup.py build_ext
+python -m pip install -U .
+"
+NonMetricSpaceLib::::.appveyor.yml::::build_script::::build_script_2::::ps::::cd ..
+NonMetricSpaceLib::::.appveyor.yml::::test_script::::test_script_0::::ps::::cd python_bindings
+NonMetricSpaceLib::::.appveyor.yml::::test_script::::test_script_1::::cmd::::python setup.py test
+NonMetricSpaceLib::::.appveyor.yml::::test_script::::test_script_2::::ps::::cd ..
+"NonMetricSpaceLib::::.appveyor.yml::::deploy_script::::deploy_script_0::::ps::::if ($env:APPVEYOR_REPO_TAG -ne ""true"") {
+  echo ""Skipping deployment because this is not a tagged commit""
+  return
+}
+# Specify account details for PyPI
+echo ""Deploying...""
+mv .pypirc $env:USERPROFILE\\.pypirc
+# Workaround required to ensure setup.py finds the .pypirc under Windows
+$env:HOME=$env:USERPROFILE
+# Install wheel-building support
+python -m pip install --user wheel twine
+# Build wheel and upload
+cd python_bindings
+python setup.py build_ext
+python setup.py sdist bdist_wheel
+python -m twine upload -r pypi -p $env:pypipassword --skip-existing dist/*
+echo ""Deployment complete""
+"
+NonMetricSpaceLib::::.travis.yml::::file::::.travis.yml
+NonMetricSpaceLib::::.travis.yml::::language::::cpp
+NonMetricSpaceLib::::.travis.yml::::sudo::::required
+NonMetricSpaceLib::::.travis.yml::::addons::::apt::::packages::::g++
+NonMetricSpaceLib::::.travis.yml::::addons::::apt::::packages::::libblas-dev
+NonMetricSpaceLib::::.travis.yml::::addons::::apt::::packages::::liblapack-dev
+NonMetricSpaceLib::::.travis.yml::::addons::::apt::::packages::::gfortran
+NonMetricSpaceLib::::.travis.yml::::addons::::apt::::packages::::cmake
+NonMetricSpaceLib::::.travis.yml::::addons::::apt::::packages::::libboost-all-dev
+NonMetricSpaceLib::::.travis.yml::::addons::::apt::::packages::::libgsl0-dev
+NonMetricSpaceLib::::.travis.yml::::addons::::apt::::packages::::libeigen3-dev
+NonMetricSpaceLib::::.travis.yml::::addons::::homebrew::::packages::::pyenv
+NonMetricSpaceLib::::.travis.yml::::addons::::homebrew::::update::::true
+NonMetricSpaceLib::::.travis.yml::::matrix::::fast_finish::::true
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::os::::linux
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::os::::linux
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::os::::linux
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::os::::linux
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::os::::linux
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::os::::linux
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::os::::linux
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::os::::linux
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::os::::linux
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::os::::linux
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::dist::::trusty
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::env::::PYTHON=2.7
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::services::::docker
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::services::::docker
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::services::::docker
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::services::::docker
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::services::::docker
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::services::::docker
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::services::::docker
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::services::::docker
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::services::::docker
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::services::::docker
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::update::::true
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::update::::true
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::update::::true
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::update::::true
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::update::::true
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::update::::true
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::update::::true
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::update::::true
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::update::::true
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::update::::true
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::sources::::ubuntu-toolchain-r-test
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::sources::::ubuntu-toolchain-r-test
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::sources::::ubuntu-toolchain-r-test
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::sources::::ubuntu-toolchain-r-test
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::sources::::ubuntu-toolchain-r-test
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::sources::::ubuntu-toolchain-r-test
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::sources::::deadsnakes
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::sources::::deadsnakes
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::sources::::deadsnakes
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::sources::::deadsnakes
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::sources::::deadsnakes
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::sources::::deadsnakes
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::sources::::deadsnakes
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::sources::::deadsnakes
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::sources::::deadsnakes
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::sources::::deadsnakes
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::g++
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::g++
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::g++
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::g++
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::g++
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::g++
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::g++
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::g++
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::g++
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::g++
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libblas-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libblas-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libblas-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libblas-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libblas-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libblas-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libblas-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libblas-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libblas-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libblas-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::liblapack-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::liblapack-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::liblapack-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::liblapack-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::liblapack-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::liblapack-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::liblapack-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::liblapack-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::liblapack-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::liblapack-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::gfortran
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::gfortran
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::gfortran
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::gfortran
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::gfortran
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::gfortran
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::gfortran
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::gfortran
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::gfortran
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::gfortran
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::cmake
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::cmake
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::cmake
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::cmake
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::cmake
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::cmake
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::cmake
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::cmake
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::cmake
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::cmake
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libboost-all-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libboost-all-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libboost-all-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libboost-all-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libboost-all-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libboost-all-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libboost-all-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libboost-all-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libboost-all-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libboost-all-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libgsl0-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libgsl0-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libgsl0-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libgsl0-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libgsl0-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libgsl0-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libgsl0-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libgsl0-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libgsl0-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libgsl0-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libeigen3-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libeigen3-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libeigen3-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libeigen3-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libeigen3-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libeigen3-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libeigen3-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libeigen3-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libeigen3-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::libeigen3-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::python2.7-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::env::::PYTHON=3.5
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::dist::::xenial
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::dist::::xenial
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::dist::::xenial
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::dist::::xenial
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::dist::::xenial
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::dist::::xenial
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::dist::::xenial
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::dist::::xenial
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::dist::::xenial
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::python3.5-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::env::::PYTHON=3.6
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::env::::PYTHON=3.6
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::python3.6-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::python3.6-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::env::::PYTHON=3.7
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::env::::PYTHON=3.7
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::python3.7-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::python3.7-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::env::::PYTHON=3.8
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::env::::PYTHON=3.8
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::python3.8-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::python3.8-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::python3.8-distutils
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::python3.8-distutils
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::env::::PYTHON=3.9
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::env::::PYTHON=3.9
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::python3.9-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::python3.9-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::python3.9-distutils
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::packages::::python3.9-distutils
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::arch::::arm64
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::arch::::arm64
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::arch::::arm64
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::arch::::arm64
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::sources::::sourceline/ppa:ubuntu-toolchain-r/test::::sourceline::::ppa:ubuntu-toolchain-r/test
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::sources::::sourceline/ppa:ubuntu-toolchain-r/test::::sourceline::::ppa:ubuntu-toolchain-r/test
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::sources::::sourceline/ppa:ubuntu-toolchain-r/test::::sourceline::::ppa:ubuntu-toolchain-r/test
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/linux::::addons::::apt::::sources::::sourceline/ppa:ubuntu-toolchain-r/test::::sourceline::::ppa:ubuntu-toolchain-r/test
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::os::::osx
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::os::::osx
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::os::::osx
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::os::::osx
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::os::::osx
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::os::::osx
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::os::::osx
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::os::::osx
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::os::::osx
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::os::::osx
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::os::::osx
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::os::::osx
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::env::::PYTHON=2.7-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::env::::PYTHON=2.7-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::osx_image::::xcode11.2
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::osx_image::::xcode11.2
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::osx_image::::xcode11.2
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::osx_image::::xcode11.2
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::osx_image::::xcode11.2
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::osx_image::::xcode11.2
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::env::::PYTHON=3.5-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::env::::PYTHON=3.5-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::env::::PYTHON=3.6-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::env::::PYTHON=3.6-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::env::::PYTHON=3.7-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::env::::PYTHON=3.7-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::env::::PYTHON=3.8-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::env::::PYTHON=3.8-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::env::::PYTHON=3.9-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::env::::PYTHON=3.9-dev
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::osx_image::::xcode12
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::osx_image::::xcode12
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::osx_image::::xcode12
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::osx_image::::xcode12
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::osx_image::::xcode12
+NonMetricSpaceLib::::.travis.yml::::matrix::::include::::os/osx::::osx_image::::xcode12
+NonMetricSpaceLib::::.travis.yml::::matrix::::allow_failures::::os/osx::::os::::osx
+"NonMetricSpaceLib::::.travis.yml::::before_install::::PY=python
+echo ""TRAVIS_OS_NAME=$TRAVIS_OS_NAME""
+echo ""PYTHON=$PYTHON""
+if [ ""$TRAVIS_OS_NAME"" = ""linux"" ]; then 
+  export CXX=g++ CC=gcc
+  if [ $(echo ""$PYTHON"" | grep ""^3\."") ]; then
+    echo ""bootstrapping pip module""
+    PY=python${PYTHON}
+    # For older PYTHON need a separate script or else it may fail
+    if [ ""$PYTHON"" = ""3.5"" ] ; then
+      GET_PIP_SCRIPT=""https://bootstrap.pypa.io/pip/3.5/get-pip.py""
+    else
+      GET_PIP_SCRIPT=""https://bootstrap.pypa.io/get-pip.py""
+    fi
+    echo ""Using PIP bootstrapping script $GET_PIP_SCRIPT""
+    curl  ""$GET_PIP_SCRIPT"" | sudo -H $PY
+  fi
+fi
+
+if [[ ""$TRAVIS_OS_NAME"" == ""osx"" ]]; then
+  pyenv install $PYTHON
+  PY=/Users/travis/.pyenv/versions/${PYTHON}/bin/python
+fi
+
+PIP=""$PY -m pip""
+if [ ""$PYTHON"" = ""2.7"" ] ; then
+  echo ""Keeping an old pip version for Python$PYTHON""
+  sudo -H $PIP install --upgrade ""pip < 21.0""
+else
+  sudo -H $PIP install --upgrade pip
+fi
+"
+"NonMetricSpaceLib::::.travis.yml::::install::::if [ ""$TRAVIS_OS_NAME"" = ""linux"" ]; then
+  cmake similarity_search -DWITH_EXTRAS=1
+else
+  cmake similarity_search
+fi
+make -j 4
+$PIP install --user scipy six flake8 psutil
+cd python_bindings
+$PIP install --user -r requirements.txt
+$PY setup.py build_ext
+$PIP install --user .
+cd ..
+"
+NonMetricSpaceLib::::.travis.yml::::script::::$PY --version
+NonMetricSpaceLib::::.travis.yml::::script::::cd python_bindings && $PY setup.py test && cd ..
+"NonMetricSpaceLib::::.travis.yml::::script::::if [ ""$TRAVIS_OS_NAME"" = ""linux"" ] ; then
+    set -e
+    cd similarity_search;
+    ./release/bunit
+    travis_retry ./release/test_integr integr.log 
+    cd ..
+    set +e
+fi
+"
+"NonMetricSpaceLib::::.travis.yml::::after_script::::if [ ""$TRAVIS_TAG"" ]; then
+  export TRAVIS_OS_NAME
+  export PY
+  export PIP
+  export PYTHON
+  bash travis/deploy.sh
+  $PIP install --user ""six>=1.9.0""
+  $PIP install --user twine
+  cp .pypirc ~/.pypirc
+  pwd
+  ls python_bindings/
+  ls python_bindings/dist/
+  $PY -m twine upload -r pypi -p $PYPI_PASSWORD --skip-existing python_bindings/dist/* &>/dev/null
+  echo ""Twine upload status: $?""
+else
+  echo ""Skipping deployment because this is not a tagged commit""
+fi
+"
+"NonMetricSpaceLib::::.travis.yml::::before_cache::::if [ ""${TRAVIS_OS_NAME}"" = ""osx"" ]; then brew cleanup; fi"
+NonMetricSpaceLib::::.travis.yml::::cache::::apt
+NonMetricSpaceLib::::benchmark/data_utils.py::::file::::benchmark/data_utils.py
+NonMetricSpaceLib::::benchmark/eval.py::::file::::benchmark/eval.py
+NonMetricSpaceLib::::benchmark/eval.py::::NearestNeighbors::::variable::::sindx
+NonMetricSpaceLib::::benchmark/eval.py::::NearestNeighbors::::variable::::sindx
+NonMetricSpaceLib::::benchmark/eval.py::::NearestNeighbors::::n_neighbors::::K
+NonMetricSpaceLib::::benchmark/eval.py::::NearestNeighbors::::n_neighbors::::K
+NonMetricSpaceLib::::benchmark/eval.py::::NearestNeighbors::::algorithm::::brute
+NonMetricSpaceLib::::benchmark/eval.py::::NearestNeighbors::::algorithm::::brute
+NonMetricSpaceLib::::benchmark/eval.py::::NearestNeighbors::::metric::::minkowski
+NonMetricSpaceLib::::benchmark/eval.py::::NearestNeighbors::::p::::to_int
+NonMetricSpaceLib::::docs/_config.yml::::file::::docs/_config.yml
+NonMetricSpaceLib::::docs/_config.yml::::theme::::jekyll-theme-minimal
+NonMetricSpaceLib::::python_bindings/notebooks/test_hnsw_recall.py::::file::::python_bindings/notebooks/test_hnsw_recall.py
+NonMetricSpaceLib::::python_bindings/notebooks/test_hnsw_recall.py::::NearestNeighbors::::n_neighbors::::k
+NonMetricSpaceLib::::python_bindings/notebooks/test_hnsw_recall.py::::NearestNeighbors::::metric::::l2
+NonMetricSpaceLib::::python_bindings/notebooks/test_hnsw_recall.py::::NearestNeighbors::::algorithm::::brute
+NonMetricSpaceLib::::python_bindings/tox.ini::::file::::python_bindings/tox.ini
+"NonMetricSpaceLib::::python_bindings/tox.ini::::tox::::envlist::::py27, py35, py36"
+NonMetricSpaceLib::::python_bindings/tox.ini::::testenv::::commands::::{envpython} setup.py test
+NonMetricSpaceLib::::python_bindings/tox.ini::::testenv::::deps::::-rrequirements.txt
+"NonMetricSpaceLib::::python_bindings/tox.ini::::testenv:style::::deps::::-rrequirements.txt
+flake8"
+NonMetricSpaceLib::::python_bindings/tox.ini::::testenv:style::::commands::::flake8
+NonMetricSpaceLib::::python_bindings/tox.ini::::flake8::::max-line-length::::100
+NonMetricSpaceLib::::query_server/java_client/pom.xml::::file::::query_server/java_client/pom.xml
+NonMetricSpaceLib::::query_server/java_client/pom.xml::::project::::modelVersion::::modelVersion:4.0.0
+NonMetricSpaceLib::::query_server/java_client/pom.xml::::project::::groupId::::edu.cmu.lti.oaqa
+NonMetricSpaceLib::::query_server/java_client/pom.xml::::project::::artifactId::::nmslib
+NonMetricSpaceLib::::query_server/java_client/pom.xml::::project::::version::::version:1.0-SNAPSHOT
+NonMetricSpaceLib::::query_server/java_client/pom.xml::::project::::name::::A sample Java client.
+NonMetricSpaceLib::::query_server/java_client/pom.xml::::project::::properties::::project.build.sourceEncoding::::UTF-8
+NonMetricSpaceLib::::query_server/java_client/pom.xml::::project::::properties::::maven.compiler.source::::1.6
+NonMetricSpaceLib::::query_server/java_client/pom.xml::::project::::properties::::maven.compiler.target::::1.6
+NonMetricSpaceLib::::query_server/java_client/pom.xml::::project::::dependencies::::dependency_commons-cli/commons-cli::::groupId::::commons-cli
+NonMetricSpaceLib::::query_server/java_client/pom.xml::::project::::dependencies::::dependency_commons-cli/commons-cli::::artifactId::::commons-cli
+NonMetricSpaceLib::::query_server/java_client/pom.xml::::project::::dependencies::::dependency_commons-cli/commons-cli::::version::::version:1.2
+NonMetricSpaceLib::::query_server/java_client/pom.xml::::project::::dependencies::::dependency_org.apache.thrift/libthrift::::groupId::::org.apache.thrift
+NonMetricSpaceLib::::query_server/java_client/pom.xml::::project::::dependencies::::dependency_org.apache.thrift/libthrift::::artifactId::::libthrift
+NonMetricSpaceLib::::query_server/java_client/pom.xml::::project::::dependencies::::dependency_org.apache.thrift/libthrift::::version::::version:0.11.0
+NonMetricSpaceLib::::query_server/java_client/pom.xml::::project::::dependencies::::dependency_org.slf4j/slf4j-api::::groupId::::org.slf4j
+NonMetricSpaceLib::::query_server/java_client/pom.xml::::project::::dependencies::::dependency_org.slf4j/slf4j-api::::artifactId::::slf4j-api
+NonMetricSpaceLib::::query_server/java_client/pom.xml::::project::::dependencies::::dependency_org.slf4j/slf4j-api::::version::::version:1.7.12
+NonMetricSpaceLib::::query_server/java_client/pom.xml::::ExecutableName::::target/nmslib-1.0-SNAPSHOT.jar
+NonMetricSpaceLib::::query_server/java_client/pom.xml::::ExecutableNameNoVersion::::target/nmslib.jar

@@ -1,0 +1,297 @@
+node
+FLAML::::.devcontainer/Dockerfile::::file::::.devcontainer/Dockerfile
+FLAML::::.devcontainer/Dockerfile::::from::::mcr.microsoft.com/vscode/devcontainers/python:0-3.9
+FLAML::::.devcontainer/Dockerfile::::env::::DEBIAN_FRONTEND::::noninteractive
+FLAML::::.devcontainer/Dockerfile::::env::::DEBIAN_FRONTEND::::dialog
+FLAML::::.github/workflows/CD.yml::::file::::.github/workflows/CD.yml
+FLAML::::.github/workflows/CD.yml::::name::::CD
+FLAML::::.github/workflows/CD.yml::::on::::release::::types::::published
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::strategy::::matrix::::os::::ubuntu-latest
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::strategy::::matrix::::python-version::::3.8
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::runs-on::::${{ matrix.os }}
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::environment::::package
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::steps::::steps_0::::name::::Checkout
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::steps::::steps_0::::uses::::actions/checkout@v2
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::steps::::steps_1::::name::::Cache conda
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::steps::::steps_1::::uses::::actions/cache@v1
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::steps::::steps_1::::with::::path::::~/conda_pkgs_dir
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::steps::::steps_1::::with::::key::::conda-${{ matrix.os }}-python-${{ matrix.python-version }}-${{ hashFiles('environment.yml') }}
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::steps::::steps_2::::name::::Setup Miniconda
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::steps::::steps_2::::uses::::conda-incubator/setup-miniconda@v2
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::steps::::steps_2::::with::::auto-update-conda::::true
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::steps::::steps_2::::with::::auto-activate-base::::false
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::steps::::steps_2::::with::::activate-environment::::hcrystalball
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::steps::::steps_2::::with::::python-version::::${{ matrix.python-version }}
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::steps::::steps_2::::with::::use-only-tar-bz2::::true
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::steps::::steps_3::::name::::Install from source
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::steps::::steps_3::::shell::::pwsh
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::steps::::steps_3::::run::::pip install .
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::steps::::steps_4::::name::::Conda list
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::steps::::steps_4::::shell::::pwsh
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::steps::::steps_4::::run::::conda list
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::steps::::steps_5::::name::::Build
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::steps::::steps_5::::shell::::pwsh
+"FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::steps::::steps_5::::run::::pip install twine
+python setup.py sdist bdist_wheel
+"
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::steps::::steps_6::::name::::Publish to PyPI
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::steps::::steps_6::::env::::TWINE_USERNAME::::${{ secrets.PYPI_USERNAME }}
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::steps::::steps_6::::env::::TWINE_PASSWORD::::${{ secrets.PYPI_PASSWORD }}
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::steps::::steps_6::::shell::::pwsh
+FLAML::::.github/workflows/CD.yml::::jobs::::deploy::::steps::::steps_6::::run::::twine upload dist/*
+FLAML::::.github/workflows/deploy-website.yml::::file::::.github/workflows/deploy-website.yml
+FLAML::::.github/workflows/deploy-website.yml::::name::::docs
+FLAML::::.github/workflows/deploy-website.yml::::on::::pull_request::::branches::::main
+FLAML::::.github/workflows/deploy-website.yml::::on::::push::::branches::::main
+FLAML::::.github/workflows/deploy-website.yml::::jobs::::checks::::if::::github.event_name != 'push'
+FLAML::::.github/workflows/deploy-website.yml::::jobs::::checks::::runs-on::::ubuntu-latest
+FLAML::::.github/workflows/deploy-website.yml::::jobs::::checks::::defaults::::run::::working-directory::::website
+FLAML::::.github/workflows/deploy-website.yml::::jobs::::checks::::steps::::steps_0::::uses::::actions/checkout@v2
+FLAML::::.github/workflows/deploy-website.yml::::jobs::::checks::::steps::::steps_1::::uses::::actions/setup-node@v2
+FLAML::::.github/workflows/deploy-website.yml::::jobs::::checks::::steps::::steps_1::::with::::node-version::::14.x
+FLAML::::.github/workflows/deploy-website.yml::::jobs::::checks::::steps::::steps_2::::name::::setup python
+FLAML::::.github/workflows/deploy-website.yml::::jobs::::checks::::steps::::steps_2::::uses::::actions/setup-python@v2
+FLAML::::.github/workflows/deploy-website.yml::::jobs::::checks::::steps::::steps_2::::with::::python-version::::3.8
+FLAML::::.github/workflows/deploy-website.yml::::jobs::::checks::::steps::::steps_3::::name::::pydoc-markdown install
+"FLAML::::.github/workflows/deploy-website.yml::::jobs::::checks::::steps::::steps_3::::run::::python -m pip install --upgrade pip
+pip install pydoc-markdown
+"
+FLAML::::.github/workflows/deploy-website.yml::::jobs::::checks::::steps::::steps_4::::name::::pydoc-markdown run
+"FLAML::::.github/workflows/deploy-website.yml::::jobs::::checks::::steps::::steps_4::::run::::pydoc-markdown
+"
+FLAML::::.github/workflows/deploy-website.yml::::jobs::::checks::::steps::::steps_5::::name::::Test Build
+"FLAML::::.github/workflows/deploy-website.yml::::jobs::::checks::::steps::::steps_5::::run::::if [ -e yarn.lock ]; then
+yarn install --frozen-lockfile
+yarn build
+elif [ -e package-lock.json ]; then
+npm ci
+npm run build
+else
+npm i --legacy-peer-deps
+npm run build
+fi
+"
+FLAML::::.github/workflows/deploy-website.yml::::jobs::::gh-release::::if::::github.event_name != 'pull_request'
+FLAML::::.github/workflows/deploy-website.yml::::jobs::::gh-release::::runs-on::::ubuntu-latest
+FLAML::::.github/workflows/deploy-website.yml::::jobs::::gh-release::::defaults::::run::::working-directory::::website
+FLAML::::.github/workflows/deploy-website.yml::::jobs::::gh-release::::steps::::steps_0::::uses::::actions/checkout@v2
+FLAML::::.github/workflows/deploy-website.yml::::jobs::::gh-release::::steps::::steps_1::::uses::::actions/setup-node@v2
+FLAML::::.github/workflows/deploy-website.yml::::jobs::::gh-release::::steps::::steps_1::::with::::node-version::::14.x
+FLAML::::.github/workflows/deploy-website.yml::::jobs::::gh-release::::steps::::steps_2::::name::::setup python
+FLAML::::.github/workflows/deploy-website.yml::::jobs::::gh-release::::steps::::steps_2::::uses::::actions/setup-python@v2
+FLAML::::.github/workflows/deploy-website.yml::::jobs::::gh-release::::steps::::steps_2::::with::::python-version::::3.8
+FLAML::::.github/workflows/deploy-website.yml::::jobs::::gh-release::::steps::::steps_3::::name::::pydoc-markdown install
+"FLAML::::.github/workflows/deploy-website.yml::::jobs::::gh-release::::steps::::steps_3::::run::::python -m pip install --upgrade pip
+pip install pydoc-markdown
+"
+FLAML::::.github/workflows/deploy-website.yml::::jobs::::gh-release::::steps::::steps_4::::name::::pydoc-markdown run
+"FLAML::::.github/workflows/deploy-website.yml::::jobs::::gh-release::::steps::::steps_4::::run::::pydoc-markdown
+"
+FLAML::::.github/workflows/deploy-website.yml::::jobs::::gh-release::::steps::::steps_5::::name::::Build website
+"FLAML::::.github/workflows/deploy-website.yml::::jobs::::gh-release::::steps::::steps_5::::run::::if [ -e yarn.lock ]; then
+yarn install --frozen-lockfile
+yarn build
+elif [ -e package-lock.json ]; then
+npm ci
+npm run build
+else
+npm i --legacy-peer-deps
+npm run build
+fi
+"
+FLAML::::.github/workflows/deploy-website.yml::::jobs::::gh-release::::steps::::steps_6::::name::::Deploy to GitHub Pages
+FLAML::::.github/workflows/deploy-website.yml::::jobs::::gh-release::::steps::::steps_6::::uses::::peaceiris/actions-gh-pages@v3
+FLAML::::.github/workflows/deploy-website.yml::::jobs::::gh-release::::steps::::steps_6::::with::::github_token::::${{ secrets.GITHUB_TOKEN }}
+FLAML::::.github/workflows/deploy-website.yml::::jobs::::gh-release::::steps::::steps_6::::with::::publish_dir::::./website/build
+FLAML::::.github/workflows/python-package.yml::::file::::.github/workflows/python-package.yml
+FLAML::::.github/workflows/python-package.yml::::name::::Build
+FLAML::::.github/workflows/python-package.yml::::on::::push::::branches::::main
+FLAML::::.github/workflows/python-package.yml::::on::::pull_request::::branches::::main
+FLAML::::.github/workflows/python-package.yml::::jobs::::build::::runs-on::::${{ matrix.os }}
+FLAML::::.github/workflows/python-package.yml::::jobs::::build::::strategy::::matrix::::os::::ubuntu-latest
+FLAML::::.github/workflows/python-package.yml::::jobs::::build::::strategy::::matrix::::os::::macos-latest
+FLAML::::.github/workflows/python-package.yml::::jobs::::build::::strategy::::matrix::::os::::windows-2019
+FLAML::::.github/workflows/python-package.yml::::jobs::::build::::strategy::::matrix::::python-version::::3.6
+FLAML::::.github/workflows/python-package.yml::::jobs::::build::::strategy::::matrix::::python-version::::3.7
+FLAML::::.github/workflows/python-package.yml::::jobs::::build::::strategy::::matrix::::python-version::::3.8
+FLAML::::.github/workflows/python-package.yml::::jobs::::build::::strategy::::matrix::::python-version::::3.9
+FLAML::::.github/workflows/python-package.yml::::jobs::::build::::steps::::steps_0::::uses::::actions/checkout@v2
+FLAML::::.github/workflows/python-package.yml::::jobs::::build::::steps::::steps_1::::name::::Set up Python ${{ matrix.python-version }}
+FLAML::::.github/workflows/python-package.yml::::jobs::::build::::steps::::steps_1::::uses::::actions/setup-python@v2
+FLAML::::.github/workflows/python-package.yml::::jobs::::build::::steps::::steps_1::::with::::python-version::::${{ matrix.python-version }}
+"FLAML::::.github/workflows/python-package.yml::::jobs::::build::::steps::::steps_2::::name::::If mac, install libomp to facilitate lgbm and xgboost install"
+FLAML::::.github/workflows/python-package.yml::::jobs::::build::::steps::::steps_2::::if::::matrix.os == 'macOS-latest'
+"FLAML::::.github/workflows/python-package.yml::::jobs::::build::::steps::::steps_2::::run::::# remove libomp version constraint after xgboost works with libomp>11.1.0
+wget https://raw.githubusercontent.com/Homebrew/homebrew-core/679923b4eb48a8dc7ecc1f05d06063cd79b3fc00/Formula/libomp.rb -O $(find $(brew --repository) -name libomp.rb)
+brew install libomp
+export CC=/usr/bin/clang
+export CXX=/usr/bin/clang++
+export CPPFLAGS=""$CPPFLAGS -Xpreprocessor -fopenmp""
+export CFLAGS=""$CFLAGS -I/usr/local/opt/libomp/include""
+export CXXFLAGS=""$CXXFLAGS -I/usr/local/opt/libomp/include""
+export LDFLAGS=""$LDFLAGS -Wl,-rpath,/usr/local/opt/libomp/lib -L/usr/local/opt/libomp/lib -lomp""
+"
+FLAML::::.github/workflows/python-package.yml::::jobs::::build::::steps::::steps_3::::name::::Install packages and dependencies
+"FLAML::::.github/workflows/python-package.yml::::jobs::::build::::steps::::steps_3::::run::::python -m pip install --upgrade pip wheel
+pip install -e .
+python -c ""import flaml""
+pip install -e .[test]
+"
+"FLAML::::.github/workflows/python-package.yml::::jobs::::build::::steps::::steps_4::::name::::If linux or mac, install ray"
+FLAML::::.github/workflows/python-package.yml::::jobs::::build::::steps::::steps_4::::if::::(matrix.os == 'macOS-latest' || matrix.os == 'ubuntu-latest') && matrix.python-version != '3.9'
+"FLAML::::.github/workflows/python-package.yml::::jobs::::build::::steps::::steps_4::::run::::pip install -e .[ray,forecast]
+pip install 'tensorboardX<=2.2'
+"
+FLAML::::.github/workflows/python-package.yml::::jobs::::build::::steps::::steps_5::::name::::Lint with flake8
+"FLAML::::.github/workflows/python-package.yml::::jobs::::build::::steps::::steps_5::::run::::# stop the build if there are Python syntax errors or undefined names
+flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+# exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+"
+FLAML::::.github/workflows/python-package.yml::::jobs::::build::::steps::::steps_6::::name::::Test with pytest
+FLAML::::.github/workflows/python-package.yml::::jobs::::build::::steps::::steps_6::::if::::${{ matrix.python-version != '3.7' || matrix.os == 'macos-latest' }}
+"FLAML::::.github/workflows/python-package.yml::::jobs::::build::::steps::::steps_6::::run::::pytest test
+"
+FLAML::::.github/workflows/python-package.yml::::jobs::::build::::steps::::steps_7::::name::::Coverage
+FLAML::::.github/workflows/python-package.yml::::jobs::::build::::steps::::steps_7::::if::::${{ matrix.python-version == '3.7' && matrix.os != 'macos-latest' }}
+"FLAML::::.github/workflows/python-package.yml::::jobs::::build::::steps::::steps_7::::run::::pip install coverage
+coverage run -a -m pytest test
+coverage xml
+"
+FLAML::::.github/workflows/python-package.yml::::jobs::::build::::steps::::steps_8::::name::::Upload coverage to Codecov
+FLAML::::.github/workflows/python-package.yml::::jobs::::build::::steps::::steps_8::::if::::${{ matrix.python-version == '3.7' && matrix.os != 'macos-latest' }}
+FLAML::::.github/workflows/python-package.yml::::jobs::::build::::steps::::steps_8::::uses::::codecov/codecov-action@v1
+FLAML::::.github/workflows/python-package.yml::::jobs::::build::::steps::::steps_8::::with::::file::::./coverage.xml
+FLAML::::.github/workflows/python-package.yml::::jobs::::build::::steps::::steps_8::::with::::flags::::unittests
+FLAML::::.pre-commit-config.yaml::::file::::.pre-commit-config.yaml
+FLAML::::.pre-commit-config.yaml::::repos::::repos_0::::repo::::https://github.com/psf/black
+FLAML::::.pre-commit-config.yaml::::repos::::repos_0::::rev::::stable
+FLAML::::.pre-commit-config.yaml::::repos::::repos_0::::hooks::::hooks_0::::id::::black
+FLAML::::.pre-commit-config.yaml::::repos::::repos_0::::hooks::::hooks_0::::language_version::::python3
+FLAML::::.pre-commit-config.yaml::::repos::::repos_1::::repo::::https://github.com/pre-commit/pre-commit-hooks
+FLAML::::.pre-commit-config.yaml::::repos::::repos_1::::rev::::v1.2.3
+FLAML::::.pre-commit-config.yaml::::repos::::repos_1::::hooks::::hooks_0::::id::::flake8
+FLAML::::.pre-commit-config.yaml::::repos::::repos_1::::hooks::::hooks_1::::id::::check-added-large-files
+FLAML::::.pre-commit-config.yaml::::repos::::repos_1::::hooks::::hooks_2::::id::::check-ast
+FLAML::::.pre-commit-config.yaml::::repos::::repos_1::::hooks::::hooks_3::::id::::check-byte-order-marker
+FLAML::::.pre-commit-config.yaml::::repos::::repos_1::::hooks::::hooks_4::::id::::check-merge-conflict
+FLAML::::.pre-commit-config.yaml::::repos::::repos_1::::hooks::::hooks_5::::id::::detect-private-key
+FLAML::::.pre-commit-config.yaml::::repos::::repos_1::::hooks::::hooks_6::::id::::trailing-whitespace
+FLAML::::.pre-commit-config.yaml::::repos::::repos_1::::hooks::::hooks_7::::id::::no-commit-to-branch
+FLAML::::Dockerfile::::file::::Dockerfile
+FLAML::::Dockerfile::::from::::python:3.7
+FLAML::::Dockerfile::::cmd::::exec_command::::/bin/bash
+FLAML::::Dockerfile::::cmd::::param0::::bin/bash
+FLAML::::Dockerfile::::entrypoint::::exec_command::::
+FLAML::::Dockerfile::::entrypoint::::param0::::
+FLAML::::flaml/automl.py::::file::::flaml/automl.py
+FLAML::::flaml/automl.py::::GroupKFold::::n_splits::::n_splits
+FLAML::::flaml/automl.py::::RepeatedStratifiedKFold::::n_splits::::n_splits
+FLAML::::flaml/automl.py::::RepeatedStratifiedKFold::::n_repeats::::1
+FLAML::::flaml/automl.py::::RepeatedStratifiedKFold::::random_state::::RANDOM_SEED
+FLAML::::flaml/automl.py::::GroupShuffleSplit::::variable::::gss
+FLAML::::flaml/automl.py::::GroupShuffleSplit::::n_splits::::1
+FLAML::::flaml/automl.py::::GroupShuffleSplit::::test_size::::split_ratio
+FLAML::::flaml/automl.py::::GroupShuffleSplit::::random_state::::RANDOM_SEED
+FLAML::::flaml/automl.py::::TimeSeriesSplit::::n_splits::::n_splits
+FLAML::::flaml/automl.py::::TimeSeriesSplit::::n_splits::::n_splits
+FLAML::::flaml/automl.py::::TimeSeriesSplit::::test_size::::period
+FLAML::::flaml/automl.py::::RepeatedKFold::::n_splits::::n_splits
+FLAML::::flaml/automl.py::::RepeatedKFold::::n_repeats::::1
+FLAML::::flaml/automl.py::::RepeatedKFold::::random_state::::RANDOM_SEED
+FLAML::::flaml/data.py::::file::::flaml/data.py
+"FLAML::::flaml/data.py::::ColumnTransformer::::transformers::::[('continuous', 'SimpleImputer')]"
+FLAML::::flaml/data.py::::SimpleImputer::::strategy::::median
+FLAML::::flaml/ml.py::::file::::flaml/ml.py
+FLAML::::flaml/model.py::::file::::flaml/model.py
+FLAML::::flaml/model.py::::DummyClassifier::::variable::::model
+FLAML::::flaml/model.py::::DummyRegressor::::variable::::model
+FLAML::::flaml/onlineml/trial.py::::file::::flaml/onlineml/trial.py
+FLAML::::pytest.ini::::file::::pytest.ini
+"FLAML::::pytest.ini::::pytest::::addopts::::-m ""not conda"""
+FLAML::::pytest.ini::::pytest::::markers::::conda: test related to conda forge distribution
+FLAML::::test/automl/test_classification.py::::file::::test/automl/test_classification.py
+FLAML::::test/automl/test_forecast.py::::file::::test/automl/test_forecast.py
+FLAML::::test/automl/test_multiclass.py::::file::::test/automl/test_multiclass.py
+FLAML::::test/automl/test_notebook_example.py::::file::::test/automl/test_notebook_example.py
+FLAML::::test/automl/test_python_log.py::::file::::test/automl/test_python_log.py
+FLAML::::test/automl/test_regression.py::::file::::test/automl/test_regression.py
+FLAML::::test/automl/test_regression.py::::MultiOutputRegressor::::variable::::model
+FLAML::::test/automl/test_regression.py::::RegressorChain::::variable::::model
+FLAML::::test/automl/test_split.py::::file::::test/automl/test_split.py
+FLAML::::test/automl/test_training_log.py::::file::::test/automl/test_training_log.py
+FLAML::::test/automl/test_warmstart.py::::file::::test/automl/test_warmstart.py
+FLAML::::test/automl/test_xgboost2d.py::::file::::test/automl/test_xgboost2d.py
+FLAML::::test/automl/test_xgboost2d_sample_size.py::::file::::test/automl/test_xgboost2d_sample_size.py
+FLAML::::test/nni/config.yml::::file::::test/nni/config.yml
+FLAML::::test/nni/config.yml::::authorName::::default
+FLAML::::test/nni/config.yml::::experimentName::::example_mnist
+FLAML::::test/nni/config.yml::::trialConcurrency::::1
+FLAML::::test/nni/config.yml::::maxExecDuration::::1h
+FLAML::::test/nni/config.yml::::maxTrialNum::::10
+FLAML::::test/nni/config.yml::::trainingServicePlatform::::local
+FLAML::::test/nni/config.yml::::searchSpacePath::::search_space.json
+FLAML::::test/nni/config.yml::::useAnnotation::::false
+FLAML::::test/nni/config.yml::::tuner::::codeDir::::./
+FLAML::::test/nni/config.yml::::tuner::::classFileName::::flaml_nni_wrap.py
+FLAML::::test/nni/config.yml::::tuner::::className::::BlendSearchTuner
+FLAML::::test/nni/config.yml::::trial::::command::::python3 mnist.py
+FLAML::::test/nni/config.yml::::trial::::codeDir::::.
+FLAML::::test/nni/config.yml::::trial::::gpuNum::::0
+FLAML::::test/object_store.py::::file::::test/object_store.py
+FLAML::::test/rank.py::::file::::test/rank.py
+FLAML::::test/ray/distribute_automl.py::::file::::test/ray/distribute_automl.py
+FLAML::::test/ray/distribute_tune.py::::file::::test/ray/distribute_tune.py
+FLAML::::test/reg.py::::file::::test/reg.py
+FLAML::::test/test_autovw.py::::file::::test/test_autovw.py
+FLAML::::test/test_conda_distribution.py::::file::::test/test_conda_distribution.py
+FLAML::::test/test_gpu.py::::file::::test/test_gpu.py
+FLAML::::test/test_model.py::::file::::test/test_model.py
+FLAML::::test/tune/test_tune.py::::file::::test/tune/test_tune.py
+FLAML::::test/tune_example.py::::file::::test/tune_example.py
+FLAML::::website/package.json::::file::::website/package.json
+FLAML::::website/package.json::::name::::website
+FLAML::::website/package.json::::version::::version:0.0.0
+FLAML::::website/package.json::::private::::True
+FLAML::::website/package.json::::scripts::::docusaurus::::docusaurus
+FLAML::::website/package.json::::scripts::::start::::docusaurus start
+FLAML::::website/package.json::::scripts::::build::::docusaurus build
+FLAML::::website/package.json::::scripts::::swizzle::::docusaurus swizzle
+FLAML::::website/package.json::::scripts::::deploy::::docusaurus deploy
+FLAML::::website/package.json::::scripts::::clear::::docusaurus clear
+FLAML::::website/package.json::::scripts::::serve::::docusaurus serve
+FLAML::::website/package.json::::scripts::::write-translations::::docusaurus write-translations
+FLAML::::website/package.json::::scripts::::write-heading-ids::::docusaurus write-heading-ids
+FLAML::::website/package.json::::dependencies::::@docusaurus/core::::@docusaurus/core:0.0.0-4193
+FLAML::::website/package.json::::dependencies::::@docusaurus/preset-classic::::@docusaurus/preset-classic:0.0.0-4193
+FLAML::::website/package.json::::dependencies::::@easyops-cn/docusaurus-search-local::::@easyops-cn/docusaurus-search-local:^0.21.1
+FLAML::::website/package.json::::dependencies::::@mdx-js/react::::@mdx-js/react:^1.6.21
+FLAML::::website/package.json::::dependencies::::@svgr/webpack::::@svgr/webpack:^5.5.0
+FLAML::::website/package.json::::dependencies::::clsx::::clsx:^1.1.1
+FLAML::::website/package.json::::dependencies::::file-loader::::file-loader:^6.2.0
+FLAML::::website/package.json::::dependencies::::hast-util-is-element::::hast-util-is-element:1.1.0
+FLAML::::website/package.json::::dependencies::::react::::react:^17.0.1
+FLAML::::website/package.json::::dependencies::::react-dom::::react-dom:^17.0.1
+FLAML::::website/package.json::::dependencies::::rehype-katex::::rehype-katex:4
+FLAML::::website/package.json::::dependencies::::remark-math::::remark-math:3
+FLAML::::website/package.json::::dependencies::::trim::::trim:^0.0.3
+FLAML::::website/package.json::::dependencies::::url-loader::::url-loader:^4.1.1
+FLAML::::website/package.json::::browserslist::::production::::production/>0.5%::::>0.5%
+FLAML::::website/package.json::::browserslist::::production::::production/not dead::::not dead
+FLAML::::website/package.json::::browserslist::::production::::production/not op_mini all::::not op_mini all
+FLAML::::website/package.json::::browserslist::::development::::development/last 1 chrome version::::last 1 chrome version
+FLAML::::website/package.json::::browserslist::::development::::development/last 1 firefox version::::last 1 firefox version
+FLAML::::website/package.json::::browserslist::::development::::development/last 1 safari version::::last 1 safari version
+FLAML::::website/pydoc-markdown.yml::::file::::website/pydoc-markdown.yml
+FLAML::::website/pydoc-markdown.yml::::loaders::::loaders_0::::type::::python
+FLAML::::website/pydoc-markdown.yml::::loaders::::loaders_0::::search_path::::../flaml/
+FLAML::::website/pydoc-markdown.yml::::processors::::processors_0::::type::::filter
+FLAML::::website/pydoc-markdown.yml::::processors::::processors_0::::skip_empty_modules::::true
+FLAML::::website/pydoc-markdown.yml::::processors::::processors_1::::type::::smart
+FLAML::::website/pydoc-markdown.yml::::processors::::processors_2::::type::::crossref
+FLAML::::website/pydoc-markdown.yml::::renderer::::type::::docusaurus
+FLAML::::website/pydoc-markdown.yml::::renderer::::docs_base_path::::docs
+FLAML::::website/pydoc-markdown.yml::::renderer::::relative_output_path::::reference
+FLAML::::website/pydoc-markdown.yml::::renderer::::relative_sidebar_path::::sidebar.json
+FLAML::::website/pydoc-markdown.yml::::renderer::::sidebar_top_level_label::::Reference
+FLAML::::website/pydoc-markdown.yml::::renderer::::markdown::::escape_html_in_docstring::::false
