@@ -16,6 +16,8 @@ You can find the modified repositories in `out/`.
 
 
 ## Research Question
-- Are default values used for ML projects? For which ML technique?
-- When do default values diverge? Any specific scenario/task?
-- What value range is used for specific ML tecniques?
+- How is Machine Learning Code of common ML libraries configured?
+    - Which values are assigned to options that initialize ML algorithms?
+    - What kind of values are used? Default values or values optimized with hyperparameter tuning?
+    - When do these values diverge? Are specific scenarios/tasks responsible?
+    - What is the value range fpr specific options?

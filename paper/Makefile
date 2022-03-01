@@ -28,7 +28,6 @@ $(FIGUREFOLDER):
 	mkdir -p $(FIGUREFOLDER)
 
 bib:
-	chmod +rx ./scripts/format.sh
 	./scripts/format.sh --file bibliography.bib
 
 clean:
