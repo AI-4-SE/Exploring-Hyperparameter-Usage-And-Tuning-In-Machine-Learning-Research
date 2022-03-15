@@ -13,11 +13,3 @@ It takes an optional parameter which is a Git tree-ish (e.g. `main`) that can be
 
 The result files will be in `results/`.
 You can find the modified repositories in `out/`.
-
-
-## Research Question
-- How is Machine Learning Code of common ML libraries configured?
-    - Which values are assigned to options that initialize ML algorithms?
-    - What kind of values are used? Default values or values optimized with hyperparameter tuning?
-    - When do these values diverge? Are specific scenarios/tasks responsible?
-    - What is the value range fpr specific options?
