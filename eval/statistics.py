@@ -8,7 +8,7 @@ import pandas as pd
 from collections import Counter
 
 
-statistics_unprocessed = "data/statistics_unprocessed/"
+statistics_dir = "data/statistics/"
 statistics_processed = "data/statistics_processed/"
 sklearn_data = "data/sklearn/modules/sklearn_modules.json"
 
@@ -75,7 +75,8 @@ def clean_statistics():
         
 def main():
     # count_classes()
-    clean_statistics()
+    # clean_statistics()
+    copy_statistic_files(statistics_dir)
 
 
 if __name__ == "__main__":
