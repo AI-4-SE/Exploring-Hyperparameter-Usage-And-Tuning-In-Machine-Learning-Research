@@ -46,6 +46,7 @@ def extract_params(href, module_type):
                     default = match.group("name")
                     default = default.replace("\u201d", "'")
                     default = default.replace("\u2019", "'")
+                    default = default.replace("'", "")
                     params.append((param.text, default))
                     continue
                 else:
@@ -108,7 +109,7 @@ for name in names:
             entry = entries[0]
             description = entries[-1].find("p").text
             element = entry.find("a", class_="reference internal")
-            
+                
             module_type = check_type(name=element["title"].split(".")[-1], description=description)
 
             params = extract_params(element["href"], module_type)
@@ -136,5 +137,5 @@ for name in names:
 #print("number of classes/function", len(data))
 
 
-with open("sklearn_modules_with_default.json", "w") as f:
+with open("data/sklearn/modules/sklearn_modules_new.json", "w") as f:
     json.dump(data_small, f, sort_keys=True, indent=4)
