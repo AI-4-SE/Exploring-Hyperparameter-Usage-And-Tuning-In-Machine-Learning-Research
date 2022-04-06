@@ -9,8 +9,7 @@ import pandas as pd
 
 STATISTICS_DIR = "data/statistics/"
 SKL_MODULES_FILE = "data/sklearn/modules/sklearn_modules.json"
-TEST_PROJECT = "data/statistics/statistics_alignarr.json"
-ALL_PROJECTS = "data/statistics/*"
+ALL_PROJECTS = "results/sklearn/statistics/*"
 
 
 def create_specific_module(project_data, data):

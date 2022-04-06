@@ -10,7 +10,7 @@ from ml_object import SklearnModule
 
 STATISTICS_DIR = "data/statistics/"
 SKL_MODULES_FILE = "data/sklearn/modules/sklearn_modules.json"
-ALL_PROJECTS = "data/statistics/*"
+ALL_PROJECTS = "results/sklearn/statistics/*"
 DEFAULT_REGEX = re.compile(r".+=.+")
 
 
