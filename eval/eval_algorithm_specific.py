@@ -10,7 +10,7 @@ from ml_object import SklearnModule
 
 STATISTICS_DIR = "data/statistics/"
 SKL_MODULES_FILE = "data/sklearn/modules/sklearn_modules.json"
-ALL_PROJECTS = "results/sklearn/statistics/*"
+ALL_PROJECTS = "statistics/sklearn/statistics/*"
 DEFAULT_REGEX = re.compile(r".+=.+")
 
 
@@ -134,7 +134,7 @@ def main():
     # tensorflow_option_count = count_options(tensorflow_modules)
     # pytorch_option_count = count_options(pytorch_modules)
 
-    with open("data/sklearn_option_count.json", "w") as f:
+    with open("statistics/sklearn/sklearn_option_count.json", "w") as f:
         json.dump(sklearn_option_count, f, sort_keys=True, indent=4)
 
     
