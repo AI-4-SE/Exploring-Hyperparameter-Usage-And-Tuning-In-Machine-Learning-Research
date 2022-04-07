@@ -17,6 +17,7 @@ TENSORFLOW_FROM_REGEX = re.compile(r"from tensorflow[a-zA-z._]* import [a-zA-Z_]
 PYTORCH_REGEX = re.compile(r"import torch")
 PYTORCH_FROM_REGEX = re.compile(r"from torch[a-zA-z._]* import [a-zA-Z_]*")
 
+SAMPLE_SET = "data/sample_set.txt"
 
 def create_sample_set(number):
     for _, _, files in os.walk(target_dir):
@@ -33,9 +34,9 @@ def read_samples(file_path):
     return lines
 
 def find_ml_repos(import_regex, import_from_regex, file_path):
-    samples = read_samples("./data/sklearn/sample_set.txt")
+    samples = read_samples(SAMPLE_SET)
 
-    with open(filepath, "w") as source:
+    with open(file_path, "w") as source:
         for subdir, _ , files in os.walk(target_dir):
             for file in files:
                 is_ml_repo = False
@@ -62,11 +63,11 @@ def find_ml_repos(import_regex, import_from_regex, file_path):
                         if is_ml_repo:
                             break
 
-def get_urls():
-    tar_files = read_samples("./data/sklearn/sklearn_sample.txt")
+def get_urls(sample_path, url_path):
+    tar_files = read_samples(sample_path)
     print("tar files len: ", len(tar_files))
 
-    with open("./data/sklearn/sklearn_sample_final.csv", "w", newline = '\n') as file:
+    with open(url_path, "w", newline = '\n') as file:
         writer = csv.DictWriter(file, fieldnames=["tar_filename", "repo_url"])
         writer.writeheader()
         with open('paperswithcode_repos_220102.jsonl', 'r') as json_file:
@@ -86,11 +87,16 @@ if __name__ == "__main__":
     # create_sample_set(1000), already done
 
     sklearn_path = "data/sklearn/sklearn_sample.txt"
-    tensorflow_path = "data/sklearn/tensorflow_samples.txt"
-    pytorch_path = "data/sklearn/pytorch_samples.txt"
+    sklearn_url = "data/sklearn/sklearn_sample_final.csv"
+    tensorflow_path = "data/tensorflow/tensorflow_samples.txt"
+    tensorflow_url = "data/tensorflow/tensorflow_samples_final.csv"
+    pytorch_path = "data/pytorch/pytorch_samples.txt"
+    pytorch_url = "data/pytorch/pytorch_samples_final.csv"
 
-    find_ml_repos(SKLEARN_REGEX, SKLEARN_FROM_REGEX, sklearn_path)
-    find_ml_repos(TENSORFLOW_REGEX, TENSORFLOW_FROM_REGEX, tensorflow_path)
-    find_ml_repos(PYTORCH_REGEX, PYTORCH_FROM_REGEX, pytorch_path)
 
-    # get_urls
+
+    #find_ml_repos(SKLEARN_REGEX, SKLEARN_FROM_REGEX, sklearn_path)
+    #find_ml_repos(TENSORFLOW_REGEX, TENSORFLOW_FROM_REGEX, tensorflow_path)
+    #find_ml_repos(PYTORCH_REGEX, PYTORCH_FROM_REGEX, pytorch_path)
+    
+    get_urls(pytorch_path, pytorch_url)
