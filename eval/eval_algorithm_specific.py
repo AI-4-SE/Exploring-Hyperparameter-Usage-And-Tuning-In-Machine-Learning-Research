@@ -6,6 +6,7 @@ import plotly.graph_objs as go
 import pandas as pd
 from typing import List, Dict, Tuple
 from ml_object import SklearnModule
+from operator import *
 
 
 STATISTICS_DIR = "data/statistics/"
@@ -13,6 +14,7 @@ SKL_MODULES_FILE = "data/sklearn/modules/sklearn_modules.json"
 ALL_PROJECTS = "statistics/sklearn/statistics/*"
 DEFAULT_REGEX = re.compile(r".+=.+")
 
+SKLEARN_OPTION_COUNT = "statistics/sklearn/sklearn_option_count.json"
 
 def option_exists(option: List, params: List) -> boolean:
     param_names = [param[0] for param in params]
@@ -121,27 +123,54 @@ def get_modules_without_options(modules_option_count) -> List:
     return modules_without_options
 
 
+def sort_by_option_type(file_path, sort_criteon="default", list_size=5):
+    with open(file_path) as f:
+        data = json.load(f)
+
+    #print(data)
+
+    #for module in sorted(data,key=lambda x:data[x]['default']):
+    #    print(module)
+
+    sorted_data = list(sorted(data.items(),key=lambda x:getitem(x[1],sort_criteon),reverse=True))
+    return sorted_data[:list_size]
+
+
 def main():
-    with open(SKL_MODULES_FILE) as f:
-        sklearn_data = json.load(f)
+    #with open(SKL_MODULES_FILE) as f:
+    #    sklearn_data = json.load(f)
 
     
-    sklearn_modules = create_modules(sklearn_data)
+    #sklearn_modules = create_modules(sklearn_data)
     # tenforflow_modules = create_modules(tensorflow_data)
     # pytorch_modules = create_modules(pytorch_data)
 
-    sklearn_option_count = count_options(sklearn_modules)
+    #sklearn_option_count = count_options(sklearn_modules)
     # tensorflow_option_count = count_options(tensorflow_modules)
     # pytorch_option_count = count_options(pytorch_modules)
 
-    with open("statistics/sklearn/sklearn_option_count.json", "w") as f:
-        json.dump(sklearn_option_count, f, sort_keys=True, indent=4)
+    #with open(SKLEARN_OPTION_COUNT, "w") as f:
+    #    json.dump(sklearn_option_count, f, sort_keys=True, indent=4)
 
-    
-    sklearn_modules_without_options = get_modules_without_options(sklearn_option_count)
+    #sklearn_modules_without_options = get_modules_without_options(sklearn_option_count)
 
-    print(len(sklearn_modules_without_options))
-    print(sklearn_modules_without_options)
+    #print(len(sklearn_modules_without_options))
+    #print(sklearn_modules_without_options)
+
+    print("ML algorithms with the most default options:")
+    most_default_options = sort_by_option_type(SKLEARN_OPTION_COUNT, "default", 5)
+    print(most_default_options)
+    print("==============================")
+    print("ML algorithms with the most custom options:")
+    most_custom_options = sort_by_option_type(SKLEARN_OPTION_COUNT, "custom", 5)
+    print(most_custom_options)
+    print("==============================")
+    print("ML algorithms with the most required options:")
+    most_required_options = sort_by_option_type(SKLEARN_OPTION_COUNT, "required", 5)
+    print(most_required_options)
+
+
+    # TODO: calculate average number of options for each module
 
 
 if __name__ == "__main__":
