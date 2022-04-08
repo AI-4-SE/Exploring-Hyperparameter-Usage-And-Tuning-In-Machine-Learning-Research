@@ -52,40 +52,30 @@
 
 \section{Introduction}\label{sec:intro}
 % Motivation
-\begin{itemize}
-    \item machine learning has gained attention in recent years
-    \item machine learning has become one of the most important research fields in academia as well as industrial research
-    \item similarly to traditional software system, machine learning projects exhibit a wide range of configuration options
-    \item those options influence, for instance, the performance of machine learning models, which features are used, or how data is processed
-    \item especially algorithm-specific options are crucial for the models
-    \item algorithm-specific options are introduced by machine learning libraries 
-    \item the most popular machine learning libraries are sci-kit learn, tensorflow, pytorch
-    \item those libraries provide ML algorithms and corresponding options for initialization
-    \item option can be customized but often those libraries already provide default values
-    \item default parameters of learning algorithm APIs may not be optimal for a given data or problem, and may lead to local optima (Paper: Code Smells for Machine Learning Applications)
-    \item while the default parameters of a machine learning library may be adequate for some time, these default parameters may change in new versions of the library (Paper: Code Smells for Machine Learning Applications)
-\end{itemize}
+Machine learning (ML) is pervasive in the current research and industrial landscape. 
+In recent year, ML has become one of the most important research fields in academia and industrial research.
+
+Similarly to traditional software systems, ML projects exhibit a wide range of configuration options, influencing, for instance, the performance of ML models. 
+Especially ML algorithm-specific options are crucial for a ML model. 
+Typically, ML libraries, such as Tensorflow, Pytorch, and Sci-Kit Learn provide ML algorithms with their corresponding options for initialization. 
+Those libraries often provide default values, which, however, can also be customized. 
+Default options of learning algorithms may not be optimal for a given data set or problem. 
+While default options may be adequate for some time, these default options may change in new versions of libraries, complicating the replication of ML projects. (Paper: Code Smells for Machine Learning Applications)
 
 % Current Approaches/State of the Art
-\begin{itemize}
-    \item previous work already showed that configurations of machine learning may be a severe threats
-    \item configurations part of technical debt in machine learning
-    \item to the best of our knowledge, know studies that directly investigate the parameter space of machine learning libraries
-\end{itemize}
+Previous work already showed that configuration may be a severe threat. 
+However, only a few dealt with configuration options for ML algorithms, showing that options have a huge impact on the resulting model, may lead to code smells in ML code, and complicate the replication of ML projects. 
+To the best of our knowledge, none of them investigated the parameter space of ML algorithms to understand how researcher/developer/data scientists configure ML algorithms.
 
 % Own approach
-\begin{itemize}
-    \item we analyze projects that incorporate machine learning projects
-    \item extracting their machine learning algorithms, such as classifier, regressor, or estimator, including all options and their values
-    \item analyzing the data from two perspectives: project- and algorithm specific
-\end{itemize}
+With this work, we make a step in investigating the parameter space of ML algorithms of three common ML libraries. 
+Specifically, we study the parameter space of Tensorflow, Pytorch, and Sci-Kit Learn.
+To this end, we analyze ML algorithm and their configuration parameters in ML projects selected from paperswithcode.com for each ML library.
+The goal is to shed light on the parameter space of ML algorithms provided by the ML libraries.
 
 % Research Questions
 To guide our paper, we answer the following questions:
 \begin{questions}
-    \item How do researcher/developer/people approach machine learning? 
-    \item Which domains, tasks, and datasets are tackled by ML scientists? 
-    \item What are the differences between these domains, tasks, and datasets?    
     \item How is ML code configured? (project- or algorithm-specific) 
     \item What the parameter space of machine learning libraries?
     \item Which and what kind of values are used?
@@ -110,17 +100,30 @@ In summary, we make the following contributions:
 
 
 \section{Methodology}\label{sec:methodology}
+For this paper, we performed an empirical study on the parameter space of ML algorithms of three popular ML libraries. 
+We initially selected a sample set of 1000 subjects systems from paperswithcode.com and check whether these subject systems incorporate on of the libraries, resulting into three data sets of subject systems, one for each ML library.
+We then analyzed each data set using static analysis and data obtained from API crawling.
 
-\subsection{Subject Systems}
+Our study encompasses three steps: (1) Subject System Selection, (2) API Crawling, and (3) Static Analysis. 
+
+\subsection{Subject System Selection}
+Paperswithcode pursues the mission to create an open source resource with machine learning papers, code, datasets and tools for analysis. 
+Today it is one of the biggest platforms to collect papers and the corresponding paper, forming an excellent source to extract a sample set of ML projects.
+
+% TODO: Revise this part!
+It is an extensive representation of the field with 63,517~papers indexed by October~2021. 
+For each paper, the portal provides a list of repositories that link to the paper.
+These can be the official repository, or third-party repositories implementing a certain aspect of a publication.
+We processed the list of repositories and downloaded 86,053~HEAD revisions of repositories hosted on GitHub as well as additional GitHub metadata on them, resulting in a collection of over 1,4~TB of code repositories.
+
 \begin{itemize}
-    \item repositories published along with scientific papers
-    \item meta AI has instigated the the open source project \emph{Papers with Code}
     \item crawled this papers and their code to create a sample set of X repositories
     \item to ensure considering machine learning projects that incorporate the target library, we employed regular expression to check whether these libraries where used within the projects
     \item specifically, we focused here on import statements in the source code
     \item each python file was inspected and checked
     \item projects that fulfilled the condition has been added to the final set of subjects Systems
     \item this procedure was conducted for each library
+    \item resulting into three data sets of subject systems, one for each library
 \end{itemize}
 
 \subsection{ML API Crawling}
@@ -135,6 +138,7 @@ In summary, we make the following contributions:
 \begin{itemize}
     \item static code analysis to locate occurrences of machine learning algorithm and to extract the options
     \item on top of that, we employ a data flow analysis to ensure that we get correct option values
+    \item extracted data is compared to API data
 \end{itemize}
 
 \subsection{Analysis}
