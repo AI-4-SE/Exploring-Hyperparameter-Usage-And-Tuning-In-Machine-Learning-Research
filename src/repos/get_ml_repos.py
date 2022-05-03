@@ -20,14 +20,16 @@ TENSORFLOW_FROM_REGEX = re.compile(r"from tensorflow[a-zA-z._]* import [a-zA-Z_]
 PYTORCH_REGEX = re.compile(r"import torch")
 PYTORCH_FROM_REGEX = re.compile(r"from torch[a-zA-z._]* import [a-zA-Z_]*")
 
-BASE = "/home/ssimon/GitHub/ml-settings/"
-SAMPLE_SET = "data/sample_set.txt"
+directory_parts = os.path.dirname(os.path.abspath(__file__)).split("\\")
+directory_parts = directory_parts[:-2]
+BASE = "\\".join(directory_parts)
+SAMPLE_SET = "\\data\\sample_set.txt"
 
 def create_sample_set(number):
     for _, _, files in os.walk(target_dir):
         sample = set(random.sample(files, number))
         
-    with open("./data/sklearn/sample_set.txt", "w") as sample_set:
+    with open(".\\data\\sklearn\\sample_set.txt", "w") as sample_set:
         for file in sample:
             sample_set.write(file + "\n")
 
@@ -38,7 +40,7 @@ def read_samples(file_path):
     return lines
 
 def find_ml_repos(import_regex, import_from_regex, file_path):
-    samples = read_samples(BASE + SAMPLE_SET)
+    samples = read_samples(SAMPLE_SET)
 
     with open(BASE + file_path, "w") as source:
         for subdir, _ , files in os.walk(target_dir):
@@ -88,18 +90,19 @@ def get_urls(sample_path, url_path):
 
 
 def check_python_version(url, url_final):
+    samples = read_samples(SAMPLE_SET)
+    drop_counter = 0
     repos = []
     with open(BASE + url, "r", encoding="utf-8") as source:
         for line in source.readlines():
             data = line.split(",")
             repos.append((data[0], data[1].replace("\n", "")))
 
-    print(len(repos))
-    print(repos)
-
     with open(BASE + url_final, "w") as source:
-        for subdir, _ , files in os.walk(target_dir):
+        source.write("tar_filename,repo_url" + "\n")
+        for subdir, _ , _ in os.walk(target_dir):
             for repo in repos:
+                dropped_repo = False
                 if repo[0] in samples:
                     tar = tarfile.open(os.path.join(subdir, repo[0]))
                     for member in tar.getmembers():
@@ -111,29 +114,35 @@ def check_python_version(url, url_final):
                                 f=tar.extractfile(member)
                                 code_str = f.read()
                                 tree = ast.parse(code_str)
-                                source.write(f"{repo[0]},{repo[1]}" + "\n")
+                                
                             except Exception as error:
                                 # Drop repository if not written in Python3
-                                print("Drop repo: ", repo[0])
+                                print("Dropped repo: ", repo[0], error)
+                                dropped_repo = True
+                        if dropped_repo:
+                            drop_counter +=1
+                            break
+                    if not dropped_repo:
+                        source.write(f"{repo[0]},{repo[1]}" + "\n")
+    
+    print("Drop Counter: ", drop_counter)
 
 
 if __name__ == "__main__":
     # create_sample_set(1000), already done
 
-    sklearn_path = "/data/sklearn/sklearn_sample.txt"
-    sklearn_url = "/data/sklearn/sklearn_sample_url.csv"
-    sklearn_url_final = "/data/sklearn_sample_url_final.csv"
-    tensorflow_path = "/data/tensorflow/tensorflow_samples.txt"
-    tensorflow_url = "/data/tensorflow/tensorflow_samples_url.csv"
-    tensorflow_url_final = "/data/tensorflow/tensorflow_samples_url_final.csv"
-    pytorch_path = "/data/pytorch/pytorch_samples.txt"
-    pytorch_url = "/data/pytorch/pytorch_samples_url.csv"
-    pytorch_url_final = "/data/pytorch/pytorch_samples_url_final.csv"
-
-    print(os.path.dirname(os.path.abspath(__file__)))
+    sklearn_path = "\\data\\sklearn\\sklearn_sample.txt"
+    sklearn_url = "\\data\\sklearn\\sklearn_sample_url.csv"
+    sklearn_url_final = "\\data\\sklearn\\sklearn_sample_url_final.csv"
+    tensorflow_path = "\\data\\tensorflow\\tensorflow_samples.txt"
+    tensorflow_url = "\\data\\tensorflow\\tensorflow_samples_url.csv"
+    tensorflow_url_final = "\\data\\tensorflow\\tensorflow_samples_url_final.csv"
+    pytorch_path = "\\data\\pytorch\\pytorch_samples.txt"
+    pytorch_url = "\\data\\pytorch\\pytorch_samples_url.csv"
+    pytorch_url_final = "\\data\\pytorch\\pytorch_samples_url_final.csv"
 
     #find_ml_repos(SKLEARN_REGEX, SKLEARN_FROM_REGEX, sklearn_path)
     #find_ml_repos(TENSORFLOW_REGEX, TENSORFLOW_FROM_REGEX, tensorflow_path)
     #find_ml_repos(PYTORCH_REGEX, PYTORCH_FROM_REGEX, pytorch_path)
     #get_urls(pytorch_path, pytorch_url)
-    check_python_version(sklearn_url, sklearn_url_final)
+    check_python_version(pytorch_url, pytorch_url_final)
