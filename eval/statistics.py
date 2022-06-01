@@ -8,7 +8,7 @@ import pandas as pd
 from collections import Counter
 
 
-statistics_dir = "data/statistics/"
+statistics_dir = "../src/statistics/sklearn/params/"
 statistics_processed = "data/statistics_processed/"
 sklearn_data = "data/sklearn/modules/sklearn_modules.json"
 
@@ -18,10 +18,11 @@ all_modules = []
 def copy_statistic_files(target):
     for repo in glob.glob("results/*"):
         for csv_file in glob.glob(f"{repo}/statistics/*"):
-            name = csv_file.split("/")[-1]
-            print(csv_file)
-            shutil.copyfile(csv_file, target + name)
-            break
+            if csv_file.endswith("params.json"):
+                name = csv_file.split("/")[-1]
+                print(csv_file)
+                print(target+name)
+                shutil.copyfile(csv_file, target + name)
 
 
 def find_module(name):
