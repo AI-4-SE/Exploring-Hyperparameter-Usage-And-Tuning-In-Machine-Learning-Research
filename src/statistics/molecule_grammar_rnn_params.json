@@ -1,0 +1,1015 @@
+{
+    "data/molecule_dataset.py": {
+        "torch": {
+            "ZincDataset_20": {
+                "base_class_0": {
+                    "value": "torch.utils.data.Dataset",
+                    "possible_values": []
+                }
+            },
+            "from_numpy_27": {
+                "ndarray": {
+                    "value": "i",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "grammar_model/__main__.py": {
+        "torch": {
+            "DataLoader_18": {
+                "variable": {
+                    "value": "train_dataloader",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "train_dataset",
+                    "possible_values": [
+                        [
+                            "PerturbedZincDataset('data/zinc.npz', alphabet)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "args.batch_size",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "True",
+                    "possible_values": []
+                },
+                "drop_last": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_19": {
+                "variable": {
+                    "value": "test_dataloader",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "torch.load('prior_samples.pkl')[:10000]",
+                    "possible_values": []
+                },
+                "batch_size": {
+                    "value": "10000",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "True",
+                    "possible_values": []
+                },
+                "drop_last": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "Adam_23": {
+                "variable": {
+                    "value": "optimiser",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "model.parameters()",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "0.001",
+                    "possible_values": []
+                }
+            },
+            "load_19": {
+                "f": {
+                    "value": "prior_samples.pkl",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "grammar_model/alphabets.py": {
+        "torch": {
+            "from_numpy_61": {
+                "variable": {
+                    "value": "x_uni",
+                    "possible_values": []
+                },
+                "ndarray": {
+                    "value": "np.random.choice(range(len(self)), size=x.size())",
+                    "possible_values": []
+                }
+            },
+            "rand_63": {
+                "*size": {
+                    "value": "*x.size()",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "grammar_model/grammar_rnn.py": {
+        "torch": {
+            "BayesRNN_11": {
+                "base_class_0": {
+                    "value": "torch.nn.Module",
+                    "possible_values": []
+                },
+                "Embedding_21": {
+                    "variable": {
+                        "value": "self._embedding",
+                        "possible_values": []
+                    },
+                    "num_embeddings": {
+                        "value": "self.alphabet_size",
+                        "possible_values": []
+                    },
+                    "embedding_dim": {
+                        "value": "self.embedding_size",
+                        "possible_values": []
+                    },
+                    "padding_idx": {
+                        "value": "0",
+                        "possible_values": []
+                    }
+                },
+                "GRU_24": {
+                    "variable": {
+                        "value": "self.rnn",
+                        "possible_values": []
+                    },
+                    "*args": {
+                        "value": "self.embedding_size",
+                        "possible_values": []
+                    },
+                    "batch_first": {
+                        "value": "True",
+                        "possible_values": []
+                    },
+                    "dropout": {
+                        "value": "self.keep_prob",
+                        "possible_values": []
+                    }
+                },
+                "ModuleList_26": {
+                    "variable": {
+                        "value": "self._cells",
+                        "possible_values": []
+                    },
+                    "modules": {
+                        "value": "self._construct_cells()",
+                        "possible_values": []
+                    }
+                },
+                "Linear_29": {
+                    "variable": {
+                        "value": "self._projection",
+                        "possible_values": []
+                    },
+                    "in_features": {
+                        "value": "self.hidden_size",
+                        "possible_values": []
+                    },
+                    "out_features": {
+                        "value": "self.alphabet_size",
+                        "possible_values": []
+                    }
+                }
+            },
+            "cat_85": {
+                "variable": {
+                    "value": "x",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[padding, x]",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "possible_values": []
+                }
+            },
+            "sigmoid_90": {
+                "variable": {
+                    "value": "p",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self._projection(output)",
+                    "possible_values": []
+                }
+            },
+            "load_100": {
+                "variable": {
+                    "value": "state",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "file_path",
+                    "possible_values": [
+                        [
+                            "os.path.join('log', 'grammar')",
+                            "Call"
+                        ],
+                        [
+                            "os.path.join('log', 'grammar')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "sigmoid_73": {
+                "variable": {
+                    "value": "mask",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self._projection(self._cell(x_in.repeat(n_samples)))",
+                    "possible_values": []
+                }
+            },
+            "mean_73": {
+                "variable": {
+                    "value": "mask",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "0",
+                    "possible_values": []
+                }
+            },
+            "round_73": {
+                "variable": {
+                    "value": "mask",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "save_96": {
+                "obj": {
+                    "value": "{'grammar_state_dict': state}",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "file_path",
+                    "possible_values": [
+                        [
+                            "os.path.join('log', 'grammar')",
+                            "Call"
+                        ],
+                        [
+                            "os.path.join('log', 'grammar')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "GRUCell_40": {
+                "input_size": {
+                    "value": "in_size",
+                    "possible_values": [
+                        [
+                            "self.embedding_size if n == 0 else self.hidden_size",
+                            "IfExp"
+                        ]
+                    ]
+                },
+                "hidden_size": {
+                    "value": "self.hidden_size",
+                    "possible_values": []
+                }
+            },
+            "bernoulli_60": {
+                "input": {
+                    "value": "keep_prob",
+                    "possible_values": [
+                        [
+                            "torch.cuda.FloatTensor(batch_size * n_samples, self.hidden_size).zero_() + self.keep_prob",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "grammar_model/grammar_trainer.py": {
+        "torch": {
+            "mean_30": {
+                "variable": {
+                    "value": "p",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "ops.corresponding(p_full, x.data)",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "0",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "utilities/ops.py": {
+        "torch": {
+            "VAELoss_85": {
+                "base_class_0": {
+                    "value": "torch.autograd.Function",
+                    "possible_values": []
+                },
+                "BCELoss_87": {
+                    "variable": {
+                        "value": "self.binary_xentropy",
+                        "possible_values": []
+                    },
+                    "params": {
+                        "value": "default",
+                        "possible_values": []
+                    }
+                }
+            },
+            "log_77": {
+                "variable": {
+                    "value": "log_p",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "make_safe(p)",
+                    "possible_values": []
+                }
+            },
+            "sum_78": {
+                "variable": {
+                    "value": "positive",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "log_p",
+                    "possible_values": [
+                        [
+                            "torch.log(make_safe(p))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "1",
+                    "possible_values": []
+                }
+            },
+            "exp_79": {
+                "variable": {
+                    "value": "neg_prod",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "positive",
+                    "possible_values": [
+                        [
+                            "torch.sum(log_p, 1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "log1p_80": {
+                "variable": {
+                    "value": "negative",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "-make_safe(neg_prod)",
+                    "possible_values": []
+                }
+            },
+            "sum_82": {
+                "input": {
+                    "value": "y * positive + (1 - y) * negative",
+                    "possible_values": []
+                }
+            },
+            "cat_112": {
+                "tensors": {
+                    "value": "[torch.multinomial(char_preds, 1) for char_preds in seq_preds]",
+                    "possible_values": []
+                }
+            },
+            "stack_115": {
+                "tensors": {
+                    "value": "seqs",
+                    "possible_values": [
+                        [
+                            "[torch.cat([torch.multinomial(char_preds, 1) for char_preds in seq_preds]) for seq_preds in preds]",
+                            "ListComp"
+                        ]
+                    ]
+                }
+            },
+            "eq_119": {
+                "input": {
+                    "value": "s1",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "s2",
+                    "possible_values": []
+                }
+            },
+            "all_119": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "norm_20": {
+                "input": {
+                    "value": "param",
+                    "possible_values": [
+                        [
+                            "params",
+                            "Name"
+                        ],
+                        [
+                            "params",
+                            "Name"
+                        ]
+                    ]
+                },
+                "p": {
+                    "value": "2",
+                    "possible_values": []
+                }
+            },
+            "exp_47": {
+                "input": {
+                    "value": "z_log_var / 2.0",
+                    "possible_values": []
+                }
+            },
+            "mean_91": {
+                "input": {
+                    "value": "1 + z_log_var - z_mean ** 2 - torch.exp(z_log_var)",
+                    "possible_values": []
+                }
+            },
+            "multinomial_112": {
+                "input": {
+                    "value": "char_preds",
+                    "possible_values": []
+                },
+                "num_samples": {
+                    "value": "1",
+                    "possible_values": []
+                }
+            },
+            "exp_91": {
+                "input": {
+                    "value": "z_log_var",
+                    "possible_values": []
+                }
+            },
+            "orthogonal_71": {
+                "module": {
+                    "value": "param",
+                    "possible_values": [
+                        [
+                            "params",
+                            "Name"
+                        ],
+                        [
+                            "params",
+                            "Name"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "vae/__main__.py": {
+        "torch": {
+            "DataLoader_24": {
+                "variable": {
+                    "value": "train_dataloader",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "train_dataset",
+                    "possible_values": [
+                        [
+                            "ZincDataset('data/zinc.npz', fname='train')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shuffle": {
+                    "value": "True",
+                    "possible_values": []
+                },
+                "batch_size": {
+                    "value": "args.batch_size",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_25": {
+                "variable": {
+                    "value": "test_dataloader",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "ZincDataset('data/zinc.npz', fname='test')",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "True",
+                    "possible_values": []
+                },
+                "batch_size": {
+                    "value": "args.batch_size * 10",
+                    "possible_values": []
+                }
+            },
+            "Adam_29": {
+                "variable": {
+                    "value": "optimiser",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "all_params",
+                    "possible_values": [
+                        [
+                            "list(encoder.parameters()) + list(decoder.parameters())",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "lr": {
+                    "value": "0.001",
+                    "possible_values": []
+                }
+            },
+            "cat_42": {
+                "variable": {
+                    "value": "samples",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "samples",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "torch.cat(samples, 0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "0",
+                    "possible_values": []
+                }
+            },
+            "save_44": {
+                "obj": {
+                    "value": "samples",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "torch.cat(samples, 0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "f": {
+                    "value": "prior_samples.pkl",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "vae/vae_models.py": {
+        "torch": {
+            "Encoder_9": {
+                "base_class_0": {
+                    "value": "torch.nn.Module",
+                    "possible_values": []
+                },
+                "Conv1d_12": {
+                    "variable": {
+                        "value": "self.conv1",
+                        "possible_values": []
+                    },
+                    "in_channels": {
+                        "value": "alphabet_size",
+                        "possible_values": [
+                            [
+                                "27",
+                                "MethodArgument"
+                            ],
+                            [
+                                "27",
+                                "MethodArgument"
+                            ]
+                        ]
+                    },
+                    "out_channels": {
+                        "value": "9",
+                        "possible_values": []
+                    },
+                    "kernel_size": {
+                        "value": "9",
+                        "possible_values": []
+                    },
+                    "padding": {
+                        "value": "0",
+                        "possible_values": []
+                    }
+                },
+                "Conv1d_13": {
+                    "variable": {
+                        "value": "self.conv2",
+                        "possible_values": []
+                    },
+                    "in_channels": {
+                        "value": "9",
+                        "possible_values": []
+                    },
+                    "out_channels": {
+                        "value": "9",
+                        "possible_values": []
+                    },
+                    "kernel_size": {
+                        "value": "9",
+                        "possible_values": []
+                    },
+                    "padding": {
+                        "value": "0",
+                        "possible_values": []
+                    }
+                },
+                "Conv1d_14": {
+                    "variable": {
+                        "value": "self.conv3",
+                        "possible_values": []
+                    },
+                    "in_channels": {
+                        "value": "9",
+                        "possible_values": []
+                    },
+                    "out_channels": {
+                        "value": "10",
+                        "possible_values": []
+                    },
+                    "kernel_size": {
+                        "value": "11",
+                        "possible_values": []
+                    },
+                    "padding": {
+                        "value": "0",
+                        "possible_values": []
+                    }
+                },
+                "Linear_16": {
+                    "variable": {
+                        "value": "self.linear",
+                        "possible_values": []
+                    },
+                    "in_features": {
+                        "value": "(max_len - 26) * 10",
+                        "possible_values": []
+                    },
+                    "out_features": {
+                        "value": "435",
+                        "possible_values": []
+                    }
+                },
+                "Linear_17": {
+                    "variable": {
+                        "value": "self.mean_lin",
+                        "possible_values": []
+                    },
+                    "in_features": {
+                        "value": "435",
+                        "possible_values": []
+                    },
+                    "out_features": {
+                        "value": "latent_size",
+                        "possible_values": [
+                            [
+                                "56",
+                                "MethodArgument"
+                            ],
+                            [
+                                "56",
+                                "MethodArgument"
+                            ]
+                        ]
+                    }
+                },
+                "Linear_18": {
+                    "variable": {
+                        "value": "self.var_lin",
+                        "possible_values": []
+                    },
+                    "in_features": {
+                        "value": "435",
+                        "possible_values": []
+                    },
+                    "out_features": {
+                        "value": "latent_size",
+                        "possible_values": [
+                            [
+                                "56",
+                                "MethodArgument"
+                            ],
+                            [
+                                "56",
+                                "MethodArgument"
+                            ]
+                        ]
+                    }
+                }
+            },
+            "Decoder_37": {
+                "base_class_0": {
+                    "value": "torch.nn.Module",
+                    "possible_values": []
+                },
+                "self.alphabet_size": {
+                    "value": "alphabet_size",
+                    "possible_values": [
+                        [
+                            "27",
+                            "MethodArgument"
+                        ],
+                        [
+                            "27",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "self.max_len": {
+                    "value": "max_len",
+                    "possible_values": [
+                        [
+                            "85",
+                            "MethodArgument"
+                        ],
+                        [
+                            "85",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "Linear_44": {
+                    "variable": {
+                        "value": "self.linear",
+                        "possible_values": []
+                    },
+                    "in_features": {
+                        "value": "latent_size",
+                        "possible_values": [
+                            [
+                                "56",
+                                "MethodArgument"
+                            ],
+                            [
+                                "56",
+                                "MethodArgument"
+                            ]
+                        ]
+                    },
+                    "out_features": {
+                        "value": "latent_size",
+                        "possible_values": [
+                            [
+                                "56",
+                                "MethodArgument"
+                            ],
+                            [
+                                "56",
+                                "MethodArgument"
+                            ]
+                        ]
+                    }
+                },
+                "Linear_45": {
+                    "variable": {
+                        "value": "self.lin_out",
+                        "possible_values": []
+                    },
+                    "in_features": {
+                        "value": "self.hidden_size",
+                        "possible_values": []
+                    },
+                    "out_features": {
+                        "value": "alphabet_size",
+                        "possible_values": [
+                            [
+                                "27",
+                                "MethodArgument"
+                            ],
+                            [
+                                "27",
+                                "MethodArgument"
+                            ]
+                        ]
+                    }
+                },
+                "GRU_46": {
+                    "variable": {
+                        "value": "self.gru",
+                        "possible_values": []
+                    },
+                    "input_size": {
+                        "value": "latent_size",
+                        "possible_values": [
+                            [
+                                "56",
+                                "MethodArgument"
+                            ],
+                            [
+                                "56",
+                                "MethodArgument"
+                            ]
+                        ]
+                    },
+                    "hidden_size": {
+                        "value": "self.hidden_size",
+                        "possible_values": []
+                    },
+                    "num_layers": {
+                        "value": "3",
+                        "possible_values": []
+                    },
+                    "batch_first": {
+                        "value": "True",
+                        "possible_values": []
+                    }
+                }
+            },
+            "relu_25": {
+                "variable": {
+                    "value": "h",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.conv1(batch)",
+                    "possible_values": []
+                }
+            },
+            "relu_26": {
+                "variable": {
+                    "value": "h",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.conv2(h)",
+                    "possible_values": []
+                }
+            },
+            "relu_27": {
+                "variable": {
+                    "value": "h",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.conv3(h)",
+                    "possible_values": []
+                }
+            },
+            "relu_33": {
+                "variable": {
+                    "value": "h_out",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.linear(h_flat)",
+                    "possible_values": []
+                }
+            },
+            "relu_52": {
+                "variable": {
+                    "value": "h",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.linear(batch)",
+                    "possible_values": []
+                }
+            },
+            "unsqueeze_52": {
+                "variable": {
+                    "value": "h",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "1",
+                    "possible_values": []
+                }
+            },
+            "softmax_57": {
+                "input": {
+                    "value": "out",
+                    "possible_values": [
+                        [
+                            "self.lin_out(out.contiguous().view(-1, out.size(2)))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "-1",
+                    "possible_values": []
+                }
+            },
+            "zeros_53": {
+                "*size": {
+                    "value": "3",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "len(batch)",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "self.hidden_size",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "vae/vae_trainer.py": {
+        "torch": {
+            "load_109": {
+                "variable": {
+                    "value": "state",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "path",
+                    "possible_values": [
+                        [
+                            "self.checkpoint_path(self.epoch)",
+                            "Call"
+                        ],
+                        [
+                            "self.checkpoint_path(name)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "normal_117": {
+                "variable": {
+                    "value": "z_samples",
+                    "possible_values": []
+                },
+                "mean": {
+                    "value": "torch.cuda.FloatTensor(n_samples, 56) * 0",
+                    "possible_values": []
+                },
+                "std": {
+                    "value": "torch.cuda.FloatTensor(n_samples, 56) * 0 + 1",
+                    "possible_values": []
+                }
+            },
+            "save_100": {
+                "obj": {
+                    "value": "state",
+                    "possible_values": [
+                        [
+                            "{'encoder': self.encoder.state_dict(), 'decoder': self.decoder.state_dict(), 'optimiser': self.optimiser.state_dict(), 'scheduler': self.scheduler.state_dict()}",
+                            "Dict"
+                        ],
+                        [
+                            "torch.load(path)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "f": {
+                    "value": "path",
+                    "possible_values": [
+                        [
+                            "self.checkpoint_path(self.epoch)",
+                            "Call"
+                        ],
+                        [
+                            "self.checkpoint_path(name)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    }
+}

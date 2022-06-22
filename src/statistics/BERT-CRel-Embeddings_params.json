@@ -1,0 +1,513 @@
+{
+    "BMET/config.py": {
+        "torch": {
+            "device_10": {
+                "variable": {
+                    "value": "DEVICE",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda if USE_CUDA else cpu",
+                    "possible_values": []
+                }
+            },
+            "is_available_9": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "BMET/data.py": {
+        "torch": {
+            "MeshPairDataset_25": {
+                "base_class_0": {
+                    "value": "torch.utils.data.Dataset",
+                    "possible_values": []
+                },
+                "self.embs": {
+                    "value": "wv_model",
+                    "possible_values": []
+                }
+            },
+            "tensor_59": {
+                "variable": {
+                    "value": "labels",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "[rec[0] for rec in batch]",
+                    "possible_values": []
+                }
+            },
+            "tensor_60": {
+                "data": {
+                    "value": "rec[1]",
+                    "possible_values": []
+                }
+            },
+            "tensor_62": {
+                "data": {
+                    "value": "rec[2]",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "BMET/eval.py": {
+        "torch": {
+            "mm_60": {
+                "variable": {
+                    "value": "embs",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "we[0].weight",
+                    "possible_values": []
+                },
+                "mat2": {
+                    "value": "we[1].weight",
+                    "possible_values": []
+                }
+            },
+            "normalize_62": {
+                "variable": {
+                    "value": "embs",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "embs",
+                    "possible_values": [
+                        [
+                            "torch.mm(we[0].weight, we[1].weight).cpu().detach()",
+                            "Call"
+                        ],
+                        [
+                            "F.normalize(embs, p=2, dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "self.wv_mdl.emb",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "p": {
+                    "value": "2",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "possible_values": []
+                }
+            },
+            "einsum_89": {
+                "variable": {
+                    "value": "scores_t",
+                    "possible_values": []
+                },
+                "equation": {
+                    "value": "ij, ij -> i",
+                    "possible_values": []
+                },
+                "*operands": {
+                    "value": "mat[0]",
+                    "possible_values": []
+                }
+            },
+            "einsum_95": {
+                "variable": {
+                    "value": "scores_m",
+                    "possible_values": []
+                },
+                "equation": {
+                    "value": "ij, ij -> i",
+                    "possible_values": []
+                },
+                "*operands": {
+                    "value": "mat[2]",
+                    "possible_values": []
+                }
+            },
+            "empty_73": {
+                "*size": {
+                    "value": "mat_size",
+                    "possible_values": [
+                        [
+                            "torch.Size((len(ref), embs.size(1)))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "mean_80": {
+                "variable": {
+                    "value": "v",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.stack([embs[j] for j in idx])",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "possible_values": []
+                }
+            },
+            "stack_81": {
+                "tensors": {
+                    "value": "[embs[j] for j in idx]",
+                    "possible_values": []
+                }
+            },
+            "normalize_86": {
+                "input": {
+                    "value": "x",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "BMET/model.py": {
+        "torch": {
+            "MeshRelClassifier_20": {
+                "base_class_0": {
+                    "value": "torch.nn.Module",
+                    "possible_values": []
+                },
+                "self.wv_mdl": {
+                    "value": "wv",
+                    "possible_values": []
+                }
+            },
+            "Sequential_44": {
+                "variable": {
+                    "value": "we",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Embedding.from_pretrained(self.wv_mdl.emb, freeze=True, padding_idx=0, sparse=True)",
+                    "possible_values": []
+                }
+            },
+            "mm_67": {
+                "variable": {
+                    "value": "fine_tuned",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "emb_org",
+                    "possible_values": [
+                        [
+                            "self.we[0].weight",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "mat2": {
+                    "value": "proj",
+                    "possible_values": [
+                        [
+                            "self.we[1].weight",
+                            "Attribute"
+                        ]
+                    ]
+                }
+            },
+            "mm_75": {
+                "variable": {
+                    "value": "fine_tuned",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.we[0].weight",
+                    "possible_values": []
+                },
+                "mat2": {
+                    "value": "self.we[1].weight",
+                    "possible_values": []
+                }
+            },
+            "Linear_47": {
+                "in_features": {
+                    "value": "emb_dim",
+                    "possible_values": [
+                        [
+                            "self.wv_mdl.emb.size(1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "emb_dim",
+                    "possible_values": [
+                        [
+                            "self.wv_mdl.emb.size(1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "bias": {
+                    "value": "False",
+                    "possible_values": []
+                }
+            },
+            "eye_49": {
+                "n": {
+                    "value": "emb_dim",
+                    "possible_values": [
+                        [
+                            "self.wv_mdl.emb.size(1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "no_grad_68": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "eye_70": {
+                "n": {
+                    "value": "self.wv_mdl.emb.size(1)",
+                    "possible_values": []
+                }
+            },
+            "no_grad_78": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "eye_80": {
+                "n": {
+                    "value": "self.wv_mdl.emb.size(1)",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "BMET/utils.py": {
+        "torch": {
+            "tensor_220": {
+                "variable": {
+                    "value": "lengths",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "lengths",
+                    "possible_values": [
+                        [
+                            "torch.tensor(lengths)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "arange_223": {
+                "start": {
+                    "value": "0",
+                    "possible_values": []
+                },
+                "end": {
+                    "value": "max_len",
+                    "possible_values": [
+                        [
+                            "max_len or lengths.max()",
+                            "BoolOp"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "device": {
+                    "value": "lengths.device",
+                    "possible_values": []
+                }
+            },
+            "lt_223": {
+                "input": {
+                    "value": "lengths.unsqueeze(1)",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "BMET/vocab.py": {
+        "torch": {
+            "topk_93": {
+                "variable": {
+                    "value": "(scores, ids)",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "F.cosine_similarity(self.emb, v.repeat(self.emb.size(0), 1))",
+                    "possible_values": []
+                },
+                "k": {
+                    "value": "k",
+                    "possible_values": [
+                        [
+                            "5",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "normalize_79": {
+                "variable": {
+                    "value": "self.emb",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.emb",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "2",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "possible_values": []
+                }
+            },
+            "mean_87": {
+                "variable": {
+                    "value": "v",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.stack([self.emb[self[w]] for w in words])",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "possible_values": []
+                }
+            },
+            "cosine_similarity_94": {
+                "x1": {
+                    "value": "self.emb",
+                    "possible_values": []
+                },
+                "x2": {
+                    "value": "v.repeat(self.emb.size(0), 1)",
+                    "possible_values": []
+                }
+            },
+            "stack_88": {
+                "tensors": {
+                    "value": "[self.emb[self[w]] for w in words]",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "train.py": {
+        "torch": {
+            "DataLoader_39": {
+                "variable": {
+                    "value": "trn_it",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "ds['trn']",
+                    "possible_values": []
+                },
+                "batch_size": {
+                    "value": "cfg.BSZ",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "True",
+                    "possible_values": []
+                },
+                "collate_fn": {
+                    "value": "batchify",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_80": {
+                "variable": {
+                    "value": "val_it",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "val_ds",
+                    "possible_values": []
+                },
+                "batch_size": {
+                    "value": "cfg.BSZ",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "True",
+                    "possible_values": []
+                },
+                "collate_fn": {
+                    "value": "batchify",
+                    "possible_values": []
+                }
+            },
+            "ReduceLROnPlateau_131": {
+                "variable": {
+                    "value": "sch",
+                    "possible_values": []
+                },
+                "optimizer": {
+                    "value": "optimizer",
+                    "possible_values": [
+                        [
+                            "AdamW([p for (n, p) in model.named_parameters() if not n.startswith('bert.bert.embeddings.word_embeddings[0]')], lr=cfg.LR)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "patience": {
+                    "value": "cfg.SCH_PATIENCE",
+                    "possible_values": []
+                },
+                "factor": {
+                    "value": "cfg.SCH_FACTOR",
+                    "possible_values": []
+                },
+                "min_lr": {
+                    "value": "cfg.MIN_LR",
+                    "possible_values": []
+                },
+                "verbose": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_31": {
+                "seed": {
+                    "value": "cfg.RSEED",
+                    "possible_values": []
+                }
+            },
+            "clip_grad_norm__46": {
+                "parameters": {
+                    "value": "mdl.parameters()",
+                    "possible_values": []
+                },
+                "max_norm": {
+                    "value": "8",
+                    "possible_values": []
+                }
+            },
+            "no_grad_81": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

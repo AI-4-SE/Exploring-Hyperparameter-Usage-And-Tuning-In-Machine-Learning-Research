@@ -1,0 +1,4410 @@
+{
+    "utils/speech_commands_example/freeze.py": {
+        "tensorflow": {
+            "placeholder_80": {
+                "variable": {
+                    "value": "wav_data_placeholder",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.string",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[]",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "wav_data",
+                    "possible_values": []
+                }
+            },
+            "decode_wav_81": {
+                "variable": {
+                    "value": "decoded_sample_data",
+                    "possible_values": []
+                },
+                "contents": {
+                    "value": "wav_data_placeholder",
+                    "possible_values": [
+                        [
+                            "tf.placeholder(tf.string, [], name='wav_data')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "desired_channels": {
+                    "value": "1",
+                    "possible_values": []
+                },
+                "desired_samples": {
+                    "value": "model_settings['desired_samples']",
+                    "possible_values": [
+                        [
+                            "models.prepare_model_settings(len(words_list), sample_rate, clip_duration_ms, window_size_ms, window_stride_ms, dct_coefficient_count)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "name": {
+                    "value": "decoded_sample_data",
+                    "possible_values": []
+                }
+            },
+            "reshape_97": {
+                "variable": {
+                    "value": "reshaped_input",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "fingerprint_input",
+                    "possible_values": [
+                        [
+                            "contrib_audio.mfcc(spectrogram, decoded_sample_data.sample_rate, dct_coefficient_count=dct_coefficient_count)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, fingerprint_time_size * fingerprint_frequency_size]",
+                    "possible_values": []
+                }
+            },
+            "InteractiveSession_112": {
+                "variable": {
+                    "value": "sess",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "convert_variables_to_constants_120": {
+                "variable": {
+                    "value": "frozen_graph_def",
+                    "possible_values": []
+                },
+                "sess": {
+                    "value": "sess",
+                    "possible_values": [
+                        [
+                            "tf.InteractiveSession()",
+                            "Call"
+                        ]
+                    ]
+                },
+                "input_graph_def": {
+                    "value": "sess.graph_def",
+                    "possible_values": []
+                },
+                "output_node_names": {
+                    "value": "['labels_softmax']",
+                    "possible_values": []
+                }
+            },
+            "softmax_106": {
+                "logits": {
+                    "value": "logits",
+                    "possible_values": [
+                        [
+                            "models.create_model(reshaped_input, model_settings, model_architecture, is_training=False, runtime_settings=runtime_settings)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "name": {
+                    "value": "labels_softmax",
+                    "possible_values": []
+                }
+            },
+            "write_graph_122": {
+                "graph_or_graph_def": {
+                    "value": "frozen_graph_def",
+                    "possible_values": [
+                        [
+                            "graph_util.convert_variables_to_constants(sess, sess.graph_def, ['labels_softmax'])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "logdir": {
+                    "value": "os.path.dirname(FLAGS.output_file)",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "os.path.basename(FLAGS.output_file)",
+                    "possible_values": []
+                },
+                "as_text": {
+                    "value": "False",
+                    "possible_values": []
+                }
+            },
+            "info_127": {
+                "msg": {
+                    "value": "Saved frozen graph to %s",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "FLAGS.output_file",
+                    "possible_values": []
+                }
+            },
+            "run_180": {
+                "main": {
+                    "value": "main",
+                    "possible_values": []
+                },
+                "argv": {
+                    "value": "[sys.argv[0]] + unparsed",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "utils/speech_commands_example/input_data.py": {
+        "tensorflow": {
+            "placeholder_119": {
+                "variable": {
+                    "value": "wav_filename_placeholder",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.string",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[]",
+                    "possible_values": []
+                }
+            },
+            "read_file_120": {
+                "variable": {
+                    "value": "wav_loader",
+                    "possible_values": []
+                },
+                "filename": {
+                    "value": "wav_filename_placeholder",
+                    "possible_values": [
+                        [
+                            "tf.placeholder(tf.string, [])",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.string, [])",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.string, [])",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.string, [])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "decode_wav_121": {
+                "variable": {
+                    "value": "wav_decoder",
+                    "possible_values": []
+                },
+                "contents": {
+                    "value": "wav_loader",
+                    "possible_values": [
+                        [
+                            "io_ops.read_file(wav_filename_placeholder)",
+                            "Call"
+                        ],
+                        [
+                            "io_ops.read_file(wav_filename_placeholder)",
+                            "Call"
+                        ],
+                        [
+                            "io_ops.read_file(self.wav_filename_placeholder_)",
+                            "Call"
+                        ],
+                        [
+                            "io_ops.read_file(wav_filename_placeholder)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "desired_channels": {
+                    "value": "1",
+                    "possible_values": []
+                }
+            },
+            "placeholder_136": {
+                "variable": {
+                    "value": "wav_filename_placeholder",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.string",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[]",
+                    "possible_values": []
+                }
+            },
+            "placeholder_137": {
+                "variable": {
+                    "value": "sample_rate_placeholder",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.int32",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[]",
+                    "possible_values": []
+                }
+            },
+            "placeholder_138": {
+                "variable": {
+                    "value": "wav_data_placeholder",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, 1]",
+                    "possible_values": []
+                }
+            },
+            "encode_wav_139": {
+                "variable": {
+                    "value": "wav_encoder",
+                    "possible_values": []
+                },
+                "audio": {
+                    "value": "wav_data_placeholder",
+                    "possible_values": [
+                        [
+                            "tf.placeholder(tf.float32, [None, 1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "sample_rate": {
+                    "value": "sample_rate_placeholder",
+                    "possible_values": [
+                        [
+                            "tf.placeholder(tf.int32, [])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "write_file_141": {
+                "variable": {
+                    "value": "wav_saver",
+                    "possible_values": []
+                },
+                "filename": {
+                    "value": "wav_filename_placeholder",
+                    "possible_values": [
+                        [
+                            "tf.placeholder(tf.string, [])",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.string, [])",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.string, [])",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.string, [])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "contents": {
+                    "value": "wav_encoder",
+                    "possible_values": [
+                        [
+                            "contrib_audio.encode_wav(wav_data_placeholder, sample_rate_placeholder)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "placeholder_349": {
+                "variable": {
+                    "value": "self.wav_filename_placeholder_",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.string",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[]",
+                    "possible_values": []
+                }
+            },
+            "read_file_350": {
+                "variable": {
+                    "value": "wav_loader",
+                    "possible_values": []
+                },
+                "filename": {
+                    "value": "self.wav_filename_placeholder_",
+                    "possible_values": []
+                }
+            },
+            "decode_wav_351": {
+                "variable": {
+                    "value": "wav_decoder",
+                    "possible_values": []
+                },
+                "contents": {
+                    "value": "wav_loader",
+                    "possible_values": [
+                        [
+                            "io_ops.read_file(wav_filename_placeholder)",
+                            "Call"
+                        ],
+                        [
+                            "io_ops.read_file(wav_filename_placeholder)",
+                            "Call"
+                        ],
+                        [
+                            "io_ops.read_file(self.wav_filename_placeholder_)",
+                            "Call"
+                        ],
+                        [
+                            "io_ops.read_file(wav_filename_placeholder)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "desired_channels": {
+                    "value": "1",
+                    "possible_values": []
+                },
+                "desired_samples": {
+                    "value": "desired_samples",
+                    "possible_values": [
+                        [
+                            "model_settings['desired_samples']",
+                            "Subscript"
+                        ],
+                        [
+                            "model_settings['desired_samples']",
+                            "Subscript"
+                        ],
+                        [
+                            "model_settings['desired_samples']",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "placeholder_354": {
+                "variable": {
+                    "value": "self.foreground_volume_placeholder_",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[]",
+                    "possible_values": []
+                }
+            },
+            "multiply_355": {
+                "variable": {
+                    "value": "scaled_foreground",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "wav_decoder.audio",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "self.foreground_volume_placeholder_",
+                    "possible_values": []
+                }
+            },
+            "placeholder_358": {
+                "variable": {
+                    "value": "self.time_shift_padding_placeholder_",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.int32",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[2, 2]",
+                    "possible_values": []
+                }
+            },
+            "placeholder_359": {
+                "variable": {
+                    "value": "self.time_shift_offset_placeholder_",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.int32",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[2]",
+                    "possible_values": []
+                }
+            },
+            "pad_360": {
+                "variable": {
+                    "value": "padded_foreground",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "scaled_foreground",
+                    "possible_values": [
+                        [
+                            "tf.multiply(wav_decoder.audio, self.foreground_volume_placeholder_)",
+                            "Call"
+                        ],
+                        [
+                            "tf.multiply(wav_decoder.audio, foreground_volume_placeholder)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "paddings": {
+                    "value": "self.time_shift_padding_placeholder_",
+                    "possible_values": []
+                },
+                "mode": {
+                    "value": "CONSTANT",
+                    "possible_values": []
+                }
+            },
+            "slice_364": {
+                "variable": {
+                    "value": "sliced_foreground",
+                    "possible_values": []
+                },
+                "input_": {
+                    "value": "padded_foreground",
+                    "possible_values": [
+                        [
+                            "tf.pad(scaled_foreground, self.time_shift_padding_placeholder_, mode='CONSTANT')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "begin": {
+                    "value": "self.time_shift_offset_placeholder_",
+                    "possible_values": []
+                },
+                "size": {
+                    "value": "[desired_samples, -1]",
+                    "possible_values": []
+                }
+            },
+            "placeholder_368": {
+                "variable": {
+                    "value": "self.background_data_placeholder_",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[desired_samples, 1]",
+                    "possible_values": []
+                }
+            },
+            "placeholder_370": {
+                "variable": {
+                    "value": "self.background_volume_placeholder_",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[]",
+                    "possible_values": []
+                }
+            },
+            "multiply_371": {
+                "variable": {
+                    "value": "background_mul",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "self.background_data_placeholder_",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "self.background_volume_placeholder_",
+                    "possible_values": []
+                }
+            },
+            "add_373": {
+                "variable": {
+                    "value": "background_add",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "background_mul",
+                    "possible_values": [
+                        [
+                            "tf.multiply(self.background_data_placeholder_, self.background_volume_placeholder_)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "sliced_foreground",
+                    "possible_values": [
+                        [
+                            "tf.slice(padded_foreground, self.time_shift_offset_placeholder_, [desired_samples, -1])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "clip_by_value_374": {
+                "variable": {
+                    "value": "background_clamp",
+                    "possible_values": []
+                },
+                "t": {
+                    "value": "background_add",
+                    "possible_values": [
+                        [
+                            "tf.add(background_mul, sliced_foreground)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "clip_value_min": {
+                    "value": "-1.0",
+                    "possible_values": []
+                },
+                "clip_value_max": {
+                    "value": "1.0",
+                    "possible_values": []
+                }
+            },
+            "Session_118": {
+                "graph": {
+                    "value": "tf.Graph()",
+                    "possible_values": []
+                }
+            },
+            "Session_135": {
+                "graph": {
+                    "value": "tf.Graph()",
+                    "possible_values": []
+                }
+            },
+            "Glob_242": {
+                "filename": {
+                    "value": "search_path",
+                    "possible_values": [
+                        [
+                            "os.path.join(self.data_dir, '*', '*.wav')",
+                            "Call"
+                        ],
+                        [
+                            "os.path.join(self.data_dir, BACKGROUND_NOISE_DIR_NAME, '*.wav')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "placeholder_314": {
+                "variable": {
+                    "value": "wav_filename_placeholder",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.string",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[]",
+                    "possible_values": []
+                }
+            },
+            "read_file_315": {
+                "variable": {
+                    "value": "wav_loader",
+                    "possible_values": []
+                },
+                "filename": {
+                    "value": "wav_filename_placeholder",
+                    "possible_values": [
+                        [
+                            "tf.placeholder(tf.string, [])",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.string, [])",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.string, [])",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.string, [])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "decode_wav_316": {
+                "variable": {
+                    "value": "wav_decoder",
+                    "possible_values": []
+                },
+                "contents": {
+                    "value": "wav_loader",
+                    "possible_values": [
+                        [
+                            "io_ops.read_file(wav_filename_placeholder)",
+                            "Call"
+                        ],
+                        [
+                            "io_ops.read_file(wav_filename_placeholder)",
+                            "Call"
+                        ],
+                        [
+                            "io_ops.read_file(self.wav_filename_placeholder_)",
+                            "Call"
+                        ],
+                        [
+                            "io_ops.read_file(wav_filename_placeholder)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "desired_channels": {
+                    "value": "1",
+                    "possible_values": []
+                }
+            },
+            "placeholder_511": {
+                "variable": {
+                    "value": "wav_filename_placeholder",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.string",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[]",
+                    "possible_values": []
+                }
+            },
+            "read_file_512": {
+                "variable": {
+                    "value": "wav_loader",
+                    "possible_values": []
+                },
+                "filename": {
+                    "value": "wav_filename_placeholder",
+                    "possible_values": [
+                        [
+                            "tf.placeholder(tf.string, [])",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.string, [])",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.string, [])",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.string, [])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "decode_wav_513": {
+                "variable": {
+                    "value": "wav_decoder",
+                    "possible_values": []
+                },
+                "contents": {
+                    "value": "wav_loader",
+                    "possible_values": [
+                        [
+                            "io_ops.read_file(wav_filename_placeholder)",
+                            "Call"
+                        ],
+                        [
+                            "io_ops.read_file(wav_filename_placeholder)",
+                            "Call"
+                        ],
+                        [
+                            "io_ops.read_file(self.wav_filename_placeholder_)",
+                            "Call"
+                        ],
+                        [
+                            "io_ops.read_file(wav_filename_placeholder)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "desired_channels": {
+                    "value": "1",
+                    "possible_values": []
+                },
+                "desired_samples": {
+                    "value": "desired_samples",
+                    "possible_values": [
+                        [
+                            "model_settings['desired_samples']",
+                            "Subscript"
+                        ],
+                        [
+                            "model_settings['desired_samples']",
+                            "Subscript"
+                        ],
+                        [
+                            "model_settings['desired_samples']",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "placeholder_515": {
+                "variable": {
+                    "value": "foreground_volume_placeholder",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[]",
+                    "possible_values": []
+                }
+            },
+            "multiply_516": {
+                "variable": {
+                    "value": "scaled_foreground",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "wav_decoder.audio",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "foreground_volume_placeholder",
+                    "possible_values": [
+                        [
+                            "tf.placeholder(tf.float32, [])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "info_202": {
+                "msg": {
+                    "value": "Successfully downloaded %s (%d bytes)",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "filename",
+                    "possible_values": [
+                        [
+                            "data_url.split('/')[-1]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "**kwargs": {
+                    "value": "statinfo.st_size",
+                    "possible_values": []
+                }
+            },
+            "Session_313": {
+                "graph": {
+                    "value": "tf.Graph()",
+                    "possible_values": []
+                }
+            },
+            "Glob_319": {
+                "filename": {
+                    "value": "search_path",
+                    "possible_values": [
+                        [
+                            "os.path.join(self.data_dir, '*', '*.wav')",
+                            "Call"
+                        ],
+                        [
+                            "os.path.join(self.data_dir, BACKGROUND_NOISE_DIR_NAME, '*.wav')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Session_510": {
+                "graph": {
+                    "value": "tf.Graph()",
+                    "possible_values": []
+                }
+            },
+            "as_bytes_96": {
+                "bytes_or_text": {
+                    "value": "hash_name",
+                    "possible_values": [
+                        [
+                            "re.sub('_nohash_.*$', '', base_name)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Graph_118": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "Graph_135": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "error_195": {
+                "msg": {
+                    "value": "Failed to download URL: %s to folder: %s",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "data_url",
+                    "possible_values": []
+                },
+                "**kwargs": {
+                    "value": "filepath",
+                    "possible_values": [
+                        [
+                            "os.path.join(dest_directory, filename)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "error_197": {
+                "msg": {
+                    "value": "Please make sure you have enough free space and an internet connection",
+                    "possible_values": []
+                }
+            },
+            "Graph_313": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "Graph_510": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "utils/speech_commands_example/models.py": {
+        "tensorflow": {
+            "Saver_122": {
+                "variable": {
+                    "value": "saver",
+                    "possible_values": []
+                },
+                "var_list": {
+                    "value": "tf.global_variables()",
+                    "possible_values": []
+                }
+            },
+            "Variable_155": {
+                "variable": {
+                    "value": "weights",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.truncated_normal([fingerprint_size, label_count], stddev=0.001)",
+                    "possible_values": []
+                }
+            },
+            "Variable_157": {
+                "variable": {
+                    "value": "bias",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.zeros([label_count])",
+                    "possible_values": []
+                }
+            },
+            "reshape_217": {
+                "variable": {
+                    "value": "fingerprint_4d",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "fingerprint_input",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[-1, input_time_size, input_frequency_size, 1]",
+                    "possible_values": []
+                }
+            },
+            "Variable_222": {
+                "variable": {
+                    "value": "first_weights",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.truncated_normal([first_filter_height, first_filter_width, 1, first_filter_count], stddev=0.01)",
+                    "possible_values": []
+                }
+            },
+            "Variable_226": {
+                "variable": {
+                    "value": "first_bias",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.zeros([first_filter_count])",
+                    "possible_values": []
+                }
+            },
+            "relu_229": {
+                "variable": {
+                    "value": "first_relu",
+                    "possible_values": []
+                },
+                "features": {
+                    "value": "first_conv",
+                    "possible_values": [
+                        [
+                            "tf.nn.conv2d(fingerprint_4d, first_weights, [1, 1, 1, 1], 'SAME') + first_bias",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.nn.conv2d(fingerprint_4d, first_weights, [1, first_filter_stride_y, first_filter_stride_x, 1], 'VALID') + first_bias",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "max_pool_234": {
+                "variable": {
+                    "value": "max_pool",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "first_dropout",
+                    "possible_values": [
+                        [
+                            "tf.nn.dropout(first_relu, dropout_prob)",
+                            "Call"
+                        ],
+                        [
+                            "first_relu",
+                            "Name"
+                        ],
+                        [
+                            "tf.nn.dropout(first_relu, dropout_prob)",
+                            "Call"
+                        ],
+                        [
+                            "first_relu",
+                            "Name"
+                        ],
+                        [
+                            "tf.nn.dropout(first_relu, dropout_prob)",
+                            "Call"
+                        ],
+                        [
+                            "first_relu",
+                            "Name"
+                        ]
+                    ]
+                },
+                "ksize": {
+                    "value": "[1, 2, 2, 1]",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "[1, 2, 2, 1]",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "SAME",
+                    "possible_values": []
+                }
+            },
+            "Variable_238": {
+                "variable": {
+                    "value": "second_weights",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.truncated_normal([second_filter_height, second_filter_width, first_filter_count, second_filter_count], stddev=0.01)",
+                    "possible_values": []
+                }
+            },
+            "Variable_245": {
+                "variable": {
+                    "value": "second_bias",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.zeros([second_filter_count])",
+                    "possible_values": []
+                }
+            },
+            "relu_248": {
+                "variable": {
+                    "value": "second_relu",
+                    "possible_values": []
+                },
+                "features": {
+                    "value": "second_conv",
+                    "possible_values": [
+                        [
+                            "tf.nn.conv2d(max_pool, second_weights, [1, 1, 1, 1], 'SAME') + second_bias",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "reshape_259": {
+                "variable": {
+                    "value": "flattened_second_conv",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "second_dropout",
+                    "possible_values": [
+                        [
+                            "tf.nn.dropout(second_relu, dropout_prob)",
+                            "Call"
+                        ],
+                        [
+                            "second_relu",
+                            "Name"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, second_conv_element_count]",
+                    "possible_values": []
+                }
+            },
+            "Variable_262": {
+                "variable": {
+                    "value": "final_fc_weights",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.truncated_normal([second_conv_element_count, label_count], stddev=0.01)",
+                    "possible_values": []
+                }
+            },
+            "Variable_265": {
+                "variable": {
+                    "value": "final_fc_bias",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.zeros([label_count])",
+                    "possible_values": []
+                }
+            },
+            "reshape_323": {
+                "variable": {
+                    "value": "fingerprint_4d",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "fingerprint_input",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[-1, input_time_size, input_frequency_size, 1]",
+                    "possible_values": []
+                }
+            },
+            "Variable_330": {
+                "variable": {
+                    "value": "first_weights",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.truncated_normal([first_filter_height, first_filter_width, 1, first_filter_count], stddev=0.01)",
+                    "possible_values": []
+                }
+            },
+            "Variable_334": {
+                "variable": {
+                    "value": "first_bias",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.zeros([first_filter_count])",
+                    "possible_values": []
+                }
+            },
+            "relu_338": {
+                "variable": {
+                    "value": "first_relu",
+                    "possible_values": []
+                },
+                "features": {
+                    "value": "first_conv",
+                    "possible_values": [
+                        [
+                            "tf.nn.conv2d(fingerprint_4d, first_weights, [1, 1, 1, 1], 'SAME') + first_bias",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.nn.conv2d(fingerprint_4d, first_weights, [1, first_filter_stride_y, first_filter_stride_x, 1], 'VALID') + first_bias",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "reshape_351": {
+                "variable": {
+                    "value": "flattened_first_conv",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "first_dropout",
+                    "possible_values": [
+                        [
+                            "tf.nn.dropout(first_relu, dropout_prob)",
+                            "Call"
+                        ],
+                        [
+                            "first_relu",
+                            "Name"
+                        ],
+                        [
+                            "tf.nn.dropout(first_relu, dropout_prob)",
+                            "Call"
+                        ],
+                        [
+                            "first_relu",
+                            "Name"
+                        ],
+                        [
+                            "tf.nn.dropout(first_relu, dropout_prob)",
+                            "Call"
+                        ],
+                        [
+                            "first_relu",
+                            "Name"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, first_conv_element_count]",
+                    "possible_values": []
+                }
+            },
+            "Variable_354": {
+                "variable": {
+                    "value": "first_fc_weights",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.truncated_normal([first_conv_element_count, first_fc_output_channels], stddev=0.01)",
+                    "possible_values": []
+                }
+            },
+            "Variable_357": {
+                "variable": {
+                    "value": "first_fc_bias",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.zeros([first_fc_output_channels])",
+                    "possible_values": []
+                }
+            },
+            "Variable_364": {
+                "variable": {
+                    "value": "second_fc_weights",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.truncated_normal([first_fc_output_channels, second_fc_output_channels], stddev=0.01)",
+                    "possible_values": []
+                }
+            },
+            "Variable_367": {
+                "variable": {
+                    "value": "second_fc_bias",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.zeros([second_fc_output_channels])",
+                    "possible_values": []
+                }
+            },
+            "Variable_374": {
+                "variable": {
+                    "value": "final_fc_weights",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.truncated_normal([second_fc_output_channels, label_count], stddev=0.01)",
+                    "possible_values": []
+                }
+            },
+            "Variable_377": {
+                "variable": {
+                    "value": "final_fc_bias",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.zeros([label_count])",
+                    "possible_values": []
+                }
+            },
+            "Variable_465": {
+                "variable": {
+                    "value": "memory",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.zeros([num_filters, batch, input_time_size])",
+                    "possible_values": []
+                },
+                "trainable": {
+                    "value": "False",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "runtime-memory",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_483": {
+                "variable": {
+                    "value": "new_fingerprint_input",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "new_fingerprint_input",
+                    "possible_values": [
+                        [
+                            "fingerprint_input[:, -num_new_frames * input_frequency_size:]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.expand_dims(new_fingerprint_input, 2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "2",
+                    "possible_values": []
+                }
+            },
+            "Variable_486": {
+                "variable": {
+                    "value": "weights_frequency",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.truncated_normal([input_frequency_size, num_filters], stddev=0.01)",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_490": {
+                "variable": {
+                    "value": "weights_frequency",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "weights_frequency",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.truncated_normal([input_frequency_size, num_filters], stddev=0.01))",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(weights_frequency, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "possible_values": []
+                }
+            },
+            "conv1d_493": {
+                "variable": {
+                    "value": "activations_time",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "new_fingerprint_input",
+                    "possible_values": [
+                        [
+                            "fingerprint_input[:, -num_new_frames * input_frequency_size:]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.expand_dims(new_fingerprint_input, 2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "weights_frequency",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.truncated_normal([input_frequency_size, num_filters], stddev=0.01))",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(weights_frequency, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "stride": {
+                    "value": "input_frequency_size",
+                    "possible_values": [
+                        [
+                            "model_settings['dct_coefficient_count']",
+                            "Subscript"
+                        ],
+                        [
+                            "model_settings['dct_coefficient_count']",
+                            "Subscript"
+                        ],
+                        [
+                            "model_settings['dct_coefficient_count']",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "padding": {
+                    "value": "VALID",
+                    "possible_values": []
+                }
+            },
+            "transpose_497": {
+                "variable": {
+                    "value": "activations_time",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "activations_time",
+                    "possible_values": [
+                        [
+                            "tf.nn.conv1d(new_fingerprint_input, weights_frequency, input_frequency_size, 'VALID')",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(activations_time, perm=[2, 0, 1])",
+                            "Call"
+                        ],
+                        [
+                            "new_memory",
+                            "Name"
+                        ]
+                    ]
+                },
+                "perm": {
+                    "value": "[2, 0, 1]",
+                    "possible_values": []
+                }
+            },
+            "Variable_509": {
+                "variable": {
+                    "value": "weights_time",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.truncated_normal([num_filters, input_time_size], stddev=0.01)",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_514": {
+                "variable": {
+                    "value": "weights_time",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "weights_time",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.truncated_normal([num_filters, input_time_size], stddev=0.01))",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(weights_time, 2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "2",
+                    "possible_values": []
+                }
+            },
+            "matmul_515": {
+                "variable": {
+                    "value": "outputs",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "activations_time",
+                    "possible_values": [
+                        [
+                            "tf.nn.conv1d(new_fingerprint_input, weights_frequency, input_frequency_size, 'VALID')",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(activations_time, perm=[2, 0, 1])",
+                            "Call"
+                        ],
+                        [
+                            "new_memory",
+                            "Name"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "weights_time",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.truncated_normal([num_filters, input_time_size], stddev=0.01))",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(weights_time, 2)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reshape_520": {
+                "variable": {
+                    "value": "outputs",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "outputs",
+                    "possible_values": [
+                        [
+                            "tf.matmul(activations_time, weights_time)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(outputs, [num_units, rank, -1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[num_units, rank, -1]",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_522": {
+                "variable": {
+                    "value": "units_output",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "outputs",
+                    "possible_values": [
+                        [
+                            "tf.matmul(activations_time, weights_time)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(outputs, [num_units, rank, -1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "possible_values": []
+                }
+            },
+            "transpose_524": {
+                "variable": {
+                    "value": "units_output",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "units_output",
+                    "possible_values": [
+                        [
+                            "tf.reduce_sum(outputs, axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(units_output)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Variable_527": {
+                "variable": {
+                    "value": "bias",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.zeros([num_units])",
+                    "possible_values": []
+                }
+            },
+            "bias_add_528": {
+                "variable": {
+                    "value": "first_bias",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "units_output",
+                    "possible_values": [
+                        [
+                            "tf.reduce_sum(outputs, axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(units_output)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "bias": {
+                    "value": "bias",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.zeros([label_count]))",
+                            "Call"
+                        ],
+                        [
+                            "tf.Variable(tf.zeros([num_units]))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "relu_531": {
+                "variable": {
+                    "value": "first_relu",
+                    "possible_values": []
+                },
+                "features": {
+                    "value": "first_bias",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.zeros([first_filter_count]))",
+                            "Call"
+                        ],
+                        [
+                            "tf.Variable(tf.zeros([first_filter_count]))",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.bias_add(units_output, bias)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Variable_539": {
+                "variable": {
+                    "value": "first_fc_weights",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.truncated_normal([num_units, first_fc_output_channels], stddev=0.01)",
+                    "possible_values": []
+                }
+            },
+            "Variable_541": {
+                "variable": {
+                    "value": "first_fc_bias",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.zeros([first_fc_output_channels])",
+                    "possible_values": []
+                }
+            },
+            "Variable_548": {
+                "variable": {
+                    "value": "second_fc_weights",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.truncated_normal([first_fc_output_channels, second_fc_output_channels], stddev=0.01)",
+                    "possible_values": []
+                }
+            },
+            "Variable_551": {
+                "variable": {
+                    "value": "second_fc_bias",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.zeros([second_fc_output_channels])",
+                    "possible_values": []
+                }
+            },
+            "Variable_558": {
+                "variable": {
+                    "value": "final_fc_weights",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.truncated_normal([second_fc_output_channels, label_count], stddev=0.01)",
+                    "possible_values": []
+                }
+            },
+            "Variable_561": {
+                "variable": {
+                    "value": "final_fc_bias",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.zeros([label_count])",
+                    "possible_values": []
+                }
+            },
+            "placeholder_152": {
+                "variable": {
+                    "value": "dropout_prob",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "dropout_prob",
+                    "possible_values": []
+                }
+            },
+            "placeholder_214": {
+                "variable": {
+                    "value": "dropout_prob",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "dropout_prob",
+                    "possible_values": []
+                }
+            },
+            "dropout_231": {
+                "variable": {
+                    "value": "first_dropout",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "first_relu",
+                    "possible_values": [
+                        [
+                            "tf.nn.relu(first_conv)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(first_conv)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(first_bias)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "dropout_prob",
+                    "possible_values": [
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "dropout_250": {
+                "variable": {
+                    "value": "second_dropout",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "second_relu",
+                    "possible_values": [
+                        [
+                            "tf.nn.relu(second_conv)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "dropout_prob",
+                    "possible_values": [
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "placeholder_320": {
+                "variable": {
+                    "value": "dropout_prob",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "dropout_prob",
+                    "possible_values": []
+                }
+            },
+            "dropout_340": {
+                "variable": {
+                    "value": "first_dropout",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "first_relu",
+                    "possible_values": [
+                        [
+                            "tf.nn.relu(first_conv)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(first_conv)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(first_bias)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "dropout_prob",
+                    "possible_values": [
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "dropout_360": {
+                "variable": {
+                    "value": "second_fc_input",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "first_fc",
+                    "possible_values": [
+                        [
+                            "tf.matmul(flattened_first_conv, first_fc_weights) + first_fc_bias",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(first_dropout, first_fc_weights) + first_fc_bias",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "dropout_prob",
+                    "possible_values": [
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "dropout_370": {
+                "variable": {
+                    "value": "final_fc_input",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "second_fc",
+                    "possible_values": [
+                        [
+                            "tf.matmul(second_fc_input, second_fc_weights) + second_fc_bias",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(second_fc_input, second_fc_weights) + second_fc_bias",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "dropout_prob",
+                    "possible_values": [
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "placeholder_441": {
+                "variable": {
+                    "value": "dropout_prob",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "dropout_prob",
+                    "possible_values": []
+                }
+            },
+            "cond_476": {
+                "variable": {
+                    "value": "num_new_frames",
+                    "possible_values": []
+                },
+                "pred": {
+                    "value": "tf.equal(tf.count_nonzero(memory), 0)",
+                    "possible_values": []
+                },
+                "true_fn": {
+                    "value": "lambda : input_time_size",
+                    "possible_values": []
+                },
+                "false_fn": {
+                    "value": "lambda : int(runtime_settings['clip_stride_ms'] / window_stride_ms)",
+                    "possible_values": []
+                }
+            },
+            "concat_504": {
+                "variable": {
+                    "value": "new_memory",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[new_memory, activations_time]",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "2",
+                    "possible_values": []
+                }
+            },
+            "dropout_534": {
+                "variable": {
+                    "value": "first_dropout",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "first_relu",
+                    "possible_values": [
+                        [
+                            "tf.nn.relu(first_conv)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(first_conv)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(first_bias)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "dropout_prob",
+                    "possible_values": [
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "dropout_544": {
+                "variable": {
+                    "value": "second_fc_input",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "first_fc",
+                    "possible_values": [
+                        [
+                            "tf.matmul(flattened_first_conv, first_fc_weights) + first_fc_bias",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(first_dropout, first_fc_weights) + first_fc_bias",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "dropout_prob",
+                    "possible_values": [
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "dropout_554": {
+                "variable": {
+                    "value": "final_fc_input",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "second_fc",
+                    "possible_values": [
+                        [
+                            "tf.matmul(second_fc_input, second_fc_weights) + second_fc_bias",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(second_fc_input, second_fc_weights) + second_fc_bias",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "dropout_prob",
+                    "possible_values": [
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ],
+                        [
+                            "tf.placeholder(tf.float32, name='dropout_prob')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "global_variables_122": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "truncated_normal_156": {
+                "shape": {
+                    "value": "[fingerprint_size, label_count]",
+                    "possible_values": []
+                },
+                "stddev": {
+                    "value": "0.001",
+                    "possible_values": []
+                }
+            },
+            "zeros_157": {
+                "shape": {
+                    "value": "[label_count]",
+                    "possible_values": []
+                }
+            },
+            "matmul_158": {
+                "a": {
+                    "value": "fingerprint_input",
+                    "possible_values": []
+                },
+                "b": {
+                    "value": "weights",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.truncated_normal([fingerprint_size, label_count], stddev=0.001))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "truncated_normal_223": {
+                "shape": {
+                    "value": "[first_filter_height, first_filter_width, 1, first_filter_count]",
+                    "possible_values": []
+                },
+                "stddev": {
+                    "value": "0.01",
+                    "possible_values": []
+                }
+            },
+            "zeros_226": {
+                "shape": {
+                    "value": "[first_filter_count]",
+                    "possible_values": []
+                }
+            },
+            "conv2d_227": {
+                "input": {
+                    "value": "fingerprint_4d",
+                    "possible_values": [
+                        [
+                            "tf.reshape(fingerprint_input, [-1, input_time_size, input_frequency_size, 1])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(fingerprint_input, [-1, input_time_size, input_frequency_size, 1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "first_weights",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.truncated_normal([first_filter_height, first_filter_width, 1, first_filter_count], stddev=0.01))",
+                            "Call"
+                        ],
+                        [
+                            "tf.Variable(tf.truncated_normal([first_filter_height, first_filter_width, 1, first_filter_count], stddev=0.01))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "strides": {
+                    "value": "[1, 1, 1, 1]",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "SAME",
+                    "possible_values": []
+                }
+            },
+            "truncated_normal_239": {
+                "shape": {
+                    "value": "[second_filter_height, second_filter_width, first_filter_count, second_filter_count]",
+                    "possible_values": []
+                },
+                "stddev": {
+                    "value": "0.01",
+                    "possible_values": []
+                }
+            },
+            "zeros_245": {
+                "shape": {
+                    "value": "[second_filter_count]",
+                    "possible_values": []
+                }
+            },
+            "conv2d_246": {
+                "input": {
+                    "value": "max_pool",
+                    "possible_values": [
+                        [
+                            "tf.nn.max_pool(first_dropout, [1, 2, 2, 1], [1, 2, 2, 1], 'SAME')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "second_weights",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.truncated_normal([second_filter_height, second_filter_width, first_filter_count, second_filter_count], stddev=0.01))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "strides": {
+                    "value": "[1, 1, 1, 1]",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "SAME",
+                    "possible_values": []
+                }
+            },
+            "truncated_normal_263": {
+                "shape": {
+                    "value": "[second_conv_element_count, label_count]",
+                    "possible_values": []
+                },
+                "stddev": {
+                    "value": "0.01",
+                    "possible_values": []
+                }
+            },
+            "zeros_265": {
+                "shape": {
+                    "value": "[label_count]",
+                    "possible_values": []
+                }
+            },
+            "matmul_266": {
+                "a": {
+                    "value": "flattened_second_conv",
+                    "possible_values": [
+                        [
+                            "tf.reshape(second_dropout, [-1, second_conv_element_count])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "final_fc_weights",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.truncated_normal([second_conv_element_count, label_count], stddev=0.01))",
+                            "Call"
+                        ],
+                        [
+                            "tf.Variable(tf.truncated_normal([second_fc_output_channels, label_count], stddev=0.01))",
+                            "Call"
+                        ],
+                        [
+                            "tf.Variable(tf.truncated_normal([second_fc_output_channels, label_count], stddev=0.01))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "truncated_normal_331": {
+                "shape": {
+                    "value": "[first_filter_height, first_filter_width, 1, first_filter_count]",
+                    "possible_values": []
+                },
+                "stddev": {
+                    "value": "0.01",
+                    "possible_values": []
+                }
+            },
+            "zeros_334": {
+                "shape": {
+                    "value": "[first_filter_count]",
+                    "possible_values": []
+                }
+            },
+            "conv2d_335": {
+                "input": {
+                    "value": "fingerprint_4d",
+                    "possible_values": [
+                        [
+                            "tf.reshape(fingerprint_input, [-1, input_time_size, input_frequency_size, 1])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(fingerprint_input, [-1, input_time_size, input_frequency_size, 1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "first_weights",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.truncated_normal([first_filter_height, first_filter_width, 1, first_filter_count], stddev=0.01))",
+                            "Call"
+                        ],
+                        [
+                            "tf.Variable(tf.truncated_normal([first_filter_height, first_filter_width, 1, first_filter_count], stddev=0.01))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "strides": {
+                    "value": "[1, first_filter_stride_y, first_filter_stride_x, 1]",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "VALID",
+                    "possible_values": []
+                }
+            },
+            "truncated_normal_355": {
+                "shape": {
+                    "value": "[first_conv_element_count, first_fc_output_channels]",
+                    "possible_values": []
+                },
+                "stddev": {
+                    "value": "0.01",
+                    "possible_values": []
+                }
+            },
+            "zeros_357": {
+                "shape": {
+                    "value": "[first_fc_output_channels]",
+                    "possible_values": []
+                }
+            },
+            "matmul_358": {
+                "a": {
+                    "value": "flattened_first_conv",
+                    "possible_values": [
+                        [
+                            "tf.reshape(first_dropout, [-1, first_conv_element_count])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "first_fc_weights",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.truncated_normal([first_conv_element_count, first_fc_output_channels], stddev=0.01))",
+                            "Call"
+                        ],
+                        [
+                            "tf.Variable(tf.truncated_normal([num_units, first_fc_output_channels], stddev=0.01))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "truncated_normal_365": {
+                "shape": {
+                    "value": "[first_fc_output_channels, second_fc_output_channels]",
+                    "possible_values": []
+                },
+                "stddev": {
+                    "value": "0.01",
+                    "possible_values": []
+                }
+            },
+            "zeros_367": {
+                "shape": {
+                    "value": "[second_fc_output_channels]",
+                    "possible_values": []
+                }
+            },
+            "matmul_368": {
+                "a": {
+                    "value": "second_fc_input",
+                    "possible_values": [
+                        [
+                            "tf.nn.dropout(first_fc, dropout_prob)",
+                            "Call"
+                        ],
+                        [
+                            "first_fc",
+                            "Name"
+                        ],
+                        [
+                            "tf.nn.dropout(first_fc, dropout_prob)",
+                            "Call"
+                        ],
+                        [
+                            "first_fc",
+                            "Name"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "second_fc_weights",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.truncated_normal([first_fc_output_channels, second_fc_output_channels], stddev=0.01))",
+                            "Call"
+                        ],
+                        [
+                            "tf.Variable(tf.truncated_normal([first_fc_output_channels, second_fc_output_channels], stddev=0.01))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "truncated_normal_375": {
+                "shape": {
+                    "value": "[second_fc_output_channels, label_count]",
+                    "possible_values": []
+                },
+                "stddev": {
+                    "value": "0.01",
+                    "possible_values": []
+                }
+            },
+            "zeros_377": {
+                "shape": {
+                    "value": "[label_count]",
+                    "possible_values": []
+                }
+            },
+            "matmul_378": {
+                "a": {
+                    "value": "final_fc_input",
+                    "possible_values": [
+                        [
+                            "tf.nn.dropout(second_fc, dropout_prob)",
+                            "Call"
+                        ],
+                        [
+                            "second_fc",
+                            "Name"
+                        ],
+                        [
+                            "tf.nn.dropout(second_fc, dropout_prob)",
+                            "Call"
+                        ],
+                        [
+                            "second_fc",
+                            "Name"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "final_fc_weights",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.truncated_normal([second_conv_element_count, label_count], stddev=0.01))",
+                            "Call"
+                        ],
+                        [
+                            "tf.Variable(tf.truncated_normal([second_fc_output_channels, label_count], stddev=0.01))",
+                            "Call"
+                        ],
+                        [
+                            "tf.Variable(tf.truncated_normal([second_fc_output_channels, label_count], stddev=0.01))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "zeros_465": {
+                "shape": {
+                    "value": "[num_filters, batch, input_time_size]",
+                    "possible_values": []
+                }
+            },
+            "truncated_normal_487": {
+                "shape": {
+                    "value": "[input_frequency_size, num_filters]",
+                    "possible_values": []
+                },
+                "stddev": {
+                    "value": "0.01",
+                    "possible_values": []
+                }
+            },
+            "assign_505": {
+                "ref": {
+                    "value": "memory",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.zeros([num_filters, batch, input_time_size]), trainable=False, name='runtime-memory')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "value": {
+                    "value": "new_memory",
+                    "possible_values": [
+                        [
+                            "memory[:, :, num_new_frames:]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.concat([new_memory, activations_time], 2)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "truncated_normal_510": {
+                "shape": {
+                    "value": "[num_filters, input_time_size]",
+                    "possible_values": []
+                },
+                "stddev": {
+                    "value": "0.01",
+                    "possible_values": []
+                }
+            },
+            "zeros_527": {
+                "shape": {
+                    "value": "[num_units]",
+                    "possible_values": []
+                }
+            },
+            "truncated_normal_540": {
+                "shape": {
+                    "value": "[num_units, first_fc_output_channels]",
+                    "possible_values": []
+                },
+                "stddev": {
+                    "value": "0.01",
+                    "possible_values": []
+                }
+            },
+            "zeros_541": {
+                "shape": {
+                    "value": "[first_fc_output_channels]",
+                    "possible_values": []
+                }
+            },
+            "matmul_542": {
+                "a": {
+                    "value": "first_dropout",
+                    "possible_values": [
+                        [
+                            "tf.nn.dropout(first_relu, dropout_prob)",
+                            "Call"
+                        ],
+                        [
+                            "first_relu",
+                            "Name"
+                        ],
+                        [
+                            "tf.nn.dropout(first_relu, dropout_prob)",
+                            "Call"
+                        ],
+                        [
+                            "first_relu",
+                            "Name"
+                        ],
+                        [
+                            "tf.nn.dropout(first_relu, dropout_prob)",
+                            "Call"
+                        ],
+                        [
+                            "first_relu",
+                            "Name"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "first_fc_weights",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.truncated_normal([first_conv_element_count, first_fc_output_channels], stddev=0.01))",
+                            "Call"
+                        ],
+                        [
+                            "tf.Variable(tf.truncated_normal([num_units, first_fc_output_channels], stddev=0.01))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "truncated_normal_549": {
+                "shape": {
+                    "value": "[first_fc_output_channels, second_fc_output_channels]",
+                    "possible_values": []
+                },
+                "stddev": {
+                    "value": "0.01",
+                    "possible_values": []
+                }
+            },
+            "zeros_551": {
+                "shape": {
+                    "value": "[second_fc_output_channels]",
+                    "possible_values": []
+                }
+            },
+            "matmul_552": {
+                "a": {
+                    "value": "second_fc_input",
+                    "possible_values": [
+                        [
+                            "tf.nn.dropout(first_fc, dropout_prob)",
+                            "Call"
+                        ],
+                        [
+                            "first_fc",
+                            "Name"
+                        ],
+                        [
+                            "tf.nn.dropout(first_fc, dropout_prob)",
+                            "Call"
+                        ],
+                        [
+                            "first_fc",
+                            "Name"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "second_fc_weights",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.truncated_normal([first_fc_output_channels, second_fc_output_channels], stddev=0.01))",
+                            "Call"
+                        ],
+                        [
+                            "tf.Variable(tf.truncated_normal([first_fc_output_channels, second_fc_output_channels], stddev=0.01))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "truncated_normal_559": {
+                "shape": {
+                    "value": "[second_fc_output_channels, label_count]",
+                    "possible_values": []
+                },
+                "stddev": {
+                    "value": "0.01",
+                    "possible_values": []
+                }
+            },
+            "zeros_561": {
+                "shape": {
+                    "value": "[label_count]",
+                    "possible_values": []
+                }
+            },
+            "matmul_562": {
+                "a": {
+                    "value": "final_fc_input",
+                    "possible_values": [
+                        [
+                            "tf.nn.dropout(second_fc, dropout_prob)",
+                            "Call"
+                        ],
+                        [
+                            "second_fc",
+                            "Name"
+                        ],
+                        [
+                            "tf.nn.dropout(second_fc, dropout_prob)",
+                            "Call"
+                        ],
+                        [
+                            "second_fc",
+                            "Name"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "final_fc_weights",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.truncated_normal([second_conv_element_count, label_count], stddev=0.01))",
+                            "Call"
+                        ],
+                        [
+                            "tf.Variable(tf.truncated_normal([second_fc_output_channels, label_count], stddev=0.01))",
+                            "Call"
+                        ],
+                        [
+                            "tf.Variable(tf.truncated_normal([second_fc_output_channels, label_count], stddev=0.01))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "equal_477": {
+                "x": {
+                    "value": "tf.count_nonzero(memory)",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "0",
+                    "possible_values": []
+                }
+            },
+            "count_nonzero_477": {
+                "input": {
+                    "value": "memory",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.zeros([num_filters, batch, input_time_size]), trainable=False, name='runtime-memory')",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "utils/speech_commands_example/train.py": {
+        "tensorflow": {
+            "InteractiveSession_92": {
+                "variable": {
+                    "value": "sess",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "placeholder_124": {
+                "variable": {
+                    "value": "fingerprint_input",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, fingerprint_size]",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "fingerprint_input",
+                    "possible_values": []
+                }
+            },
+            "placeholder_134": {
+                "variable": {
+                    "value": "ground_truth_input",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, label_count]",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "groundtruth_input",
+                    "possible_values": []
+                }
+            },
+            "argmax_155": {
+                "variable": {
+                    "value": "predicted_indices",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "logits",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "possible_values": []
+                }
+            },
+            "argmax_156": {
+                "variable": {
+                    "value": "expected_indices",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "ground_truth_input",
+                    "possible_values": [
+                        [
+                            "tf.placeholder(tf.float32, [None, label_count], name='groundtruth_input')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "possible_values": []
+                }
+            },
+            "equal_157": {
+                "variable": {
+                    "value": "correct_prediction",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "predicted_indices",
+                    "possible_values": [
+                        [
+                            "tf.argmax(logits, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "expected_indices",
+                    "possible_values": [
+                        [
+                            "tf.argmax(ground_truth_input, 1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "confusion_matrix_158": {
+                "variable": {
+                    "value": "confusion_matrix",
+                    "possible_values": []
+                },
+                "labels": {
+                    "value": "expected_indices",
+                    "possible_values": [
+                        [
+                            "tf.argmax(ground_truth_input, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "predictions": {
+                    "value": "predicted_indices",
+                    "possible_values": [
+                        [
+                            "tf.argmax(logits, 1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reduce_mean_159": {
+                "variable": {
+                    "value": "evaluation_step",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "tf.cast(correct_prediction, tf.float32)",
+                    "possible_values": []
+                }
+            },
+            "get_or_create_global_step_162": {
+                "variable": {
+                    "value": "global_step",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "assign_163": {
+                "variable": {
+                    "value": "increment_global_step",
+                    "possible_values": []
+                },
+                "ref": {
+                    "value": "global_step",
+                    "possible_values": [
+                        [
+                            "tf.contrib.framework.get_or_create_global_step()",
+                            "Call"
+                        ]
+                    ]
+                },
+                "value": {
+                    "value": "global_step + 1",
+                    "possible_values": []
+                }
+            },
+            "Saver_165": {
+                "variable": {
+                    "value": "saver",
+                    "possible_values": []
+                },
+                "var_list": {
+                    "value": "tf.global_variables()",
+                    "possible_values": []
+                }
+            },
+            "merge_all_168": {
+                "variable": {
+                    "value": "merged_summaries",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "FileWriter_169": {
+                "variable": {
+                    "value": "train_writer",
+                    "possible_values": []
+                },
+                "logdir": {
+                    "value": "FLAGS.summaries_dir + '/train'",
+                    "possible_values": []
+                },
+                "graph": {
+                    "value": "sess.graph",
+                    "possible_values": []
+                }
+            },
+            "FileWriter_171": {
+                "variable": {
+                    "value": "validation_writer",
+                    "possible_values": []
+                },
+                "logdir": {
+                    "value": "FLAGS.summaries_dir + '/validation'",
+                    "possible_values": []
+                }
+            },
+            "set_verbosity_89": {
+                "level": {
+                    "value": "tf.logging.INFO",
+                    "possible_values": []
+                }
+            },
+            "add_check_numerics_ops_141": {
+                "variable": {
+                    "value": "checks",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_146": {
+                "variable": {
+                    "value": "cross_entropy_mean",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "tf.nn.softmax_cross_entropy_with_logits(labels=ground_truth_input, logits=logits)",
+                    "possible_values": []
+                }
+            },
+            "scalar_149": {
+                "name": {
+                    "value": "cross_entropy",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "cross_entropy_mean",
+                    "possible_values": [
+                        [
+                            "tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=ground_truth_input, logits=logits))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "placeholder_151": {
+                "variable": {
+                    "value": "learning_rate_input",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[]",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "learning_rate_input",
+                    "possible_values": []
+                }
+            },
+            "GradientDescentOptimizer_153": {
+                "variable": {
+                    "value": "train_step",
+                    "possible_values": []
+                },
+                "learning_rate": {
+                    "value": "learning_rate_input",
+                    "possible_values": [
+                        [
+                            "tf.placeholder(tf.float32, [], name='learning_rate_input')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "scalar_160": {
+                "name": {
+                    "value": "accuracy",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "evaluation_step",
+                    "possible_values": [
+                        [
+                            "tf.reduce_mean(tf.cast(correct_prediction, tf.float32))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "global_variables_initializer_173": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "run_173": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "info_181": {
+                "msg": {
+                    "value": "Training from step: %d ",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "start_step",
+                    "possible_values": [
+                        [
+                            "1",
+                            "Constant"
+                        ],
+                        [
+                            "global_step.eval(session=sess)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "write_graph_184": {
+                "graph_or_graph_def": {
+                    "value": "sess.graph_def",
+                    "possible_values": []
+                },
+                "logdir": {
+                    "value": "FLAGS.train_dir",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "FLAGS.model_architecture + '.pbtxt'",
+                    "possible_values": []
+                }
+            },
+            "info_261": {
+                "msg": {
+                    "value": "set_size=%d",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "set_size",
+                    "possible_values": [
+                        [
+                            "audio_processor.set_size('testing')",
+                            "Call"
+                        ],
+                        [
+                            "audio_processor.set_size('validation')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "info_280": {
+                "msg": {
+                    "value": "'Confusion Matrix:\\n %s' % total_conf_matrix",
+                    "possible_values": []
+                }
+            },
+            "info_281": {
+                "msg": {
+                    "value": "'Final test accuracy = %.1f%% (N=%d)' % (total_accuracy * 100, set_size)",
+                    "possible_values": []
+                }
+            },
+            "run_428": {
+                "main": {
+                    "value": "main",
+                    "possible_values": []
+                },
+                "argv": {
+                    "value": "[sys.argv[0]] + unparsed",
+                    "possible_values": []
+                }
+            },
+            "name_scope_145": {
+                "name": {
+                    "value": "cross_entropy",
+                    "possible_values": []
+                }
+            },
+            "name_scope_150": {
+                "name": {
+                    "value": "train",
+                    "possible_values": []
+                }
+            },
+            "control_dependencies_150": {
+                "control_inputs": {
+                    "value": "control_dependencies",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "[checks]",
+                            "List"
+                        ]
+                    ]
+                }
+            },
+            "cast_159": {
+                "x": {
+                    "value": "correct_prediction",
+                    "possible_values": [
+                        [
+                            "tf.equal(predicted_indices, expected_indices)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "possible_values": []
+                }
+            },
+            "global_variables_165": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "GFile_188": {
+                "name": {
+                    "value": "os.path.join(FLAGS.train_dir, FLAGS.model_architecture + '_labels.txt')",
+                    "possible_values": []
+                },
+                "mode": {
+                    "value": "w",
+                    "possible_values": []
+                }
+            },
+            "info_220": {
+                "msg": {
+                    "value": "'Step #%d: rate %f, accuracy %.1f%%, cross entropy %f' % (training_step, learning_rate_value, train_accuracy * 100, cross_entropy_value)",
+                    "possible_values": []
+                }
+            },
+            "softmax_cross_entropy_with_logits_147": {
+                "labels": {
+                    "value": "ground_truth_input",
+                    "possible_values": [
+                        [
+                            "tf.placeholder(tf.float32, [None, label_count], name='groundtruth_input')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "logits": {
+                    "value": "logits",
+                    "possible_values": []
+                }
+            },
+            "info_248": {
+                "msg": {
+                    "value": "'Confusion Matrix:\\n %s' % total_conf_matrix",
+                    "possible_values": []
+                }
+            },
+            "info_249": {
+                "msg": {
+                    "value": "'Step %d: Validation accuracy = %.1f%% (N=%d)' % (training_step, total_accuracy * 100, set_size)",
+                    "possible_values": []
+                }
+            },
+            "info_257": {
+                "msg": {
+                    "value": "Saving to \"%s-%d\"",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "checkpoint_path",
+                    "possible_values": [
+                        [
+                            "os.path.join(FLAGS.train_dir, FLAGS.model_architecture + '.ckpt')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "**kwargs": {
+                    "value": "training_step",
+                    "possible_values": [
+                        [
+                            "range(start_step, training_steps_max + 1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "service.py": {
+        "torch": {
+            "from_numpy_99": {
+                "variable": {
+                    "value": "model_in",
+                    "possible_values": []
+                },
+                "ndarray": {
+                    "value": "self.audio_processor.compute_mfccs(wav_data).squeeze(2)",
+                    "possible_values": []
+                }
+            },
+            "unsqueeze_99": {
+                "variable": {
+                    "value": "model_in",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "0",
+                    "possible_values": []
+                }
+            },
+            "softmax_103": {
+                "input": {
+                    "value": "self.model(model_in).squeeze(0).cpu()",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "utils/model.py": {
+        "torch": {
+            "SerializableModule_72": {
+                "base_class_0": {
+                    "value": "torch.nn.Module",
+                    "possible_values": []
+                }
+            },
+            "SpeechDataset_212": {
+                "base_class_0": {
+                    "value": "torch.utils.data.Dataset",
+                    "possible_values": []
+                },
+                "self.set_type": {
+                    "value": "set_type",
+                    "possible_values": []
+                }
+            },
+            "normal_70": {
+                "variable": {
+                    "value": "tensor[torch.abs(tensor) > 2 * std_dev]",
+                    "possible_values": []
+                },
+                "mean": {
+                    "value": "t",
+                    "possible_values": [
+                        [
+                            "tensor[torch.abs(tensor) > 2 * std_dev]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "std": {
+                    "value": "std_dev",
+                    "possible_values": [
+                        [
+                            "0.01",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "Conv2d_87": {
+                "variable": {
+                    "value": "self.conv0",
+                    "possible_values": []
+                },
+                "in_channels": {
+                    "value": "1",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "n_maps",
+                    "possible_values": [
+                        [
+                            "config['n_feature_maps']",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "kernel_size": {
+                    "value": "(3, 3)",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "(1, 1)",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "False",
+                    "possible_values": []
+                }
+            },
+            "Linear_102": {
+                "variable": {
+                    "value": "self.output",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "n_maps",
+                    "possible_values": [
+                        [
+                            "config['n_feature_maps']",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "n_labels",
+                    "possible_values": [
+                        [
+                            "config['n_labels']",
+                            "Subscript"
+                        ],
+                        [
+                            "config['n_labels']",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "mean_120": {
+                "variable": {
+                    "value": "x",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x",
+                    "possible_values": [
+                        [
+                            "x.unsqueeze(1)",
+                            "Call"
+                        ],
+                        [
+                            "x.view(x.size(0), x.size(1), -1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.mean(x, 2)",
+                            "Call"
+                        ],
+                        [
+                            "y + old_x",
+                            "BinOp"
+                        ],
+                        [
+                            "y",
+                            "Name"
+                        ],
+                        [
+                            "getattr(self, 'bn{}'.format(i))(x)",
+                            "Call"
+                        ],
+                        [
+                            "Variable(torch.zeros(1, 1, height, width), volatile=True)",
+                            "Call"
+                        ],
+                        [
+                            "self.pool1(self.conv1(x))",
+                            "Call"
+                        ],
+                        [
+                            "self.pool2(self.conv2(x))",
+                            "Call"
+                        ],
+                        [
+                            "F.relu(self.conv1(x.unsqueeze(1)))",
+                            "Call"
+                        ],
+                        [
+                            "self.dropout(x)",
+                            "Call"
+                        ],
+                        [
+                            "self.pool1(x)",
+                            "Call"
+                        ],
+                        [
+                            "F.relu(self.conv2(x))",
+                            "Call"
+                        ],
+                        [
+                            "self.dropout(x)",
+                            "Call"
+                        ],
+                        [
+                            "self.pool2(x)",
+                            "Call"
+                        ],
+                        [
+                            "x.view(x.size(0), -1)",
+                            "Call"
+                        ],
+                        [
+                            "self.lin(x)",
+                            "Call"
+                        ],
+                        [
+                            "self.dnn1(x)",
+                            "Call"
+                        ],
+                        [
+                            "F.relu(x)",
+                            "Call"
+                        ],
+                        [
+                            "self.dropout(x)",
+                            "Call"
+                        ],
+                        [
+                            "self.dnn2(x)",
+                            "Call"
+                        ],
+                        [
+                            "self.dropout(x)",
+                            "Call"
+                        ],
+                        [
+                            "None",
+                            "Constant"
+                        ],
+                        [
+                            "audio_tensor if x is None else torch.cat((x, audio_tensor), 0)",
+                            "IfExp"
+                        ],
+                        [
+                            "audio_tensor if x is None else torch.cat((x, audio_tensor), 0)",
+                            "IfExp"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "2",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_135": {
+                "variable": {
+                    "value": "self.conv1",
+                    "possible_values": []
+                },
+                "in_channels": {
+                    "value": "1",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "n_featmaps1",
+                    "possible_values": [
+                        [
+                            "config['n_feature_maps1']",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "kernel_size": {
+                    "value": "conv1_size",
+                    "possible_values": [
+                        [
+                            "config['conv1_size']",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "stride": {
+                    "value": "conv1_stride",
+                    "possible_values": [
+                        [
+                            "tuple(config['conv1_stride'])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "MaxPool2d_141": {
+                "variable": {
+                    "value": "self.pool1",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "conv1_pool",
+                    "possible_values": [
+                        [
+                            "config['conv1_pool']",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "Linear_180": {
+                "variable": {
+                    "value": "self.output",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "last_size",
+                    "possible_values": [
+                        [
+                            "conv_net_size",
+                            "Name"
+                        ],
+                        [
+                            "conv_net_size",
+                            "Name"
+                        ],
+                        [
+                            "dnn1_size",
+                            "Name"
+                        ],
+                        [
+                            "dnn2_size",
+                            "Name"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "n_labels",
+                    "possible_values": [
+                        [
+                            "config['n_labels']",
+                            "Subscript"
+                        ],
+                        [
+                            "config['n_labels']",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "Dropout_184": {
+                "variable": {
+                    "value": "self.dropout",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "dropout_prob",
+                    "possible_values": [
+                        [
+                            "config['dropout_prob']",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "relu_187": {
+                "variable": {
+                    "value": "x",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.conv1(x.unsqueeze(1))",
+                    "possible_values": []
+                }
+            },
+            "sum_67": {
+                "input": {
+                    "value": "torch.abs(tensor) > 2 * std_dev",
+                    "possible_values": []
+                }
+            },
+            "save_77": {
+                "obj": {
+                    "value": "self.state_dict()",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "filename",
+                    "possible_values": [
+                        [
+                            "os.listdir(path_name)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "AvgPool2d_89": {
+                "variable": {
+                    "value": "self.pool",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "config['res_pool']",
+                    "possible_values": []
+                }
+            },
+            "relu_107": {
+                "variable": {
+                    "value": "y",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "getattr(self, 'conv{}'.format(i))(x)",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_153": {
+                "variable": {
+                    "value": "self.conv2",
+                    "possible_values": []
+                },
+                "in_channels": {
+                    "value": "n_featmaps1",
+                    "possible_values": [
+                        [
+                            "config['n_feature_maps1']",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "out_channels": {
+                    "value": "n_featmaps2",
+                    "possible_values": [
+                        [
+                            "config['n_feature_maps2']",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "kernel_size": {
+                    "value": "conv2_size",
+                    "possible_values": [
+                        [
+                            "config['conv2_size']",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "stride": {
+                    "value": "conv2_stride",
+                    "possible_values": [
+                        [
+                            "tuple(config['conv2_stride'])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "MaxPool2d_157": {
+                "variable": {
+                    "value": "self.pool2",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "conv2_pool",
+                    "possible_values": [
+                        [
+                            "config['conv2_pool']",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "Linear_162": {
+                "variable": {
+                    "value": "self.lin",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "conv_net_size",
+                    "possible_values": [
+                        [
+                            "x.view(1, -1).size(1)",
+                            "Call"
+                        ],
+                        [
+                            "x.view(1, -1).size(1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "32",
+                    "possible_values": []
+                }
+            },
+            "relu_191": {
+                "variable": {
+                    "value": "x",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.conv2(x)",
+                    "possible_values": []
+                }
+            },
+            "load_80": {
+                "f": {
+                    "value": "filename",
+                    "possible_values": [
+                        [
+                            "os.listdir(path_name)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "map_location": {
+                    "value": "lambda storage, loc: storage",
+                    "possible_values": []
+                }
+            },
+            "zeros_143": {
+                "*size": {
+                    "value": "1",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "1",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "height",
+                    "possible_values": [
+                        [
+                            "config['height']",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "layout": {
+                    "value": "width",
+                    "possible_values": [
+                        [
+                            "config['width']",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "Linear_168": {
+                "variable": {
+                    "value": "self.dnn1",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "conv_net_size",
+                    "possible_values": [
+                        [
+                            "x.view(1, -1).size(1)",
+                            "Call"
+                        ],
+                        [
+                            "x.view(1, -1).size(1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "dnn1_size",
+                    "possible_values": [
+                        [
+                            "config['dnn1_size']",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "Linear_172": {
+                "variable": {
+                    "value": "self.dnn1",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "32",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "dnn1_size",
+                    "possible_values": [
+                        [
+                            "config['dnn1_size']",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "Linear_176": {
+                "variable": {
+                    "value": "self.dnn2",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "dnn1_size",
+                    "possible_values": [
+                        [
+                            "config['dnn1_size']",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "dnn2_size",
+                    "possible_values": [
+                        [
+                            "config['dnn2_size']",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "relu_200": {
+                "variable": {
+                    "value": "x",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x",
+                    "possible_values": [
+                        [
+                            "x.unsqueeze(1)",
+                            "Call"
+                        ],
+                        [
+                            "x.view(x.size(0), x.size(1), -1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.mean(x, 2)",
+                            "Call"
+                        ],
+                        [
+                            "y + old_x",
+                            "BinOp"
+                        ],
+                        [
+                            "y",
+                            "Name"
+                        ],
+                        [
+                            "getattr(self, 'bn{}'.format(i))(x)",
+                            "Call"
+                        ],
+                        [
+                            "Variable(torch.zeros(1, 1, height, width), volatile=True)",
+                            "Call"
+                        ],
+                        [
+                            "self.pool1(self.conv1(x))",
+                            "Call"
+                        ],
+                        [
+                            "self.pool2(self.conv2(x))",
+                            "Call"
+                        ],
+                        [
+                            "F.relu(self.conv1(x.unsqueeze(1)))",
+                            "Call"
+                        ],
+                        [
+                            "self.dropout(x)",
+                            "Call"
+                        ],
+                        [
+                            "self.pool1(x)",
+                            "Call"
+                        ],
+                        [
+                            "F.relu(self.conv2(x))",
+                            "Call"
+                        ],
+                        [
+                            "self.dropout(x)",
+                            "Call"
+                        ],
+                        [
+                            "self.pool2(x)",
+                            "Call"
+                        ],
+                        [
+                            "x.view(x.size(0), -1)",
+                            "Call"
+                        ],
+                        [
+                            "self.lin(x)",
+                            "Call"
+                        ],
+                        [
+                            "self.dnn1(x)",
+                            "Call"
+                        ],
+                        [
+                            "F.relu(x)",
+                            "Call"
+                        ],
+                        [
+                            "self.dropout(x)",
+                            "Call"
+                        ],
+                        [
+                            "self.dnn2(x)",
+                            "Call"
+                        ],
+                        [
+                            "self.dropout(x)",
+                            "Call"
+                        ],
+                        [
+                            "None",
+                            "Constant"
+                        ],
+                        [
+                            "audio_tensor if x is None else torch.cat((x, audio_tensor), 0)",
+                            "IfExp"
+                        ],
+                        [
+                            "audio_tensor if x is None else torch.cat((x, audio_tensor), 0)",
+                            "IfExp"
+                        ]
+                    ]
+                }
+            },
+            "from_numpy_258": {
+                "variable": {
+                    "value": "audio_tensor",
+                    "possible_values": []
+                },
+                "ndarray": {
+                    "value": "self.audio_processor.compute_mfccs(audio_data).reshape(1, -1, 40)",
+                    "possible_values": []
+                }
+            },
+            "tensor_265": {
+                "data": {
+                    "value": "y",
+                    "possible_values": [
+                        [
+                            "F.relu(getattr(self, 'conv{}'.format(i))(x))",
+                            "Call"
+                        ],
+                        [
+                            "self.pool(y)",
+                            "Call"
+                        ],
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                }
+            },
+            "abs_67": {
+                "input": {
+                    "value": "tensor",
+                    "possible_values": []
+                }
+            },
+            "abs_68": {
+                "input": {
+                    "value": "tensor",
+                    "possible_values": []
+                }
+            },
+            "abs_70": {
+                "input": {
+                    "value": "tensor",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_94": {
+                "in_channels": {
+                    "value": "n_maps",
+                    "possible_values": [
+                        [
+                            "config['n_feature_maps']",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "out_channels": {
+                    "value": "n_maps",
+                    "possible_values": [
+                        [
+                            "config['n_feature_maps']",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "kernel_size": {
+                    "value": "(3, 3)",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "int(2 ** (i // 3))",
+                    "possible_values": []
+                },
+                "dilation": {
+                    "value": "int(2 ** (i // 3))",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "False",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_97": {
+                "in_channels": {
+                    "value": "n_maps",
+                    "possible_values": [
+                        [
+                            "config['n_feature_maps']",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "out_channels": {
+                    "value": "n_maps",
+                    "possible_values": [
+                        [
+                            "config['n_feature_maps']",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "kernel_size": {
+                    "value": "(3, 3)",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "1",
+                    "possible_values": []
+                },
+                "dilation": {
+                    "value": "1",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "False",
+                    "possible_values": []
+                }
+            },
+            "BatchNorm2d_100": {
+                "num_features": {
+                    "value": "n_maps",
+                    "possible_values": [
+                        [
+                            "config['n_feature_maps']",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "affine": {
+                    "value": "False",
+                    "possible_values": []
+                }
+            },
+            "from_numpy_261": {
+                "variable": {
+                    "value": "audio_tensor",
+                    "possible_values": []
+                },
+                "ndarray": {
+                    "value": "np.expand_dims(audio_data, axis=0)",
+                    "possible_values": []
+                }
+            },
+            "cat_259": {
+                "tensors": {
+                    "value": "(x, audio_tensor)",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "possible_values": []
+                }
+            },
+            "cat_263": {
+                "tensors": {
+                    "value": "(x, audio_tensor)",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "utils/train.py": {
+        "torch": {
+            "CrossEntropyLoss_72": {
+                "variable": {
+                    "value": "criterion",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "SGD_99": {
+                "variable": {
+                    "value": "optimizer",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "model.parameters()",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "config['lr'][0]",
+                    "possible_values": [
+                        [
+                            "builder.config_from_argparse(parser)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "nesterov": {
+                    "value": "config['use_nesterov']",
+                    "possible_values": [
+                        [
+                            "builder.config_from_argparse(parser)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "weight_decay": {
+                    "value": "config['weight_decay']",
+                    "possible_values": [
+                        [
+                            "builder.config_from_argparse(parser)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "momentum": {
+                    "value": "config['momentum']",
+                    "possible_values": [
+                        [
+                            "builder.config_from_argparse(parser)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "CrossEntropyLoss_103": {
+                "variable": {
+                    "value": "criterion",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_106": {
+                "variable": {
+                    "value": "train_loader",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "train_set",
+                    "possible_values": []
+                },
+                "batch_size": {
+                    "value": "config['batch_size']",
+                    "possible_values": [
+                        [
+                            "builder.config_from_argparse(parser)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shuffle": {
+                    "value": "True",
+                    "possible_values": []
+                },
+                "drop_last": {
+                    "value": "True",
+                    "possible_values": []
+                },
+                "collate_fn": {
+                    "value": "train_set.collate_fn",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_111": {
+                "variable": {
+                    "value": "dev_loader",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "dev_set",
+                    "possible_values": []
+                },
+                "batch_size": {
+                    "value": "min(len(dev_set), 16)",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "False",
+                    "possible_values": []
+                },
+                "collate_fn": {
+                    "value": "dev_set.collate_fn",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_116": {
+                "variable": {
+                    "value": "test_loader",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "test_set",
+                    "possible_values": []
+                },
+                "batch_size": {
+                    "value": "len(test_set)",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "False",
+                    "possible_values": []
+                },
+                "collate_fn": {
+                    "value": "test_set.collate_fn",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_50": {
+                "seed": {
+                    "value": "seed",
+                    "possible_values": [
+                        [
+                            "config['seed']",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "DataLoader_59": {
+                "variable": {
+                    "value": "test_loader",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "test_set",
+                    "possible_values": []
+                },
+                "batch_size": {
+                    "value": "len(test_set)",
+                    "possible_values": []
+                },
+                "collate_fn": {
+                    "value": "test_set.collate_fn",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_53": {
+                "seed": {
+                    "value": "seed",
+                    "possible_values": [
+                        [
+                            "config['seed']",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "set_device_64": {
+                "device": {
+                    "value": "config['gpu_no']",
+                    "possible_values": []
+                }
+            },
+            "set_device_69": {
+                "device": {
+                    "value": "config['gpu_no']",
+                    "possible_values": []
+                }
+            },
+            "set_device_97": {
+                "device": {
+                    "value": "config['gpu_no']",
+                    "possible_values": []
+                }
+            },
+            "SGD_140": {
+                "variable": {
+                    "value": "optimizer",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "model.parameters()",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "config['lr'][sched_idx]",
+                    "possible_values": [
+                        [
+                            "builder.config_from_argparse(parser)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "nesterov": {
+                    "value": "config['use_nesterov']",
+                    "possible_values": [
+                        [
+                            "builder.config_from_argparse(parser)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "momentum": {
+                    "value": "config['momentum']",
+                    "possible_values": [
+                        [
+                            "builder.config_from_argparse(parser)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "weight_decay": {
+                    "value": "config['weight_decay']",
+                    "possible_values": [
+                        [
+                            "builder.config_from_argparse(parser)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "max_43": {
+                "input": {
+                    "value": "scores",
+                    "possible_values": [
+                        [
+                            "model(model_in)",
+                            "Call"
+                        ],
+                        [
+                            "model(model_in)",
+                            "Call"
+                        ],
+                        [
+                            "model(model_in)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    }
+}

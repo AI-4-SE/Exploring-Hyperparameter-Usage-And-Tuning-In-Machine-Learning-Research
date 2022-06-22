@@ -1,0 +1,2542 @@
+{
+    "src/models/conv_model.py": {
+        "torch": {
+            "ConvModel_9": {
+                "base_class_0": {
+                    "value": "torch.nn.Module",
+                    "possible_values": []
+                },
+                "Sequential_33": {
+                    "variable": {
+                        "value": "conv_body",
+                        "possible_values": []
+                    },
+                    "*args": {
+                        "value": "*[ConvBlock(conv_sizes[i], conv_sizes[i + 1], use_bn, use_skip_connection, use_maxpool, self.activation) for i in range(len(conv_sizes) - 1)]",
+                        "possible_values": []
+                    }
+                },
+                "Sequential_36": {
+                    "variable": {
+                        "value": "dense_head",
+                        "possible_values": []
+                    },
+                    "*args": {
+                        "value": "*[self._create_dense_block(dense_sizes[i], dense_sizes[i + 1], use_dropout) for i in range(len(dense_sizes) - 1)]",
+                        "possible_values": []
+                    }
+                },
+                "Sequential_40": {
+                    "variable": {
+                        "value": "self.nn",
+                        "possible_values": []
+                    },
+                    "*args": {
+                        "value": "conv_body",
+                        "possible_values": []
+                    }
+                }
+            },
+            "ConvBlock_62": {
+                "base_class_0": {
+                    "value": "torch.nn.Module",
+                    "possible_values": []
+                },
+                "Sequential_73": {
+                    "variable": {
+                        "value": "self.block",
+                        "possible_values": []
+                    },
+                    "*args": {
+                        "value": "nn.Conv2d(in_size, out_size, kernel_size=3, padding=1)",
+                        "possible_values": []
+                    }
+                }
+            },
+            "Sequential_49": {
+                "variable": {
+                    "value": "block",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "AdaptiveAvgPool2d_42": {
+                "output_size": {
+                    "value": "adaptive_pool_size",
+                    "possible_values": [
+                        [
+                            "config.get('adaptive_pool_size', (4, 4))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Linear_45": {
+                "in_features": {
+                    "value": "dense_sizes[-1]",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "10",
+                    "possible_values": []
+                }
+            },
+            "Linear_50": {
+                "in_features": {
+                    "value": "in_size",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "out_size",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_74": {
+                "in_channels": {
+                    "value": "in_size",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "out_size",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "3",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "1",
+                    "possible_values": []
+                }
+            },
+            "ReLU_23": {
+                "inplace": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "Dropout_54": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "MaxPool2d_77": {
+                "kernel_size": {
+                    "value": "2",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "2",
+                    "possible_values": []
+                }
+            },
+            "SELU_25": {
+                "inplace": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "Tanh_27": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "Sigmoid_29": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/models/elbow_model.py": {
+        "torch": {
+            "Parameter_13": {
+                "variable": {
+                    "value": "self.w_3",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "w_3 if not w_3 is None else weight_vector(SimpleModel().parameters())",
+                    "possible_values": []
+                }
+            },
+            "Parameter_43": {
+                "variable": {
+                    "value": "self.w_3",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "self.w_3.to(*args, **kwargs)",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/models/ensemble/ensemble_base.py": {
+        "torch": {
+            "stack_31": {
+                "variable": {
+                    "value": "preds",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "preds",
+                    "possible_values": [
+                        [
+                            "[self.run_model_by_id(i, x) for i in range(num_models)]",
+                            "ListComp"
+                        ],
+                        [
+                            "torch.stack(preds)",
+                            "Call"
+                        ],
+                        [
+                            "preds / num_models",
+                            "BinOp"
+                        ],
+                        [
+                            "preds * weights.view(-1, 1, 1)",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "all_36": {
+                "input": {
+                    "value": "weights >= 0",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/models/ensemble/mapping_ensemble.py": {
+        "torch": {
+            "Sequential_37": {
+                "*args": {
+                    "value": "*layers",
+                    "possible_values": []
+                }
+            },
+            "stack_16": {
+                "tensors": {
+                    "value": "[torch.randn(mapping_config.dense_sizes[0]) for _ in range(num_models)]",
+                    "possible_values": []
+                }
+            },
+            "Linear_22": {
+                "in_features": {
+                    "value": "config.dense_sizes[i - 1]",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "config.dense_sizes[i]",
+                    "possible_values": []
+                }
+            },
+            "Linear_35": {
+                "in_features": {
+                    "value": "config.dense_sizes[-1]",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "output_size",
+                    "possible_values": [
+                        [
+                            "sum((p.numel() for p in self.dummy_model.parameters()))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "ReLU_26": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "randn_17": {
+                "*size": {
+                    "value": "mapping_config.dense_sizes[0]",
+                    "possible_values": []
+                }
+            },
+            "Tanh_28": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/models/ensemble/normal_ensemble.py": {
+        "torch": {}
+    },
+    "src/models/ensemble/plane_ensemble.py": {
+        "torch": {
+            "stack_23": {
+                "tensors": {
+                    "value": "[self.sample_coords(coords_init_strategy) for _ in range(num_models)]",
+                    "possible_values": []
+                }
+            },
+            "randn_30": {
+                "*size": {
+                    "value": "2",
+                    "possible_values": []
+                }
+            },
+            "rand_32": {
+                "*size": {
+                    "value": "2",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/models/layer_ops.py": {
+        "torch": {
+            "zeros_like_188": {
+                "variable": {
+                    "value": "dummy_mean",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.bias",
+                    "possible_values": []
+                }
+            },
+            "ones_like_189": {
+                "variable": {
+                    "value": "dummy_var",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.weight",
+                    "possible_values": []
+                }
+            },
+            "zeros_like_214": {
+                "variable": {
+                    "value": "dummy_mean",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.bias",
+                    "possible_values": []
+                }
+            },
+            "ones_like_215": {
+                "variable": {
+                    "value": "dummy_var",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.weight",
+                    "possible_values": []
+                }
+            },
+            "conv2d_121": {
+                "input": {
+                    "value": "X",
+                    "possible_values": []
+                },
+                "weight": {
+                    "value": "self.weight",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "self.bias",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "self.stride",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "self.padding",
+                    "possible_values": []
+                }
+            },
+            "linear_139": {
+                "input": {
+                    "value": "X",
+                    "possible_values": []
+                },
+                "weight": {
+                    "value": "self.weight",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "self.bias",
+                    "possible_values": []
+                }
+            },
+            "max_pool2d_152": {
+                "input": {
+                    "value": "X",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "self.kernel_size",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "self.stride",
+                    "possible_values": []
+                },
+                "dilation": {
+                    "value": "self.dilation",
+                    "possible_values": []
+                }
+            },
+            "batch_norm_191": {
+                "input": {
+                    "value": "x",
+                    "possible_values": [
+                        [
+                            "m(x)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "running_mean": {
+                    "value": "dummy_mean",
+                    "possible_values": [
+                        [
+                            "torch.zeros_like(self.bias)",
+                            "Call"
+                        ],
+                        [
+                            "torch.zeros_like(self.bias)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "running_var": {
+                    "value": "dummy_var",
+                    "possible_values": [
+                        [
+                            "torch.ones_like(self.weight)",
+                            "Call"
+                        ],
+                        [
+                            "torch.ones_like(self.weight)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "weight": {
+                    "value": "self.weight",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "self.bias",
+                    "possible_values": []
+                },
+                "training": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "batch_norm_217": {
+                "input": {
+                    "value": "x",
+                    "possible_values": [
+                        [
+                            "m(x)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "running_mean": {
+                    "value": "dummy_mean",
+                    "possible_values": [
+                        [
+                            "torch.zeros_like(self.bias)",
+                            "Call"
+                        ],
+                        [
+                            "torch.zeros_like(self.bias)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "running_var": {
+                    "value": "dummy_var",
+                    "possible_values": [
+                        [
+                            "torch.ones_like(self.weight)",
+                            "Call"
+                        ],
+                        [
+                            "torch.ones_like(self.weight)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "weight": {
+                    "value": "self.weight + 1",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "self.bias",
+                    "possible_values": []
+                },
+                "training": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "Parameter_75": {
+                "data": {
+                    "value": "param_value",
+                    "possible_values": [
+                        [
+                            "None if param_value is None else param_value.to(*args, **kwargs)",
+                            "IfExp"
+                        ]
+                    ]
+                }
+            },
+            "dropout2d_166": {
+                "input": {
+                    "value": "x",
+                    "possible_values": [
+                        [
+                            "m(x)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "p": {
+                    "value": "self.p",
+                    "possible_values": []
+                }
+            },
+            "dropout_168": {
+                "input": {
+                    "value": "x",
+                    "possible_values": [
+                        [
+                            "m(x)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "p": {
+                    "value": "self.p",
+                    "possible_values": []
+                }
+            },
+            "ReLU_263": {
+                "inplace": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "SELU_265": {
+                "inplace": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "Tanh_267": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "Sigmoid_269": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "Dropout_271": {
+                "p": {
+                    "value": "module.p",
+                    "possible_values": []
+                }
+            },
+            "MaxPool2d_273": {
+                "kernel_size": {
+                    "value": "module.kernel_size",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "module.stride",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "module.padding",
+                    "possible_values": []
+                },
+                "dilation": {
+                    "value": "module.dilation",
+                    "possible_values": []
+                }
+            },
+            "AdaptiveAvgPool2d_277": {
+                "output_size": {
+                    "value": "module.output_size",
+                    "possible_values": []
+                }
+            },
+            "AdaptiveMaxPool2d_279": {
+                "output_size": {
+                    "value": "module.output_size",
+                    "possible_values": []
+                }
+            },
+            "cat_284": {
+                "variable": {
+                    "value": "curr_weight",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[p.view(-1) for p in params[:num_params_in_module]]",
+                    "possible_values": []
+                }
+            },
+            "cat_289": {
+                "variable": {
+                    "value": "curr_weight",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[p.view(-1) for p in params[:num_params_in_module]]",
+                    "possible_values": []
+                }
+            },
+            "cat_306": {
+                "tensors": {
+                    "value": "params_a",
+                    "possible_values": [
+                        [
+                            "[p.view(-1) for p in params[:num_params_in_transform_a]]",
+                            "ListComp"
+                        ]
+                    ]
+                }
+            },
+            "empty_306": {
+                "*size": {
+                    "value": "0",
+                    "possible_values": []
+                }
+            },
+            "cat_307": {
+                "tensors": {
+                    "value": "params_b",
+                    "possible_values": [
+                        [
+                            "[p.view(-1) for p in params[num_params_in_transform_a:num_params_in_module]]",
+                            "ListComp"
+                        ]
+                    ]
+                }
+            },
+            "empty_307": {
+                "*size": {
+                    "value": "0",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/models/layers.py": {
+        "torch": {
+            "ReparametrizedBatchNorm2d_5": {
+                "base_class_0": {
+                    "value": "torch.nn.BatchNorm2d",
+                    "possible_values": []
+                }
+            },
+            "batch_norm_34": {
+                "input": {
+                    "value": "x",
+                    "possible_values": []
+                },
+                "running_mean": {
+                    "value": "self.running_mean",
+                    "possible_values": []
+                },
+                "running_var": {
+                    "value": "self.running_var",
+                    "possible_values": []
+                },
+                "weight": {
+                    "value": "self.weight + 1.0",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "self.bias",
+                    "possible_values": []
+                },
+                "training": {
+                    "value": "self.training or not self.track_running_stats",
+                    "possible_values": []
+                },
+                "momentum": {
+                    "value": "exponential_average_factor",
+                    "possible_values": [
+                        [
+                            "0.0",
+                            "Constant"
+                        ],
+                        [
+                            "self.momentum",
+                            "Attribute"
+                        ],
+                        [
+                            "1.0 / float(self.num_batches_tracked)",
+                            "BinOp"
+                        ],
+                        [
+                            "self.momentum",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "eps": {
+                    "value": "self.eps",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/models/line_model.py": {
+        "torch": {
+            "Parameter_13": {
+                "variable": {
+                    "value": "self.w_1",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "weight_vector(SimpleModel().parameters())",
+                    "possible_values": []
+                }
+            },
+            "Parameter_14": {
+                "variable": {
+                    "value": "self.w_2",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "weight_vector(SimpleModel().parameters())",
+                    "possible_values": []
+                }
+            },
+            "Parameter_42": {
+                "variable": {
+                    "value": "self.w_1",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "self.w_1.to(*args, **kwargs)",
+                    "possible_values": []
+                }
+            },
+            "Parameter_43": {
+                "variable": {
+                    "value": "self.w_2",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "self.w_2.to(*args, **kwargs)",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/models/mask_model.py": {
+        "torch": {
+            "dot_111": {
+                "input": {
+                    "value": "self.up",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "self.right",
+                    "possible_values": []
+                }
+            },
+            "abs_111": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "tensor_30": {
+                "data": {
+                    "value": "0.1",
+                    "possible_values": []
+                }
+            },
+            "dot_32": {
+                "input": {
+                    "value": "self.right",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "self.up",
+                    "possible_values": []
+                }
+            },
+            "dot_33": {
+                "input": {
+                    "value": "self.right",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "self.up",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/models/resnet.py": {
+        "torch": {
+            "ResNet18_41": {
+                "base_class_0": {
+                    "value": "torch.nn.Module",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_10": {
+                "in_channels": {
+                    "value": "in_planes",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "out_planes",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "3",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "stride",
+                    "possible_values": [
+                        [
+                            "1",
+                            "MethodArgument"
+                        ],
+                        [
+                            "1",
+                            "MethodArgument"
+                        ],
+                        [
+                            "1",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "padding": {
+                    "value": "1",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "False",
+                    "possible_values": []
+                }
+            },
+            "Sequential_16": {
+                "*args": {
+                    "value": "Add(nn.Sequential(conv3x3(in_planes, out_planes, stride), ReparametrizedBatchNorm2d(out_planes), nn.ReLU(inplace=True), conv3x3(out_planes, out_planes), ReparametrizedBatchNorm2d(out_planes)), downsample)",
+                    "possible_values": []
+                }
+            },
+            "Sequential_33": {
+                "*args": {
+                    "value": "nn.Conv2d(channels_in, channels_out, kernel_size=3, padding=1, bias=False)",
+                    "possible_values": []
+                }
+            },
+            "Sequential_48": {
+                "variable": {
+                    "value": "self.nn",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Conv2d(n_input_channels, 64, kernel_size=7, stride=2, padding=3, bias=False)",
+                    "possible_values": []
+                }
+            },
+            "Sequential_92": {
+                "variable": {
+                    "value": "self.nn",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Conv2d(n_input_channels, 64, kernel_size=3, padding=1, bias=False)",
+                    "possible_values": []
+                }
+            },
+            "Sequential_14": {
+                "*args": {
+                    "value": "Identity()",
+                    "possible_values": []
+                }
+            },
+            "ReLU_28": {
+                "inplace": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_34": {
+                "in_channels": {
+                    "value": "channels_in",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "channels_out",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "3",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "1",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "False",
+                    "possible_values": []
+                }
+            },
+            "ReLU_36": {
+                "inplace": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "MaxPool2d_37": {
+                "kernel_size": {
+                    "value": "2",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "2",
+                    "possible_values": []
+                }
+            },
+            "Sequential_74": {
+                "variable": {
+                    "value": "downsample",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Conv2d(in_planes, out_planes, kernel_size=1, stride=stride, bias=False)",
+                    "possible_values": []
+                }
+            },
+            "Sequential_81": {
+                "*args": {
+                    "value": "make_residual_block(in_planes, out_planes, stride, downsample)",
+                    "possible_values": []
+                }
+            },
+            "Sequential_18": {
+                "*args": {
+                    "value": "conv3x3(in_planes, out_planes, stride)",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_49": {
+                "in_channels": {
+                    "value": "n_input_channels",
+                    "possible_values": [
+                        [
+                            "3",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "out_channels": {
+                    "value": "64",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "7",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "2",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "3",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "False",
+                    "possible_values": []
+                }
+            },
+            "MaxPool2d_51": {
+                "kernel_size": {
+                    "value": "3",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "2",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "1",
+                    "possible_values": []
+                }
+            },
+            "ReLU_52": {
+                "inplace": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "AdaptiveAvgPool2d_59": {
+                "output_size": {
+                    "value": "(1, 1)",
+                    "possible_values": []
+                }
+            },
+            "Linear_61": {
+                "in_features": {
+                    "value": "512",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "n_classes",
+                    "possible_values": [
+                        [
+                            "1000",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "Conv2d_108": {
+                "in_channels": {
+                    "value": "n_input_channels",
+                    "possible_values": [
+                        [
+                            "3",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "out_channels": {
+                    "value": "64",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "3",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "1",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "False",
+                    "possible_values": []
+                }
+            },
+            "ReLU_110": {
+                "inplace": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "AdaptiveMaxPool2d_122": {
+                "output_size": {
+                    "value": "(1, 1)",
+                    "possible_values": []
+                }
+            },
+            "Linear_124": {
+                "in_features": {
+                    "value": "256",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "n_classes",
+                    "possible_values": [
+                        [
+                            "1000",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "ReLU_21": {
+                "inplace": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_75": {
+                "in_channels": {
+                    "value": "in_planes",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "out_planes",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "stride",
+                    "possible_values": [
+                        [
+                            "1",
+                            "MethodArgument"
+                        ],
+                        [
+                            "1",
+                            "MethodArgument"
+                        ],
+                        [
+                            "1",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "bias": {
+                    "value": "False",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/models/simple_model.py": {
+        "torch": {
+            "SimpleModel_9": {
+                "base_class_0": {
+                    "value": "torch.nn.Module",
+                    "possible_values": []
+                },
+                "Sequential_13": {
+                    "variable": {
+                        "value": "self.nn",
+                        "possible_values": []
+                    },
+                    "*args": {
+                        "value": "nn.Conv2d(1, 8, 5)",
+                        "possible_values": []
+                    }
+                }
+            },
+            "Conv2d_14": {
+                "in_channels": {
+                    "value": "1",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "8",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "5",
+                    "possible_values": []
+                }
+            },
+            "ReLU_15": {
+                "inplace": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "MaxPool2d_16": {
+                "kernel_size": {
+                    "value": "2",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "2",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_18": {
+                "in_channels": {
+                    "value": "8",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "32",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "3",
+                    "possible_values": []
+                }
+            },
+            "ReLU_19": {
+                "inplace": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "MaxPool2d_20": {
+                "kernel_size": {
+                    "value": "2",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "2",
+                    "possible_values": []
+                }
+            },
+            "Linear_23": {
+                "in_features": {
+                    "value": "800",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "1024",
+                    "possible_values": []
+                }
+            },
+            "ReLU_24": {
+                "inplace": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "Dropout_25": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "Linear_26": {
+                "in_features": {
+                    "value": "1024",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "512",
+                    "possible_values": []
+                }
+            },
+            "ReLU_27": {
+                "inplace": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "Dropout_28": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "Linear_29": {
+                "in_features": {
+                    "value": "512",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "256",
+                    "possible_values": []
+                }
+            },
+            "ReLU_30": {
+                "inplace": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "Dropout_31": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "Linear_32": {
+                "in_features": {
+                    "value": "256",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "10",
+                    "possible_values": []
+                }
+            },
+            "no_grad_41": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "ReLU_56": {
+                "inplace": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "ReLU_61": {
+                "inplace": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "ReLU_67": {
+                "inplace": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/models/vgg.py": {
+        "torch": {
+            "VGG_11": {
+                "base_class_0": {
+                    "value": "torch.nn.Module",
+                    "possible_values": []
+                },
+                "Sequential_15": {
+                    "variable": {
+                        "value": "self.model",
+                        "possible_values": []
+                    },
+                    "*args": {
+                        "value": "conv_body",
+                        "possible_values": []
+                    }
+                }
+            },
+            "Sequential_50": {
+                "variable": {
+                    "value": "conv_body",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Conv2d(n_input_channels, 64, kernel_size=3, padding=1)",
+                    "possible_values": []
+                }
+            },
+            "AdaptiveAvgPool2d_17": {
+                "output_size": {
+                    "value": "(7, 7)",
+                    "possible_values": []
+                }
+            },
+            "Linear_19": {
+                "in_features": {
+                    "value": "512 * 7 * 7",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "head_size",
+                    "possible_values": []
+                }
+            },
+            "ReLU_20": {
+                "inplace": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "Dropout_21": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "Linear_22": {
+                "in_features": {
+                    "value": "head_size",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "head_size",
+                    "possible_values": []
+                }
+            },
+            "ReLU_23": {
+                "inplace": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "Dropout_24": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "Linear_25": {
+                "in_features": {
+                    "value": "head_size",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "num_classes",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_51": {
+                "in_channels": {
+                    "value": "n_input_channels",
+                    "possible_values": [
+                        [
+                            "1",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "out_channels": {
+                    "value": "64",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "3",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "1",
+                    "possible_values": []
+                }
+            },
+            "ReLU_53": {
+                "inplace": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "MaxPool2d_54": {
+                "kernel_size": {
+                    "value": "2",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "2",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_56": {
+                "in_channels": {
+                    "value": "64",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "128",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "3",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "1",
+                    "possible_values": []
+                }
+            },
+            "ReLU_58": {
+                "inplace": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "MaxPool2d_59": {
+                "kernel_size": {
+                    "value": "2",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "2",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_61": {
+                "in_channels": {
+                    "value": "128",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "256",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "3",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "1",
+                    "possible_values": []
+                }
+            },
+            "ReLU_63": {
+                "inplace": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_65": {
+                "in_channels": {
+                    "value": "256",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "256",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "3",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "1",
+                    "possible_values": []
+                }
+            },
+            "ReLU_67": {
+                "inplace": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "MaxPool2d_68": {
+                "kernel_size": {
+                    "value": "2",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "2",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_70": {
+                "in_channels": {
+                    "value": "256",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "512",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "3",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "1",
+                    "possible_values": []
+                }
+            },
+            "ReLU_72": {
+                "inplace": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_74": {
+                "in_channels": {
+                    "value": "512",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "512",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "3",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "1",
+                    "possible_values": []
+                }
+            },
+            "ReLU_76": {
+                "inplace": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "MaxPool2d_77": {
+                "kernel_size": {
+                    "value": "2",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "2",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_79": {
+                "in_channels": {
+                    "value": "512",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "512",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "3",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "1",
+                    "possible_values": []
+                }
+            },
+            "ReLU_81": {
+                "inplace": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_82": {
+                "in_channels": {
+                    "value": "512",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "512",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "3",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "1",
+                    "possible_values": []
+                }
+            },
+            "ReLU_84": {
+                "inplace": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "MaxPool2d_85": {
+                "kernel_size": {
+                    "value": "2",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "2",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/optims/triangle_lr.py": {
+        "torch": {
+            "TriangleLR_6": {
+                "base_class_0": {
+                    "value": "torch.optim.lr_scheduler.LambdaLR",
+                    "possible_values": []
+                },
+                "self.epoch_size": {
+                    "value": "epoch_size",
+                    "possible_values": []
+                },
+                "self.knots": {
+                    "value": "knots",
+                    "possible_values": []
+                },
+                "self.values": {
+                    "value": "values",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/trainers/classifier_trainer.py": {
+        "torch": {
+            "DataLoader_48": {
+                "variable": {
+                    "value": "self.train_dataloader",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "data_train",
+                    "possible_values": [
+                        [
+                            "CIFAR10(data_dir, train=True, transform=train_transform)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "batch_size",
+                    "possible_values": [
+                        [
+                            "self.config.hp.batch_size",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "num_workers": {
+                    "value": "0",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_49": {
+                "variable": {
+                    "value": "self.val_dataloader",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "data_test",
+                    "possible_values": [
+                        [
+                            "CIFAR10(data_dir, train=False, transform=test_transform)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "batch_size",
+                    "possible_values": [
+                        [
+                            "self.config.hp.batch_size",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "num_workers": {
+                    "value": "0",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "False",
+                    "possible_values": []
+                }
+            },
+            "CrossEntropyLoss_65": {
+                "variable": {
+                    "value": "self.criterion",
+                    "possible_values": []
+                },
+                "reduction": {
+                    "value": "none",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/trainers/elbow_trainer.py": {
+        "torch": {
+            "DataLoader_64": {
+                "variable": {
+                    "value": "self.train_dataloader",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "data_train",
+                    "possible_values": [
+                        [
+                            "FashionMNIST(data_dir, download=True, train=True, transform=ToTensor())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "batch_size",
+                    "possible_values": [
+                        [
+                            "self.config.hp.batch_size",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "num_workers": {
+                    "value": "3",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_65": {
+                "variable": {
+                    "value": "self.val_dataloader",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "data_test",
+                    "possible_values": [
+                        [
+                            "FashionMNIST(data_dir, download=True, train=False, transform=ToTensor())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "batch_size",
+                    "possible_values": [
+                        [
+                            "self.config.hp.batch_size",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "num_workers": {
+                    "value": "3",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "False",
+                    "possible_values": []
+                }
+            },
+            "CrossEntropyLoss_68": {
+                "variable": {
+                    "value": "self.criterion",
+                    "possible_values": []
+                },
+                "reduction": {
+                    "value": "none",
+                    "possible_values": []
+                }
+            },
+            "Adam_71": {
+                "variable": {
+                    "value": "self.optim",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "[self.model.w_3]",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "self.config.hp.lr",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/trainers/ensemble_trainer.py": {
+        "torch": {
+            "stack_84": {
+                "variable": {
+                    "value": "total_loss",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "point_losses",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                }
+            },
+            "mean_84": {
+                "variable": {
+                    "value": "total_loss",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "stack_165": {
+                "variable": {
+                    "value": "decorrelation_loss",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "distances",
+                    "possible_values": [
+                        [
+                            "pairwise_distances(wrong_cls_preds)",
+                            "Call"
+                        ],
+                        [
+                            "pairwise_distances(weights)",
+                            "Call"
+                        ],
+                        [
+                            "pairwise_distances(self.model.coords)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "mean_165": {
+                "variable": {
+                    "value": "decorrelation_loss",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "stack_89": {
+                "tensors": {
+                    "value": "point_losses",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                }
+            },
+            "mean_89": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "stack_90": {
+                "tensors": {
+                    "value": "point_losses",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                }
+            },
+            "max_90": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "stack_91": {
+                "tensors": {
+                    "value": "point_losses",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                }
+            },
+            "min_91": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "clip_grad_norm__113": {
+                "parameters": {
+                    "value": "self.model.parameters()",
+                    "possible_values": []
+                },
+                "max_norm": {
+                    "value": "self.config.hp.grad_clip_threshold",
+                    "possible_values": []
+                }
+            },
+            "cat_133": {
+                "variable": {
+                    "value": "mapping_grad_norm",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[p.grad.view(-1) for p in self.model.mapping.parameters()]",
+                    "possible_values": []
+                }
+            },
+            "norm_133": {
+                "variable": {
+                    "value": "mapping_grad_norm",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "ones_like_151": {
+                "variable": {
+                    "value": "wrong_cls_mask",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "preds[0]",
+                    "possible_values": []
+                }
+            },
+            "stack_153": {
+                "variable": {
+                    "value": "wrong_cls_preds",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[p[wrong_cls_mask] for p in preds]",
+                    "possible_values": []
+                }
+            },
+            "no_grad_179": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "stack_182": {
+                "variable": {
+                    "value": "individual_preds",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[self.model.run_model_by_id(i, x) for i in range(len(self.model.coords))]",
+                    "possible_values": []
+                }
+            },
+            "arange_152": {
+                "start": {
+                    "value": "preds[0].size(0)",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/trainers/line_trainer.py": {
+        "torch": {
+            "DataLoader_33": {
+                "variable": {
+                    "value": "self.train_dataloader",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "data_train",
+                    "possible_values": [
+                        [
+                            "FashionMNIST(data_dir, download=True, train=True, transform=ToTensor())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "batch_size",
+                    "possible_values": [
+                        [
+                            "self.config.hp.batch_size",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "num_workers": {
+                    "value": "3",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_34": {
+                "variable": {
+                    "value": "self.val_dataloader",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "data_test",
+                    "possible_values": [
+                        [
+                            "FashionMNIST(data_dir, download=True, train=False, transform=ToTensor())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "batch_size",
+                    "possible_values": [
+                        [
+                            "self.config.hp.batch_size",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "num_workers": {
+                    "value": "3",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "False",
+                    "possible_values": []
+                }
+            },
+            "CrossEntropyLoss_40": {
+                "variable": {
+                    "value": "self.criterion",
+                    "possible_values": []
+                },
+                "reduction": {
+                    "value": "none",
+                    "possible_values": []
+                }
+            },
+            "Adam_43": {
+                "variable": {
+                    "value": "self.optim",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "self.model.parameters()",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "self.config.hp.lr",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/trainers/mask_trainer.py": {
+        "torch": {
+            "Subset_90": {
+                "variable": {
+                    "value": "data_vis_train",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "data_train",
+                    "possible_values": [
+                        [
+                            "FashionMNIST(data_dir, train=True, transform=transforms.ToTensor())",
+                            "Call"
+                        ],
+                        [
+                            "MNIST(data_dir, train=True, transform=transforms.ToTensor())",
+                            "Call"
+                        ],
+                        [
+                            "CIFAR10(data_dir, train=True, transform=train_transform)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "indices": {
+                    "value": "random.sample(range(len(data_train)), self.config.get('n_points_for_vis', 1000))",
+                    "possible_values": []
+                }
+            },
+            "Subset_91": {
+                "variable": {
+                    "value": "data_vis_test",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "data_test",
+                    "possible_values": [
+                        [
+                            "FashionMNIST(data_dir, train=False, transform=transforms.ToTensor())",
+                            "Call"
+                        ],
+                        [
+                            "MNIST(data_dir, train=False, transform=transforms.ToTensor())",
+                            "Call"
+                        ],
+                        [
+                            "CIFAR10(data_dir, train=False, transform=test_transform)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "indices": {
+                    "value": "random.sample(range(len(data_test)), self.config.get('n_points_for_vis', 1000))",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_93": {
+                "variable": {
+                    "value": "self.train_dataloader",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "data_train",
+                    "possible_values": [
+                        [
+                            "FashionMNIST(data_dir, train=True, transform=transforms.ToTensor())",
+                            "Call"
+                        ],
+                        [
+                            "MNIST(data_dir, train=True, transform=transforms.ToTensor())",
+                            "Call"
+                        ],
+                        [
+                            "CIFAR10(data_dir, train=True, transform=train_transform)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "batch_size",
+                    "possible_values": [
+                        [
+                            "self.config.hp.batch_size",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "shuffle": {
+                    "value": "True",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_94": {
+                "variable": {
+                    "value": "self.val_dataloader",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "data_test",
+                    "possible_values": [
+                        [
+                            "FashionMNIST(data_dir, train=False, transform=transforms.ToTensor())",
+                            "Call"
+                        ],
+                        [
+                            "MNIST(data_dir, train=False, transform=transforms.ToTensor())",
+                            "Call"
+                        ],
+                        [
+                            "CIFAR10(data_dir, train=False, transform=test_transform)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "batch_size",
+                    "possible_values": [
+                        [
+                            "self.config.hp.batch_size",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "shuffle": {
+                    "value": "False",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_95": {
+                "variable": {
+                    "value": "self.vis_train_dataloader",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "data_vis_train",
+                    "possible_values": [
+                        [
+                            "Subset(data_train, random.sample(range(len(data_train)), self.config.get('n_points_for_vis', 1000)))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "batch_size",
+                    "possible_values": [
+                        [
+                            "self.config.hp.batch_size",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "shuffle": {
+                    "value": "False",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_96": {
+                "variable": {
+                    "value": "self.vis_test_dataloader",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "data_vis_test",
+                    "possible_values": [
+                        [
+                            "Subset(data_test, random.sample(range(len(data_test)), self.config.get('n_points_for_vis', 1000)))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "batch_size",
+                    "possible_values": [
+                        [
+                            "self.config.hp.batch_size",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "shuffle": {
+                    "value": "False",
+                    "possible_values": []
+                }
+            },
+            "CrossEntropyLoss_128": {
+                "variable": {
+                    "value": "self.criterion",
+                    "possible_values": []
+                },
+                "reduction": {
+                    "value": "none",
+                    "possible_values": []
+                }
+            },
+            "Adam_134": {
+                "variable": {
+                    "value": "self.optim",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "self.model.parameters()",
+                    "possible_values": []
+                }
+            },
+            "clip_grad_norm__203": {
+                "parameters": {
+                    "value": "self.model.parameters()",
+                    "possible_values": []
+                },
+                "max_norm": {
+                    "value": "self.config.hp.grad_clip_threshold",
+                    "possible_values": []
+                }
+            },
+            "SGD_136": {
+                "variable": {
+                    "value": "self.optim",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "self.model.parameters()",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/utils.py": {
+        "torch": {
+            "CrossEntropyLoss_133": {
+                "variable": {
+                    "value": "criterion",
+                    "possible_values": []
+                },
+                "reduction": {
+                    "value": "none",
+                    "possible_values": []
+                }
+            },
+            "cat_12": {
+                "tensors": {
+                    "value": "[p.view(-1) for p in params]",
+                    "possible_values": []
+                }
+            },
+            "zeros_like_102": {
+                "variable": {
+                    "value": "state_dict[key]",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "list(state_dict.values())[-1]",
+                    "possible_values": []
+                }
+            },
+            "no_grad_120": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "no_grad_158": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            },
+            "cat_172": {
+                "variable": {
+                    "value": "activations[i]",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[activations[i], act]",
+                    "possible_values": []
+                }
+            },
+            "dot_37": {
+                "input": {
+                    "value": "lhs.view(-1)",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "rhs.view(-1)",
+                    "possible_values": []
+                }
+            },
+            "ones_like_104": {
+                "variable": {
+                    "value": "state_dict[key]",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "list(state_dict.values())[-1]",
+                    "possible_values": []
+                }
+            },
+            "dot_71": {
+                "input": {
+                    "value": "v2",
+                    "possible_values": [
+                        [
+                            "v2.double()",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "v1",
+                    "possible_values": [
+                        [
+                            "v1.double()",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "norm_71": {
+                "input": {
+                    "value": "v1",
+                    "possible_values": [
+                        [
+                            "v1.double()",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "pow_71": {
+                "input": {
+                    "value": "2",
+                    "possible_values": []
+                }
+            },
+            "norm_74": {
+                "input": {
+                    "value": "result",
+                    "possible_values": [
+                        [
+                            "v2 - v1 * (torch.dot(v2, v1) / torch.norm(v1).pow(2))",
+                            "BinOp"
+                        ],
+                        [
+                            "result * (torch.norm(v1) / torch.norm(result))",
+                            "BinOp"
+                        ],
+                        [
+                            "result * (torch.norm(v2) / torch.norm(result))",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "zeros_106": {
+                "variable": {
+                    "value": "state_dict[key]",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "1",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "params[0].device",
+                    "possible_values": []
+                }
+            },
+            "norm_76": {
+                "input": {
+                    "value": "result",
+                    "possible_values": [
+                        [
+                            "v2 - v1 * (torch.dot(v2, v1) / torch.norm(v1).pow(2))",
+                            "BinOp"
+                        ],
+                        [
+                            "result * (torch.norm(v1) / torch.norm(result))",
+                            "BinOp"
+                        ],
+                        [
+                            "result * (torch.norm(v2) / torch.norm(result))",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "tests/test_utils.py": {
+        "torch": {
+            "rand_7": {
+                "variable": {
+                    "value": "v1",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "10 ** 6",
+                    "possible_values": []
+                }
+            },
+            "rand_8": {
+                "variable": {
+                    "value": "v2",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "10 ** 6",
+                    "possible_values": []
+                }
+            },
+            "dot_10": {
+                "input": {
+                    "value": "v1",
+                    "possible_values": [
+                        [
+                            "torch.rand(10 ** 6)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "orthogonalize(v1, v2)",
+                    "possible_values": []
+                }
+            },
+            "abs_10": {
+                "params": {
+                    "value": "default",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}
