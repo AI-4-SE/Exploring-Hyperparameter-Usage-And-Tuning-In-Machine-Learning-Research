@@ -8,7 +8,7 @@ import pandas as pd
 from collections import Counter
 
 
-statistics_dir = "../src/statistics/sklearn/params/"
+statistics_dir = "../src/statistics/"
 statistics_processed = "data/statistics_processed/"
 sklearn_data = "data/sklearn/modules/sklearn_modules.json"
 
