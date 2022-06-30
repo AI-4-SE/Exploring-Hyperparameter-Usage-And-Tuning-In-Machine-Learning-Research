@@ -1,0 +1,1283 @@
+{
+    "VD-LSTM-Pat-Sum.py": {
+        "tensorflow": {
+            "trainable_variables_355": {
+                "variable": {
+                    "value": "params",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Saver_381": {
+                "variable": {
+                    "value": "saver",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "placeholder_227": {
+                "variable": {
+                    "value": "self.x",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.int32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[batch_size, num_steps, max_word_len]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "placeholder_228": {
+                "variable": {
+                    "value": "self.y",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.int32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[batch_size, num_steps]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "cast_229": {
+                "variable": {
+                    "value": "y_float",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "self.y",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "embedding_lookup_232": {
+                "variable": {
+                    "value": "words_embedded",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "self.pat_embedding",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "ids": {
+                    "value": "self.x",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "reshape_233": {
+                "variable": {
+                    "value": "words_embedded",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "words_embedded",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.nn.embedding_lookup(self.pat_embedding, self.x)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(words_embedded, [-1, max_word_len, pat_emb_dim])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, max_word_len, pat_emb_dim]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_235": {
+                "variable": {
+                    "value": "words_embedded_sum",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "words_embedded",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.nn.embedding_lookup(self.pat_embedding, self.x)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(words_embedded, [-1, max_word_len, pat_emb_dim])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "reshape_266": {
+                "variable": {
+                    "value": "highw_output_reshaped",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "highw2_output",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[batch_size, num_steps, -1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "unstack_273": {
+                "variable": {
+                    "value": "lstm_input",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "highw_output_reshaped",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.reshape(highw2_output, [batch_size, num_steps, -1])",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(highw_output_reshaped, 1 - drop_x, [batch_size, num_steps, 1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "MultiRNNCell_298": {
+                "variable": {
+                    "value": "self.cell",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "cells": {
+                    "value": "cells",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                }
+            },
+            "reshape_304": {
+                "variable": {
+                    "value": "output",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "tf.concat(axis=1, values=outputs)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[-1, hidden_size]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "scatter_update_334": {
+                "variable": {
+                    "value": "self.clear_pat_embedding_padding",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "ref": {
+                    "value": "self.pat_embedding",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "indices": {
+                    "value": "[0]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "updates": {
+                    "value": "tf.constant(0.0, shape=[1, config.pat_emb_dim], dtype=tf.float32)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Variable_337": {
+                "variable": {
+                    "value": "self.lr",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "0.0",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "trainable": {
+                    "value": "False",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "trainable_variables_338": {
+                "variable": {
+                    "value": "tvars",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "clip_by_global_norm_339": {
+                "variable": {
+                    "value": "(grads, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "t_list": {
+                    "value": "tf.gradients(self.full_cost, tvars)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "clip_norm": {
+                    "value": "config.max_grad_norm",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "GradientDescentOptimizer_341": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "learning_rate": {
+                    "value": "self.lr",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "placeholder_345": {
+                "variable": {
+                    "value": "self.new_lr",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "new_learning_rate",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "assign_346": {
+                "variable": {
+                    "value": "self.lr_update",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "ref": {
+                    "value": "self.lr",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "self.new_lr",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "global_variables_initializer_386": {
+                "variable": {
+                    "value": "init",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "get_variable_222": {
+                "variable": {
+                    "value": "self.pat_embedding",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "pat_embedding",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[pat_vocab_size, pat_emb_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.random_uniform_initializer(-init_scale, init_scale)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_239": {
+                "variable": {
+                    "value": "transf_weights",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "transf_weights",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[highway_size, highway_size]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.random_uniform_initializer(-init_scale, init_scale)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "get_variable_243": {
+                "variable": {
+                    "value": "transf_biases",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "transf_biases",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[highway_size]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.random_uniform_initializer(-2 - 0.01, -2 + 0.01)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "get_variable_246": {
+                "variable": {
+                    "value": "highw_weights",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "highw_weights",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[highway_size, highway_size]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.random_uniform_initializer(-init_scale, init_scale)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "get_variable_250": {
+                "variable": {
+                    "value": "highw_biases",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "highw_biases",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[highway_size]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.random_uniform_initializer(-init_scale, init_scale)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "sigmoid_253": {
+                "variable": {
+                    "value": "transf_gate",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.matmul(highway_inputs, transf_weights) + transf_biases",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "dropout_269": {
+                "variable": {
+                    "value": "highw_output_reshaped",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "highw_output_reshaped",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.reshape(highw2_output, [batch_size, num_steps, -1])",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(highw_output_reshaped, 1 - drop_x, [batch_size, num_steps, 1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "1 - drop_x",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "noise_shape": {
+                    "value": "[batch_size, num_steps, 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "static_rnn_302": {
+                "variable": {
+                    "value": "(outputs, self.state)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "cell": {
+                    "value": "self.cell",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "lstm_input",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.unstack(highw_output_reshaped, axis=1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "initial_state": {
+                    "value": "self.init_state",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "get_variable_308": {
+                "variable": {
+                    "value": "weights",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "weights",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[word_vocab_size, hidden_size]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.random_uniform_initializer(-init_scale, init_scale)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "get_variable_311": {
+                "variable": {
+                    "value": "biases",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "biases",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[word_vocab_size]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.random_uniform_initializer(-init_scale, init_scale)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "trainable_variables_324": {
+                "variable": {
+                    "value": "tvars",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "variable_scope_221": {
+                "name_or_scope": {
+                    "value": "pat_emb",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "reuse": {
+                    "value": "need_reuse",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "False",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "variable_scope_260": {
+                "name_or_scope": {
+                    "value": "highway1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "reuse": {
+                    "value": "need_reuse",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "False",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "variable_scope_263": {
+                "name_or_scope": {
+                    "value": "highway2",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "reuse": {
+                    "value": "need_reuse",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "False",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "LSTMCell_276": {
+                "units": {
+                    "value": "hidden_size",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "300",
+                            "Constant"
+                        ],
+                        [
+                            "config.hidden_size",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "forget_bias": {
+                    "value": "1.0",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "reuse": {
+                    "value": "need_reuse",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "False",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "variable_scope_301": {
+                "name_or_scope": {
+                    "value": "lstm_rnn",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "reuse": {
+                    "value": "need_reuse",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "False",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "concat_304": {
+                "axis": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "outputs",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_307": {
+                "name_or_scope": {
+                    "value": "softmax_params",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "reuse": {
+                    "value": "need_reuse",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "False",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "matmul_316": {
+                "a": {
+                    "value": "output",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.reshape(tf.concat(axis=1, values=outputs), [-1, hidden_size])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "tf.transpose(weights)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_321": {
+                "input_tensor": {
+                    "value": "loss",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.contrib.legacy_seq2seq.sequence_loss_by_example([logits], [tf.reshape(self.y, [-1])], [tf.ones([batch_size * num_steps], dtype=tf.float32)])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "constant_335": {
+                "value": {
+                    "value": "0.0",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[1, config.pat_emb_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "gradients_339": {
+                "ys": {
+                    "value": "self.full_cost",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "xs": {
+                    "value": "tvars",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.trainable_variables()",
+                            "Call"
+                        ],
+                        [
+                            "tf.trainable_variables()",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Session_389": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Session_505": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "multiply_254": {
+                "x": {
+                    "value": "transf_gate",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.nn.sigmoid(tf.matmul(highway_inputs, transf_weights) + transf_biases)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "tf.nn.relu(tf.matmul(highway_inputs, highw_weights) + highw_biases)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "multiply_256": {
+                "x": {
+                    "value": "tf.ones([highway_size], dtype=tf.float32) - transf_gate",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "highway_inputs",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_279": {
+                "name_or_scope": {
+                    "value": "'layer' + str(i)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "transpose_316": {
+                "a": {
+                    "value": "weights",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('weights', [word_vocab_size, hidden_size], initializer=tf.random_uniform_initializer(-init_scale, init_scale), dtype=tf.float32)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reshape_319": {
+                "tensor": {
+                    "value": "self.y",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[-1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "ones_320": {
+                "shape": {
+                    "value": "[batch_size * num_steps]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "add_n_325": {
+                "inputs": {
+                    "value": "[tf.nn.l2_loss(v) for v in tvars if 'bias' not in v.name and 'Bias' not in v.name]",
+                    "type": "ListComp",
+                    "possible_values": []
+                }
+            },
+            "get_or_create_global_step_343": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "random_uniform_initializer_224": {
+                "minval": {
+                    "value": "-init_scale",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "maxval": {
+                    "value": "init_scale",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "0.05",
+                            "Constant"
+                        ],
+                        [
+                            "config.init_scale",
+                            "Attribute"
+                        ]
+                    ]
+                }
+            },
+            "random_uniform_initializer_241": {
+                "minval": {
+                    "value": "-init_scale",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "maxval": {
+                    "value": "init_scale",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "0.05",
+                            "Constant"
+                        ],
+                        [
+                            "config.init_scale",
+                            "Attribute"
+                        ]
+                    ]
+                }
+            },
+            "random_uniform_initializer_244": {
+                "minval": {
+                    "value": "-2 - 0.01",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "maxval": {
+                    "value": "-2 + 0.01",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "random_uniform_initializer_248": {
+                "minval": {
+                    "value": "-init_scale",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "maxval": {
+                    "value": "init_scale",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "0.05",
+                            "Constant"
+                        ],
+                        [
+                            "config.init_scale",
+                            "Attribute"
+                        ]
+                    ]
+                }
+            },
+            "random_uniform_initializer_251": {
+                "minval": {
+                    "value": "-init_scale",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "maxval": {
+                    "value": "init_scale",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "0.05",
+                            "Constant"
+                        ],
+                        [
+                            "config.init_scale",
+                            "Attribute"
+                        ]
+                    ]
+                }
+            },
+            "matmul_253": {
+                "a": {
+                    "value": "highway_inputs",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "b": {
+                    "value": "transf_weights",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('transf_weights', [highway_size, highway_size], initializer=tf.random_uniform_initializer(-init_scale, init_scale), dtype=tf.float32)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "relu_255": {
+                "features": {
+                    "value": "tf.matmul(highway_inputs, highw_weights) + highw_biases",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "random_uniform_initializer_309": {
+                "minval": {
+                    "value": "-init_scale",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "maxval": {
+                    "value": "init_scale",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "0.05",
+                            "Constant"
+                        ],
+                        [
+                            "config.init_scale",
+                            "Attribute"
+                        ]
+                    ]
+                }
+            },
+            "random_uniform_initializer_312": {
+                "minval": {
+                    "value": "-init_scale",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "maxval": {
+                    "value": "init_scale",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "0.05",
+                            "Constant"
+                        ],
+                        [
+                            "config.init_scale",
+                            "Attribute"
+                        ]
+                    ]
+                }
+            },
+            "ones_256": {
+                "shape": {
+                    "value": "[highway_size]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "l2_loss_325": {
+                "t": {
+                    "value": "v",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "matmul_255": {
+                "a": {
+                    "value": "highway_inputs",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "b": {
+                    "value": "highw_weights",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('highw_weights', [highway_size, highway_size], initializer=tf.random_uniform_initializer(-init_scale, init_scale), dtype=tf.float32)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "my_dropout.py": {
+        "tensorflow": {
+            "map_structure_34": {
+                "func": {
+                    "value": "enumerated_fn",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*structure": {
+                    "value": "*args",
+                    "type": "Starred",
+                    "possible_values": []
+                }
+            },
+            "floor_157": {
+                "variable": {
+                    "value": "binary_tensor",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "random_tensor",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "keep_prob + noise",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "LSTMStateTuple_189": {
+                "variable": {
+                    "value": "new_state",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "c": {
+                    "value": "c",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "h": {
+                    "value": "h",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self._dropout(h, 'state', self._recurrent_state_noise, self._state_keep_prob)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "name_scope_73": {
+                "name": {
+                    "value": "DropoutWrapperInit",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "convert_to_tensor_75": {
+                "variable": {
+                    "value": "tensor_value",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "v",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "constant_value_76": {
+                "variable": {
+                    "value": "const_value",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "pylist": {
+                    "value": "tensor_value",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "ops.convert_to_tensor(v)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "name_scope_147": {
+                "name": {
+                    "value": "type(self).__name__ + 'ZeroState'",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[batch_size]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "div_158": {
+                "x": {
+                    "value": "value",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "keep_prob",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "concat_108": {
+                "values": {
+                    "value": "([1], tensor_shape.TensorShape(s).as_list())",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "dropout_166": {
+                "x": {
+                    "value": "v",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "keep_prob": {
+                    "value": "keep_prob",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "seed": {
+                    "value": "self._gen_seed(salt_prefix, i)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "TensorShape_109": {
+                "dims": {
+                    "value": "s",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

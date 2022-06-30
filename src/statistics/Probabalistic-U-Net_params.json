@@ -1,0 +1,742 @@
+{
+    "src/data.py": {
+        "torch": {
+            "DataLoader_259": {
+                "variable": {
+                    "value": "dataloader",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "chaos_dataset",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "ChaosLiverMR(root_dir='/home/ishaan/probablistic_u_net/data', train=True, renew=True)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "num_workers": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/metrics.py": {
+        "torch": {
+            "dot_28": {
+                "variable": {
+                    "value": "inter",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "seg",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "seg.contiguous().view(-1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "gt",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "gt.contiguous().view(-1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "no_grad_24": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "sum_29": {
+                "input": {
+                    "value": "gt",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "gt.contiguous().view(-1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "src/model/blocks.py": {
+        "torch": {
+            "Conv2d_28": {
+                "variable": {
+                    "value": "self.conv1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_channels": {
+                    "value": "self.in_channels",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "self.filter_num",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "3",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_32": {
+                "variable": {
+                    "value": "self.conv2",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_channels": {
+                    "value": "self.filter_num",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "self.filter_num",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "3",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "relu_40": {
+                "variable": {
+                    "value": "x",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.conv1(x)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "relu_45": {
+                "variable": {
+                    "value": "x",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.conv2(x)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "relu_95": {
+                "variable": {
+                    "value": "up_sample_out",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.up_sample(x)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "cat_97": {
+                "variable": {
+                    "value": "merged_out",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[padded_up_sample_layer, skip_layer]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "pad_119": {
+                "variable": {
+                    "value": "padded_up_sample_layer",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "up_sample_layer",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "pad": {
+                    "value": "(diffX // 2, diffX - diffX // 2, diffY // 2, diffY - diffY // 2)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "BatchNorm2d_37": {
+                "variable": {
+                    "value": "self.bn_op",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_features": {
+                    "value": "self.filter_num",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Sequential_74": {
+                "variable": {
+                    "value": "self.up_sample",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True)",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "ConvTranspose2d_85": {
+                "variable": {
+                    "value": "self.up_sample",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_channels": {
+                    "value": "self.in_channels",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "self.in_channels",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Upsample_74": {
+                "scale_factor": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "mode": {
+                    "value": "bilinear",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "align_corners": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_78": {
+                "in_channels": {
+                    "value": "self.in_channels",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "self.in_channels",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/model/unet.py": {
+        "torch": {
+            "ModuleList_35": {
+                "variable": {
+                    "value": "self.contracting_path",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "ModuleList_36": {
+                "variable": {
+                    "value": "self.expanding_path",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Conv2d_72": {
+                "variable": {
+                    "value": "self.output",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_channels": {
+                    "value": "int(self.enc_layer_depths[0])",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "self.n_classes",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "interpolate_93": {
+                "variable": {
+                    "value": "out",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "enc_op(x)",
+                            "Call"
+                        ],
+                        [
+                            "nn.MaxPool2d(kernel_size=2)(x)",
+                            "Call"
+                        ],
+                        [
+                            "self.bottle_neck_layer(x)",
+                            "Call"
+                        ],
+                        [
+                            "dec_op(x, enc_outputs[-1 - block_id])",
+                            "Call"
+                        ],
+                        [
+                            "self.output(x)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "size": {
+                    "value": "self.output_shape",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "mode": {
+                    "value": "bilinear",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "align_corners": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "relu_95": {
+                "variable": {
+                    "value": "out",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "out",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "F.interpolate(input=x, size=self.output_shape, mode='bilinear', align_corners=True)",
+                            "Call"
+                        ],
+                        [
+                            "F.relu(out)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "MaxPool2d_80": {
+                "kernel_size": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/train.py": {
+        "torch": {
+            "DataLoader_61": {
+                "variable": {
+                    "value": "train_dataloader",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "train_dataset",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "ChaosLiverMR(root_dir=args.data_dir, train=True, renew=args.renew)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "args.batch_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "num_workers": {
+                    "value": "4",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_66": {
+                "variable": {
+                    "value": "val_dataloader",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "val_dataset",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "ChaosLiverMR(root_dir=args.data_dir, train=False, renew=False)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "args.batch_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "num_workers": {
+                    "value": "4",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Adam_78": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "model.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "args.lr",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "CrossEntropyLoss_141": {
+                "variable": {
+                    "value": "criterion",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "manual_seed_44": {
+                "seed": {
+                    "value": "args.seed",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "device_47": {
+                "variable": {
+                    "value": "device",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "'cuda:{}'.format(args.gpu_id)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "device_49": {
+                "variable": {
+                    "value": "device",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cpu",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "argmax_158": {
+                "variable": {
+                    "value": "targets",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "labels",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "softmax_169": {
+                "variable": {
+                    "value": "norm_outputs",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "outputs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "model(images)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "is_tensor_135": {
+                "obj": {
+                    "value": "v",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "no_grad_174": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "argmax_201": {
+                "variable": {
+                    "value": "val_targets",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "val_labels",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "softmax_210": {
+                "variable": {
+                    "value": "norm_val_outputs",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "val_outputs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "model(val_images)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/utils.py": {
+        "torch": {
+            "load_190": {
+                "variable": {
+                    "value": "checkpoint",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "most_recent_checkpoint_file_path",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "select_last_checkpoint(checkpoint_file_paths)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "ones_257": {
+                "variable": {
+                    "value": "ones",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "preds.shape",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "zeros_258": {
+                "variable": {
+                    "value": "zeros",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "preds.shape",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "where_259": {
+                "variable": {
+                    "value": "thresh_preds",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "preds.cpu() > 0.5",
+                    "type": "Compare",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "ones",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.ones(preds.shape)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "zeros",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.zeros(preds.shape)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "save_167": {
+                "obj": {
+                    "value": "save_dict",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "{'epoch': epoch, 'model_state_dict': model.state_dict(), 'optimizer_state_dict': optimizer.state_dict()}",
+                            "Dict"
+                        ]
+                    ]
+                },
+                "f": {
+                    "value": "save_path",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "os.path.join(checkpoint_dir, 'checkpoint_epoch_{}.pt'.format(epoch))",
+                            "Call"
+                        ],
+                        [
+                            "os.path.join(result_dir, fname)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "no_grad_234": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

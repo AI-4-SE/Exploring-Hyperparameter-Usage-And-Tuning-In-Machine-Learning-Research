@@ -1,0 +1,723 @@
+{
+    "learning_to_expire_pytorch/learning_to_expire_pytorch.py": {
+        "torch": {
+            "zeros_34": {
+                "variable": {
+                    "value": "zero_pad",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(b, h, i, 1)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "device",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "dtype",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "cat_35": {
+                "variable": {
+                    "value": "concatted",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[zero_pad, t]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "cat_23": {
+                "tensors": {
+                    "value": "tensors",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "list(filter(exists, tensors))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "dim",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "-1",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "arange_47": {
+                "variable": {
+                    "value": "t",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "start": {
+                    "value": "n - 1",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "end": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "step": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "device",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "einsum_48": {
+                "variable": {
+                    "value": "sinusoid_inp",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "equation": {
+                    "value": "i , j -> i j",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "*operands": {
+                    "value": "t",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.arange(n - 1, -1, -1, device=device).type_as(self.inv_freq)",
+                            "Call"
+                        ],
+                        [
+                            "rearrange(time, 'b j -> b () () j')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "cat_49": {
+                "variable": {
+                    "value": "emb",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(sinusoid_inp.sin(), sinusoid_inp.cos())",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "Linear_59": {
+                "variable": {
+                    "value": "self.to_expiration",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "dim",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "-1",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "pad_66": {
+                "variable": {
+                    "value": "r",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "exps - t",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "pad": {
+                    "value": "(0, seq_len)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "1.0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "clamp_67": {
+                "variable": {
+                    "value": "mask",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "r / self.ramp_length + 1",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "min": {
+                    "value": "0.0",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "max": {
+                    "value": "1.0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "LayerNorm_75": {
+                "variable": {
+                    "value": "self.norm",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "normalized_shape": {
+                    "value": "dim",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "-1",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "Sequential_85": {
+                "variable": {
+                    "value": "self.net",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Linear(dim, dim * mult)",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Linear_101": {
+                "variable": {
+                    "value": "self.to_pos",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "dim",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "-1",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "dim_head",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "dim // heads",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "Linear_102": {
+                "variable": {
+                    "value": "self.to_q",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "dim",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "-1",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "dim",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "-1",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "Linear_103": {
+                "variable": {
+                    "value": "self.to_kv",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "dim",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "-1",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "dim * 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "Linear_104": {
+                "variable": {
+                    "value": "self.to_out",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "dim",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "-1",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "dim",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "-1",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "pad_123": {
+                "variable": {
+                    "value": "pos_dots",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "pos_dots",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "einsum('b h i d, j d -> b h i j', q, pos) * scale",
+                            "BinOp"
+                        ],
+                        [
+                            "rel_shift(pos_dots)",
+                            "Call"
+                        ],
+                        [
+                            "F.pad(pos_dots, (mem_len, 0), value=0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "pad": {
+                    "value": "(mem_len, 0)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "ones_127": {
+                "variable": {
+                    "value": "mask",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "dots.shape[-2:]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "device",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "einsum_138": {
+                "variable": {
+                    "value": "out",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "equation": {
+                    "value": "b h i j, b h j d -> b h i d",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "*operands": {
+                    "value": "attn",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "dots.softmax(dim=-1)",
+                            "Call"
+                        ],
+                        [
+                            "attn * expire_mask",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "Embedding_155": {
+                "variable": {
+                    "value": "self.token_emb",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "num_tokens",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "embedding_dim": {
+                    "value": "dim",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "-1",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "ModuleList_165": {
+                "variable": {
+                    "value": "self.layers",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "modules": {
+                    "value": "[]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "Linear_173": {
+                "variable": {
+                    "value": "self.to_logits",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "dim",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "-1",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "num_tokens",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "tensor_184": {
+                "variable": {
+                    "value": "aux_loss",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "0.0",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "requires_grad": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "arange_240": {
+                "variable": {
+                    "value": "new_times",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "start": {
+                    "value": "n - 1",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "end": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "step": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "device",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "Linear_86": {
+                "in_features": {
+                    "value": "dim",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "-1",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "dim * mult",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "GELU_87": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Linear_88": {
+                "in_features": {
+                    "value": "dim * mult",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "dim",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "-1",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "einsum_117": {
+                "equation": {
+                    "value": "b h i d, b h j d -> b h i j",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "*operands": {
+                    "value": "q",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.to_q(x)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "einsum_121": {
+                "equation": {
+                    "value": "b h i d, j d -> b h i j",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "*operands": {
+                    "value": "q",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.to_q(x)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "randint_193": {
+                "variable": {
+                    "value": "forget_time_thres",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "low": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "high": {
+                    "value": "self.max_mem_len",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "size": {
+                    "value": "(b, 1)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "device",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "pad_196": {
+                "variable": {
+                    "value": "forget_dropout_mask",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "forget_dropout_mask",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "(time < forget_time_thres).float()",
+                            "Call"
+                        ],
+                        [
+                            "rearrange(forget_dropout_mask, 'b n -> b () () n')",
+                            "Call"
+                        ],
+                        [
+                            "F.pad(forget_dropout_mask, (0, n), value=1.0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "pad": {
+                    "value": "(0, n)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "1.0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "ModuleList_167": {
+                "modules": {
+                    "value": "[ExpireSpan(dim, self.max_mem_len, ramp_length), PreNorm(dim, CausalAttention(dim, heads=heads)), PreNorm(dim, FeedForward(dim))]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "zeros_like_224": {
+                "variable": {
+                    "value": "even_expired_exps_mask",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "expired_exps_mask",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "(expire_mask <= 0)[..., :-n]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "device": {
+                    "value": "device",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "scatter_224": {
+                "variable": {
+                    "value": "even_expired_exps_mask",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "indices",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "index": {
+                    "value": "1.0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "arange_42": {
+                "start": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "end": {
+                    "value": "dim",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "-1",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "step": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

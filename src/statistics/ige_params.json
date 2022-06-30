@@ -1,0 +1,3829 @@
+{
+    "ige/callbacks.py": {
+        "tensorflow": {
+            "TerminateOnNaN_153": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "merge_all_172": {
+                "variable": {
+                    "value": "custom_summary",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "TensorBoard_174": {
+                "variable": {
+                    "value": "tb_callback",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "LearningRateScheduler_200": {
+                "schedule": {
+                    "value": "lr_schedule",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "ige/estimator.py": {
+        "tensorflow": {
+            "RunConfig_59": {
+                "variable": {
+                    "value": "run_config",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "keep_checkpoint_max": {
+                    "value": "6",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "save_checkpoints_steps": {
+                    "value": "20000",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "save_summary_steps": {
+                    "value": "2000",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "log_step_count_steps": {
+                    "value": "2000",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Estimator_66": {
+                "variable": {
+                    "value": "estimator",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "model_fn": {
+                    "value": "model_fn",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "model_dir": {
+                    "value": "model_dir",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "os.path.expanduser('~/ige_models/estimator_test')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "config": {
+                    "value": "run_config",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.estimator.RunConfig(keep_checkpoint_max=6, save_checkpoints_steps=20000, save_summary_steps=2000, log_step_count_steps=2000)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "TrainSpec_69": {
+                "variable": {
+                    "value": "train_spec",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input_fn": {
+                    "value": "lambda : problem.get_dataset(split='train', batch_size=batch_size).repeat()",
+                    "type": "Lambda",
+                    "possible_values": []
+                },
+                "max_steps": {
+                    "value": "max_steps",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "200 * problem.examples_per_epoch('train') // batch_size",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "EvalSpec_74": {
+                "variable": {
+                    "value": "eval_spec",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input_fn": {
+                    "value": "lambda : problem.get_dataset(split='validation', batch_size=batch_size).repeat()",
+                    "type": "Lambda",
+                    "possible_values": []
+                }
+            },
+            "map_structure_18": {
+                "variable": {
+                    "value": "features",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "func": {
+                    "value": "lambda x: tf.keras.layers.Input(tensor=x)",
+                    "type": "Lambda",
+                    "possible_values": []
+                },
+                "*structure": {
+                    "value": "features",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.nest.map_structure(lambda x: tf.keras.layers.Input(tensor=x), features)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Model_27": {
+                "variable": {
+                    "value": "model",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "tf.nest.flatten(features)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "outputs": {
+                    "value": "inference",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "get_baseline_inference(features, problem.output_spec(), training=mode == ModeKeys.TRAIN, max_norm_first=False, max_norm_mid=False, max_norm_last=False)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reduce_mean_33": {
+                "variable": {
+                    "value": "metric_loss",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "pose_loss(labels, inference, order=1, alignment=Alignment.OPT_SCALE)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_or_create_global_step_39": {
+                "variable": {
+                    "value": "global_step",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "exponential_decay_40": {
+                "variable": {
+                    "value": "learning_rate",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "learning_rate": {
+                    "value": "float(initial_learning_rate)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "global_step": {
+                    "value": "global_step",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.train.get_or_create_global_step()",
+                            "Call"
+                        ]
+                    ]
+                },
+                "decay_steps": {
+                    "value": "decay_steps",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "100000",
+                            "Constant"
+                        ]
+                    ]
+                },
+                "decay_rate": {
+                    "value": "decay_rate",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "0.96",
+                            "Constant"
+                        ]
+                    ]
+                }
+            },
+            "AdamOptimizer_42": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "learning_rate": {
+                    "value": "learning_rate",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.train.exponential_decay(float(initial_learning_rate), global_step, decay_steps, decay_rate)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "set_verbosity_65": {
+                "level": {
+                    "value": "tf.logging.INFO",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "train_and_evaluate_78": {
+                "estimator": {
+                    "value": "estimator",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.estimator.Estimator(model_fn, model_dir, config=run_config)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "train_spec": {
+                    "value": "train_spec",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.estimator.TrainSpec(lambda : problem.get_dataset(split='train', batch_size=batch_size).repeat(), max_steps=max_steps)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "eval_spec": {
+                    "value": "eval_spec",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.estimator.EvalSpec(lambda : problem.get_dataset(split='validation', batch_size=batch_size).repeat())",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "add_n_31": {
+                "variable": {
+                    "value": "loss",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "model.losses + [loss]",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "scalar_35": {
+                "name": {
+                    "value": "l1_denormalized",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "metric_loss",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.reduce_mean(pose_loss(labels, inference, order=1, alignment=Alignment.OPT_SCALE))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "EstimatorSpec_46": {
+                "mode": {
+                    "value": "mode",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "predictions": {
+                    "value": "inference",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "get_baseline_inference(features, problem.output_spec(), training=mode == ModeKeys.TRAIN, max_norm_first=False, max_norm_mid=False, max_norm_last=False)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "loss": {
+                    "value": "loss",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "problem.loss(labels, inference)",
+                            "Call"
+                        ],
+                        [
+                            "tf.add_n(model.losses + [loss])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "train_op": {
+                    "value": "train_op",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "optimizer.minimize(loss, global_step=global_step)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "eval_metric_ops": {
+                    "value": "eval_metric_ops",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "{'l1_loss': tf.metrics.mean(metric_loss)}",
+                            "Dict"
+                        ]
+                    ]
+                }
+            },
+            "mean_37": {
+                "a": {
+                    "value": "metric_loss",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.reduce_mean(pose_loss(labels, inference, order=1, alignment=Alignment.OPT_SCALE))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "control_dependencies_44": {
+                "control_inputs": {
+                    "value": "updates",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "model.updates",
+                            "Attribute"
+                        ]
+                    ]
+                }
+            },
+            "Input_19": {
+                "tensor": {
+                    "value": "x",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "flatten_28": {
+                "structure": {
+                    "value": "features",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.nest.map_structure(lambda x: tf.keras.layers.Input(tensor=x), features)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "ige/gin_keras.py": {
+        "tensorflow": {}
+    },
+    "ige/hpe/data/builder.py": {
+        "tensorflow": {
+            "GFile_134": {
+                "name": {
+                    "value": "path",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "os.path.join(manual_dir, 'h36m.zip')",
+                            "Call"
+                        ],
+                        [
+                            "self._path(key)",
+                            "Call"
+                        ],
+                        [
+                            "os.path.join(manual_dir, 'stacked_hourglass_fined_tuned_240.tar.gz')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "mode": {
+                    "value": "rb",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "exists_160": {
+                "path": {
+                    "value": "path",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "os.path.join(manual_dir, 'h36m.zip')",
+                            "Call"
+                        ],
+                        [
+                            "self._path(key)",
+                            "Call"
+                        ],
+                        [
+                            "os.path.join(manual_dir, 'stacked_hourglass_fined_tuned_240.tar.gz')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "exists_274": {
+                "path": {
+                    "value": "self._path(key)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "exists_161": {
+                "path": {
+                    "value": "manual_dir",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "dl_manager.manual_dir",
+                            "Attribute"
+                        ]
+                    ]
+                }
+            },
+            "makedirs_162": {
+                "path": {
+                    "value": "manual_dir",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "dl_manager.manual_dir",
+                            "Attribute"
+                        ]
+                    ]
+                }
+            },
+            "exists_278": {
+                "path": {
+                    "value": "path",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "os.path.join(manual_dir, 'h36m.zip')",
+                            "Call"
+                        ],
+                        [
+                            "self._path(key)",
+                            "Call"
+                        ],
+                        [
+                            "os.path.join(manual_dir, 'stacked_hourglass_fined_tuned_240.tar.gz')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "GFile_280": {
+                "name": {
+                    "value": "path",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "os.path.join(manual_dir, 'h36m.zip')",
+                            "Call"
+                        ],
+                        [
+                            "self._path(key)",
+                            "Call"
+                        ],
+                        [
+                            "os.path.join(manual_dir, 'stacked_hourglass_fined_tuned_240.tar.gz')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "mode": {
+                    "value": "rb",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "listdir_325": {
+                "path": {
+                    "value": "self._subject_dir(subject_id)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "listdir_452": {
+                "path": {
+                    "value": "self._subject_dir(subject_id)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "exists_478": {
+                "path": {
+                    "value": "path",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "os.path.join(manual_dir, 'h36m.zip')",
+                            "Call"
+                        ],
+                        [
+                            "self._path(key)",
+                            "Call"
+                        ],
+                        [
+                            "os.path.join(manual_dir, 'stacked_hourglass_fined_tuned_240.tar.gz')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "listdir_501": {
+                "path": {
+                    "value": "self._subject_dir(subject_id)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "exists_667": {
+                "path": {
+                    "value": "cameras_path",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self._camera_path",
+                            "Attribute"
+                        ]
+                    ]
+                }
+            },
+            "copy_671": {
+                "a": {
+                    "value": "src",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "exists_669": {
+                "path": {
+                    "value": "folder",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "os.path.dirname(cameras_path)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "makedirs_670": {
+                "path": {
+                    "value": "folder",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "os.path.dirname(cameras_path)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "ige/hpe/losses.py": {
+        "tensorflow": {
+            "norm_52": {
+                "tensor": {
+                    "value": "midpoint",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "ops.get_midpoint(y_true, origin_index, keepdims=True)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "keepdims": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "ige/hpe/metrics.py": {
+        "tensorflow": {}
+    },
+    "ige/hpe/models/baseline.py": {
+        "tensorflow": {
+            "MaxNorm_79": {
+                "variable": {
+                    "value": "max_norm_constraint",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "max_value": {
+                    "value": "1.0",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "None",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "BatchNormalization_83": {
+                "variable": {
+                    "value": "layer",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "scale": {
+                    "value": "scale_batch_norm",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "True",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "Flatten_90": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Dense_92": {
+                "units": {
+                    "value": "filters",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "1024",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "use_bias": {
+                    "value": "use_biases",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "not use_batch_norm",
+                            "UnaryOp"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "name": {
+                    "value": "initial_dense",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "kernel_constraint": {
+                    "value": "max_norm_constraint if max_norm_first else None",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "Dense_115": {
+                "units": {
+                    "value": "n * d",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "use_bias": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "output_dense",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "kernel_constraint": {
+                    "value": "max_norm_constraint if max_norm_last else None",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "Reshape_119": {
+                "target_shape": {
+                    "value": "(n, d)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "Activation_86": {
+                "activation": {
+                    "value": "relu",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Dropout_87": {
+                "rate": {
+                    "value": "dropout_rate",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "0.5",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "name_scope_100": {
+                "name": {
+                    "value": "'block%d' % i",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "flatten_65": {
+                "structure": {
+                    "value": "inputs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "inputs.copy()",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Add_111": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Dense_105": {
+                "units": {
+                    "value": "filters",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "1024",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "use_bias": {
+                    "value": "use_biases",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "not use_batch_norm",
+                            "UnaryOp"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "name": {
+                    "value": "'dense%d-%d' % (i, j)",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "kernel_constraint": {
+                    "value": "mid_kernel_constraint",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "max_norm_constraint if max_norm_mid else None",
+                            "IfExp"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "ige/hpe/models/ige_model.py": {
+        "tensorflow": {
+            "Model_112": {
+                "variable": {
+                    "value": "y0_model",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "p2",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "inputs['pose_2d']",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "outputs": {
+                    "value": "y0",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "y0_inference_fn(p2, output_spec)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Dense_48": {
+                "units": {
+                    "value": "final_units",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "8",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "activation": {
+                    "value": "final_activation",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "softabs",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "kernel_regularizer": {
+                    "value": "kernel_regularizer",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "kernel_initializer": {
+                    "value": "tf.keras.initializers.VarianceScaling(scale=initializer_scale, mode='fan_avg', distribution='truncated_normal')",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "'%sfinal' % prefix",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "Lambda_55": {
+                "function": {
+                    "value": "tf.reduce_sum",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "arguments": {
+                    "value": "dict(axis=-1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "'%sreduction' % prefix",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "Lambda_66": {
+                "function": {
+                    "value": "_project",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "Concatenate_67": {
+                "axis": {
+                    "value": "-2",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "Lambda_68": {
+                "function": {
+                    "value": "ops.get_pairwise_dist2",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Add_70": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Concatenate_132": {
+                "axis": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Dense_41": {
+                "units": {
+                    "value": "h",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "hidden_activation",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "softplus",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "kernel_regularizer": {
+                    "value": "kernel_regularizer",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "kernel_initializer": {
+                    "value": "tf.keras.initializers.VarianceScaling(scale=initializer_scale, mode='fan_avg', distribution='truncated_normal')",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "'%shidden%d' % (prefix, i)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "Lambda_64": {
+                "function": {
+                    "value": "_get_feas_input",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "VarianceScaling_51": {
+                "scale": {
+                    "value": "initializer_scale",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "0.001",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "mode": {
+                    "value": "fan_avg",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "distribution": {
+                    "value": "truncated_normal",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Lambda_133": {
+                "function": {
+                    "value": "tf.expand_dims",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "arguments": {
+                    "value": "dict(axis=0)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "VarianceScaling_44": {
+                "scale": {
+                    "value": "initializer_scale",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "0.001",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "mode": {
+                    "value": "fan_avg",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "distribution": {
+                    "value": "truncated_normal",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "ige/hpe/ops.py": {
+        "tensorflow": {
+            "split_216": {
+                "variable": {
+                    "value": "(XX, D)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "points",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.gather(points, [i0, i1], axis=-2)",
+                            "Call"
+                        ],
+                        [
+                            "tf.convert_to_tensor(points)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "num_or_size_splits": {
+                    "value": "(2, 1)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "squeeze_218": {
+                "variable": {
+                    "value": "D",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "D",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.squeeze(D, axis=-1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_219": {
+                "variable": {
+                    "value": "r2",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "tf.square(XX)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "reverse_220": {
+                "variable": {
+                    "value": "tangential_dist_coeff",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "tangential_dist_coeff",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.reverse(tangential_dist_coeff, [False] * (len(tangential_dist_coeff.shape) - 1) + [True])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "[False] * (len(tangential_dist_coeff.shape) - 1) + [True]",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "stack_226": {
+                "variable": {
+                    "value": "r_pows",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "(r2, r22, r23)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_229": {
+                "variable": {
+                    "value": "tan",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "tf.expand_dims(tangential_dist_coeff, axis=-2) * XX",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "convert_to_tensor_291": {
+                "variable": {
+                    "value": "points",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "points",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.gather(points, [i0, i1], axis=-2)",
+                            "Call"
+                        ],
+                        [
+                            "tf.convert_to_tensor(points)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "convert_to_tensor_292": {
+                "variable": {
+                    "value": "R",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "R",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.convert_to_tensor(R)",
+                            "Call"
+                        ],
+                        [
+                            "tf.tile(tf.expand_dims(R, axis=-3), points)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "expand_dims_306": {
+                "variable": {
+                    "value": "t",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "t",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.expand_dims(t, axis=-2)",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(t, axis=-2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-2",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_313": {
+                "variable": {
+                    "value": "t",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "t",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.expand_dims(t, axis=-2)",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(t, axis=-2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-2",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_26": {
+                "variable": {
+                    "value": "x0",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "x * std",
+                            "BinOp"
+                        ],
+                        [
+                            "x + mean",
+                            "BinOp"
+                        ],
+                        [
+                            "x - mean",
+                            "BinOp"
+                        ],
+                        [
+                            "x / std",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-3",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_27": {
+                "variable": {
+                    "value": "x1",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "x * std",
+                            "BinOp"
+                        ],
+                        [
+                            "x + mean",
+                            "BinOp"
+                        ],
+                        [
+                            "x - mean",
+                            "BinOp"
+                        ],
+                        [
+                            "x / std",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-2",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "band_part_29": {
+                "variable": {
+                    "value": "mask",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "tf.ones((n, n), dtype=np.bool)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "num_lower": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "num_upper": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "logical_and_30": {
+                "variable": {
+                    "value": "mask",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "mask",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.linalg.band_part(tf.ones((n, n), dtype=np.bool), 0, -1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.logical_and(mask, tf.logical_not(tf.eye(n, dtype=tf.bool)))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "tf.logical_not(tf.eye(n, dtype=tf.bool))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "boolean_mask_31": {
+                "variable": {
+                    "value": "masked",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "diff",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "x0 - x1",
+                            "BinOp"
+                        ],
+                        [
+                            "get_pairwise_difference(x)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "mask": {
+                    "value": "mask",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.linalg.band_part(tf.ones((n, n), dtype=np.bool), 0, -1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.logical_and(mask, tf.logical_not(tf.eye(n, dtype=tf.bool)))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "shape.ndims - 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "reshape_32": {
+                "variable": {
+                    "value": "masked",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "masked",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.boolean_mask(diff, mask, axis=shape.ndims - 2)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(masked, (-1, n * (n - 1) // 2, shape[-1]))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "(-1, n * (n - 1) // 2, shape[-1])",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_49": {
+                "variable": {
+                    "value": "pairwise_dist2",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "tf.square(diff)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "gather_72": {
+                "variable": {
+                    "value": "points",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "points",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.gather(points, [i0, i1], axis=-2)",
+                            "Call"
+                        ],
+                        [
+                            "tf.convert_to_tensor(points)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "indices": {
+                    "value": "[i0, i1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-2",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "split_73": {
+                "variable": {
+                    "value": "(l, r)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "points",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.gather(points, [i0, i1], axis=-2)",
+                            "Call"
+                        ],
+                        [
+                            "tf.convert_to_tensor(points)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "num_or_size_splits": {
+                    "value": "[1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-2",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_74": {
+                "variable": {
+                    "value": "dist2",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "tf.math.squared_difference(l, r)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "keepdims": {
+                    "value": "keepdims",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "True",
+                            "MethodArgument"
+                        ],
+                        [
+                            "False",
+                            "MethodArgument"
+                        ],
+                        [
+                            "False",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_98": {
+                "variable": {
+                    "value": "numer",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "p3c_gt * p3c_inf",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "axis",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "(-2",
+                            "MethodArgument"
+                        ],
+                        [
+                            "-1",
+                            "MethodArgument"
+                        ],
+                        [
+                            "-2",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "keep_dims": {
+                    "value": "keepdims",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "True",
+                            "MethodArgument"
+                        ],
+                        [
+                            "False",
+                            "MethodArgument"
+                        ],
+                        [
+                            "False",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "reduce_sum_99": {
+                "variable": {
+                    "value": "denom",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "tf.square(p3c_inf)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "axis",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "(-2",
+                            "MethodArgument"
+                        ],
+                        [
+                            "-1",
+                            "MethodArgument"
+                        ],
+                        [
+                            "-2",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "keep_dims": {
+                    "value": "keepdims",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "True",
+                            "MethodArgument"
+                        ],
+                        [
+                            "False",
+                            "MethodArgument"
+                        ],
+                        [
+                            "False",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "reduce_sum_184": {
+                "variable": {
+                    "value": "err",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "tf.math.squared_difference(y_true, y_pred)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "tile_298": {
+                "variable": {
+                    "value": "R",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "tf.expand_dims(R, axis=-3)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "multiples": {
+                    "value": "points",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.gather(points, [i0, i1], axis=-2)",
+                            "Call"
+                        ],
+                        [
+                            "tf.convert_to_tensor(points)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "matmul_301": {
+                "a": {
+                    "value": "points",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.gather(points, [i0, i1], axis=-2)",
+                            "Call"
+                        ],
+                        [
+                            "tf.convert_to_tensor(points)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "R",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.convert_to_tensor(R)",
+                            "Call"
+                        ],
+                        [
+                            "tf.tile(tf.expand_dims(R, axis=-3), points)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "transpose_b": {
+                    "value": "not inverse",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "convert_to_tensor_333": {
+                "variable": {
+                    "value": "indices",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "indices",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.convert_to_tensor(indices, dtype=tf.int64)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "tf.int64",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "name_scope_23": {
+                "name": {
+                    "value": "pairwise_difference",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "name_scope_47": {
+                "name": {
+                    "value": "pairwise_dist2",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "name_scope_71": {
+                "name": {
+                    "value": "square_skeleton_scale_factor",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "squeeze_77": {
+                "variable": {
+                    "value": "dist2",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "dist2",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.reduce_sum(tf.math.squared_difference(l, r), keepdims=keepdims, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.squeeze(dist2, axis=-1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "name_scope_97": {
+                "name": {
+                    "value": "opt_scale_factor",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "name_scope_116": {
+                "name": {
+                    "value": "opt_scale_aligned",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "name_scope_134": {
+                "name": {
+                    "value": "origin_aligned",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "name_scope_183": {
+                "name": {
+                    "value": "error",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "square_219": {
+                "x": {
+                    "value": "XX",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "XX / D",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "reduce_sum_227": {
+                "input_tensor": {
+                    "value": "tf.expand_dims(radial_dist_coeff, axis=-2) * r_pows",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_265": {
+                "input": {
+                    "value": "f",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-2",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "name_scope_332": {
+                "name": {
+                    "value": "midpoint",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "gather_335": {
+                "variable": {
+                    "value": "mid",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "points",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.gather(points, [i0, i1], axis=-2)",
+                            "Call"
+                        ],
+                        [
+                            "tf.convert_to_tensor(points)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "indices": {
+                    "value": "indices",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.convert_to_tensor(indices, dtype=tf.int64)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "axis",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "(-2",
+                            "MethodArgument"
+                        ],
+                        [
+                            "-1",
+                            "MethodArgument"
+                        ],
+                        [
+                            "-2",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "gather_340": {
+                "variable": {
+                    "value": "mid",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "points",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.gather(points, [i0, i1], axis=-2)",
+                            "Call"
+                        ],
+                        [
+                            "tf.convert_to_tensor(points)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "indices": {
+                    "value": "indices",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.convert_to_tensor(indices, dtype=tf.int64)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "axis",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "(-2",
+                            "MethodArgument"
+                        ],
+                        [
+                            "-1",
+                            "MethodArgument"
+                        ],
+                        [
+                            "-2",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "name_scope_346": {
+                "name": {
+                    "value": "add_origin",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "concat_348": {
+                "values": {
+                    "value": "[points, mid]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-2",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "ones_29": {
+                "shape": {
+                    "value": "(n, n)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "np.bool",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "logical_not_30": {
+                "x": {
+                    "value": "tf.eye(n, dtype=tf.bool)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "square_49": {
+                "x": {
+                    "value": "diff",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "x0 - x1",
+                            "BinOp"
+                        ],
+                        [
+                            "get_pairwise_difference(x)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "squared_difference_75": {
+                "x": {
+                    "value": "l",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "r",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "square_100": {
+                "x": {
+                    "value": "p3c_inf",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "squared_difference_185": {
+                "x": {
+                    "value": "y_true",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "y_pred",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "pow_189": {
+                "variable": {
+                    "value": "err",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "err",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.reduce_sum(tf.math.squared_difference(y_true, y_pred), axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.pow(err, order // 2)",
+                            "Call"
+                        ],
+                        [
+                            "err + eps",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.sqrt(err)",
+                            "Call"
+                        ],
+                        [
+                            "tf.pow(err, order / 2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "order // 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_229": {
+                "input": {
+                    "value": "tangential_dist_coeff",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.reverse(tangential_dist_coeff, [False] * (len(tangential_dist_coeff.shape) - 1) + [True])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-2",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_233": {
+                "input": {
+                    "value": "radial + tan",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "shape_297": {
+                "input": {
+                    "value": "points",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.gather(points, [i0, i1], axis=-2)",
+                            "Call"
+                        ],
+                        [
+                            "tf.convert_to_tensor(points)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "expand_dims_298": {
+                "input": {
+                    "value": "R",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.convert_to_tensor(R)",
+                            "Call"
+                        ],
+                        [
+                            "tf.tile(tf.expand_dims(R, axis=-3), points)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-3",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_337": {
+                "variable": {
+                    "value": "mid",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "mid",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.gather(points, indices, axis=axis)",
+                            "Call"
+                        ],
+                        [
+                            "tf.gather(points, indices, axis=axis)",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(mid, axis=-2)",
+                            "Call"
+                        ],
+                        [
+                            "get_midpoint(points, indices, keepdims=True)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-2",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_341": {
+                "input_tensor": {
+                    "value": "mid",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.gather(points, indices, axis=axis)",
+                            "Call"
+                        ],
+                        [
+                            "tf.gather(points, indices, axis=axis)",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(mid, axis=-2)",
+                            "Call"
+                        ],
+                        [
+                            "get_midpoint(points, indices, keepdims=True)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "axis",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "(-2",
+                            "MethodArgument"
+                        ],
+                        [
+                            "-1",
+                            "MethodArgument"
+                        ],
+                        [
+                            "-2",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "keepdims": {
+                    "value": "keepdims",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "True",
+                            "MethodArgument"
+                        ],
+                        [
+                            "False",
+                            "MethodArgument"
+                        ],
+                        [
+                            "False",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "eye_30": {
+                "num_rows": {
+                    "value": "n",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "dim_value(shape[-2])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "tf.bool",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "sqrt_198": {
+                "variable": {
+                    "value": "err",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "err",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.reduce_sum(tf.math.squared_difference(y_true, y_pred), axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.pow(err, order // 2)",
+                            "Call"
+                        ],
+                        [
+                            "err + eps",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.sqrt(err)",
+                            "Call"
+                        ],
+                        [
+                            "tf.pow(err, order / 2)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "pow_200": {
+                "variable": {
+                    "value": "err",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "err",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.reduce_sum(tf.math.squared_difference(y_true, y_pred), axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.pow(err, order // 2)",
+                            "Call"
+                        ],
+                        [
+                            "err + eps",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.sqrt(err)",
+                            "Call"
+                        ],
+                        [
+                            "tf.pow(err, order / 2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "order / 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_227": {
+                "input": {
+                    "value": "radial_dist_coeff",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-2",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_234": {
+                "input": {
+                    "value": "tangential_dist_coeff",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.reverse(tangential_dist_coeff, [False] * (len(tangential_dist_coeff.shape) - 1) + [True])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-2",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "ige/hpe/problem.py": {
+        "tensorflow": {
+            "InputSpec_63": {
+                "variable": {
+                    "value": "output_spec",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "p3f.shape",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "p3f.dtype",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "constant_96": {
+                "value": {
+                    "value": "i",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "ige/hpe/procrustes.py": {
+        "tensorflow": {
+            "convert_to_tensor_23": {
+                "variable": {
+                    "value": "A",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "A",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.convert_to_tensor(A, dtype=dtype)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "dtype",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.float32",
+                            "MethodArgument"
+                        ],
+                        [
+                            "tf.float32",
+                            "MethodArgument"
+                        ],
+                        [
+                            "tf.float32",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "convert_to_tensor_24": {
+                "variable": {
+                    "value": "B",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "B",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.convert_to_tensor(B, dtype=dtype)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "dtype",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.float32",
+                            "MethodArgument"
+                        ],
+                        [
+                            "tf.float32",
+                            "MethodArgument"
+                        ],
+                        [
+                            "tf.float32",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "svd_31": {
+                "variable": {
+                    "value": "(w, u, v)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "tf.matmul(A, B, transpose_a=True)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "matmul_32": {
+                "variable": {
+                    "value": "R",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "u",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "b": {
+                    "value": "v",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "transpose_b": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_33": {
+                "variable": {
+                    "value": "scale",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "w",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "keepdims": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "convert_to_tensor_65": {
+                "variable": {
+                    "value": "mtx1",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "data1",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "dtype",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.float32",
+                            "MethodArgument"
+                        ],
+                        [
+                            "tf.float32",
+                            "MethodArgument"
+                        ],
+                        [
+                            "tf.float32",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "convert_to_tensor_66": {
+                "variable": {
+                    "value": "mtx2",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "data2",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "dtype",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.float32",
+                            "MethodArgument"
+                        ],
+                        [
+                            "tf.float32",
+                            "MethodArgument"
+                        ],
+                        [
+                            "tf.float32",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "reduce_mean_76": {
+                "variable": {
+                    "value": "offset1",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "mtx1",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.convert_to_tensor(data1, dtype=dtype)",
+                            "Call"
+                        ],
+                        [
+                            "mtx1 / norm1",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-2",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "keepdims": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_77": {
+                "variable": {
+                    "value": "offset2",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "mtx2",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.convert_to_tensor(data2, dtype=dtype)",
+                            "Call"
+                        ],
+                        [
+                            "mtx2 / norm2",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(mtx2, R, transpose_b=True) * s",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-2",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "keepdims": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "norm_81": {
+                "variable": {
+                    "value": "norm1",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "mtx1",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.convert_to_tensor(data1, dtype=dtype)",
+                            "Call"
+                        ],
+                        [
+                            "mtx1 / norm1",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "(-2, -1)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "keepdims": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "norm_82": {
+                "variable": {
+                    "value": "norm2",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "mtx2",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.convert_to_tensor(data2, dtype=dtype)",
+                            "Call"
+                        ],
+                        [
+                            "mtx2 / norm2",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(mtx2, R, transpose_b=True) * s",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "(-2, -1)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "keepdims": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_93": {
+                "variable": {
+                    "value": "s",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "s",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.expand_dims(s, axis=-1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "name_scope_22": {
+                "name": {
+                    "value": "orthogonal_procrustes",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "name_scope_64": {
+                "name": {
+                    "value": "procrustes",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "name_scope_109": {
+                "name": {
+                    "value": "procrustes_aligned",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "matmul_31": {
+                "a": {
+                    "value": "A",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.convert_to_tensor(A, dtype=dtype)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "B",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.convert_to_tensor(B, dtype=dtype)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "transpose_a": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "matmul_94": {
+                "a": {
+                    "value": "mtx2",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.convert_to_tensor(data2, dtype=dtype)",
+                            "Call"
+                        ],
+                        [
+                            "mtx2 / norm2",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(mtx2, R, transpose_b=True) * s",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "R",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.matmul(u, v, transpose_b=True)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "transpose_b": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "ige/hpe/transform.py": {
+        "tensorflow": {
+            "matmul_38": {
+                "a": {
+                    "value": "points_world - translation",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "b": {
+                    "value": "rotation",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "transpose_b": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "matmul_52": {
+                "a": {
+                    "value": "points_camera",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "b": {
+                    "value": "rotation",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "ige/layers.py": {
+        "tensorflow": {
+            "identity_24": {
+                "input": {
+                    "value": "i",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "ige/losses.py": {
+        "tensorflow": {
+            "get_12": {
+                "variable": {
+                    "value": "self._base_loss",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "identifier": {
+                    "value": "base_loss",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "reshape_25": {
+                "variable": {
+                    "value": "y_true",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "y_true",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.reshape(y_true, label_shape)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "label_shape",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "[-1 if s is None else s for s in shape[1:].as_list()]",
+                            "ListComp"
+                        ]
+                    ]
+                }
+            },
+            "map_fn_26": {
+                "variable": {
+                    "value": "losses",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "fn": {
+                    "value": "lambda yp: self._base_loss(y_true, yp, sample_weight)",
+                    "type": "Lambda",
+                    "possible_values": []
+                },
+                "elems": {
+                    "value": "y_pred",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_28": {
+                "input_tensor": {
+                    "value": "losses * weights",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "convert_to_tensor_21": {
+                "value": {
+                    "value": "self._loss_decay",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_23": {
+                "input_tensor": {
+                    "value": "weights",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.convert_to_tensor(self._loss_decay) ** (-tf.range(num_steps, dtype=tf.float32))",
+                            "BinOp"
+                        ],
+                        [
+                            "weights / tf.reduce_sum(weights)",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "range_22": {
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "ige/metrics.py": {
+        "tensorflow": {
+            "get_10": {
+                "variable": {
+                    "value": "self._base_metric",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "identifier": {
+                    "value": "base_metric",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "reshape_21": {
+                "variable": {
+                    "value": "y_true",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "y_true",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.reshape(y_true, tf.shape(y_pred))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "tf.shape(y_pred)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "shape_21": {
+                "input": {
+                    "value": "y_pred",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "y_pred[-1]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "ige/ops.py": {
+        "tensorflow": {
+            "name_scope_13": {
+                "name": {
+                    "value": "softabs",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "ige/problem.py": {
+        "tensorflow": {
+            "map_structure_22": {
+                "func": {
+                    "value": "f",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*structure": {
+                    "value": "dataset.output_shapes",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "**kwargs": {
+                    "value": "dataset.output_types",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "ige/runners.py": {
+        "tensorflow": {
+            "flatten_16": {
+                "variable": {
+                    "value": "inputs",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "structure": {
+                    "value": "inputs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.nest.flatten(inputs)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nest.map_structure(lambda shape, dtype: tf.keras.layers.Input(shape=shape[1:], dtype=dtype), train_ds.output_shapes[0], train_ds.output_types[0])",
+                            "Call"
+                        ],
+                        [
+                            "tuple(tf.nest.flatten(inputs))",
+                            "Call"
+                        ],
+                        [
+                            "inputs[0]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.nest.map_structure(lambda shape, dtype: tf.keras.layers.Input(shape=shape[1:], dtype=dtype), val_ds.output_shapes[0], val_ds.output_types[0])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "map_structure_95": {
+                "variable": {
+                    "value": "(train_ds, val_ds)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "func": {
+                    "value": "lambda split: problem.get_dataset(split, batch_size).repeat()",
+                    "type": "Lambda",
+                    "possible_values": []
+                },
+                "*structure": {
+                    "value": "('train', 'validation')",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "map_structure_98": {
+                "variable": {
+                    "value": "inputs",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "func": {
+                    "value": "lambda shape, dtype: tf.keras.layers.Input(shape=shape[1:], dtype=dtype)",
+                    "type": "Lambda",
+                    "possible_values": []
+                },
+                "*structure": {
+                    "value": "train_ds.output_shapes[0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "**kwargs": {
+                    "value": "train_ds.output_types[0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "map_structure_185": {
+                "variable": {
+                    "value": "inputs",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "func": {
+                    "value": "lambda shape, dtype: tf.keras.layers.Input(shape=shape[1:], dtype=dtype)",
+                    "type": "Lambda",
+                    "possible_values": []
+                },
+                "*structure": {
+                    "value": "val_ds.output_shapes[0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "**kwargs": {
+                    "value": "val_ds.output_types[0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "Model_19": {
+                "inputs": {
+                    "value": "inputs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.nest.flatten(inputs)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nest.map_structure(lambda shape, dtype: tf.keras.layers.Input(shape=shape[1:], dtype=dtype), train_ds.output_shapes[0], train_ds.output_types[0])",
+                            "Call"
+                        ],
+                        [
+                            "tuple(tf.nest.flatten(inputs))",
+                            "Call"
+                        ],
+                        [
+                            "inputs[0]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.nest.map_structure(lambda shape, dtype: tf.keras.layers.Input(shape=shape[1:], dtype=dtype), val_ds.output_shapes[0], val_ds.output_types[0])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "outputs": {
+                    "value": "outputs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "inference_fn(inputs, problem.output_spec())",
+                            "Call"
+                        ],
+                        [
+                            "inference_fn(tf.nest.map_structure(lambda x: tf.keras.layers.Input(tensor=x), inputs), problem.output_spec())",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "make_one_shot_iterator_215": {
+                "variable": {
+                    "value": "(inputs, labels)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "dataset",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "problem.get_dataset(split=split, batch_size=batch_size)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Graph_213": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Model_224": {
+                "variable": {
+                    "value": "model",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "tf.nest.flatten(inputs)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "**kwargs": {
+                    "value": "outputs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "inference_fn(inputs, problem.output_spec())",
+                            "Call"
+                        ],
+                        [
+                            "inference_fn(tf.nest.map_structure(lambda x: tf.keras.layers.Input(tensor=x), inputs), problem.output_spec())",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Input_99": {
+                "shape": {
+                    "value": "shape[1:]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "dtype",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "flatten_134": {
+                "structure": {
+                    "value": "inputs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.nest.flatten(inputs)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nest.map_structure(lambda shape, dtype: tf.keras.layers.Input(shape=shape[1:], dtype=dtype), train_ds.output_shapes[0], train_ds.output_types[0])",
+                            "Call"
+                        ],
+                        [
+                            "tuple(tf.nest.flatten(inputs))",
+                            "Call"
+                        ],
+                        [
+                            "inputs[0]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.nest.map_structure(lambda shape, dtype: tf.keras.layers.Input(shape=shape[1:], dtype=dtype), val_ds.output_shapes[0], val_ds.output_types[0])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Input_186": {
+                "shape": {
+                    "value": "shape[1:]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "dtype",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "Session_228": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "map_structure_221": {
+                "func": {
+                    "value": "lambda x: tf.keras.layers.Input(tensor=x)",
+                    "type": "Lambda",
+                    "possible_values": []
+                },
+                "*structure": {
+                    "value": "inputs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.nest.flatten(inputs)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nest.map_structure(lambda shape, dtype: tf.keras.layers.Input(shape=shape[1:], dtype=dtype), train_ds.output_shapes[0], train_ds.output_types[0])",
+                            "Call"
+                        ],
+                        [
+                            "tuple(tf.nest.flatten(inputs))",
+                            "Call"
+                        ],
+                        [
+                            "inputs[0]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.nest.map_structure(lambda shape, dtype: tf.keras.layers.Input(shape=shape[1:], dtype=dtype), val_ds.output_shapes[0], val_ds.output_types[0])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "flatten_224": {
+                "structure": {
+                    "value": "inputs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.nest.flatten(inputs)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nest.map_structure(lambda shape, dtype: tf.keras.layers.Input(shape=shape[1:], dtype=dtype), train_ds.output_shapes[0], train_ds.output_types[0])",
+                            "Call"
+                        ],
+                        [
+                            "tuple(tf.nest.flatten(inputs))",
+                            "Call"
+                        ],
+                        [
+                            "inputs[0]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.nest.map_structure(lambda shape, dtype: tf.keras.layers.Input(shape=shape[1:], dtype=dtype), val_ds.output_shapes[0], val_ds.output_types[0])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "flatten_200": {
+                "structure": {
+                    "value": "x",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "map_structure_235": {
+                "variable": {
+                    "value": "kwargs",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "func": {
+                    "value": "lambda x: x[i]",
+                    "type": "Lambda",
+                    "possible_values": []
+                },
+                "*structure": {
+                    "value": "batched_kwargs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "sess.run(vis_kwargs)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Input_222": {
+                "tensor": {
+                    "value": "x",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "ige/tf_compat.py": {
+        "tensorflow": {
+            "reduce_sum_70": {
+                "input_tensor": {
+                    "value": "loss",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.call(y_true, y_pred)",
+                            "Call"
+                        ],
+                        [
+                            "loss * sample_weight",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "cast_70": {
+                "x": {
+                    "value": "tf.shape(y_true)[0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "loss.dtype",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_73": {
+                "input_tensor": {
+                    "value": "loss",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.call(y_true, y_pred)",
+                            "Call"
+                        ],
+                        [
+                            "loss * sample_weight",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "shape_71": {
+                "input": {
+                    "value": "y_true",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "ige/unopt.py": {
+        "tensorflow": {
+            "while_loop_118": {
+                "variable": {
+                    "value": "(n, opt_args, rest, state, out_arr)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "cond": {
+                    "value": "cond",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "body": {
+                    "value": "body",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "loop_vars": {
+                    "value": "[0, opt_args, rest, initial_state, out_arr]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "convert_to_tensor_174": {
+                "variable": {
+                    "value": "self.learning_rate_used",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "self.learning_rate",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "dtype",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.dtype if self.map_layer is None else self.map_layer.dtype",
+                            "IfExp"
+                        ],
+                        [
+                            "self.dtype",
+                            "Attribute"
+                        ],
+                        [
+                            "tf.float32",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "Model_19": {
+                "inputs": {
+                    "value": "inputs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "[tf.keras.layers.Input(shape[1:]) for shape in input_shape]",
+                            "ListComp"
+                        ],
+                        [
+                            "list(inputs)",
+                            "Call"
+                        ],
+                        [
+                            "[inputs]",
+                            "List"
+                        ],
+                        [
+                            "[inputs]",
+                            "List"
+                        ]
+                    ]
+                },
+                "outputs": {
+                    "value": "outputs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "fn(inputs)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "TensorShape_69": {
+                "dims": {
+                    "value": "[self.num_steps] + s.as_list()",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "TensorArray_101": {
+                "size": {
+                    "value": "self.num_steps",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "element_shape": {
+                    "value": "s.shape",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "dtype",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.dtype if self.map_layer is None else self.map_layer.dtype",
+                            "IfExp"
+                        ],
+                        [
+                            "self.dtype",
+                            "Attribute"
+                        ],
+                        [
+                            "tf.float32",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "abs_184": {
+                "variable": {
+                    "value": "self.momentum_used",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "self.momentum_used",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "convert_to_tensor_186": {
+                "variable": {
+                    "value": "self.momentum_used",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "self.momentum",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "dtype",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.dtype if self.map_layer is None else self.map_layer.dtype",
+                            "IfExp"
+                        ],
+                        [
+                            "self.dtype",
+                            "Attribute"
+                        ],
+                        [
+                            "tf.float32",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "convert_to_tensor_198": {
+                "variable": {
+                    "value": "self.gradient_clip_value_used",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "self.gradient_clip_value",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "dtype",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.dtype if self.map_layer is None else self.map_layer.dtype",
+                            "IfExp"
+                        ],
+                        [
+                            "self.dtype",
+                            "Attribute"
+                        ],
+                        [
+                            "tf.float32",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "GradientTape_211": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Input_17": {
+                "shape": {
+                    "value": "shape[1:]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "serialize_keras_object_36": {
+                "instance": {
+                    "value": "self.energy_fn",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "serialize_keras_object_39": {
+                "instance": {
+                    "value": "self.map_fn",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "zeros_like_208": {
+                "input": {
+                    "value": "a",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "clip_by_value_217": {
+                "t": {
+                    "value": "g",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "clip_value_min": {
+                    "value": "-self.gradient_clip_value_used",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "clip_value_max": {
+                    "value": "self.gradient_clip_value_used",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "constant_171": {
+                "value": {
+                    "value": "self.learning_rate",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "dtype",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.dtype if self.map_layer is None else self.map_layer.dtype",
+                            "IfExp"
+                        ],
+                        [
+                            "self.dtype",
+                            "Attribute"
+                        ],
+                        [
+                            "tf.float32",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "constant_181": {
+                "value": {
+                    "value": "self.momentum",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "dtype",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.dtype if self.map_layer is None else self.map_layer.dtype",
+                            "IfExp"
+                        ],
+                        [
+                            "self.dtype",
+                            "Attribute"
+                        ],
+                        [
+                            "tf.float32",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "constant_195": {
+                "value": {
+                    "value": "self.gradient_clip_value",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "dtype",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.dtype if self.map_layer is None else self.map_layer.dtype",
+                            "IfExp"
+                        ],
+                        [
+                            "self.dtype",
+                            "Attribute"
+                        ],
+                        [
+                            "tf.float32",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,584 @@
+{
+    "scripts/ensemble.py": {
+        "sklearn": {
+            "accuracy_score_48": {
+                "y_true": {
+                    "value": "groundtruth_labels",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                },
+                "y_pred": {
+                    "value": "majority_labels",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "scripts/run_classifier.py": {
+        "torch": {
+            "DataLoader_88": {
+                "variable": {
+                    "value": "train_dataloader",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "train_dataset",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "load_and_cache_examples(args, tokenizer, labels, pad_token_label_id, data_file=TRAIN_FILE_PATTERN, is_test=False)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "sampler": {
+                    "value": "train_sampler",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "RandomSampler(train_dataset) if args.local_rank == -1 else DistributedSampler(train_dataset)",
+                            "IfExp"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "args.train_batch_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_262": {
+                "variable": {
+                    "value": "eval_dataloader",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "eval_dataset",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "load_and_cache_examples(args, tokenizer, labels, pad_token_label_id, data_file=mode, is_test=is_test)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "sampler": {
+                    "value": "eval_sampler",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "SequentialSampler(eval_dataset) if args.local_rank == -1 else DistributedSampler(eval_dataset)",
+                            "IfExp"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "args.eval_batch_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "tensor_369": {
+                "variable": {
+                    "value": "all_input_ids",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "[f.input_ids for f in features]",
+                    "type": "ListComp",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.long",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "tensor_370": {
+                "variable": {
+                    "value": "all_input_mask",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "[f.input_mask for f in features]",
+                    "type": "ListComp",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.long",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "tensor_371": {
+                "variable": {
+                    "value": "all_segment_ids",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "[f.segment_ids for f in features]",
+                    "type": "ListComp",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.long",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "tensor_372": {
+                "variable": {
+                    "value": "all_label_ids",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "[f.label_id for f in features]",
+                    "type": "ListComp",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.long",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "TensorDataset_374": {
+                "variable": {
+                    "value": "dataset",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*tensors": {
+                    "value": "all_input_ids",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "manual_seed_76": {
+                "seed": {
+                    "value": "args.seed",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "SummaryWriter_84": {
+                "variable": {
+                    "value": "tb_writer",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "DataParallel_127": {
+                "variable": {
+                    "value": "model",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "module": {
+                    "value": "model",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.nn.DataParallel(model)",
+                            "Call"
+                        ],
+                        [
+                            "torch.nn.parallel.DistributedDataParallel(model, device_ids=[args.local_rank], output_device=args.local_rank, find_unused_parameters=True)",
+                            "Call"
+                        ],
+                        [
+                            "torch.nn.DataParallel(model)",
+                            "Call"
+                        ],
+                        [
+                            "model_class.from_pretrained(args.model_name_or_path, from_tf=bool('.ckpt' in args.model_name_or_path), config=config, cache_dir=args.cache_dir if args.cache_dir else None)",
+                            "Call"
+                        ],
+                        [
+                            "model_class.from_pretrained(args.model_name_or_path)",
+                            "Call"
+                        ],
+                        [
+                            "model_class.from_pretrained(checkpoint)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "DistributedDataParallel_131": {
+                "variable": {
+                    "value": "model",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "module": {
+                    "value": "model",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.nn.DataParallel(model)",
+                            "Call"
+                        ],
+                        [
+                            "torch.nn.parallel.DistributedDataParallel(model, device_ids=[args.local_rank], output_device=args.local_rank, find_unused_parameters=True)",
+                            "Call"
+                        ],
+                        [
+                            "torch.nn.DataParallel(model)",
+                            "Call"
+                        ],
+                        [
+                            "model_class.from_pretrained(args.model_name_or_path, from_tf=bool('.ckpt' in args.model_name_or_path), config=config, cache_dir=args.cache_dir if args.cache_dir else None)",
+                            "Call"
+                        ],
+                        [
+                            "model_class.from_pretrained(args.model_name_or_path)",
+                            "Call"
+                        ],
+                        [
+                            "model_class.from_pretrained(checkpoint)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "device_ids": {
+                    "value": "[args.local_rank]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "output_device": {
+                    "value": "args.local_rank",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "find_unused_parameters": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "DataParallel_266": {
+                "variable": {
+                    "value": "model",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "module": {
+                    "value": "model",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.nn.DataParallel(model)",
+                            "Call"
+                        ],
+                        [
+                            "torch.nn.parallel.DistributedDataParallel(model, device_ids=[args.local_rank], output_device=args.local_rank, find_unused_parameters=True)",
+                            "Call"
+                        ],
+                        [
+                            "torch.nn.DataParallel(model)",
+                            "Call"
+                        ],
+                        [
+                            "model_class.from_pretrained(args.model_name_or_path, from_tf=bool('.ckpt' in args.model_name_or_path), config=config, cache_dir=args.cache_dir if args.cache_dir else None)",
+                            "Call"
+                        ],
+                        [
+                            "model_class.from_pretrained(args.model_name_or_path)",
+                            "Call"
+                        ],
+                        [
+                            "model_class.from_pretrained(checkpoint)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "load_339": {
+                "variable": {
+                    "value": "features",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "cached_features_file",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "os.path.join(args.data_dir, 'cached_{}_{}_{}'.format(data_file, list(filter(None, args.model_name_or_path.split('/'))).pop(), str(args.max_seq_length)))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "device_541": {
+                "variable": {
+                    "value": "device",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda if torch.cuda.is_available() and (not args.no_cuda) else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "device_count_542": {
+                "variable": {
+                    "value": "args.n_gpu",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "device_545": {
+                "variable": {
+                    "value": "device",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "index": {
+                    "value": "args.local_rank",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_all_78": {
+                "seed": {
+                    "value": "args.seed",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "RandomSampler_87": {
+                "data_source": {
+                    "value": "train_dataset",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "load_and_cache_examples(args, tokenizer, labels, pad_token_label_id, data_file=TRAIN_FILE_PATTERN, is_test=False)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "DistributedSampler_87": {
+                "dataset": {
+                    "value": "train_dataset",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "load_and_cache_examples(args, tokenizer, labels, pad_token_label_id, data_file=TRAIN_FILE_PATTERN, is_test=False)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "SequentialSampler_261": {
+                "data_source": {
+                    "value": "eval_dataset",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "load_and_cache_examples(args, tokenizer, labels, pad_token_label_id, data_file=mode, is_test=is_test)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "DistributedSampler_261": {
+                "dataset": {
+                    "value": "eval_dataset",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "load_and_cache_examples(args, tokenizer, labels, pad_token_label_id, data_file=mode, is_test=is_test)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "set_device_544": {
+                "device": {
+                    "value": "args.local_rank",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "CrossEntropyLoss_572": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "save_626": {
+                "obj": {
+                    "value": "args",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "parser.parse_args()",
+                            "Call"
+                        ]
+                    ]
+                },
+                "f": {
+                    "value": "os.path.join(args.output_dir, 'training_args.bin')",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "load_115": {
+                "f": {
+                    "value": "os.path.join(args.model_name_or_path, 'optimizer.pt')",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "load_116": {
+                "f": {
+                    "value": "os.path.join(args.model_name_or_path, 'scheduler.pt')",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "no_grad_280": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "save_363": {
+                "obj": {
+                    "value": "features",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.load(cached_features_file)",
+                            "Call"
+                        ],
+                        [
+                            "convert_examples_to_features(examples, labels, args.max_seq_length, tokenizer, cls_token_at_end=bool(args.model_type in ['xlnet']), cls_token=tokenizer.cls_token, cls_token_segment_id=2 if args.model_type in ['xlnet'] else 0, sep_token=tokenizer.sep_token, sep_token_extra=bool(args.model_type in ['roberta']), pad_on_left=bool(args.model_type in ['xlnet']), pad_token=tokenizer.convert_tokens_to_ids([tokenizer.pad_token])[0], pad_token_segment_id=4 if args.model_type in ['xlnet'] else 0, pad_token_label_id=pad_token_label_id)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "f": {
+                    "value": "cached_features_file",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "os.path.join(args.data_dir, 'cached_{}_{}_{}'.format(data_file, list(filter(None, args.model_name_or_path.split('/'))).pop(), str(args.max_seq_length)))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "clip_grad_norm__204": {
+                "parameters": {
+                    "value": "amp.master_params(optimizer)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "max_norm": {
+                    "value": "args.max_grad_norm",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "clip_grad_norm__206": {
+                "parameters": {
+                    "value": "model.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "max_norm": {
+                    "value": "args.max_grad_norm",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "save_236": {
+                "obj": {
+                    "value": "args",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "parser.parse_args()",
+                            "Call"
+                        ]
+                    ]
+                },
+                "f": {
+                    "value": "os.path.join(output_dir, 'training_args.bin')",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "save_239": {
+                "obj": {
+                    "value": "optimizer.state_dict()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "os.path.join(output_dir, 'optimizer.pt')",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "save_240": {
+                "obj": {
+                    "value": "scheduler.state_dict()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "os.path.join(output_dir, 'scheduler.pt')",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "is_available_541": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

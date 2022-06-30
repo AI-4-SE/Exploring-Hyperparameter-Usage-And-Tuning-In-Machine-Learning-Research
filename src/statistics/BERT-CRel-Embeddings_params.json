@@ -1,0 +1,574 @@
+{
+    "BMET/config.py": {
+        "torch": {
+            "device_10": {
+                "variable": {
+                    "value": "DEVICE",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda if USE_CUDA else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "is_available_9": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "BMET/data.py": {
+        "torch": {
+            "tensor_59": {
+                "variable": {
+                    "value": "labels",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "[rec[0] for rec in batch]",
+                    "type": "ListComp",
+                    "possible_values": []
+                }
+            },
+            "tensor_60": {
+                "data": {
+                    "value": "rec[1]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "tensor_62": {
+                "data": {
+                    "value": "rec[2]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "BMET/eval.py": {
+        "torch": {
+            "mm_60": {
+                "variable": {
+                    "value": "embs",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "we[0].weight",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "mat2": {
+                    "value": "we[1].weight",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "normalize_62": {
+                "variable": {
+                    "value": "embs",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "embs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.mm(we[0].weight, we[1].weight).cpu().detach()",
+                            "Call"
+                        ],
+                        [
+                            "F.normalize(embs, p=2, dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "self.wv_mdl.emb",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "p": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "einsum_89": {
+                "variable": {
+                    "value": "scores_t",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "equation": {
+                    "value": "ij, ij -> i",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "*operands": {
+                    "value": "mat[0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "einsum_95": {
+                "variable": {
+                    "value": "scores_m",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "equation": {
+                    "value": "ij, ij -> i",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "*operands": {
+                    "value": "mat[2]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "empty_73": {
+                "*size": {
+                    "value": "mat_size",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.Size((len(ref), embs.size(1)))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "mean_80": {
+                "variable": {
+                    "value": "v",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.stack([embs[j] for j in idx])",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "stack_81": {
+                "tensors": {
+                    "value": "[embs[j] for j in idx]",
+                    "type": "ListComp",
+                    "possible_values": []
+                }
+            },
+            "normalize_86": {
+                "input": {
+                    "value": "x",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "BMET/model.py": {
+        "torch": {
+            "Sequential_44": {
+                "variable": {
+                    "value": "we",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Embedding.from_pretrained(self.wv_mdl.emb, freeze=True, padding_idx=0, sparse=True)",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "mm_67": {
+                "variable": {
+                    "value": "fine_tuned",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "emb_org",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.we[0].weight",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "mat2": {
+                    "value": "proj",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.we[1].weight",
+                            "Attribute"
+                        ]
+                    ]
+                }
+            },
+            "mm_75": {
+                "variable": {
+                    "value": "fine_tuned",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.we[0].weight",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "mat2": {
+                    "value": "self.we[1].weight",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Linear_47": {
+                "in_features": {
+                    "value": "emb_dim",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.wv_mdl.emb.size(1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "emb_dim",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.wv_mdl.emb.size(1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "bias": {
+                    "value": "False",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "eye_49": {
+                "n": {
+                    "value": "emb_dim",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.wv_mdl.emb.size(1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "no_grad_68": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "eye_70": {
+                "n": {
+                    "value": "self.wv_mdl.emb.size(1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "no_grad_78": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "eye_80": {
+                "n": {
+                    "value": "self.wv_mdl.emb.size(1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "BMET/utils.py": {
+        "torch": {
+            "tensor_220": {
+                "variable": {
+                    "value": "lengths",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "lengths",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.tensor(lengths)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "arange_223": {
+                "start": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "end": {
+                    "value": "max_len",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "max_len or lengths.max()",
+                            "BoolOp"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "device": {
+                    "value": "lengths.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "lt_223": {
+                "input": {
+                    "value": "lengths.unsqueeze(1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "BMET/vocab.py": {
+        "torch": {
+            "topk_93": {
+                "variable": {
+                    "value": "(scores, ids)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "F.cosine_similarity(self.emb, v.repeat(self.emb.size(0), 1))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "k": {
+                    "value": "k",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "5",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "normalize_79": {
+                "variable": {
+                    "value": "self.emb",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.emb",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "mean_87": {
+                "variable": {
+                    "value": "v",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.stack([self.emb[self[w]] for w in words])",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cosine_similarity_94": {
+                "x1": {
+                    "value": "self.emb",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "x2": {
+                    "value": "v.repeat(self.emb.size(0), 1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "stack_88": {
+                "tensors": {
+                    "value": "[self.emb[self[w]] for w in words]",
+                    "type": "ListComp",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "train.py": {
+        "torch": {
+            "DataLoader_39": {
+                "variable": {
+                    "value": "trn_it",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "ds['trn']",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "batch_size": {
+                    "value": "cfg.BSZ",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "collate_fn": {
+                    "value": "batchify",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_80": {
+                "variable": {
+                    "value": "val_it",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "val_ds",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "batch_size": {
+                    "value": "cfg.BSZ",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "collate_fn": {
+                    "value": "batchify",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "ReduceLROnPlateau_131": {
+                "variable": {
+                    "value": "sch",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "optimizer": {
+                    "value": "optimizer",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "AdamW([p for (n, p) in model.named_parameters() if not n.startswith('bert.bert.embeddings.word_embeddings[0]')], lr=cfg.LR)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "patience": {
+                    "value": "cfg.SCH_PATIENCE",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "factor": {
+                    "value": "cfg.SCH_FACTOR",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "min_lr": {
+                    "value": "cfg.MIN_LR",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "verbose": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_31": {
+                "seed": {
+                    "value": "cfg.RSEED",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "clip_grad_norm__46": {
+                "parameters": {
+                    "value": "mdl.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "max_norm": {
+                    "value": "8",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "no_grad_81": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,1086 @@
+{
+    "models/dst.py": {
+        "torch": {
+            "pad_sequence_27": {
+                "variable": {
+                    "value": "padded",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "sequences": {
+                    "value": "composed",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "padding_value": {
+                    "value": "0.0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "pack_padded_sequence_35": {
+                "variable": {
+                    "value": "packed",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "reindexed",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "inputs.index_select(0, inputs.data.new(order).long())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "lengths": {
+                    "value": "reindexed_lens",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "[lens[i] for i in order]",
+                            "ListComp"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "pad_packed_sequence_37": {
+                "variable": {
+                    "value": "(padded, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "sequence": {
+                    "value": "outputs",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "padding_value": {
+                    "value": "0.0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "softmax_57": {
+                "variable": {
+                    "value": "weights",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "scores",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "cond.expand_as(seq).mul(seq).sum(2)",
+                            "Call"
+                        ],
+                        [
+                            "cond.unsqueeze(1).expand_as(seq).mul(seq).sum(2)",
+                            "Call"
+                        ],
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "unsqueeze_57": {
+                "variable": {
+                    "value": "weights",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Parameter_82": {
+                "variable": {
+                    "value": "self.slot_embedding",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.Tensor(np.ones(d_hid))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Dropout_84": {
+                "variable": {
+                    "value": "self.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "dropout",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "0.0",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "GRU_100": {
+                "variable": {
+                    "value": "self.rnn_encoder",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "din",
+                    "type": null,
+                    "possible_values": []
+                },
+                "bidirectional": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "ModuleDict_101": {
+                "variable": {
+                    "value": "self.slot_att",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "modules": {
+                    "value": "{s: SlotAttention(dhid * 2, self.dropout.get('att_in', 0.2)) for s in self.slots}",
+                    "type": "DictComp",
+                    "possible_values": []
+                }
+            },
+            "dropout_106": {
+                "variable": {
+                    "value": "attended",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "attended",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.slot_att[slot](rnn_encoding, x_len)",
+                            "Call"
+                        ],
+                        [
+                            "F.dropout(attended, self.dropout.get('att_out', 0.2), self.training)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "p": {
+                    "value": "self.dropout.get('att_out', 0.2)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "training": {
+                    "value": "self.training",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "GRU_117": {
+                "variable": {
+                    "value": "self.rnn",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "input_size",
+                    "type": null,
+                    "possible_values": []
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "dropout_121": {
+                "variable": {
+                    "value": "inputs",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "inputs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "F.dropout(inputs, self.dropout.get('tracker', 0.0), self.training)",
+                            "Call"
+                        ],
+                        [
+                            "inputs.unsqueeze(0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "p": {
+                    "value": "self.dropout.get('tracker', 0.0)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "training": {
+                    "value": "self.training",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Adam_177": {
+                "variable": {
+                    "value": "self.optimizer",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "self.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "self.args['lr']",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "mean_287": {
+                "variable": {
+                    "value": "all_loss",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.cat(losses, 0)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "load_446": {
+                "variable": {
+                    "value": "state",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "fname",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "'{}/config.json'.format(self.args['dout'])",
+                            "Call"
+                        ],
+                        [
+                            "'{}/{}.t7'.format(self.args['dout'], identifier)",
+                            "Call"
+                        ],
+                        [
+                            "files",
+                            "Name"
+                        ]
+                    ]
+                }
+            },
+            "dropout_73": {
+                "input": {
+                    "value": "out",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "super(FixedEmbedding, self).forward(*args, **kwargs)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "p": {
+                    "value": "self.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "training": {
+                    "value": "self.training",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "ModuleDict_150": {
+                "variable": {
+                    "value": "self.classifier",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "modules": {
+                    "value": "{s: nn.Linear(hidden_s, self.label_n[s]) for s in self.slots}",
+                    "type": "DictComp",
+                    "possible_values": []
+                }
+            },
+            "ModuleDict_152": {
+                "variable": {
+                    "value": "self.classifier",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "modules": {
+                    "value": "{s: nn.Linear(args['dhid'] * 4, self.label_n[s]) for s in self.slots}",
+                    "type": "DictComp",
+                    "possible_values": []
+                }
+            },
+            "as_tensor_159": {
+                "variable": {
+                    "value": "self.init_state[s]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "init_state",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "np.zeros(len(self.ontology.values[s]), dtype=np.float32)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "device": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "save_442": {
+                "obj": {
+                    "value": "state",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "np.zeros(len(self.ontology.values[s]), dtype=np.float32)",
+                            "Call"
+                        ],
+                        [
+                            "x",
+                            "Name"
+                        ],
+                        [
+                            "{'args': self.args, 'model': self.state_dict(), 'summary': summary, 'optimizer': self.optimizer.state_dict()}",
+                            "Dict"
+                        ],
+                        [
+                            "torch.load(fname)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "f": {
+                    "value": "fname",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "'{}/config.json'.format(self.args['dout'])",
+                            "Call"
+                        ],
+                        [
+                            "'{}/{}.t7'.format(self.args['dout'], identifier)",
+                            "Call"
+                        ],
+                        [
+                            "files",
+                            "Name"
+                        ]
+                    ]
+                }
+            },
+            "mean_25": {
+                "input": {
+                    "value": "asrs[i][0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "as_tensor_198": {
+                "data": {
+                    "value": "np.asarray(m, dtype=np.float32)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "cat_246": {
+                "variable": {
+                    "value": "c_acts",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "q_acts",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_248": {
+                "variable": {
+                    "value": "track_inputs",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[c_utt, c_acts]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_287": {
+                "tensors": {
+                    "value": "losses",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_288": {
+                "tensors": {
+                    "value": "preds[s]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "as_tensor_213": {
+                "data": {
+                    "value": "np.asarray(e.asr_scores, dtype=np.float32).reshape((-1, 1, 1))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "as_tensor_223": {
+                "data": {
+                    "value": "np.asarray(m, dtype=np.int_)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "as_tensor_233": {
+                "data": {
+                    "value": "np.asarray(m, dtype=np.int_)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "softmax_257": {
+                "variable": {
+                    "value": "pred_t",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "output_s",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.classifier[s](track_hidden)",
+                            "Call"
+                        ],
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "torch.clamp(pred_s, min=1e-07, max=1.0 - 1e-07)",
+                            "Call"
+                        ],
+                        [
+                            "torch.log(output_s)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_265": {
+                "variable": {
+                    "value": "pred_s",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "output_s",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.classifier[s](track_hidden)",
+                            "Call"
+                        ],
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "torch.clamp(pred_s, min=1e-07, max=1.0 - 1e-07)",
+                            "Call"
+                        ],
+                        [
+                            "torch.log(output_s)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "clamp_266": {
+                "variable": {
+                    "value": "output_s",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "pred_s",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.cat(output_s, 0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "min": {
+                    "value": "1e-07",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "max": {
+                    "value": "1.0 - 1e-07",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "log_267": {
+                "variable": {
+                    "value": "output_s",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "output_s",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.classifier[s](track_hidden)",
+                            "Call"
+                        ],
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "torch.clamp(pred_s, min=1e-07, max=1.0 - 1e-07)",
+                            "Call"
+                        ],
+                        [
+                            "torch.log(output_s)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "argmax_365": {
+                "variable": {
+                    "value": "max_t",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "p_t",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "pred_all[s][i]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "Linear_150": {
+                "in_features": {
+                    "value": "hidden_s",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "args['hidden_s']",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "self.label_n[s]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "Linear_152": {
+                "in_features": {
+                    "value": "args['dhid'] * 4",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "self.label_n[s]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "matmul_261": {
+                "variable": {
+                    "value": "uv",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x.unsqueeze(1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "t.unsqueeze(0)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "sum_262": {
+                "variable": {
+                    "value": "x",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.g[s] * uv",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "(1, 2)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "nll_loss_268": {
+                "input": {
+                    "value": "output_s",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.classifier[s](track_hidden)",
+                            "Call"
+                        ],
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "torch.clamp(pred_s, min=1e-07, max=1.0 - 1e-07)",
+                            "Call"
+                        ],
+                        [
+                            "torch.log(output_s)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "target": {
+                    "value": "states[s]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "reduction": {
+                    "value": "none",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "softmax_274": {
+                "variable": {
+                    "value": "pred",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "output_s",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.classifier[s](track_hidden)",
+                            "Call"
+                        ],
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "torch.clamp(pred_s, min=1e-07, max=1.0 - 1e-07)",
+                            "Call"
+                        ],
+                        [
+                            "torch.log(output_s)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "softmax_280": {
+                "variable": {
+                    "value": "pred",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "output_s",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.classifier[s](track_hidden)",
+                            "Call"
+                        ],
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "torch.clamp(pred_s, min=1e-07, max=1.0 - 1e-07)",
+                            "Call"
+                        ],
+                        [
+                            "torch.log(output_s)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "argmax_391": {
+                "variable": {
+                    "value": "pred_index",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.init_state[s]",
+                            "Subscript"
+                        ],
+                        [
+                            "torch.sum(self.g[s] * uv, (1, 2))",
+                            "Call"
+                        ],
+                        [
+                            "x / torch.sum(x)",
+                            "BinOp"
+                        ],
+                        [
+                            "np.zeros(len(self.ontology.values[s]), dtype=np.float32)",
+                            "Call"
+                        ],
+                        [
+                            "pred_all[s][i]",
+                            "Subscript"
+                        ],
+                        [
+                            "pred_all[s][i]",
+                            "Subscript"
+                        ],
+                        [
+                            "np.zeros(len(self.ontology.values[s]), dtype=np.float32)",
+                            "Call"
+                        ],
+                        [
+                            "state",
+                            "Name"
+                        ]
+                    ]
+                }
+            },
+            "argmax_400": {
+                "variable": {
+                    "value": "pred_index",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.init_state[s]",
+                            "Subscript"
+                        ],
+                        [
+                            "torch.sum(self.g[s] * uv, (1, 2))",
+                            "Call"
+                        ],
+                        [
+                            "x / torch.sum(x)",
+                            "BinOp"
+                        ],
+                        [
+                            "np.zeros(len(self.ontology.values[s]), dtype=np.float32)",
+                            "Call"
+                        ],
+                        [
+                            "pred_all[s][i]",
+                            "Subscript"
+                        ],
+                        [
+                            "pred_all[s][i]",
+                            "Subscript"
+                        ],
+                        [
+                            "np.zeros(len(self.ontology.values[s]), dtype=np.float32)",
+                            "Call"
+                        ],
+                        [
+                            "state",
+                            "Name"
+                        ]
+                    ]
+                }
+            },
+            "cross_entropy_273": {
+                "input": {
+                    "value": "output_s",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.classifier[s](track_hidden)",
+                            "Call"
+                        ],
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "torch.clamp(pred_s, min=1e-07, max=1.0 - 1e-07)",
+                            "Call"
+                        ],
+                        [
+                            "torch.log(output_s)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "target": {
+                    "value": "labels[s]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "reduction": {
+                    "value": "none",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cross_entropy_279": {
+                "input": {
+                    "value": "output_s",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.classifier[s](track_hidden)",
+                            "Call"
+                        ],
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "torch.clamp(pred_s, min=1e-07, max=1.0 - 1e-07)",
+                            "Call"
+                        ],
+                        [
+                            "torch.log(output_s)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "target": {
+                    "value": "states[s]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "reduction": {
+                    "value": "none",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "sum_263": {
+                "input": {
+                    "value": "x",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.init_state[s]",
+                            "Subscript"
+                        ],
+                        [
+                            "torch.sum(self.g[s] * uv, (1, 2))",
+                            "Call"
+                        ],
+                        [
+                            "x / torch.sum(x)",
+                            "BinOp"
+                        ],
+                        [
+                            "np.zeros(len(self.ontology.values[s]), dtype=np.float32)",
+                            "Call"
+                        ],
+                        [
+                            "pred_all[s][i]",
+                            "Subscript"
+                        ],
+                        [
+                            "pred_all[s][i]",
+                            "Subscript"
+                        ],
+                        [
+                            "np.zeros(len(self.ontology.values[s]), dtype=np.float32)",
+                            "Call"
+                        ],
+                        [
+                            "state",
+                            "Name"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "train.py": {
+        "torch": {
+            "manual_seed_16": {
+                "seed": {
+                    "value": "args['seed']",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

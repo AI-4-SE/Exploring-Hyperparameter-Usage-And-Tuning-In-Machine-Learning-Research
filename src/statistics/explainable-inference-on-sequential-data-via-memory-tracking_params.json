@@ -1,0 +1,1616 @@
+{
+    "core/dnc/SimplifiedDNC.py": {
+        "torch": {
+            "Dropout_24": {
+                "variable": {
+                    "value": "self.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "dropout",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "0.2",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "LSTMCell_27": {
+                "variable": {
+                    "value": "self.controller",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_size": {
+                    "value": "controller_config.input_size + 3",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "hidden_size": {
+                    "value": "controller_config.lstm_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Linear_29": {
+                "variable": {
+                    "value": "self.linear",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "controller_config.lstm_size + memory_config.word_size * memory_config.read_heads",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "self.output_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "LayerNorm_33": {
+                "variable": {
+                    "value": "self.layer_norm",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "normalized_shape": {
+                    "value": "controller_config.lstm_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "zeros_63": {
+                "variable": {
+                    "value": "batch_history_read",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(batch_size, steps, self.memory.num_read_heads, self.memory.num_rows)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "zeros_64": {
+                "variable": {
+                    "value": "batch_history_write",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(batch_size, steps, self.memory.num_write_heads, self.memory.num_rows)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "flatten_82": {
+                "variable": {
+                    "value": "read_vector",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "read_vector",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.flatten(read_vector, start_dim=1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "start_dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_83": {
+                "variable": {
+                    "value": "input_final_layer",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(dropped_controller_output, read_vector)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "clamp_93": {
+                "input": {
+                    "value": "x",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "min": {
+                    "value": "-self.clip_value",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "max": {
+                    "value": "self.clip_value",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "core/dnc/explanation.py": {
+        "torch": {
+            "zeros_96": {
+                "variable": {
+                    "value": "premise_steps",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "sum(lens)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "argmax_24": {
+                "variable": {
+                    "value": "predicted",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "outcome",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "median_44": {
+                "variable": {
+                    "value": "median_value",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "write_history_t",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "write_weights[t]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "median_70": {
+                "variable": {
+                    "value": "median",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "history_head",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "read_history_t[head]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "topk_71": {
+                "variable": {
+                    "value": "(top_values, top_indices)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "history_head",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "read_history_t[head]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "k": {
+                    "value": "self.top_k",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "core/dnc/memory.py": {
+        "torch": {
+            "is_available_12": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "cumprod_16": {
+                "input": {
+                    "value": "one_x",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.cat([torch.ones(batch_size, 1).cuda(), x], dim=1)[:, :-1]",
+                            "Subscript"
+                        ],
+                        [
+                            "torch.cat([torch.ones(batch_size, 1), x], dim=1)[:, :-1]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Softmax_21": {
+                "variable": {
+                    "value": "self.softmax",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "sum_33": {
+                "variable": {
+                    "value": "squared_norms",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "v * v",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "keepdim": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "matmul_65": {
+                "variable": {
+                    "value": "dot",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "keys",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "torch.transpose(memory, 1, 2)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "matmul_68": {
+                "variable": {
+                    "value": "norm",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "key_norms",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self._vector_norms(keys)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "torch.transpose(memory_norms, 1, 2)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "device_89": {
+                "variable": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda:0 if torch.cuda.is_available() else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "Linear_98": {
+                "variable": {
+                    "value": "self.write_vectors",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "self.input_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "self.num_write_heads * self.num_cols",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "Linear_99": {
+                "variable": {
+                    "value": "self.erase_vectors",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "self.input_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "self.num_write_heads * self.num_cols",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "Linear_100": {
+                "variable": {
+                    "value": "self.write_gate",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "self.input_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "self.num_write_heads",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Linear_101": {
+                "variable": {
+                    "value": "self.read_keys",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "self.input_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "self.num_cols * self.num_read_heads",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "Linear_102": {
+                "variable": {
+                    "value": "self.read_strengths",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "self.input_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "self.num_read_heads",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Softplus_103": {
+                "variable": {
+                    "value": "self.softplus",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Sigmoid_104": {
+                "variable": {
+                    "value": "self.sigmoid",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Linear_105": {
+                "variable": {
+                    "value": "self.free_gate",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "self.input_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "self.num_read_heads",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "arange_126": {
+                "variable": {
+                    "value": "rg",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "start": {
+                    "value": "size",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "indices.shape[0]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "torch.int32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "cat_130": {
+                "variable": {
+                    "value": "gidx",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(rg, idx)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "prod_159": {
+                "variable": {
+                    "value": "reset_gate",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "1 - weighted_resets",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "matmul_160": {
+                "variable": {
+                    "value": "write_memory",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.transpose(write_weights, 1, 2)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "write_vectors",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "topk_201": {
+                "variable": {
+                    "value": "(sorted_nonusage, indices)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "nonusage",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "1 - usage",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "k": {
+                    "value": "self.num_rows",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "topk_205": {
+                "variable": {
+                    "value": "(_, inverse_indices)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "indices",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "k": {
+                    "value": "self.num_rows",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "largest": {
+                    "value": "False",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "stack_235": {
+                "variable": {
+                    "value": "allocation_weights",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "allocation_weights",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "torch.stack(allocation_weights, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "matmul_292": {
+                "variable": {
+                    "value": "read_vectors",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "read_weights",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.content_attention(prev_state['memory'], read_keys, read_strengths)",
+                            "Call"
+                        ],
+                        [
+                            "torch.zeros([batch_size, self.num_read_heads, self.num_rows], requires_grad=False).to(self.device)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "updated_memory",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "memory * reset_gate + write_memory",
+                            "BinOp"
+                        ],
+                        [
+                            "self._erase_and_write(prev_state['memory'], write_weights, write_vector, erase_vector)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "sqrt_34": {
+                "input": {
+                    "value": "squared_norms + _EPSILON",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "zeros_303": {
+                "variable": {
+                    "value": "memory",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "batch_size",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "self.num_rows",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "self.num_cols",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "zeros_304": {
+                "variable": {
+                    "value": "usage",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "batch_size",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "self.num_rows",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "zeros_305": {
+                "variable": {
+                    "value": "write_weights",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "[batch_size, self.num_write_heads, self.num_rows]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "requires_grad": {
+                    "value": "False",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "zeros_306": {
+                "variable": {
+                    "value": "read_weights",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "[batch_size, self.num_read_heads, self.num_rows]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "requires_grad": {
+                    "value": "False",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_13": {
+                "tensors": {
+                    "value": "[torch.ones(batch_size, 1).cuda(), x]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_15": {
+                "tensors": {
+                    "value": "[torch.ones(batch_size, 1), x]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "transpose_65": {
+                "input": {
+                    "value": "memory",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.zeros(batch_size, self.num_rows, self.num_cols).to(self.device)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim0": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "dim1": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "transpose_68": {
+                "input": {
+                    "value": "memory_norms",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self._vector_norms(memory)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim0": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "dim1": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "transpose_160": {
+                "input": {
+                    "value": "write_weights",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "1 - torch.prod(1 - write_weights, 1)",
+                            "BinOp"
+                        ],
+                        [
+                            "write_gate * write_allocation_weights",
+                            "BinOp"
+                        ],
+                        [
+                            "self._write_weights(write_gate, usage)",
+                            "Call"
+                        ],
+                        [
+                            "torch.zeros([batch_size, self.num_write_heads, self.num_rows], requires_grad=False).to(self.device)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim0": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "dim1": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "no_grad_183": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "no_grad_302": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "is_available_89": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "prod_184": {
+                "input": {
+                    "value": "1 - write_weights",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "ones_13": {
+                "*size": {
+                    "value": "batch_size",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "ones_15": {
+                "*size": {
+                    "value": "batch_size",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "core/functions.py": {
+        "torch": {
+            "load_11": {
+                "variable": {
+                    "value": "checkpoint",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "path_model",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "load_26": {
+                "f": {
+                    "value": "PATH_VOCAB",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "'dataset/vocab'",
+                            "Constant"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "core/model.py": {
+        "torch": {
+            "device_11": {
+                "variable": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda:0 if torch.cuda.is_available() else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "Embedding_13": {
+                "variable": {
+                    "value": "self.embeddings",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "embed_len",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "embedding_dim": {
+                    "value": "embedding_dim",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "padding_idx": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "as_tensor_16": {
+                "variable": {
+                    "value": "self.flag_story",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "[1, 0, 0]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "tensor_17": {
+                "variable": {
+                    "value": "self.flag_o1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "[0, 1, 0]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "tensor_18": {
+                "variable": {
+                    "value": "self.flag_o2",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "[0, 0, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Linear_24": {
+                "variable": {
+                    "value": "self.fully_connected_layer",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "memory_config.word_size * 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "zeros_37": {
+                "variable": {
+                    "value": "story_vector",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(batch_size, len(story_embeds[0]), self._word_size)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "zeros_38": {
+                "variable": {
+                    "value": "o1_vector",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(batch_size, len(option1_embeds[0]), self._word_size)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "zeros_39": {
+                "variable": {
+                    "value": "o2_vector",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(batch_size, len(option2_embeds[0]), self._word_size)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "zeros_57": {
+                "variable": {
+                    "value": "query",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(batch_size, 1, self._word_size)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "cat_60": {
+                "variable": {
+                    "value": "o1_vector",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(o1_vector, query)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_61": {
+                "variable": {
+                    "value": "o2_vector",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(o2_vector, query)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_68": {
+                "variable": {
+                    "value": "combined",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(answer1_out, answer2_out)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_44": {
+                "variable": {
+                    "value": "x_new",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(story_embeds[batch][i], self.flag_story)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_49": {
+                "variable": {
+                    "value": "x_new",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(option1_embeds[batch][i], self.flag_o1)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_54": {
+                "variable": {
+                    "value": "x_new",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(option2_embeds[batch][i], self.flag_o2)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "is_available_11": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "eval.py": {
+        "torch": {
+            "device_49": {
+                "variable": {
+                    "value": "DEVICE",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda if torch.cuda.is_available() else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "no_grad_27": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "cat_32": {
+                "variable": {
+                    "value": "story",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(p1, p2, p3, p4)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "argmax_37": {
+                "variable": {
+                    "value": "predicted",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "outcome",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "is_available_49": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "explain.py": {
+        "torch": {
+            "device_77": {
+                "variable": {
+                    "value": "DEVICE",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda if torch.cuda.is_available() else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "cat_40": {
+                "variable": {
+                    "value": "story",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(p1, p2, p3, p4)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "argmax_46": {
+                "variable": {
+                    "value": "predicted",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "outcome",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "no_grad_54": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "is_available_77": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "samples.py": {
+        "torch": {
+            "device_88": {
+                "variable": {
+                    "value": "DEVICE",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda if torch.cuda.is_available() else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "cat_43": {
+                "variable": {
+                    "value": "story",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(p1, p2, p3, p4)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "argmax_49": {
+                "variable": {
+                    "value": "predicted",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "outcome",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "cat_104": {
+                "variable": {
+                    "value": "story",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(p1, p2, p3, p4)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "argmax_110": {
+                "variable": {
+                    "value": "predicted",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "outcome",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "no_grad_57": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "is_available_88": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "train.py": {
+        "torch": {
+            "device_166": {
+                "variable": {
+                    "value": "DEVICE",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda if torch.cuda.is_available() else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "as_tensor_176": {
+                "variable": {
+                    "value": "pre_trained_embeddings",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "embedding_pretrained_weights",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "vocab.vectors",
+                            "Attribute"
+                        ]
+                    ]
+                }
+            },
+            "CrossEntropyLoss_187": {
+                "variable": {
+                    "value": "loss_function",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Adam_188": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "network.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "training_parameters.learning_rate",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "eps": {
+                    "value": "1e-07",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_48": {
+                "variable": {
+                    "value": "story",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(p1, p2, p3, p4)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_101": {
+                "variable": {
+                    "value": "story",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(p1, p2, p3, p4)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "argmax_105": {
+                "variable": {
+                    "value": "predicted",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "outcome",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "argmax_55": {
+                "variable": {
+                    "value": "predicted",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "outcome",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "clip_grad_norm__118": {
+                "parameters": {
+                    "value": "network.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "max_norm": {
+                    "value": "max_grad_norm",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "no_grad_136": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "cat_141": {
+                "variable": {
+                    "value": "story",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(p1, p2, p3, p4)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "argmax_146": {
+                "variable": {
+                    "value": "predicted",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "outcome",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "load_174": {
+                "f": {
+                    "value": "dataset/vocab",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "no_grad_53": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "is_available_166": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "save_208": {
+                "obj": {
+                    "value": "checkpoint",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "{'controller_config': config_dict['controller'], 'memory_config': config_dict['memory'], 'state_dict': network.state_dict(), 'len_embeddings': len(pre_trained_embeddings)}",
+                            "Dict"
+                        ]
+                    ]
+                },
+                "f": {
+                    "value": "path_model",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "FLAGS.path_model",
+                            "Attribute"
+                        ]
+                    ]
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,2645 @@
+{
+    "codes/attentivelstm/main.py": {
+        "torch": {
+            "CrossEntropyLoss_37": {
+                "variable": {
+                    "value": "loss_function",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "is_available_40": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Adam_113": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "parameters",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "filter(lambda p: p.requires_grad, model.parameters())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "lr": {
+                    "value": "lr",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "0.1",
+                            "Constant"
+                        ],
+                        [
+                            "lr * 0.95",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "max_130": {
+                "variable": {
+                    "value": "(_, a_hats)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "scores",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "model(config, Variable(p, requires_grad=False), Variable(p_mask, requires_grad=False), Variable(p_len, requires_grad=False), Variable(q, requires_grad=False), Variable(q_mask, requires_grad=False), Variable(q_len, requires_grad=False))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "eq_137": {
+                "variable": {
+                    "value": "acc",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "a_hats",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "a",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "mean_137": {
+                "variable": {
+                    "value": "acc",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "is_available_158": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "codes/attentivelstm/model.py": {
+        "torch": {
+            "Embedding_14": {
+                "variable": {
+                    "value": "self.embed",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "config.vocab_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "embedding_dim": {
+                    "value": "config.emb_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "LSTM_18": {
+                "variable": {
+                    "value": "self._bilstm",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_size": {
+                    "value": "config.emb_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "hidden_size": {
+                    "value": "config.hidden_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_layers": {
+                    "value": "config.num_layers",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dropout": {
+                    "value": "0.5",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "bidirectional": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Linear_28": {
+                "variable": {
+                    "value": "self.w_qm",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "2 * config.hidden_dim",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "config.att_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "False",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Linear_29": {
+                "variable": {
+                    "value": "self.w_pm",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "2 * config.hidden_dim",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "config.att_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "False",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Linear_30": {
+                "variable": {
+                    "value": "self.w_ms",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "config.att_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "False",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Softmax_32": {
+                "variable": {
+                    "value": "self.att_softmax",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "CosineSimilarity_33": {
+                "variable": {
+                    "value": "self.cosine",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Linear_35": {
+                "variable": {
+                    "value": "self.ff",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "4 * config.hidden_dim",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "False",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "pack_padded_sequence_49": {
+                "variable": {
+                    "value": "sent_emb_pack",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "sent_emb",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.embed(sent)",
+                            "Call"
+                        ],
+                        [
+                            "sent_emb[perm_idx]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "lengths": {
+                    "value": "sent_lens",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "sent_lens[unperm_idx]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "pad_packed_sequence_51": {
+                "variable": {
+                    "value": "(lstm_out, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "sequence": {
+                    "value": "lstm_out",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "lstm_out[unperm_idx]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "max_77": {
+                "variable": {
+                    "value": "(out_q, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "q_lstm_out",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self._bilstm_encode(q, q_lens)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "keepdim": {
+                    "value": "False",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "max_78": {
+                "variable": {
+                    "value": "(out_p, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "p_lstm_out",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self._bilstm_encode(p, p_lens)",
+                            "Call"
+                        ],
+                        [
+                            "weights * p_lstm_out",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "keepdim": {
+                    "value": "False",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "einsum_83": {
+                "variable": {
+                    "value": "m_aq",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "equation": {
+                    "value": "ik,ijk->ijk",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "*operands": {
+                    "value": "[weight_out_q, weight_out_p]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "max_91": {
+                "variable": {
+                    "value": "(out_p, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "p_lstm_out",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self._bilstm_encode(p, p_lens)",
+                            "Call"
+                        ],
+                        [
+                            "weights * p_lstm_out",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "keepdim": {
+                    "value": "False",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_95": {
+                "variable": {
+                    "value": "inp",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[out_q, out_p]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "tanh_96": {
+                "variable": {
+                    "value": "scores",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.ff(inp)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "cat_97": {
+                "variable": {
+                    "value": "scores",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[scores, 1 - scores]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "tanh_88": {
+                "input": {
+                    "value": "m_aq",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.einsum('ik,ijk->ijk', [weight_out_q, weight_out_p])",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "codes/attentivelstm/reader.py": {
+        "torch": {
+            "tensor_103": {
+                "variable": {
+                    "value": "passages",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "passages",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.tensor(passages)",
+                            "Call"
+                        ],
+                        [
+                            "passages.long().cuda(0)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "tensor_104": {
+                "variable": {
+                    "value": "passage_masks",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "passage_masks",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.tensor(passage_masks)",
+                            "Call"
+                        ],
+                        [
+                            "passage_masks.long().cuda(0)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "tensor_105": {
+                "variable": {
+                    "value": "passage_lens",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "passage_lens",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.tensor(passage_lens)",
+                            "Call"
+                        ],
+                        [
+                            "passage_lens.long().cuda(0)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "tensor_106": {
+                "variable": {
+                    "value": "questions",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "questions",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.tensor(questions)",
+                            "Call"
+                        ],
+                        [
+                            "questions.long().cuda(0)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "tensor_107": {
+                "variable": {
+                    "value": "question_masks",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "question_masks",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.tensor(question_masks)",
+                            "Call"
+                        ],
+                        [
+                            "question_masks.long().cuda(0)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "tensor_108": {
+                "variable": {
+                    "value": "question_lens",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "question_lens",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.tensor(question_lens)",
+                            "Call"
+                        ],
+                        [
+                            "question_lens.long().cuda(0)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "tensor_109": {
+                "variable": {
+                    "value": "scores",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "scores",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "torch.tensor(scores)",
+                            "Call"
+                        ],
+                        [
+                            "scores.long().cuda(0)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "is_available_111": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "codes/iwanvar/main.py": {
+        "torch": {
+            "CrossEntropyLoss_44": {
+                "variable": {
+                    "value": "loss_function",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "is_available_47": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Adam_129": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "parameters",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "filter(lambda p: p.requires_grad, model.parameters())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "lr": {
+                    "value": "lr",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "0.1",
+                            "Constant"
+                        ],
+                        [
+                            "lr * 0.95",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "max_76": {
+                "variable": {
+                    "value": "(_, a_hats)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "pred_scores",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "model(config, Variable(qs, requires_grad=False), Variable(q_masks, requires_grad=False), Variable(q_lens, requires_grad=False), Variable(ts, requires_grad=False), Variable(t_masks, requires_grad=False), Variable(t_lens, requires_grad=False), Variable(ps, requires_grad=False), Variable(p_masks, requires_grad=False), Variable(p_lens, requires_grad=False))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "eq_80": {
+                "variable": {
+                    "value": "acc",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "a_hats",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "batch_a",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "sum_80": {
+                "variable": {
+                    "value": "acc",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "max_150": {
+                "variable": {
+                    "value": "(_, a_hats)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "scores",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "model(config, Variable(qs, requires_grad=False), Variable(q_masks, requires_grad=False), Variable(q_lens, requires_grad=False), Variable(ts, requires_grad=False), Variable(t_masks, requires_grad=False), Variable(t_lens, requires_grad=False), Variable(ps, requires_grad=False), Variable(p_masks, requires_grad=False), Variable(p_lens, requires_grad=False))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "eq_158": {
+                "variable": {
+                    "value": "acc",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "a_hats",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "a",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "sum_158": {
+                "variable": {
+                    "value": "acc",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "is_available_182": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "codes/iwanvar/model.py": {
+        "torch": {
+            "Embedding_15": {
+                "variable": {
+                    "value": "self.embed",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "config.vocab_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "embedding_dim": {
+                    "value": "config.emb_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "LSTM_19": {
+                "variable": {
+                    "value": "self._bilstm",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_size": {
+                    "value": "config.emb_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "hidden_size": {
+                    "value": "config.lstm_hidden_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_layers": {
+                    "value": "config.num_layers",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dropout": {
+                    "value": "0.5",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "bidirectional": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "ModuleList_28": {
+                "variable": {
+                    "value": "self._convs",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "modules": {
+                    "value": "[nn.Conv2d(1, config.kernel_num, (k, config.emb_dim)) for k in config.kernel_sizes]",
+                    "type": "ListComp",
+                    "possible_values": []
+                }
+            },
+            "Linear_33": {
+                "variable": {
+                    "value": "self._att_affine1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "2 * config.lstm_hidden_dim",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "config.att_hidden_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Linear_34": {
+                "variable": {
+                    "value": "self._att_affine2",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "config.att_hidden_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Dropout_36": {
+                "variable": {
+                    "value": "self._drop_layer",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "0.5",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Linear_38": {
+                "variable": {
+                    "value": "self._score_affine1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "4 * 2 * config.lstm_hidden_dim + config.kernel_num * len(config.kernel_sizes)",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "config.score_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Linear_43": {
+                "variable": {
+                    "value": "self._score_affine2",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "config.score_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "pack_padded_sequence_58": {
+                "variable": {
+                    "value": "sent_emb_pack",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "sent_emb",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.embed(sent)",
+                            "Call"
+                        ],
+                        [
+                            "sent_emb[perm_idx]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "lengths": {
+                    "value": "sent_lens",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "pad_packed_sequence_60": {
+                "variable": {
+                    "value": "(lstm_out, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "sequence": {
+                    "value": "lstm_out",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "lstm_out[unperm_idx]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "tanh_67": {
+                "variable": {
+                    "value": "self_weights",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self_weights",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self._att_affine1(lstm_out)",
+                            "Call"
+                        ],
+                        [
+                            "F.tanh(self_weights)",
+                            "Call"
+                        ],
+                        [
+                            "self._att_affine2(self_weights)",
+                            "Call"
+                        ],
+                        [
+                            "F.softmax(self_weights, dim=1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "softmax_71": {
+                "variable": {
+                    "value": "self_weights",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self_weights",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self._att_affine1(lstm_out)",
+                            "Call"
+                        ],
+                        [
+                            "F.tanh(self_weights)",
+                            "Call"
+                        ],
+                        [
+                            "self._att_affine2(self_weights)",
+                            "Call"
+                        ],
+                        [
+                            "F.softmax(self_weights, dim=1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_91": {
+                "variable": {
+                    "value": "p",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "p",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "parameters",
+                            "Name"
+                        ],
+                        [
+                            "self.embed(p)",
+                            "Call"
+                        ],
+                        [
+                            "p.unsqueeze(dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "[F.relu(conv(p)).squeeze(3) for conv in self._convs]",
+                            "ListComp"
+                        ],
+                        [
+                            "[F.max_pool1d(i, i.size(2)).squeeze(2) for i in p]",
+                            "ListComp"
+                        ],
+                        [
+                            "torch.cat(p, 1)",
+                            "Call"
+                        ],
+                        [
+                            "self._encode_transcript(p, p_mask, p_lens)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "abs_117": {
+                "variable": {
+                    "value": "h_plus",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "q - t",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "cat_119": {
+                "variable": {
+                    "value": "inp",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[q, t, h_cross, h_plus, p]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "tanh_122": {
+                "variable": {
+                    "value": "scores",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self._score_affine1(inp)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "tanh_123": {
+                "variable": {
+                    "value": "scores",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self._score_affine2(scores)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "relu_87": {
+                "input": {
+                    "value": "conv(p)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "squeeze_87": {
+                "input": {
+                    "value": "3",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "max_pool1d_89": {
+                "input": {
+                    "value": "i",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "i.size(2)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "squeeze_89": {
+                "input": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_29": {
+                "in_channels": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "config.kernel_num",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "(k, config.emb_dim)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "codes/iwanvar/reader.py": {
+        "torch": {
+            "is_available_139": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "codes/rasorsent/main.py": {
+        "torch": {
+            "NLLLoss_44": {
+                "variable": {
+                    "value": "loss_function",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "is_available_45": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Adam_114": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "parameters",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "filter(lambda p: p.requires_grad, model.parameters())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "lr": {
+                    "value": "lr",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "0.01",
+                            "Constant"
+                        ],
+                        [
+                            "lr * 0.95",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "max_70": {
+                "variable": {
+                    "value": "(_, a_hats)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "scores",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "model(config, Variable(p, requires_grad=False), Variable(p_mask, requires_grad=False), Variable(p_len, requires_grad=False), Variable(s_lens, requires_grad=False), Variable(q, requires_grad=False), Variable(q_mask, requires_grad=False), Variable(q_len, requires_grad=False))",
+                            "Call"
+                        ],
+                        [
+                            "model(config, Variable(p, requires_grad=False), Variable(p_mask, requires_grad=False), Variable(p_len, requires_grad=False), Variable(s_lens, requires_grad=False), Variable(q, requires_grad=False), Variable(q_mask, requires_grad=False), Variable(q_len, requires_grad=False))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "max_132": {
+                "variable": {
+                    "value": "(_, a_hats)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "scores",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "model(config, Variable(p, requires_grad=False), Variable(p_mask, requires_grad=False), Variable(p_len, requires_grad=False), Variable(s_lens, requires_grad=False), Variable(q, requires_grad=False), Variable(q_mask, requires_grad=False), Variable(q_len, requires_grad=False))",
+                            "Call"
+                        ],
+                        [
+                            "model(config, Variable(p, requires_grad=False), Variable(p_mask, requires_grad=False), Variable(p_len, requires_grad=False), Variable(s_lens, requires_grad=False), Variable(q, requires_grad=False), Variable(q_mask, requires_grad=False), Variable(q_len, requires_grad=False))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "is_available_170": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "codes/rasorsent/model.py": {
+        "torch": {
+            "Embedding_16": {
+                "variable": {
+                    "value": "self.embed",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "config.vocab_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "embedding_dim": {
+                    "value": "config.emb_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "LSTM_23": {
+                "variable": {
+                    "value": "self.psent_bilstm",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_size": {
+                    "value": "config.emb_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "hidden_size": {
+                    "value": "config.hidden_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_layers": {
+                    "value": "config.num_layers",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "bidirectional": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "LSTM_33": {
+                "variable": {
+                    "value": "self.qsent_bilstm",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_size": {
+                    "value": "config.emb_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "hidden_size": {
+                    "value": "config.hidden_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_layers": {
+                    "value": "config.num_layers",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "bidirectional": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "ones_43": {
+                "variable": {
+                    "value": "self.span_mask",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "config.max_p_len",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "config.max_p_len",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.float64",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Linear_49": {
+                "variable": {
+                    "value": "self.fc1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "6 * config.hidden_dim",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "False",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "LeakyReLU_50": {
+                "variable": {
+                    "value": "self.leaky_relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "LogSoftmax_51": {
+                "variable": {
+                    "value": "self.logsoftmax",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "pack_padded_sequence_74": {
+                "variable": {
+                    "value": "p_lstm_input_pack",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "p_lstm_input",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "p_raw_emb.view(batch_size * p_len, s_len, emb_size)",
+                            "Call"
+                        ],
+                        [
+                            "p_lstm_input[perm_idx]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "lengths": {
+                    "value": "s_lens",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "s_lens.view(batch_size * p_len)",
+                            "Call"
+                        ],
+                        [
+                            "s_lens[unperm_idx]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "pad_packed_sequence_77": {
+                "variable": {
+                    "value": "(lstm_out, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "sequence": {
+                    "value": "lstm_out",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "lstm_out[unperm_idx]",
+                            "Subscript"
+                        ],
+                        [
+                            "lstm_out[unperm_idx]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "pack_padded_sequence_121": {
+                "variable": {
+                    "value": "q_emb_pack",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "q_emb",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.embed(q)",
+                            "Call"
+                        ],
+                        [
+                            "q_emb[perm_idx]",
+                            "Subscript"
+                        ],
+                        [
+                            "lstm_out.gather(time_dimension, Variable(idx))",
+                            "Call"
+                        ],
+                        [
+                            "q_emb.squeeze(time_dimension)",
+                            "Call"
+                        ],
+                        [
+                            "q_emb.unsqueeze(1)",
+                            "Call"
+                        ],
+                        [
+                            "q_emb.repeat(1, max_p_len * max_p_len, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "lengths": {
+                    "value": "q_lens",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "q_lens[unperm_idx]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "pad_packed_sequence_123": {
+                "variable": {
+                    "value": "(lstm_out, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "sequence": {
+                    "value": "lstm_out",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "lstm_out[unperm_idx]",
+                            "Subscript"
+                        ],
+                        [
+                            "lstm_out[unperm_idx]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_148": {
+                "variable": {
+                    "value": "span",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[span1, span2]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "3",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_157": {
+                "variable": {
+                    "value": "input",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[span, q_emb]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "zeros_182": {
+                "variable": {
+                    "value": "zero_t",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "num_layers * 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "batch_size",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "p.size(0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "hidden_dim",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "is_available_44": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "is_available_183": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "codes/rasorsent/reader.py": {
+        "torch": {
+            "tensor_97": {
+                "variable": {
+                    "value": "passages",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "passages",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.tensor(passages)",
+                            "Call"
+                        ],
+                        [
+                            "passages.long().cuda(0)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "tensor_98": {
+                "variable": {
+                    "value": "passage_masks",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "passage_masks",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.tensor(passage_masks)",
+                            "Call"
+                        ],
+                        [
+                            "passage_masks.long().cuda(0)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "tensor_99": {
+                "variable": {
+                    "value": "passage_lens",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "passage_lens",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.tensor(passage_lens)",
+                            "Call"
+                        ],
+                        [
+                            "passage_lens.long().cuda(0)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "tensor_100": {
+                "variable": {
+                    "value": "sent_lens",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "sent_lens",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.tensor(sent_lens)",
+                            "Call"
+                        ],
+                        [
+                            "sent_lens.long().cuda(0)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "tensor_101": {
+                "variable": {
+                    "value": "questions",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "questions",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.tensor(questions)",
+                            "Call"
+                        ],
+                        [
+                            "questions.long().cuda(0)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "tensor_102": {
+                "variable": {
+                    "value": "question_masks",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "question_masks",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.tensor(question_masks)",
+                            "Call"
+                        ],
+                        [
+                            "question_masks.long().cuda(0)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "tensor_103": {
+                "variable": {
+                    "value": "question_lens",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "question_lens",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.tensor(question_lens)",
+                            "Call"
+                        ],
+                        [
+                            "question_lens.long().cuda(0)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "tensor_104": {
+                "variable": {
+                    "value": "answers",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "answers",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "torch.tensor(answers)",
+                            "Call"
+                        ],
+                        [
+                            "answers.long().cuda(0)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "is_available_106": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "codes/rasorsent_hint/main.py": {
+        "torch": {
+            "CrossEntropyLoss_48": {
+                "variable": {
+                    "value": "loss_function",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "is_available_51": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Adam_121": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "parameters",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "filter(lambda p: p.requires_grad, model.parameters())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "lr": {
+                    "value": "lr",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "0.01",
+                            "Constant"
+                        ],
+                        [
+                            "lr * 0.95",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "max_76": {
+                "variable": {
+                    "value": "(_, a_hats)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "scores",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "model(config, Variable(p, requires_grad=False), Variable(p_mask, requires_grad=False), Variable(p_len, requires_grad=False), Variable(s_lens, requires_grad=False), Variable(q, requires_grad=False), Variable(q_mask, requires_grad=False), Variable(q_len, requires_grad=False), Variable(span_mask, requires_grad=False), dev=True)",
+                            "Call"
+                        ],
+                        [
+                            "model(config, Variable(p, requires_grad=False), Variable(p_mask, requires_grad=False), Variable(p_len, requires_grad=False), Variable(s_lens, requires_grad=False), Variable(q, requires_grad=False), Variable(q_mask, requires_grad=False), Variable(q_len, requires_grad=False), Variable(span_mask, requires_grad=False), dev=False)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "max_139": {
+                "variable": {
+                    "value": "(_, a_hats)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "scores",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "model(config, Variable(p, requires_grad=False), Variable(p_mask, requires_grad=False), Variable(p_len, requires_grad=False), Variable(s_lens, requires_grad=False), Variable(q, requires_grad=False), Variable(q_mask, requires_grad=False), Variable(q_len, requires_grad=False), Variable(span_mask, requires_grad=False), dev=True)",
+                            "Call"
+                        ],
+                        [
+                            "model(config, Variable(p, requires_grad=False), Variable(p_mask, requires_grad=False), Variable(p_len, requires_grad=False), Variable(s_lens, requires_grad=False), Variable(q, requires_grad=False), Variable(q_mask, requires_grad=False), Variable(q_len, requires_grad=False), Variable(span_mask, requires_grad=False), dev=False)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "is_available_178": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "codes/rasorsent_hint/model.py": {
+        "torch": {
+            "Embedding_16": {
+                "variable": {
+                    "value": "self.embed",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "config.vocab_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "embedding_dim": {
+                    "value": "config.emb_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "LSTM_23": {
+                "variable": {
+                    "value": "self.psent_bilstm",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_size": {
+                    "value": "config.emb_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "hidden_size": {
+                    "value": "config.hidden_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_layers": {
+                    "value": "config.num_layers",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "bidirectional": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "LSTM_33": {
+                "variable": {
+                    "value": "self.qsent_bilstm",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_size": {
+                    "value": "config.emb_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "hidden_size": {
+                    "value": "config.hidden_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_layers": {
+                    "value": "config.num_layers",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "bidirectional": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Linear_49": {
+                "variable": {
+                    "value": "self.fc1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "6 * config.hidden_dim",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "False",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "LeakyReLU_50": {
+                "variable": {
+                    "value": "self.leaky_relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "LogSoftmax_51": {
+                "variable": {
+                    "value": "self.logsoftmax",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Softmax_52": {
+                "variable": {
+                    "value": "self.softmax",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "pack_padded_sequence_75": {
+                "variable": {
+                    "value": "p_lstm_input_pack",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "p_lstm_input",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "p_raw_emb.view(batch_size * p_len, s_len, emb_size)",
+                            "Call"
+                        ],
+                        [
+                            "p_lstm_input[perm_idx]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "lengths": {
+                    "value": "s_lens",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "s_lens.view(batch_size * p_len)",
+                            "Call"
+                        ],
+                        [
+                            "s_lens[unperm_idx]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "pad_packed_sequence_78": {
+                "variable": {
+                    "value": "(lstm_out, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "sequence": {
+                    "value": "lstm_out",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "lstm_out[unperm_idx]",
+                            "Subscript"
+                        ],
+                        [
+                            "lstm_out[unperm_idx]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "pack_padded_sequence_126": {
+                "variable": {
+                    "value": "q_emb_pack",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "q_emb",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.embed(q)",
+                            "Call"
+                        ],
+                        [
+                            "q_emb[perm_idx]",
+                            "Subscript"
+                        ],
+                        [
+                            "lstm_out.gather(time_dimension, Variable(idx))",
+                            "Call"
+                        ],
+                        [
+                            "q_emb.squeeze(time_dimension)",
+                            "Call"
+                        ],
+                        [
+                            "q_emb.unsqueeze(1)",
+                            "Call"
+                        ],
+                        [
+                            "q_emb.repeat(1, max_p_len * max_p_len, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "lengths": {
+                    "value": "q_lens",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "q_lens[unperm_idx]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "pad_packed_sequence_128": {
+                "variable": {
+                    "value": "(lstm_out, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "sequence": {
+                    "value": "lstm_out",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "lstm_out[unperm_idx]",
+                            "Subscript"
+                        ],
+                        [
+                            "lstm_out[unperm_idx]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_153": {
+                "variable": {
+                    "value": "span",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[span1, span2]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "3",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_165": {
+                "variable": {
+                    "value": "input",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[span, q_emb]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "zeros_205": {
+                "variable": {
+                    "value": "zero_t",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "num_layers * 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "batch_size",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "p.size(0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "hidden_dim",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "is_available_206": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "codes/rasorsent_hint/reader.py": {
+        "torch": {
+            "tensor_147": {
+                "variable": {
+                    "value": "passages",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "passages",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.tensor(passages)",
+                            "Call"
+                        ],
+                        [
+                            "passages.long().cuda(0)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "tensor_148": {
+                "variable": {
+                    "value": "passage_masks",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "passage_masks",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.tensor(passage_masks)",
+                            "Call"
+                        ],
+                        [
+                            "passage_masks.long().cuda(0)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "tensor_149": {
+                "variable": {
+                    "value": "passage_lens",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "passage_lens",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.tensor(passage_lens)",
+                            "Call"
+                        ],
+                        [
+                            "passage_lens.long().cuda(0)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "tensor_150": {
+                "variable": {
+                    "value": "sent_lens",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "sent_lens",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.tensor(sent_lens)",
+                            "Call"
+                        ],
+                        [
+                            "sent_lens.long().cuda(0)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "tensor_151": {
+                "variable": {
+                    "value": "questions",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "questions",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.tensor(questions)",
+                            "Call"
+                        ],
+                        [
+                            "questions.long().cuda(0)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "tensor_152": {
+                "variable": {
+                    "value": "question_masks",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "question_masks",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.tensor(question_masks)",
+                            "Call"
+                        ],
+                        [
+                            "question_masks.long().cuda(0)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "tensor_153": {
+                "variable": {
+                    "value": "question_lens",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "question_lens",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.tensor(question_lens)",
+                            "Call"
+                        ],
+                        [
+                            "question_lens.long().cuda(0)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "tensor_154": {
+                "variable": {
+                    "value": "answers",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "answers",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "torch.tensor(answers)",
+                            "Call"
+                        ],
+                        [
+                            "answers.long().cuda(0)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "stack_155": {
+                "variable": {
+                    "value": "span_masks",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "span_masks",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "torch.stack(span_masks)",
+                            "Call"
+                        ],
+                        [
+                            "span_masks.float().cuda(0)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "ones_81": {
+                "variable": {
+                    "value": "span_mask",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "self.max_p_len",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "self.max_p_len",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.float64",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "zeros_86": {
+                "variable": {
+                    "value": "span_mask",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "self.max_p_len",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "self.max_p_len",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.float64",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "is_available_157": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "is_available_82": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "is_available_92": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "codes/utils.py": {
+        "torch": {
+            "from_numpy_102": {
+                "variable": {
+                    "value": "emb",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "ndarray": {
+                    "value": "weights",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "np.random.randn(vocab_size, emb_size)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    }
+}

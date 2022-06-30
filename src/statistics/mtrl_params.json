@@ -1,0 +1,3077 @@
+{
+    "mtrl/agent/abstract.py": {
+        "torch": {
+            "save_277": {
+                "obj": {
+                    "value": "metadata",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "{'step': step}",
+                            "Dict"
+                        ],
+                        [
+                            "self.load_metadata(model_dir=model_dir)",
+                            "Call"
+                        ],
+                        [
+                            "None",
+                            "Constant"
+                        ],
+                        [
+                            "torch.load(metadata_path)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "f": {
+                    "value": "path_to_save_at",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "f'{model_dir}/{name}_{step}.pt'",
+                            "JoinedStr"
+                        ],
+                        [
+                            "f'{model_dir}/metadata.pt'",
+                            "JoinedStr"
+                        ]
+                    ]
+                }
+            },
+            "load_343": {
+                "variable": {
+                    "value": "metadata",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "metadata_path",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "f'{model_dir}/metadata.pt'",
+                            "JoinedStr"
+                        ]
+                    ]
+                }
+            },
+            "load_429": {
+                "variable": {
+                    "value": "component_or_optimizer",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "path_to_load_from",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "f'{model_dir}/{name}_{step}.pt'",
+                            "JoinedStr"
+                        ]
+                    ]
+                }
+            },
+            "load_431": {
+                "f": {
+                    "value": "path_to_load_from",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "f'{model_dir}/{name}_{step}.pt'",
+                            "JoinedStr"
+                        ]
+                    ]
+                }
+            },
+            "save_251": {
+                "obj": {
+                    "value": "component_or_optimizer",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.load(path_to_load_from)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "f": {
+                    "value": "path_to_save_at",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "f'{model_dir}/{name}_{step}.pt'",
+                            "JoinedStr"
+                        ],
+                        [
+                            "f'{model_dir}/metadata.pt'",
+                            "JoinedStr"
+                        ]
+                    ]
+                }
+            },
+            "save_253": {
+                "obj": {
+                    "value": "component_or_optimizer.state_dict()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "path_to_save_at",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "f'{model_dir}/{name}_{step}.pt'",
+                            "JoinedStr"
+                        ],
+                        [
+                            "f'{model_dir}/metadata.pt'",
+                            "JoinedStr"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "mtrl/agent/components/actor.py": {
+        "torch": {
+            "tanh_62": {
+                "variable": {
+                    "value": "mu",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "mu",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.tanh(mu)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "tanh_64": {
+                "variable": {
+                    "value": "pi",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "pi",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.tanh(pi)",
+                            "Call"
+                        ],
+                        [
+                            "mu + noise * std",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "tanh_423": {
+                "variable": {
+                    "value": "log_std",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "log_std",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.tanh(log_std)",
+                            "Call"
+                        ],
+                        [
+                            "log_std_min + 0.5 * (log_std_max - log_std_min) * (log_std + 1)",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "randn_like_428": {
+                "variable": {
+                    "value": "noise",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "mu",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.tanh(mu)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "log_66": {
+                "input": {
+                    "value": "F.relu(1 - pi.pow(2)) + 1e-06",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sum_66": {
+                "input": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "keepdim": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "eye_171": {
+                "variable": {
+                    "value": "task_index_to_mask",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "n": {
+                    "value": "multitask_cfg.num_envs",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "cat_384": {
+                "tensors": {
+                    "value": "(encoding, task_info.encoding)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Sequential_361": {
+                "*args": {
+                    "value": "trunk",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "ReLU_361": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "relu_66": {
+                "input": {
+                    "value": "1 - pi.pow(2)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "mtrl/agent/components/base.py": {
+        "torch": {}
+    },
+    "mtrl/agent/components/critic.py": {
+        "torch": {
+            "cat_430": {
+                "variable": {
+                    "value": "obs_action",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[obs, action]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "Linear_68": {
+                "variable": {
+                    "value": "self.obs_action_projection_layer",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "obs_dim + action_dim",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "obs_dim",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "encoder_cfg.encoder_cfg.feature_dim",
+                            "Attribute"
+                        ],
+                        [
+                            "encoder_cfg.feature_dim",
+                            "Attribute"
+                        ],
+                        [
+                            "obs_dim + multitask_cfg.task_encoder_cfg.model_cfg.output_dim",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "eye_286": {
+                "variable": {
+                    "value": "task_index_to_mask",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "n": {
+                    "value": "multitask_cfg.num_envs",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "cat_393": {
+                "tensors": {
+                    "value": "(encoding, task_info.encoding)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Sequential_195": {
+                "*args": {
+                    "value": "trunk",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "ReLU_195": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "mtrl/agent/components/decoder.py": {
+        "torch": {
+            "Linear_40": {
+                "variable": {
+                    "value": "self.fc",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "feature_dim",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "decoder_cfg.feature_dim",
+                            "Attribute"
+                        ],
+                        [
+                            "feature_dim + multitask_cfg.task_encoder_cfg.model_cfg.output_dim",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "num_filters * self.out_dim * self.out_dim",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "ModuleList_42": {
+                "variable": {
+                    "value": "self.deconvs",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "relu_55": {
+                "variable": {
+                    "value": "h",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.fc(h)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "relu_60": {
+                "variable": {
+                    "value": "deconv",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.deconvs[i](deconv)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "ConvTranspose2d_49": {
+                "in_channels": {
+                    "value": "num_filters",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "env_obs_shape[0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "3",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "output_padding": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "ConvTranspose2d_46": {
+                "in_channels": {
+                    "value": "num_filters",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "num_filters",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "3",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "mtrl/agent/components/encoder.py": {
+        "torch": {
+            "ModuleList_95": {
+                "variable": {
+                    "value": "self.convs",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "modules": {
+                    "value": "[nn.Conv2d(env_obs_shape[0], num_filters, 3, stride=2)]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "Linear_105": {
+                "variable": {
+                    "value": "self.fc",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "num_filters * out_dim * out_dim",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "feature_dim",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "LayerNorm_106": {
+                "variable": {
+                    "value": "self.ln",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "normalized_shape": {
+                    "value": "feature_dim",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "exp_118": {
+                "variable": {
+                    "value": "std",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "logstd",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "randn_like_119": {
+                "variable": {
+                    "value": "eps",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "std",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.exp(logstd)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "relu_133": {
+                "variable": {
+                    "value": "conv",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.convs[0](env_obs)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "tanh_150": {
+                "variable": {
+                    "value": "out",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "h_norm",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.ln(h_fc)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "relu_136": {
+                "variable": {
+                    "value": "conv",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.convs[i](conv)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "split_269": {
+                "tensor": {
+                    "value": "task_encoding.unsqueeze(2)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "split_size_or_sections": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_96": {
+                "in_channels": {
+                    "value": "env_obs_shape[0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "num_filters",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "3",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_99": {
+                "in_channels": {
+                    "value": "num_filters",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "num_filters",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "3",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "mtrl/agent/components/hipbmdp_theta.py": {
+        "torch": {
+            "Embedding_59": {
+                "variable": {
+                    "value": "self.embedding",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "self.num_envs",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "embedding_dim": {
+                    "value": "dim",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "padding_idx": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Sequential_64": {
+                "variable": {
+                    "value": "self.model",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.ReLU()",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "ReLU_65": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Linear_66": {
+                "in_features": {
+                    "value": "dim",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "2 * dim",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "ReLU_67": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Linear_68": {
+                "in_features": {
+                    "value": "2 * dim",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "output_dim",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "cat_129": {
+                "tensors": {
+                    "value": "theta_groups",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "mtrl/agent/components/moe_layer.py": {
+        "torch": {
+            "Parameter_36": {
+                "variable": {
+                    "value": "self.weight",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.rand(self.num_experts, self.in_features, self.out_features)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Sequential_97": {
+                "variable": {
+                    "value": "self._model",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "*layers",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Softmax_227": {
+                "variable": {
+                    "value": "self._softmax",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "zeros_289": {
+                "variable": {
+                    "value": "task_index_to_encoder_index",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(len(task_description), min(num_experts, len(clusters)))",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "Parameter_40": {
+                "variable": {
+                    "value": "self.bias",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.rand(self.num_experts, 1, self.out_features)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Embedding_212": {
+                "variable": {
+                    "value": "self.emb",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "num_tasks",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "embedding_dim": {
+                    "value": "embedding_dim",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "multitask_cfg.task_encoder_cfg.model_cfg.embedding_dim",
+                            "Attribute"
+                        ]
+                    ]
+                }
+            },
+            "zeros_like_244": {
+                "variable": {
+                    "value": "hard_attention_mask",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "gate",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self._softmax(output / self.temperature)",
+                            "Call"
+                        ],
+                        [
+                            "gate * hard_attention_mask",
+                            "BinOp"
+                        ],
+                        [
+                            "gate / gate.sum(dim=1).unsqueeze(1)",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "rand_37": {
+                "*size": {
+                    "value": "self.num_experts",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "self.in_features",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "self.out_features",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "rand_40": {
+                "*size": {
+                    "value": "self.num_experts",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "self.out_features",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "ReLU_88": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "eye_330": {
+                "n": {
+                    "value": "num_tasks",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "ones_358": {
+                "*size": {
+                    "value": "num_tasks",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "num_experts",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "mtrl/agent/components/reward_decoder.py": {
+        "torch": {
+            "Sequential_25": {
+                "variable": {
+                    "value": "self.trunk",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Linear(feature_dim, 512)",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Linear_26": {
+                "in_features": {
+                    "value": "feature_dim",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "512",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "LayerNorm_27": {
+                "normalized_shape": {
+                    "value": "512",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "ReLU_28": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Linear_29": {
+                "in_features": {
+                    "value": "512",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "mtrl/agent/components/soft_modularization.py": {
+        "torch": {
+            "ModuleList_55": {
+                "variable": {
+                    "value": "self.layers",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "modules": {
+                    "value": "layers",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                }
+            },
+            "Linear_100": {
+                "variable": {
+                    "value": "self.projection_before_routing",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "in_features",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "hidden_features",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "ModuleList_105": {
+                "variable": {
+                    "value": "self.W_d",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "modules": {
+                    "value": "[nn.Linear(in_features=hidden_features, out_features=self.num_experts_per_layer ** 2) for _ in range(num_layers)]",
+                    "type": "ListComp",
+                    "possible_values": []
+                }
+            },
+            "ModuleList_115": {
+                "variable": {
+                    "value": "self.W_u",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "modules": {
+                    "value": "[nn.Linear(in_features=self.num_experts_per_layer ** 2, out_features=hidden_features) for _ in range(num_layers - 1)]",
+                    "type": "ListComp",
+                    "possible_values": []
+                }
+            },
+            "Softmax_125": {
+                "variable": {
+                    "value": "self._softmax",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_151": {
+                "variable": {
+                    "value": "prob_tensor",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[self._process_logprob(logprob=logprob).unsqueeze(0) for logprob in prob]",
+                    "type": "ListComp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "relu_146": {
+                "input": {
+                    "value": "inp",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "mtobs.env_obs",
+                            "Attribute"
+                        ],
+                        [
+                            "layer(inp)",
+                            "Call"
+                        ],
+                        [
+                            "_out.sum(dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "self.projection_before_routing(obs * task_info.encoding)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Sequential_45": {
+                "*args": {
+                    "value": "linear",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Linear_107": {
+                "in_features": {
+                    "value": "hidden_features",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "self.num_experts_per_layer ** 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "Linear_117": {
+                "in_features": {
+                    "value": "self.num_experts_per_layer ** 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "hidden_features",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "relu_149": {
+                "input": {
+                    "value": "W_u(prob[-1]) * inp",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "ReLU_45": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "mtrl/agent/components/task_encoder.py": {
+        "torch": {
+            "Tensor_42": {
+                "variable": {
+                    "value": "pretrained_embedding",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "Sequential_51": {
+                "variable": {
+                    "value": "projection_layer",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Linear(in_features=pretrained_embedding_dim, out_features=2 * embedding_dim)",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Sequential_60": {
+                "variable": {
+                    "value": "self.embedding",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "pretrained_embedding",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Sequential_67": {
+                "variable": {
+                    "value": "self.embedding",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Embedding(num_embeddings=num_embeddings, embedding_dim=embedding_dim)",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Linear_52": {
+                "in_features": {
+                    "value": "pretrained_embedding_dim",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "pretrained_embedding.shape[1]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "2 * embedding_dim",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "ReLU_55": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Linear_56": {
+                "in_features": {
+                    "value": "2 * embedding_dim",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "embedding_dim",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "ReLU_57": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "ReLU_62": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Embedding_68": {
+                "num_embeddings": {
+                    "value": "num_embeddings",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "embedding_dim": {
+                    "value": "embedding_dim",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "ReLU_71": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "mtrl/agent/components/transition_model.py": {
+        "torch": {
+            "Linear_80": {
+                "variable": {
+                    "value": "self.fc",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "encoder_feature_dim + action_shape[0]",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "layer_width",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "LayerNorm_81": {
+                "variable": {
+                    "value": "self.ln",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "normalized_shape": {
+                    "value": "layer_width",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "Linear_82": {
+                "variable": {
+                    "value": "self.fc_mu",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "layer_width",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "encoder_feature_dim",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "transition_cfg.feature_dim",
+                            "Attribute"
+                        ],
+                        [
+                            "encoder_feature_dim + multitask_cfg.task_encoder_cfg.model_cfg.output_dim",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "relu_89": {
+                "variable": {
+                    "value": "x",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.fc(x)",
+                            "Call"
+                        ],
+                        [
+                            "self.ln(x)",
+                            "Call"
+                        ],
+                        [
+                            "torch.relu(x)",
+                            "Call"
+                        ],
+                        [
+                            "self.fc(x)",
+                            "Call"
+                        ],
+                        [
+                            "self.ln(x)",
+                            "Call"
+                        ],
+                        [
+                            "torch.relu(x)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Linear_133": {
+                "variable": {
+                    "value": "self.fc",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "encoder_feature_dim + action_shape[0]",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "layer_width",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "LayerNorm_134": {
+                "variable": {
+                    "value": "self.ln",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "normalized_shape": {
+                    "value": "layer_width",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "Linear_135": {
+                "variable": {
+                    "value": "self.fc_mu",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "layer_width",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "encoder_feature_dim",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "transition_cfg.feature_dim",
+                            "Attribute"
+                        ],
+                        [
+                            "encoder_feature_dim + multitask_cfg.task_encoder_cfg.model_cfg.output_dim",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "Linear_136": {
+                "variable": {
+                    "value": "self.fc_sigma",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "layer_width",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "encoder_feature_dim",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "transition_cfg.feature_dim",
+                            "Attribute"
+                        ],
+                        [
+                            "encoder_feature_dim + multitask_cfg.task_encoder_cfg.model_cfg.output_dim",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "relu_145": {
+                "variable": {
+                    "value": "x",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.fc(x)",
+                            "Call"
+                        ],
+                        [
+                            "self.ln(x)",
+                            "Call"
+                        ],
+                        [
+                            "torch.relu(x)",
+                            "Call"
+                        ],
+                        [
+                            "self.fc(x)",
+                            "Call"
+                        ],
+                        [
+                            "self.ln(x)",
+                            "Call"
+                        ],
+                        [
+                            "torch.relu(x)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "sigmoid_148": {
+                "variable": {
+                    "value": "sigma",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.fc_sigma(x)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "randn_like_156": {
+                "variable": {
+                    "value": "eps",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "sigma",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "None",
+                            "Constant"
+                        ],
+                        [
+                            "torch.sigmoid(self.fc_sigma(x))",
+                            "Call"
+                        ],
+                        [
+                            "self.min_sigma + (self.max_sigma - self.min_sigma) * sigma",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "mtrl/agent/deepmdp.py": {
+        "torch": {
+            "mse_loss_165": {
+                "variable": {
+                    "value": "reward_loss",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "pred_next_reward",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.reward_decoder(pred_next_latent)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "target": {
+                    "value": "reward",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "batch.reward",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "reduction": {
+                    "value": "self.loss_reduction",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "ones_like_146": {
+                "variable": {
+                    "value": "pred_next_latent_sigma",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "pred_next_latent_mu",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "mean_152": {
+                "variable": {
+                    "value": "loss",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "0.5 * diff.pow(2) + torch.log(pred_next_latent_sigma)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "mse_loss_217": {
+                "variable": {
+                    "value": "rec_loss",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "target_obs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "batch.next_env_obs",
+                            "Attribute"
+                        ],
+                        [
+                            "agent_utils.preprocess_obs(target_obs)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "target": {
+                    "value": "rec_obs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.decoder(next_h)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "mean_217": {
+                "variable": {
+                    "value": "rec_loss",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "cat_143": {
+                "tensors": {
+                    "value": "[h, action]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_162": {
+                "tensors": {
+                    "value": "[h, action]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_211": {
+                "tensors": {
+                    "value": "[h, action]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "mse_loss_219": {
+                "variable": {
+                    "value": "rec_loss",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "target_obs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "batch.next_env_obs",
+                            "Attribute"
+                        ],
+                        [
+                            "agent_utils.preprocess_obs(target_obs)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "target": {
+                    "value": "rec_obs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.decoder(next_h)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "reduction": {
+                    "value": "none",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "log_152": {
+                "input": {
+                    "value": "pred_next_latent_sigma",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.ones_like(pred_next_latent_mu)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "log_155": {
+                "input": {
+                    "value": "pred_next_latent_sigma",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.ones_like(pred_next_latent_mu)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "mtrl/agent/distral.py": {
+        "torch": {
+            "min_411": {
+                "variable": {
+                    "value": "actor_Q",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "actor_Q1",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "no_grad_255": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "no_grad_265": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "min_381": {
+                "input": {
+                    "value": "target_Q1",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "sum_445": {
+                "input": {
+                    "value": "distilled_agent_loss",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "gaussian_kld(mean1=distral_mu, logvar1=2 * distral_log_std, mean2=mu.detach(), logvar2=2 * log_std.detach())",
+                            "Call"
+                        ],
+                        [
+                            "torch.sum(distilled_agent_loss) / batch_size",
+                            "BinOp"
+                        ],
+                        [
+                            "distilled_agent_loss * self.distral_alpha",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "exp_47": {
+                "input": {
+                    "value": "logvar1",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "mtrl/agent/ds/task_info.py": {
+        "torch": {
+            "zeros_19": {
+                "*size": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "mtrl/agent/grad_manipulation.py": {
+        "torch": {
+            "zeros_105": {
+                "variable": {
+                    "value": "task_loss",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(num_tasks, 1)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.float",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "mtrl/agent/gradnorm.py": {
+        "torch": {
+            "Parameter_58": {
+                "variable": {
+                    "value": "task_weights",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.ones((num_tasks, 1), dtype=torch.float, device=self.device)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "mul_103": {
+                "variable": {
+                    "value": "weighted_task_loss",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "task_weights",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.nn.Parameter(torch.ones((num_tasks, 1), dtype=torch.float, device=self.device))",
+                            "Call"
+                        ],
+                        [
+                            "self.task_weights[name]",
+                            "Subscript"
+                        ],
+                        [
+                            "task_weights / (task_weights.sum().detach() + eps)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "task_loss",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self._convert_loss_into_task_loss(loss=loss, env_metadata=env_metadata)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "stack_130": {
+                "variable": {
+                    "value": "grad_norms",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "grad_norm_list",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                }
+            },
+            "unsqueeze_130": {
+                "variable": {
+                    "value": "grad_norms",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "l1_loss_148": {
+                "variable": {
+                    "value": "grad_norm_loss",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "grad_norms",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.stack(grad_norm_list).unsqueeze(1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "target": {
+                    "value": "target_grad_norm",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "mean_grad_norm * inverse_training_rate ** self.gradnorm_alpha",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "ones_59": {
+                "*size": {
+                    "value": "(num_tasks, 1)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.float",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "grad_121": {
+                "variable": {
+                    "value": "task_grad",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "outputs": {
+                    "value": "task_loss[index]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "last_shared_layer_parameters",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "flatten_list([list(layer.parameters()) for layer in flatten_list(last_shared_layers)])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "retain_graph": {
+                    "value": "index != num_tasks - 1",
+                    "type": "Compare",
+                    "possible_values": []
+                }
+            },
+            "parameters_to_vector_126": {
+                "variable": {
+                    "value": "vec_task_grad",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "parameters": {
+                    "value": "task_grad",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.autograd.grad(task_loss[index], last_shared_layer_parameters, retain_graph=index != num_tasks - 1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "grad_152": {
+                "outputs": {
+                    "value": "grad_norm_loss",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.nn.functional.l1_loss(grad_norms, target_grad_norm)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "inputs": {
+                    "value": "task_weights",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.nn.Parameter(torch.ones((num_tasks, 1), dtype=torch.float, device=self.device))",
+                            "Call"
+                        ],
+                        [
+                            "self.task_weights[name]",
+                            "Subscript"
+                        ],
+                        [
+                            "task_weights / (task_weights.sum().detach() + eps)",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "norm_128": {
+                "input": {
+                    "value": "torch.mul(task_weights[index], vec_task_grad)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "mul_128": {
+                "input": {
+                    "value": "task_weights[index]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "vec_task_grad",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.nn.utils.parameters_to_vector(task_grad)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "mtrl/agent/hipbmdp.py": {
+        "torch": {
+            "flip_140": {
+                "variable": {
+                    "value": "flipped_task_encoding",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "task_info.encoding",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dims": {
+                    "value": "[0]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "cat_142": {
+                "variable": {
+                    "value": "h_1",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[h, task_info.encoding]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_143": {
+                "variable": {
+                    "value": "h_2",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[h, flipped_task_encoding]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "mse_loss_153": {
+                "variable": {
+                    "value": "loss",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.norm(task_info.encoding - flipped_task_encoding)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "target": {
+                    "value": "torch.norm(pred_next_latent_mu_1.detach() - pred_next_latent_mu_2.detach())",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "cat_146": {
+                "tensors": {
+                    "value": "[h_1, batch.action]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_150": {
+                "tensors": {
+                    "value": "[h_2, batch.action]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "norm_154": {
+                "input": {
+                    "value": "task_info.encoding - flipped_task_encoding",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "norm_155": {
+                "input": {
+                    "value": "pred_next_latent_mu_1.detach() - pred_next_latent_mu_2.detach()",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "no_grad_117": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "mtrl/agent/pcgrad.py": {
+        "torch": {
+            "cat_147": {
+                "variable": {
+                    "value": "grad_vec",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "list(map(lambda x: torch.nn.utils.parameters_to_vector(x).unsqueeze(0), grad))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "parameters_to_vector_149": {
+                "parameters": {
+                    "value": "x",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "unsqueeze_149": {
+                "input": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "grad_138": {
+                "outputs": {
+                    "value": "task_loss[index]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "parameters",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "retain_graph": {
+                    "value": "retain_graph or index != num_tasks - 1",
+                    "type": "BoolOp",
+                    "possible_values": []
+                },
+                "allow_unused": {
+                    "value": "allow_unused",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "mtrl/agent/sac.py": {
+        "torch": {
+            "Parameter_73": {
+                "variable": {
+                    "value": "self.log_alpha",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.tensor([np.log(init_temperature, dtype=np.float32) for _ in range(self.num_envs)]).to(self.device)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "min_376": {
+                "variable": {
+                    "value": "actor_Q",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "actor_Q1",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "tensor_74": {
+                "data": {
+                    "value": "[np.log(init_temperature, dtype=np.float32) for _ in range(self.num_envs)]",
+                    "type": "ListComp",
+                    "possible_values": []
+                }
+            },
+            "no_grad_198": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "min_280": {
+                "input": {
+                    "value": "target_Q1",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "no_grad_302": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "mse_loss_313": {
+                "input": {
+                    "value": "current_Q1",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "target": {
+                    "value": "target_Q",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "batch.reward + batch.not_done * self.discount * target_V",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "reduction": {
+                    "value": "self.loss_reduction",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "mse_loss_315": {
+                "input": {
+                    "value": "current_Q2",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "target": {
+                    "value": "target_Q",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "batch.reward + batch.not_done * self.discount * target_V",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "reduction": {
+                    "value": "self.loss_reduction",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "no_grad_173": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "mtrl/agent/sac_ae.py": {
+        "torch": {
+            "mse_loss_117": {
+                "variable": {
+                    "value": "rec_loss",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "target_obs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "batch.env_obs",
+                            "Attribute"
+                        ],
+                        [
+                            "agent_utils.preprocess_obs(target_obs)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "target": {
+                    "value": "rec_obs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.decoder(h)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "mean_117": {
+                "variable": {
+                    "value": "rec_loss",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "mse_loss_119": {
+                "variable": {
+                    "value": "rec_loss",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "target_obs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "batch.env_obs",
+                            "Attribute"
+                        ],
+                        [
+                            "agent_utils.preprocess_obs(target_obs)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "target": {
+                    "value": "rec_obs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.decoder(h)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "reduction": {
+                    "value": "none",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "mtrl/agent/utils.py": {
+        "torch": {
+            "manual_seed_48": {
+                "seed": {
+                    "value": "seed",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "is_available_49": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "floor_60": {
+                "variable": {
+                    "value": "obs",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "obs / 2 ** (8 - bits)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "ModuleList_161": {
+                "modules": {
+                    "value": "sequential_layers",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                }
+            },
+            "Sequential_185": {
+                "*args": {
+                    "value": "*mods",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "manual_seed_all_50": {
+                "seed": {
+                    "value": "seed",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "Sequential_160": {
+                "*args": {
+                    "value": "*new_layer",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "rand_like_62": {
+                "input": {
+                    "value": "obs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.floor(obs / 2 ** (8 - bits))",
+                            "Call"
+                        ],
+                        [
+                            "obs / bins",
+                            "BinOp"
+                        ],
+                        [
+                            "obs + torch.rand_like(obs) / bins",
+                            "BinOp"
+                        ],
+                        [
+                            "obs - 0.5",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "Linear_122": {
+                "in_features": {
+                    "value": "input_dim",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "output_dim",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "Linear_124": {
+                "in_features": {
+                    "value": "input_dim",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "hidden_dim",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "ReLU_124": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Linear_127": {
+                "in_features": {
+                    "value": "hidden_dim",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "output_dim",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "Linear_126": {
+                "in_features": {
+                    "value": "hidden_dim",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "hidden_dim",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "ReLU_126": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Sequential_159": {
+                "*args": {
+                    "value": "*new_layer",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "mtrl/agent/wrapper.py": {
+        "torch": {}
+    },
+    "mtrl/env/vec_env.py": {
+        "torch": {
+            "arange_83": {
+                "variable": {
+                    "value": "self.task_obs",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "start": {
+                    "value": "self.num_envs",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "tensor_55": {
+                "data": {
+                    "value": "value",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            },
+            "tensor_108": {
+                "data": {
+                    "value": "env_obs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "super().reset()",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "mtrl/experiment/experiment.py": {
+        "torch": {
+            "device_30": {
+                "variable": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "self.config.setup.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "mtrl/experiment/utils.py": {
+        "torch": {}
+    },
+    "mtrl/logger.py": {
+        "torch": {}
+    },
+    "mtrl/replay_buffer.py": {
+        "torch": {
+            "as_tensor_80": {
+                "variable": {
+                    "value": "env_obses",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "self.env_obses[idxs]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "as_tensor_81": {
+                "variable": {
+                    "value": "actions",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "self.actions[idxs]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "as_tensor_82": {
+                "variable": {
+                    "value": "rewards",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "self.rewards[idxs]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "as_tensor_83": {
+                "variable": {
+                    "value": "next_env_obses",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "self.next_env_obses[idxs]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "as_tensor_86": {
+                "variable": {
+                    "value": "not_dones",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "self.not_dones[idxs]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "as_tensor_87": {
+                "variable": {
+                    "value": "env_indices",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "self.task_obs[idxs]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "as_tensor_109": {
+                "variable": {
+                    "value": "env_obses",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "self.env_obses[idxs]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "as_tensor_110": {
+                "variable": {
+                    "value": "actions",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "self.actions[idxs]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "as_tensor_111": {
+                "variable": {
+                    "value": "rewards",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "self.rewards[idxs]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "as_tensor_112": {
+                "variable": {
+                    "value": "next_env_obses",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "self.next_env_obses[idxs]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "as_tensor_115": {
+                "variable": {
+                    "value": "not_dones",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "self.not_dones[idxs]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "as_tensor_116": {
+                "variable": {
+                    "value": "env_indices",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "self.task_obs[idxs]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "save_241": {
+                "obj": {
+                    "value": "payload",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "[self.env_obses[start_idx:end_idx], self.next_env_obses[start_idx:end_idx], self.actions[start_idx:end_idx], self.rewards[start_idx:end_idx], self.not_dones[start_idx:end_idx], self.task_obs[start_idx:end_idx]]",
+                            "List"
+                        ],
+                        [
+                            "torch.load(path)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "f": {
+                    "value": "path",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "os.path.join(save_dir, f'{start_idx}_{end_idx - 1}.pt')",
+                            "Call"
+                        ],
+                        [
+                            "os.path.join(save_dir, chunk)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "load_250": {
+                "variable": {
+                    "value": "payload",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "path",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "os.path.join(save_dir, f'{start_idx}_{end_idx - 1}.pt')",
+                            "Call"
+                        ],
+                        [
+                            "os.path.join(save_dir, chunk)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "mtrl/utils/types.py": {
+        "torch": {}
+    },
+    "mtrl/utils/utils.py": {
+        "torch": {
+            "manual_seed_90": {
+                "seed": {
+                    "value": "seed",
+                    "type": "Name",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "tests/agent/components/decoder_test.py": {
+        "torch": {
+            "rand_39": {
+                "variable": {
+                    "value": "batch",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(batch_size, config.agent.decoder.feature_dim)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "tests/agent/components/hipbmdp_components_test.py": {
+        "torch": {
+            "randint_154": {
+                "variable": {
+                    "value": "env_index",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "low": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "high": {
+                    "value": "num_envs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "len(env.ids)",
+                            "Call"
+                        ],
+                        [
+                            "len(env.ids)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "size": {
+                    "value": "(num_envs,)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "no_grad_108": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "no_grad_123": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "tests/agent/components/metaworld_components_test.py": {
+        "torch": {
+            "randint_178": {
+                "variable": {
+                    "value": "env_index",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "low": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "high": {
+                    "value": "num_envs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "len(env.ids)",
+                            "Call"
+                        ],
+                        [
+                            "len(env.ids)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "size": {
+                    "value": "(num_envs,)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "no_grad_130": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "no_grad_145": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "tests/agent/components/reward_decoder_test.py": {
+        "torch": {
+            "rand_37": {
+                "variable": {
+                    "value": "batch",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(batch_size, reward_feature_dim)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "tests/agent/components/softmodularization_components_test.py": {
+        "torch": {
+            "no_grad_128": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "no_grad_140": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "randn_119": {
+                "*size": {
+                    "value": "(num_envs, 50)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "tests/agent/components/transition_model_test.py": {
+        "torch": {
+            "rand_39": {
+                "variable": {
+                    "value": "batch",
+                    "type": "Name",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(batch_size, 50 + action_shape[0])",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "tests/agent/hipbmdp_test.py": {
+        "torch": {
+            "device_88": {
+                "type": {
+                    "value": "cpu",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "tests/agent/metaworld_test.py": {
+        "torch": {
+            "device_130": {
+                "type": {
+                    "value": "cpu",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}
