@@ -21,6 +21,8 @@ TEST_REPOS = [
     'https://github.com/evanmy/voxel_shape_analysis', 'https://github.com/CausalML/ESPRM', 'https://github.com/bestend/tf2-bi-lstm-crf-nni', 'https://github.com/xalanq/chinese-sentiment-classification', 'https://github.com/shrezaei/MI-on-EL', 'https://github.com/eladsegal/tag-based-multi-span-extraction', 'https://github.com/jaswindersingh2/RNAsnap2', 'https://github.com/WangZesen/SincNet-Tensorflow2'
 ]
 
+NOTEBOOK_REPO = ["https://github.com/simisimon/kaggle-notebooks"]
+
 def get_repo_name_from_url(url):
     """
     Analyze a repository with CfgNet.
@@ -73,7 +75,7 @@ def main():
     subprocess.run(["mkdir", "-p", EVALUATION_FOLDER + "/results"])
 
     index = int(sys.argv[1])
-    process_repo(TEST_REPOS[index])
+    process_repo(NOTEBOOK_REPO[index])
 
 if __name__ == "__main__":
     main()

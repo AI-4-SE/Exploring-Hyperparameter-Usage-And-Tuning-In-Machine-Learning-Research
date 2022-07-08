@@ -9,6 +9,7 @@ from collections import Counter
 
 
 statistics_dir = "../src/statistics/"
+notebooks_dir = "../src/statistics/notebooks/"
 statistics_processed = "data/statistics_processed/"
 sklearn_data = "data/sklearn/modules/sklearn_modules.json"
 
@@ -77,7 +78,7 @@ def clean_statistics():
 def main():
     # count_classes()
     # clean_statistics()
-    copy_statistic_files(statistics_dir)
+    copy_statistic_files(notebooks_dir)
 
 
 if __name__ == "__main__":
