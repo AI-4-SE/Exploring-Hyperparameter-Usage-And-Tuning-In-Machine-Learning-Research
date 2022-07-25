@@ -23,13 +23,13 @@ PYTORCH_FROM_REGEX = re.compile(r"from torch[a-zA-z._]* import [a-zA-Z_]*")
 directory_parts = os.path.dirname(os.path.abspath(__file__)).split("\\")
 directory_parts = directory_parts[:-2]
 BASE = "\\".join(directory_parts)
-SAMPLE_SET = "\\data\\sample_set.txt"
+SAMPLE_SET = "\\src\\repos\\sample_set_5000.txt"
 
 def create_sample_set(number):
     for _, _, files in os.walk(target_dir):
         sample = set(random.sample(files, number))
         
-    with open(".\\data\\sklearn\\sample_set.txt", "w") as sample_set:
+    with open("sample_set_5000.txt", "w") as sample_set:
         for file in sample:
             sample_set.write(file + "\n")
 
@@ -39,15 +39,34 @@ def read_samples(file_path):
         lines = [line.replace("\n", "") for line in lines]
     return lines
 
-def find_ml_repos(import_regex, import_from_regex, file_path):
-    samples = read_samples(SAMPLE_SET)
+def check_imports(tree):
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for package in node.names:
+                module = package.name.split(".")[0]
+                if module in ("sklearn", "tensorflow", "torch"):
+                    return True
+                else:
+                    return False
 
+        if isinstance(node, ast.ImportFrom):
+            for package in node.names:
+                if node.module:
+                    module = node.module.split(".")[0]
+                    if module in ("sklearn", "tensorflow", "torch"):
+                        return True
+                    else:
+                        return False
+
+
+def find_ml_repos(file_path):
+    samples = read_samples(SAMPLE_SET)
+    print(BASE + file_path)
     with open(BASE + file_path, "w") as source:
         for subdir, _ , files in os.walk(target_dir):
             for file in files:
                 is_ml_repo = False
                 if file in samples:
-                    print("Processing: " + file)
                     tar = tarfile.open(os.path.join(subdir, file))
                     for member in tar.getmembers():
                         if member.name.endswith(".py"):
@@ -55,17 +74,14 @@ def find_ml_repos(import_regex, import_from_regex, file_path):
                             filepath = filepath.replace("/", "\\")
                             try:
                                 f=tar.extractfile(member)
-                                for line in f.readlines():
-                                    if import_regex.search(str(line)):
-                                        source.write(file + "\n")
-                                        is_ml_repo = True
-                                        break
-                                    if import_from_regex.search(str(line)):
-                                        source.write(file + "\n")
-                                        is_ml_repo = True
-                                        break
-                            except (AttributeError, KeyError):
-                                print("skipped: ", filepath)
+                                code_str = f.read()
+                                tree = ast.parse(code_str)
+                                if check_imports(tree):
+                                    source.write(file + "\n")
+                                    is_ml_repo = True
+                                    break
+                            except (AttributeError, KeyError, SyntaxError, IndentationError, Exception):
+                                continue
                         if is_ml_repo:
                             break
 
@@ -129,20 +145,22 @@ def check_python_version(url, url_final):
 
 
 if __name__ == "__main__":
-    # create_sample_set(1000), already done
+    #create_sample_set(5000)
+    #find_ml_repos("\\src\\repos\\ml_samples_5000.txt")
+    get_urls("\\src\\repos\\ml_samples_5000.txt", "\\src\\repos\\ml_samples_url_5000.csv")
 
-    sklearn_path = "\\data\\sklearn\\sklearn_sample.txt"
-    sklearn_url = "\\data\\sklearn\\sklearn_sample_url.csv"
-    sklearn_url_final = "\\data\\sklearn\\sklearn_sample_url_final.csv"
-    tensorflow_path = "\\data\\tensorflow\\tensorflow_samples.txt"
-    tensorflow_url = "\\data\\tensorflow\\tensorflow_samples_url.csv"
-    tensorflow_url_final = "\\data\\tensorflow\\tensorflow_samples_url_final.csv"
-    pytorch_path = "\\data\\pytorch\\pytorch_samples.txt"
-    pytorch_url = "\\data\\pytorch\\pytorch_samples_url.csv"
-    pytorch_url_final = "\\data\\pytorch\\pytorch_samples_url_final.csv"
+    #sklearn_path = "\\data\\sklearn\\sklearn_sample.txt"
+    #sklearn_url = "\\data\\sklearn\\sklearn_sample_url.csv"
+    #sklearn_url_final = "\\data\\sklearn\\sklearn_sample_url_final.csv"
+    #tensorflow_path = "\\data\\tensorflow\\tensorflow_samples.txt"
+    #tensorflow_url = "\\data\\tensorflow\\tensorflow_samples_url.csv"
+    #tensorflow_url_final = "\\data\\tensorflow\\tensorflow_samples_url_final.csv"
+    #pytorch_path = "\\data\\pytorch\\pytorch_samples.txt"
+    #pytorch_url = "\\data\\pytorch\\pytorch_samples_url.csv"
+    #pytorch_url_final = "\\data\\pytorch\\pytorch_samples_url_final.csv"
 
     #find_ml_repos(SKLEARN_REGEX, SKLEARN_FROM_REGEX, sklearn_path)
     #find_ml_repos(TENSORFLOW_REGEX, TENSORFLOW_FROM_REGEX, tensorflow_path)
     #find_ml_repos(PYTORCH_REGEX, PYTORCH_FROM_REGEX, pytorch_path)
     #get_urls(pytorch_path, pytorch_url)
-    check_python_version(pytorch_url, pytorch_url_final)
+    #check_python_version(pytorch_url, pytorch_url_final)
