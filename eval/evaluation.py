@@ -23,6 +23,21 @@ TEST_REPOS = [
 
 NOTEBOOK_REPO = ["https://github.com/simisimon/kaggle-notebooks"]
 
+def get_repos():
+    repos = []
+    file_name = "../data/5000/ml_samples_url_5000.csv"
+
+    with open(file_name, "r", encoding="utf-8") as src:
+        for line in src.readlines():
+            if "tar_filename" in line or "repo_url" in line:
+                continue
+            else:
+                url = line.split(",")[-1].strip()
+                repos.append(url)
+
+    return repos
+
+
 def get_repo_name_from_url(url):
     """
     Analyze a repository with CfgNet.
@@ -74,8 +89,11 @@ def main():
         subprocess.run(["rm", "-rf", EVALUATION_FOLDER])
     subprocess.run(["mkdir", "-p", EVALUATION_FOLDER + "/results"])
 
+    repos = get_repos()
+    #print("len repos", len(repos))
+
     index = int(sys.argv[1])
-    process_repo(NOTEBOOK_REPO[index])
+    process_repo(repos[index])
 
 if __name__ == "__main__":
     main()

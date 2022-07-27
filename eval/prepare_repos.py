@@ -2,7 +2,9 @@ sklearn_file = "../data/sklearn/sklearn_sample_url_final.csv"
 tf_file = "../data/tensorflow/tensorflow_samples_url_final.csv"
 torch_file = "../data/pytorch/pytorch_samples_url_final.csv"
 
-files = [sklearn_file, tf_file, torch_file]
+new_files = "../data/5000/ml_samples_url_5000.csv"
+
+files = [new_files]
 
 
 def main():
@@ -17,9 +19,9 @@ def main():
                     url = line.split(",")[-1].strip()
                     urls.add(url)
 
-
-         
     print(len(urls))
     print(urls)
+
+    
 if __name__ == "__main__":
     main()
