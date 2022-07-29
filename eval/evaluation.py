@@ -3,7 +3,8 @@ import os
 import glob
 import subprocess
 import sys
-from git import Repo
+from git import repo
+import json
 
 # The folder where we store our results.
 EVALUATION_FOLDER = "out"
@@ -24,18 +25,12 @@ TEST_REPOS = [
 NOTEBOOK_REPO = ["https://github.com/simisimon/kaggle-notebooks"]
 
 def get_repos():
-    repos = []
-    file_name = "../data/5000/ml_samples_url_5000.csv"
+    file_name = "final_sample_set.json"
 
     with open(file_name, "r", encoding="utf-8") as src:
-        for line in src.readlines():
-            if "tar_filename" in line or "repo_url" in line:
-                continue
-            else:
-                url = line.split(",")[-1].strip()
-                repos.append(url)
-
-    return repos
+        data = json.load(src)
+    
+    return data
 
 
 def get_repo_name_from_url(url):
@@ -90,7 +85,6 @@ def main():
     subprocess.run(["mkdir", "-p", EVALUATION_FOLDER + "/results"])
 
     repos = get_repos()
-    #print("len repos", len(repos))
 
     index = int(sys.argv[1])
     process_repo(repos[index])
