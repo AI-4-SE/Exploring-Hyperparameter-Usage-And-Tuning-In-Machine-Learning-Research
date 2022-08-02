@@ -81,5 +81,30 @@ def main():
     copy_statistic_files(notebooks_dir)
 
 
+def get_failed_repos():
+
+    indices = []
+
+    for error_file in glob.glob("error/*.err"):
+        #print(error_file)
+
+        with open(error_file, "r", encoding="utf-8") as src:
+            lines = src.readlines()
+            lines = lines[-6:]
+            if "launcher | Done in" not in lines[-1]:
+                index = error_file.split("-")[-1].split(".")[0]
+                indices.append(int(index))
+
+    
+    with open("final_sample_set.json", "r", encoding="utf-8") as src:
+        data = json.load(src)
+
+
+        for index in indices:
+            print(data[index])
+            
+    
+
+
 if __name__ == "__main__":
-    main()
+    get_failed_repos()
