@@ -53,17 +53,23 @@ def get_final_sample_set():
     with open("../data/5000/final_metadata_5000.json", "r", encoding="utf-8") as src:
         data = json.load(src)
 
-    random_data = random.sample(data, 1000)
+    print(len(data))
 
-    with open("../data/5000/final_metadata_1000.json", "w", encoding="utf-8") as src:
-        json.dump(random_data, src, indent=4, sort_keys=True)
+
+    #random_data = random.sample(data, 1000)
+
+    #with open("../data/5000/final_metadata_1000.json", "w", encoding="utf-8") as src:
+    #    json.dump(random_data, src, indent=4, sort_keys=True)
     
-    for item in random_data:
-        urls.append(item["repo_url"])
+    for item in data:
+        if not item["repo_url"].endswith(".py") and "tree/master" not in item["repo_url"]:
+            urls.append(item["repo_url"])
+        
+
+    print(len(urls))
 
     with open("final_sample_set.json", "w", encoding="utf-8") as src:
         json.dump(urls, src, indent=4, sort_keys=True)
-    
 
 
 if __name__ == "__main__":
