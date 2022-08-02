@@ -99,10 +99,11 @@ def get_failed_repos():
     with open("final_sample_set.json", "r", encoding="utf-8") as src:
         data = json.load(src)
 
+        failed_repos = [data[index] for index in indices]
 
-        for index in indices:
-            print(data[index])
-            
+
+    with open("failed_repos.json", "w", encoding="utf-8") as src:
+        json.dump(failed_repos, src, indent=4, sort_keys=True)
     
 
 
