@@ -3,7 +3,7 @@ import os
 import glob
 import subprocess
 import sys
-from git import repo
+from git import Repo
 import json
 
 # The folder where we store our results.
