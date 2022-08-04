@@ -1,0 +1,720 @@
+{
+    "dump_images.py": {
+        "torch": {
+            "is_available_30": {
+                "variable": {
+                    "value": "cuda",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "device_31": {
+                "variable": {
+                    "value": "device",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda if cuda else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_34": {
+                "variable": {
+                    "value": "sample_loader",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "datasets.ImageFolder(dataset, transform=transforms.Compose([transforms.Resize((224, 224)), transforms.ToTensor(), transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])]))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "batch_size": {
+                    "value": "batch_size",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "5",
+                            "Constant"
+                        ]
+                    ]
+                },
+                "shuffle": {
+                    "value": "False",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "misc_functions.py": {
+        "torch": {
+            "as_tensor_20": {
+                "variable": {
+                    "value": "mean",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "mean",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.as_tensor(mean)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "as_tensor_21": {
+                "variable": {
+                    "value": "std",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "std",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.as_tensor(std)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "saliency/fullgrad.py": {
+        "torch": {
+            "is_available_34": {
+                "variable": {
+                    "value": "cuda",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "device_35": {
+                "variable": {
+                    "value": "device",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda if cuda else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "randn_38": {
+                "variable": {
+                    "value": "input",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "self.im_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "nll_loss_72": {
+                "input": {
+                    "value": "out",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.model(image)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "target": {
+                    "value": "target_class.flatten()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "reduction": {
+                    "value": "sum",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "interpolate_128": {
+                "variable": {
+                    "value": "gradient",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "temp",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self._postProcess(bias_grad[i])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "size": {
+                    "value": "(im_size[2], im_size[3])",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "mode": {
+                    "value": "bilinear",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "align_corners": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "saliency/grad.py": {
+        "torch": {
+            "log_softmax_44": {
+                "variable": {
+                    "value": "outputs",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "outputs",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "self.model(image)",
+                            "Call"
+                        ],
+                        [
+                            "torch.log_softmax(outputs, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "nll_loss_45": {
+                "variable": {
+                    "value": "agg",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "outputs",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "self.model(image)",
+                            "Call"
+                        ],
+                        [
+                            "torch.log_softmax(outputs, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "target": {
+                    "value": "target_class",
+                    "type": "MethodArgument",
+                    "possible_values": [
+                        [
+                            "outputs.data.max(1, keepdim=True)[1].flatten()",
+                            "Call"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "reduction": {
+                    "value": "sum",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "abs_61": {
+                "input": {
+                    "value": "input_grad",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self._getGradients(image, target_class=target_class)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "sum_61": {
+                "input": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "keepdim": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "grad_51": {
+                "outputs": {
+                    "value": "agg",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "F.nll_loss(outputs, target_class, reduction='sum')",
+                            "Call"
+                        ],
+                        [
+                            "-1.0 * F.nll_loss(outputs, target_class, reduction='sum')",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "inputs": {
+                    "value": "image",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "image.requires_grad_()",
+                            "Call"
+                        ]
+                    ]
+                },
+                "only_inputs": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "retain_graph": {
+                    "value": "False",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "nll_loss_47": {
+                "input": {
+                    "value": "outputs",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "self.model(image)",
+                            "Call"
+                        ],
+                        [
+                            "torch.log_softmax(outputs, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "target": {
+                    "value": "target_class",
+                    "type": "MethodArgument",
+                    "possible_values": [
+                        [
+                            "outputs.data.max(1, keepdim=True)[1].flatten()",
+                            "Call"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "reduction": {
+                    "value": "sum",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "saliency/gradcam.py": {
+        "torch": {
+            "interpolate_88": {
+                "variable": {
+                    "value": "cam_resized",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "F.relu(cam)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "size": {
+                    "value": "image.size(2)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "mode": {
+                    "value": "bilinear",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "align_corners": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "nll_loss_60": {
+                "input": {
+                    "value": "out",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.model(x)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "target": {
+                    "value": "target_class.flatten()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "reduction": {
+                    "value": "sum",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "relu_88": {
+                "input": {
+                    "value": "cam",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "(F.relu(features) * grads).sum(1, keepdim=True)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "relu_87": {
+                "input": {
+                    "value": "features",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "saliency/simple_fullgrad.py": {
+        "torch": {
+            "nll_loss_50": {
+                "input": {
+                    "value": "out",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.model(image)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "target": {
+                    "value": "target_class.flatten()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "reduction": {
+                    "value": "sum",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "interpolate_87": {
+                "variable": {
+                    "value": "gradient",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "temp",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self._postProcess(intermed_grad[i])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "size": {
+                    "value": "(im_size[2], im_size[3])",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "mode": {
+                    "value": "bilinear",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "align_corners": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "saliency/smooth_fullgrad.py": {
+        "torch": {
+            "zeros_like_56": {
+                "variable": {
+                    "value": "final",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "cam[0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "normal_40": {
+                "variable": {
+                    "value": "noise",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "mean": {
+                    "value": "torch.zeros_like(image).to(image.device)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "std": {
+                    "value": "std_dev",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.std_spread * (image.max().item() - image.min().item())",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "interpolate_62": {
+                "input": {
+                    "value": "temp",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.fg._postProcess(cam[k])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "size": {
+                    "value": "(im_size[2], im_size[3])",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "mode": {
+                    "value": "bilinear",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "align_corners": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "sum_62": {
+                "input": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "keepdim": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "zeros_like_40": {
+                "input": {
+                    "value": "image",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "saliency/smoothgrad.py": {
+        "torch": {
+            "zeros_like_58": {
+                "variable": {
+                    "value": "cam",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "image",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "image.requires_grad_()",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "normal_61": {
+                "variable": {
+                    "value": "noise",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "mean": {
+                    "value": "torch.zeros_like(image).to(image.device)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "std": {
+                    "value": "std_dev",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.std_spread * (image.max().item() - image.min().item())",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "nll_loss_42": {
+                "input": {
+                    "value": "out",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.model(image)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "target": {
+                    "value": "target_class",
+                    "type": "MethodArgument",
+                    "possible_values": [
+                        [
+                            "out.data.max(1, keepdim=True)[1]",
+                            "Subscript"
+                        ],
+                        [
+                            "target_class.flatten()",
+                            "Call"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "reduction": {
+                    "value": "sum",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "grad_46": {
+                "outputs": {
+                    "value": "loss",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "-1.0 * F.nll_loss(out, target_class, reduction='sum')",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "inputs": {
+                    "value": "image",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "image.requires_grad_()",
+                            "Call"
+                        ]
+                    ]
+                },
+                "only_inputs": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "zeros_like_61": {
+                "input": {
+                    "value": "image",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "image.requires_grad_()",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "saliency/tensor_extractor.py": {
+        "torch": {
+            "grad_73": {
+                "outputs": {
+                    "value": "output_scalar",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "x",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "sqrt_48": {
+                "input": {
+                    "value": "module.running_var + module.eps",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

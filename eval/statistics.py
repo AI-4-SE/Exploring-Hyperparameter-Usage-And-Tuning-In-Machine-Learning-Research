@@ -4,13 +4,13 @@ import json
 import csv
 from numpy import full
 import pandas as pd
+import random
 
 from collections import Counter
 
 
-statistics_dir = "../src/statistics/"
-notebooks_dir = "../src/statistics/notebooks/"
-statistics_processed = "data/statistics_processed/"
+statistics_dir = "../src/data/statistics/"
+notebooks_dir = "../src/data/notebooks/"
 sklearn_data = "data/sklearn/modules/sklearn_modules.json"
 
 all_modules = []
@@ -25,6 +25,20 @@ def copy_statistic_files(target):
                 print(target+name)
                 shutil.copyfile(csv_file, target + name)
 
+def copy_random_statistics_files(target, n = 1000):
+    files = []
+    for repo in glob.glob("results/*"):
+        for csv_file in glob.glob(f"{repo}/statistics/*"):
+            if csv_file.endswith("params.json"):
+                name = csv_file.split("/")[-1]
+                print(csv_file)
+                files.append(csv_file)
+
+    random_files = random.sample(files, n)
+
+    for f in random_files:
+        name = f.split("/")[-1]
+        shutil.copyfile(f, target + name)
 
 def find_module(name):
     with open(sklearn_data, "r") as source:
@@ -61,20 +75,10 @@ def count_classes():
             all_modules.append(x)
 
     print(Counter(all_modules))
+        
 
 
-def clean_statistics():
-    for full_name in glob.glob(f"{statistics_unprocessed}/*"):
-        name = full_name.split("/")[-1]
-        with open(f"{statistics_processed}{name}", "w+") as dest_file:
-            with open(full_name, "r") as src_file:
-                for line in src_file.readlines():
-                    if "node" in line:
-                        dest_file.write(line)
-                    if ".py" in line:
-                        dest_file.write(line)
-        
-        
+
 def main():
     # count_classes()
     # clean_statistics()
@@ -108,4 +112,7 @@ def get_failed_repos():
 
 
 if __name__ == "__main__":
-    get_failed_repos()
+    #copy_random_statistics_files(statistics_dir)
+
+    files = glob.glob(f"{statistics_dir}/*")
+    print(len(files))

@@ -1,0 +1,1494 @@
+{
+    "network.py": {
+        "tensorflow": {
+            "concat_65": {
+                "variable": {
+                    "value": "x_input",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[x, flow]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "l2_normalize_124": {
+                "variable": {
+                    "value": "x1",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "x1",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.nn.l2_normalize(x1, axis=3)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "3",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "l2_normalize_125": {
+                "variable": {
+                    "value": "x2_warp",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "x2_warp",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "tf_warp(x2, flow, height, width)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.l2_normalize(x2_warp, axis=3)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "3",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "extract_image_patches_127": {
+                "variable": {
+                    "value": "x2_patches",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "images": {
+                    "value": "x2_warp",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "tf_warp(x2, flow, height, width)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.l2_normalize(x2_warp, axis=3)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "ksizes": {
+                    "value": "[1, d, d, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "[1, 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "rates": {
+                    "value": "[1, 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "SAME",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "reshape_132": {
+                "variable": {
+                    "value": "x2_patches",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "x2_patches",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "tf.extract_image_patches(x2_warp, [1, d, d, 1], strides=[1, 1, 1, 1], rates=[1, 1, 1, 1], padding='SAME')",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(x2_patches, [-1, height, width, d, d, channel])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, height, width, d, d, channel]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "reshape_133": {
+                "variable": {
+                    "value": "x1_reshape",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "x1",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.nn.l2_normalize(x1, axis=3)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, height, width, 1, 1, channel]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "concat_165": {
+                "variable": {
+                    "value": "net_input",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[cost_volume, x1, flow]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "shape_193": {
+                "variable": {
+                    "value": "x_shape",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x1_feature['conv6_2']",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "zeros_194": {
+                "variable": {
+                    "value": "initial_flow",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[x_shape[0], x_shape[1], x_shape[2], 2]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "initial_flow",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "shape_101": {
+                "variable": {
+                    "value": "x_shape",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "get_variable_138": {
+                "variable": {
+                    "value": "raw_P",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "raw_P",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[channel, channel]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.keras.initializers.Identity()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "matmul_146": {
+                "variable": {
+                    "value": "P",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "tf.eye(channel) + skew_P",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "b": {
+                    "value": "tf.linalg.inv(tf.eye(channel) - skew_P)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_149": {
+                "variable": {
+                    "value": "raw_D",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "raw_D",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[channel]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.zeros_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "matmul_158": {
+                "a": {
+                    "value": "tf.transpose(P)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "b": {
+                    "value": "D",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.matrix_diag(tf.div(1 + trans_D, 1 - trans_D))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "multiply_160": {
+                "variable": {
+                    "value": "x1_dot_x2",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.tensordot(x1_reshape, W, axes=[-1, 0])",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "x2_patches",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "tf.extract_image_patches(x2_warp, [1, d, d, 1], strides=[1, 1, 1, 1], rates=[1, 1, 1, 1], padding='SAME')",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(x2_patches, [-1, height, width, d, d, channel])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reduce_sum_161": {
+                "variable": {
+                    "value": "cost_volume",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "x1_dot_x2",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.multiply(tf.tensordot(x1_reshape, W, axes=[-1, 0]), x2_patches)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "reshape_162": {
+                "variable": {
+                    "value": "cost_volume",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "cost_volume",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "tf.reduce_sum(x1_dot_x2, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(cost_volume, [-1, height, width, d * d])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, height, width, d * d]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_19": {
+                "name_or_scope": {
+                    "value": "name",
+                    "type": "MethodArgument",
+                    "possible_values": [
+                        [
+                            "'feature_extractor'",
+                            "MethodArgument"
+                        ],
+                        [
+                            "'context_network'",
+                            "MethodArgument"
+                        ],
+                        [
+                            "'estimator'",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "reuse": {
+                    "value": "reuse",
+                    "type": "MethodArgument",
+                    "possible_values": [
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "regularizer": {
+                    "value": "regularizer",
+                    "type": "MethodArgument",
+                    "possible_values": [
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "variable_scope_66": {
+                "name_or_scope": {
+                    "value": "name",
+                    "type": "MethodArgument",
+                    "possible_values": [
+                        [
+                            "'feature_extractor'",
+                            "MethodArgument"
+                        ],
+                        [
+                            "'context_network'",
+                            "MethodArgument"
+                        ],
+                        [
+                            "'estimator'",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "reuse": {
+                    "value": "reuse",
+                    "type": "MethodArgument",
+                    "possible_values": [
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "regularizer": {
+                    "value": "regularizer",
+                    "type": "MethodArgument",
+                    "possible_values": [
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "variable_scope_136": {
+                "name_or_scope": {
+                    "value": "name",
+                    "type": "MethodArgument",
+                    "possible_values": [
+                        [
+                            "'feature_extractor'",
+                            "MethodArgument"
+                        ],
+                        [
+                            "'context_network'",
+                            "MethodArgument"
+                        ],
+                        [
+                            "'estimator'",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "reuse": {
+                    "value": "reuse",
+                    "type": "MethodArgument",
+                    "possible_values": [
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "regularizer": {
+                    "value": "regularizer",
+                    "type": "MethodArgument",
+                    "possible_values": [
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "variable_scope_166": {
+                "name_or_scope": {
+                    "value": "name",
+                    "type": "MethodArgument",
+                    "possible_values": [
+                        [
+                            "'feature_extractor'",
+                            "MethodArgument"
+                        ],
+                        [
+                            "'context_network'",
+                            "MethodArgument"
+                        ],
+                        [
+                            "'estimator'",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "reuse": {
+                    "value": "reuse",
+                    "type": "MethodArgument",
+                    "possible_values": [
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "regularizer": {
+                    "value": "regularizer",
+                    "type": "MethodArgument",
+                    "possible_values": [
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "shape_256": {
+                "input": {
+                    "value": "batch_img1",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "shape_287": {
+                "input": {
+                    "value": "batch_img1",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "inv_146": {
+                "input": {
+                    "value": "tf.eye(channel) - skew_P",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "div_155": {
+                "x": {
+                    "value": "1 + trans_D",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "1 - trans_D",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "tensordot_160": {
+                "a": {
+                    "value": "x1_reshape",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.reshape(x1, [-1, height, width, 1, 1, channel])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "W",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.matmul(tf.matmul(tf.transpose(P), D), P)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axes": {
+                    "value": "[-1, 0]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "shape_210": {
+                "input": {
+                    "value": "x1_feature[feature_name]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "Identity_141": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "transpose_144": {
+                "a": {
+                    "value": "raw_P_upper",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.matrix_band_part(raw_P, 0, -1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "eye_146": {
+                "num_rows": {
+                    "value": "channel",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "x1.get_shape().as_list()[-1]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "zeros_initializer_152": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "atan_154": {
+                "x": {
+                    "value": "raw_D",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('raw_D', shape=[channel], initializer=tf.zeros_initializer(), dtype=tf.float32)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "transpose_158": {
+                "a": {
+                    "value": "P",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "tf.matmul(tf.eye(channel) + skew_P, tf.linalg.inv(tf.eye(channel) - skew_P))",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "corr.py": {
+        "torch": {
+            "Parameter_14": {
+                "variable": {
+                    "value": "self.raw_P",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.eye(self.dim)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "requires_grad": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Parameter_15": {
+                "variable": {
+                    "value": "self.raw_D",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.zeros(self.dim)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "requires_grad": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "triu_20": {
+                "variable": {
+                    "value": "self.raw_P_upper",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.raw_P",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "matmul_23": {
+                "variable": {
+                    "value": "self.P",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.eye + self.skew_P",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "torch.inverse(self.eye - self.skew_P)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "diag_27": {
+                "variable": {
+                    "value": "self.D",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "(1 + self.trans_D) / (1 - self.trans_D)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "matmul_28": {
+                "input": {
+                    "value": "self.P.t()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "self.D",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "matmul_34": {
+                "variable": {
+                    "value": "corr",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.tensordot(fmap1, self.W, dims=[[1], [0]])",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "fmap2",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "fmap2.view(batch, dim, ht * wd)",
+                            "Call"
+                        ],
+                        [
+                            "fmap2.view(batch, dim, ht * wd)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "cat_68": {
+                "variable": {
+                    "value": "out",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "out_pyramid",
+                    "type": "List",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "cat_110": {
+                "variable": {
+                    "value": "out",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "out_pyramid",
+                    "type": "List",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "matmul_120": {
+                "variable": {
+                    "value": "corr",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "fmap1.transpose(1, 2)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "fmap2",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "fmap2.view(batch, dim, ht * wd)",
+                            "Call"
+                        ],
+                        [
+                            "fmap2.view(batch, dim, ht * wd)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "avg_pool2d_46": {
+                "variable": {
+                    "value": "corr",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "corr",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "torch.matmul(torch.tensordot(fmap1, self.W, dims=[[1], [0]]), fmap2)",
+                            "Call"
+                        ],
+                        [
+                            "corr.view(batch, ht, wd, 1, ht, wd)",
+                            "Call"
+                        ],
+                        [
+                            "self.compute_cost_volume(fmap1, fmap2)",
+                            "Call"
+                        ],
+                        [
+                            "corr.view(batch * h1 * w1, dim, h2, w2)",
+                            "Call"
+                        ],
+                        [
+                            "F.avg_pool2d(corr, 2, stride=2)",
+                            "Call"
+                        ],
+                        [
+                            "self.corr_pyramid[i]",
+                            "Subscript"
+                        ],
+                        [
+                            "bilinear_sampler(corr, coords_lvl)",
+                            "Call"
+                        ],
+                        [
+                            "corr.view(batch, h1, w1, -1)",
+                            "Call"
+                        ],
+                        [
+                            "CorrBlock.corr(fmap1, fmap2)",
+                            "Call"
+                        ],
+                        [
+                            "corr.reshape(batch * h1 * w1, dim, h2, w2)",
+                            "Call"
+                        ],
+                        [
+                            "F.avg_pool2d(corr, 2, stride=2)",
+                            "Call"
+                        ],
+                        [
+                            "self.corr_pyramid[i]",
+                            "Subscript"
+                        ],
+                        [
+                            "bilinear_sampler(corr, coords_lvl)",
+                            "Call"
+                        ],
+                        [
+                            "corr.view(batch, h1, w1, -1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.matmul(fmap1.transpose(1, 2), fmap2)",
+                            "Call"
+                        ],
+                        [
+                            "corr.view(batch, ht, wd, 1, ht, wd)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "kernel_size": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "linspace_56": {
+                "variable": {
+                    "value": "dx",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "start": {
+                    "value": "-r",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "end": {
+                    "value": "r",
+                    "type": "Attribute",
+                    "possible_values": [
+                        [
+                            "self.radius",
+                            "Attribute"
+                        ],
+                        [
+                            "self.radius",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "steps": {
+                    "value": "2 * r + 1",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "linspace_57": {
+                "variable": {
+                    "value": "dy",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "start": {
+                    "value": "-r",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "end": {
+                    "value": "r",
+                    "type": "Attribute",
+                    "possible_values": [
+                        [
+                            "self.radius",
+                            "Attribute"
+                        ],
+                        [
+                            "self.radius",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "steps": {
+                    "value": "2 * r + 1",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "stack_58": {
+                "variable": {
+                    "value": "delta",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "torch.meshgrid(dy, dx)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "avg_pool2d_87": {
+                "variable": {
+                    "value": "corr",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "corr",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "torch.matmul(torch.tensordot(fmap1, self.W, dims=[[1], [0]]), fmap2)",
+                            "Call"
+                        ],
+                        [
+                            "corr.view(batch, ht, wd, 1, ht, wd)",
+                            "Call"
+                        ],
+                        [
+                            "self.compute_cost_volume(fmap1, fmap2)",
+                            "Call"
+                        ],
+                        [
+                            "corr.view(batch * h1 * w1, dim, h2, w2)",
+                            "Call"
+                        ],
+                        [
+                            "F.avg_pool2d(corr, 2, stride=2)",
+                            "Call"
+                        ],
+                        [
+                            "self.corr_pyramid[i]",
+                            "Subscript"
+                        ],
+                        [
+                            "bilinear_sampler(corr, coords_lvl)",
+                            "Call"
+                        ],
+                        [
+                            "corr.view(batch, h1, w1, -1)",
+                            "Call"
+                        ],
+                        [
+                            "CorrBlock.corr(fmap1, fmap2)",
+                            "Call"
+                        ],
+                        [
+                            "corr.reshape(batch * h1 * w1, dim, h2, w2)",
+                            "Call"
+                        ],
+                        [
+                            "F.avg_pool2d(corr, 2, stride=2)",
+                            "Call"
+                        ],
+                        [
+                            "self.corr_pyramid[i]",
+                            "Subscript"
+                        ],
+                        [
+                            "bilinear_sampler(corr, coords_lvl)",
+                            "Call"
+                        ],
+                        [
+                            "corr.view(batch, h1, w1, -1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.matmul(fmap1.transpose(1, 2), fmap2)",
+                            "Call"
+                        ],
+                        [
+                            "corr.view(batch, ht, wd, 1, ht, wd)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "kernel_size": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "linspace_98": {
+                "variable": {
+                    "value": "dx",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "start": {
+                    "value": "-r",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "end": {
+                    "value": "r",
+                    "type": "Attribute",
+                    "possible_values": [
+                        [
+                            "self.radius",
+                            "Attribute"
+                        ],
+                        [
+                            "self.radius",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "steps": {
+                    "value": "2 * r + 1",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "linspace_99": {
+                "variable": {
+                    "value": "dy",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "start": {
+                    "value": "-r",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "end": {
+                    "value": "r",
+                    "type": "Attribute",
+                    "possible_values": [
+                        [
+                            "self.radius",
+                            "Attribute"
+                        ],
+                        [
+                            "self.radius",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "steps": {
+                    "value": "2 * r + 1",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "stack_100": {
+                "variable": {
+                    "value": "delta",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "torch.meshgrid(dy, dx)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "eye_14": {
+                "n": {
+                    "value": "self.dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "zeros_15": {
+                "*size": {
+                    "value": "self.dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "eye_16": {
+                "n": {
+                    "value": "self.dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "inverse_23": {
+                "input": {
+                    "value": "self.eye - self.skew_P",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "tensordot_34": {
+                "a": {
+                    "value": "fmap1",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "fmap1.view(batch, dim, ht * wd)",
+                            "Call"
+                        ],
+                        [
+                            "fmap1.view(batch, dim, ht * wd)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "self.W",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dims": {
+                    "value": "[[1], [0]]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "sqrt_36": {
+                "input": {
+                    "value": "torch.tensor(dim).float()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "sqrt_122": {
+                "input": {
+                    "value": "torch.tensor(dim).float()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "atan_26": {
+                "input": {
+                    "value": "self.raw_D",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "tensor_36": {
+                "data": {
+                    "value": "dim",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "tensor_122": {
+                "data": {
+                    "value": "dim",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "meshgrid_58": {
+                "*tensors": {
+                    "value": "dy",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "torch.linspace(-r, r, 2 * r + 1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.linspace(-r, r, 2 * r + 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "indexing": {
+                    "value": "dx",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "torch.linspace(-r, r, 2 * r + 1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.linspace(-r, r, 2 * r + 1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "meshgrid_100": {
+                "*tensors": {
+                    "value": "dy",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "torch.linspace(-r, r, 2 * r + 1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.linspace(-r, r, 2 * r + 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "indexing": {
+                    "value": "dx",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "torch.linspace(-r, r, 2 * r + 1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.linspace(-r, r, 2 * r + 1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    }
+}

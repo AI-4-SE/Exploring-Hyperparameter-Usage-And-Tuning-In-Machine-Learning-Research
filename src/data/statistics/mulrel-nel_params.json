@@ -1,0 +1,1775 @@
+{
+    "nel/abstract_word_entity.py": {
+        "torch": {
+            "load_85": {
+                "variable": {
+                    "value": "params",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "path",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "load_26": {
+                "f": {
+                    "value": "path + '.state_dict' + suffix",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "Parameter_49": {
+                "variable": {
+                    "value": "self.word_embeddings.weight",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.Tensor(config['word_embeddings'])",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Parameter_51": {
+                "variable": {
+                    "value": "self.entity_embeddings.weight",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.Tensor(config['entity_embeddings'])",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Parameter_57": {
+                "variable": {
+                    "value": "self.snd_word_embeddings.weight",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.Tensor(config['snd_word_embeddings'])",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "save_69": {
+                "obj": {
+                    "value": "self.state_dict()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "path + '.state_dict' + suffix",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "nel/ed_ranker.py": {
+        "torch": {
+            "Adam_273": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "[p for p in self.model.parameters() if p.requires_grad]",
+                    "type": "ListComp",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "config['lr']",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "topk_95": {
+                "variable": {
+                    "value": "(_, top_pos)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "log_probs",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "self.prerank_model.forward(token_ids, token_offsets, entity_ids, use_sum=True)",
+                            "Call"
+                        ],
+                        [
+                            "(log_probs * entity_mask).add_((entity_mask - 1).mul_(10000000000.0))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "k": {
+                    "value": "self.args.keep_ctx_ent",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Adam_352": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "[p for p in self.model.parameters() if p.requires_grad]",
+                    "type": "ListComp",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "config['lr']",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "nel/local_ctx_att_ranker.py": {
+        "torch": {
+            "Parameter_22": {
+                "variable": {
+                    "value": "self.att_mat_diag",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.ones(self.emb_dims)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Parameter_23": {
+                "variable": {
+                    "value": "self.tok_score_mat_diag",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.ones(self.emb_dims)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Dropout_24": {
+                "variable": {
+                    "value": "self.local_ctx_dr",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Linear_26": {
+                "variable": {
+                    "value": "self.score_combine_linear_1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "self.hid_dims",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "ReLU_27": {
+                "variable": {
+                    "value": "self.score_combine_act_1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Linear_28": {
+                "variable": {
+                    "value": "self.score_combine_linear_2",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "self.hid_dims",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "bmm_61": {
+                "variable": {
+                    "value": "ent_tok_att_scores",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "entity_vecs * self.att_mat_diag",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "mat2": {
+                    "value": "tok_vecs.permute(0, 2, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "max_63": {
+                "variable": {
+                    "value": "(tok_att_scores, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "ent_tok_att_scores",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "torch.bmm(entity_vecs * self.att_mat_diag, tok_vecs.permute(0, 2, 1))",
+                            "Call"
+                        ],
+                        [
+                            "(ent_tok_att_scores * tok_mask).add_((tok_mask - 1).mul_(10000000000.0))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "topk_64": {
+                "variable": {
+                    "value": "(top_tok_att_scores, top_tok_att_ids)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "tok_att_scores",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "k": {
+                    "value": "min(self.tok_top_n, n_words)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "softmax_65": {
+                "variable": {
+                    "value": "att_probs",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "top_tok_att_scores",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "gather_68": {
+                "variable": {
+                    "value": "selected_tok_vecs",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "tok_vecs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.word_embeddings(token_ids)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "index": {
+                    "value": "top_tok_att_ids.view(batchsize, -1, 1).repeat(1, 1, tok_vecs.size(2))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "sum_70": {
+                "variable": {
+                    "value": "ctx_vecs",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "selected_tok_vecs * self.tok_score_mat_diag * att_probs",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "keepdim": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "bmm_72": {
+                "variable": {
+                    "value": "ent_ctx_scores",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "entity_vecs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.entity_embeddings(entity_ids)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "mat2": {
+                    "value": "ctx_vecs.permute(0, 2, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "multi_margin_loss_114": {
+                "variable": {
+                    "value": "loss",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "scores",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "self._scores.data.cpu().numpy()",
+                            "Call"
+                        ],
+                        [
+                            "self.score_combine_linear_2(hidden).view(batchsize, n_entities)",
+                            "Call"
+                        ],
+                        [
+                            "ent_ctx_scores",
+                            "Name"
+                        ],
+                        [
+                            "(scores * entity_mask).add_((entity_mask - 1).mul_(10000000000.0))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "target": {
+                    "value": "true_pos",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "margin": {
+                    "value": "self.margin",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "cat_76": {
+                "variable": {
+                    "value": "inputs",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[ent_ctx_scores.view(batchsize * n_entities, -1), torch.log(p_e_m + 1e-20).view(batchsize * n_entities, -1)]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "ones_22": {
+                "*size": {
+                    "value": "self.emb_dims",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "ones_23": {
+                "*size": {
+                    "value": "self.emb_dims",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "sum_66": {
+                "input": {
+                    "value": "att_probs",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "self._att_probs.data.cpu().numpy()",
+                            "Call"
+                        ],
+                        [
+                            "F.softmax(top_tok_att_scores, dim=1).view(batchsize, -1, 1)",
+                            "Call"
+                        ],
+                        [
+                            "att_probs / torch.sum(att_probs, dim=1, keepdim=True)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "keepdim": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "log_77": {
+                "input": {
+                    "value": "p_e_m + 1e-20",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "nel/mulrel_ranker.py": {
+        "torch": {
+            "Sequential_64": {
+                "variable": {
+                    "value": "self.ctx_layer",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "torch.nn.Linear(self.emb_dims * 3, self.ew_hid_dims)",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Parameter_77": {
+                "variable": {
+                    "value": "self.rel_embs",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "self.rel_embs",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Parameter_79": {
+                "variable": {
+                    "value": "self.ew_embs",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.randn(self.n_rels, self.ew_hid_dims) * (0.01 if self.mode == 'ment-norm' else 0.1)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "Sequential_84": {
+                "variable": {
+                    "value": "self.score_combine",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "torch.nn.Linear(2, self.hid_dims)",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "normalize_99": {
+                "variable": {
+                    "value": "X",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.rel_embs",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "normalize_104": {
+                "variable": {
+                    "value": "X",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.ew_embs",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "cat_134": {
+                "variable": {
+                    "value": "bow_ctx_vecs",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[local_lctx_vecs, ment_vecs, local_rctx_vecs]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_257": {
+                "variable": {
+                    "value": "inputs",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[ent_scores.view(n_ments * n_cands, -1), torch.log(p_e_m + 1e-20).view(n_ments * n_cands, -1)]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "multi_margin_loss_269": {
+                "variable": {
+                    "value": "loss",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "scores",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "self.score_combine(inputs).view(n_ments, n_cands)",
+                            "Call"
+                        ],
+                        [
+                            "self.score_combine(inputs).view(n_ments, n_cands)",
+                            "Call"
+                        ],
+                        [
+                            "scores[:-1]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "target": {
+                    "value": "true_pos",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "margin": {
+                    "value": "self.margin",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "normalize_274": {
+                "variable": {
+                    "value": "X",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.rel_embs",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "normalize_279": {
+                "variable": {
+                    "value": "X",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.ew_embs",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Parameter_58": {
+                "variable": {
+                    "value": "self.ent_localctx_comp",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.ones(self.emb_dims)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Parameter_61": {
+                "variable": {
+                    "value": "self.pad_ent_emb",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.randn(1, self.emb_dims) * 0.1",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "Parameter_62": {
+                "variable": {
+                    "value": "self.pad_ctx_vec",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.randn(1, self.emb_dims) * 0.1",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "cat_137": {
+                "variable": {
+                    "value": "ent_vecs",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[ent_vecs, self.pad_ent_emb.view(1, 1, -1).repeat(1, n_cands, 1)]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "zeros_138": {
+                "variable": {
+                    "value": "tmp",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "n_cands",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "cat_141": {
+                "variable": {
+                    "value": "entity_mask",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[entity_mask, tmp]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_142": {
+                "variable": {
+                    "value": "p_e_m",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[p_e_m, tmp]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_143": {
+                "variable": {
+                    "value": "local_ent_scores",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[local_ent_scores, Variable(torch.zeros(1, n_cands).cuda(), requires_grad=False)]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_153": {
+                "variable": {
+                    "value": "inputs",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[Variable(torch.zeros(n_ments * n_cands, 1).cuda()), local_ent_scores.view(n_ments * n_cands, -1), torch.log(p_e_m + 1e-20).view(n_ments * n_cands, -1)]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "arange_164": {
+                "variable": {
+                    "value": "ment_pos",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "start": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "end": {
+                    "value": "n_ments",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "n_ments + 1",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "matmul_177": {
+                "variable": {
+                    "value": "rel_ctx_ctx_scores",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "rel_ctx_vecs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "m1_ctx_vecs.view(1, n_ments, -1) * self.ew_embs.view(n_rels, 1, -1)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "m2_ctx_vecs.view(1, n_ments, -1).permute(0, 2, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "sum_277": {
+                "input": {
+                    "value": "diff",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "(X.view(self.n_rels, 1, -1) - X.view(1, self.n_rels, -1)).pow(2).sum(dim=2).sqrt()",
+                            "Call"
+                        ],
+                        [
+                            "(X.view(self.n_rels, 1, -1) - X.view(1, self.n_rels, -1)).pow(2).sum(dim=2).sqrt()",
+                            "Call"
+                        ],
+                        [
+                            "(X.view(self.n_rels, 1, -1) - X.view(1, self.n_rels, -1)).pow(2).sum(dim=2).add_(1e-05).sqrt()",
+                            "Call"
+                        ],
+                        [
+                            "diff * (diff < 1).float()",
+                            "BinOp"
+                        ],
+                        [
+                            "(X.view(self.n_rels, 1, -1) - X.view(1, self.n_rels, -1)).pow(2).sum(dim=2).add_(1e-05).sqrt()",
+                            "Call"
+                        ],
+                        [
+                            "diff * (diff < 1).float()",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "mul_277": {
+                "input": {
+                    "value": "lamb",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "1e-07",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "sum_282": {
+                "input": {
+                    "value": "diff",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "(X.view(self.n_rels, 1, -1) - X.view(1, self.n_rels, -1)).pow(2).sum(dim=2).sqrt()",
+                            "Call"
+                        ],
+                        [
+                            "(X.view(self.n_rels, 1, -1) - X.view(1, self.n_rels, -1)).pow(2).sum(dim=2).sqrt()",
+                            "Call"
+                        ],
+                        [
+                            "(X.view(self.n_rels, 1, -1) - X.view(1, self.n_rels, -1)).pow(2).sum(dim=2).add_(1e-05).sqrt()",
+                            "Call"
+                        ],
+                        [
+                            "diff * (diff < 1).float()",
+                            "BinOp"
+                        ],
+                        [
+                            "(X.view(self.n_rels, 1, -1) - X.view(1, self.n_rels, -1)).pow(2).sum(dim=2).add_(1e-05).sqrt()",
+                            "Call"
+                        ],
+                        [
+                            "diff * (diff < 1).float()",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "mul_282": {
+                "input": {
+                    "value": "lamb",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "1e-07",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "Linear_65": {
+                "in_features": {
+                    "value": "self.emb_dims * 3",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "self.ew_hid_dims",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Tanh_66": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Dropout_67": {
+                "p": {
+                    "value": "self.dr",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "randn_69": {
+                "*size": {
+                    "value": "self.n_rels",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "self.emb_dims",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Linear_85": {
+                "in_features": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "self.hid_dims",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "ReLU_86": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Linear_87": {
+                "in_features": {
+                    "value": "self.hid_dims",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "sum_129": {
+                "input": {
+                    "value": "self.s_ltoken_mask",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "keepdim": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "sum_131": {
+                "input": {
+                    "value": "self.s_rtoken_mask",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "keepdim": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "sum_133": {
+                "input": {
+                    "value": "self.s_mtoken_mask",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "keepdim": {
+                    "value": "True",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_150": {
+                "variable": {
+                    "value": "gold",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[gold, tmp]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "cat_173": {
+                "variable": {
+                    "value": "ctx_vecs",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[ctx_vecs, self.pad_ctx_vec]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "topk_186": {
+                "variable": {
+                    "value": "(topk_values, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "rel_ctx_ctx_scores",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "torch.matmul(rel_ctx_vecs, m2_ctx_vecs.view(1, n_ments, -1).permute(0, 2, 1))",
+                            "Call"
+                        ],
+                        [
+                            "rel_ctx_ctx_scores.add_((1 - Variable(dist.float().cuda())).mul_(-10000000000.0))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "k": {
+                    "value": "min(self.ent_top_n, n_ments)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "softmax_192": {
+                "variable": {
+                    "value": "rel_ctx_ctx_probs",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "rel_ctx_ctx_scores",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "torch.matmul(rel_ctx_vecs, m2_ctx_vecs.view(1, n_ments, -1).permute(0, 2, 1))",
+                            "Call"
+                        ],
+                        [
+                            "rel_ctx_ctx_scores.add_((1 - Variable(dist.float().cuda())).mul_(-10000000000.0))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "sum_220": {
+                "variable": {
+                    "value": "ent_ent_scores",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "rel_ent_ent_scores * rel_ctx_ctx_weights.view(n_rels, n_ments, 1, n_ments, 1)",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "mul_220": {
+                "variable": {
+                    "value": "ent_ent_scores",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "1.0 / n_rels",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "softmax_251": {
+                "variable": {
+                    "value": "ent_scores",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "ent_scores",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "local_ent_scores",
+                            "Name"
+                        ],
+                        [
+                            "torch.sum(torch.sum(ent_ent_scores * onehot_gold, dim=3), dim=2)",
+                            "Call"
+                        ],
+                        [
+                            "local_ent_scores * 1 + torch.sum(msgs * mask.view(n_ments, 1, n_ments), dim=2)",
+                            "BinOp"
+                        ],
+                        [
+                            "F.softmax(ent_scores, dim=1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "sum_254": {
+                "input": {
+                    "value": "ent_ent_scores * onehot_gold",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "3",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "ones_58": {
+                "*size": {
+                    "value": "self.emb_dims",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "randn_79": {
+                "*size": {
+                    "value": "self.n_rels",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "self.ew_hid_dims",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "zeros_125": {
+                "*size": {
+                    "value": "n_ments",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "n_ments + 1",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "n_cands",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "matmul_214": {
+                "variable": {
+                    "value": "rel_ent_ent_scores",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "rel_ent_vecs.view(n_rels, n_ments, 1, n_cands, -1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "ent_vecs.view(1, 1, n_ments, n_cands, -1).permute(0, 1, 2, 4, 3)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "matmul_225": {
+                "variable": {
+                    "value": "rel_vecs",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "ctx_ctx_rel_probs.view(n_ments, n_ments, 1, n_rels)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "self.rel_embs.view(1, 1, n_rels, -1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "matmul_229": {
+                "variable": {
+                    "value": "ent_ent_scores",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "ent_rel_vecs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "ent_vecs.view(n_ments, 1, n_cands, -1) * rel_vecs.view(n_ments, n_ments, 1, -1)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "ent_vecs.view(1, n_ments, n_cands, -1).permute(0, 1, 3, 2)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "permute_229": {
+                "variable": {
+                    "value": "ent_ent_scores",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "dims": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "max_243": {
+                "variable": {
+                    "value": "(msgs, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "ent_ent_votes",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "ent_ent_scores + local_ent_scores * 1 + torch.sum(prev_msgs.view(1, n_ments, n_cands, n_ments) * mask.view(n_ments, 1, 1, n_ments), dim=3).view(n_ments, 1, n_ments, n_cands)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "3",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "log_258": {
+                "input": {
+                    "value": "p_e_m + 1e-20",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "randn_61": {
+                "*size": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "self.emb_dims",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "randn_62": {
+                "*size": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "self.emb_dims",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "randn_71": {
+                "*size": {
+                    "value": "self.emb_dims",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "zeros_149": {
+                "*size": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "log_155": {
+                "input": {
+                    "value": "p_e_m + 1e-20",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "softmax_198": {
+                "variable": {
+                    "value": "ctx_ctx_rel_probs",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "ctx_ctx_rel_scores.view(n_ments * n_ments, n_rels)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "zeros_235": {
+                "*size": {
+                    "value": "n_ments",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "n_ments + 1",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "n_cands",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "n_ments",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "n_ments + 1",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "sum_250": {
+                "input": {
+                    "value": "msgs * mask.view(n_ments, 1, n_ments)",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "randn_75": {
+                "*size": {
+                    "value": "self.n_rels",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "self.emb_dims",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "zeros_144": {
+                "*size": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "n_cands",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "zeros_153": {
+                "*size": {
+                    "value": "n_ments * n_cands",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "eye_180": {
+                "n": {
+                    "value": "n_ments",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "n_ments + 1",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "sum_240": {
+                "input": {
+                    "value": "prev_msgs.view(1, n_ments, n_cands, n_ments) * mask.view(n_ments, 1, 1, n_ments)",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "3",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "eye_249": {
+                "n": {
+                    "value": "n_ments",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "n_ments + 1",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "eye_238": {
+                "n": {
+                    "value": "n_ments",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "n_ments + 1",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "zeros_253": {
+                "*size": {
+                    "value": "n_ments",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "n_ments + 1",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "n_cands",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "softmax_244": {
+                "input": {
+                    "value": "msgs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "(F.softmax(msgs, dim=1).mul(self.dr) + prev_msgs.exp().mul(1 - self.dr)).log()",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "mul_244": {
+                "input": {
+                    "value": "self.dr",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "nel/ntee.py": {
+        "torch": {
+            "Parameter_78": {
+                "variable": {
+                    "value": "model.linear.weight",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.FloatTensor(W).t()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Parameter_79": {
+                "variable": {
+                    "value": "model.linear.bias",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.FloatTensor(b)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Linear_18": {
+                "variable": {
+                    "value": "self.linear",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "self.emb_dims",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "self.emb_dims",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "normalize_25": {
+                "variable": {
+                    "value": "sum_vecs",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "sum_vecs",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "self.word_embeddings(token_ids, token_offsets)",
+                            "Call"
+                        ],
+                        [
+                            "F.normalize(sum_vecs)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "bmm_36": {
+                "variable": {
+                    "value": "scores",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "entity_vecs",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "self.entity_embeddings(entity_ids)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "mat2": {
+                    "value": "sent_vecs.view(batchsize, dims, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "log_softmax_38": {
+                "variable": {
+                    "value": "log_probs",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "scores",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "torch.bmm(entity_vecs, sent_vecs.view(batchsize, dims, 1)).view(batchsize, n_entities)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "max_43": {
+                "variable": {
+                    "value": "(_, pred_entity_ids)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "log_probs",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "F.log_softmax(scores, dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "self.forward(token_ids, token_offsets, entity_ids)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "eq_47": {
+                "variable": {
+                    "value": "acc",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "gold_entity_ids",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "pred_entity_ids",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "sum_47": {
+                "variable": {
+                    "value": "acc",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "nll_loss_51": {
+                "input": {
+                    "value": "log_probs",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "F.log_softmax(scores, dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "self.forward(token_ids, token_offsets, entity_ids)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "target": {
+                    "value": "true_pos",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "t_78": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,389 @@
+{
+    "src/main.py": {
+        "torch": {
+            "manual_seed_15": {
+                "seed": {
+                    "value": "args.seed",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/splitter.py": {
+        "torch": {
+            "Embedding_34": {
+                "variable": {
+                    "value": "self.base_node_embedding",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "self.base_node_count",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "embedding_dim": {
+                    "value": "self.args.dimensions",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "padding_idx": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Embedding_38": {
+                "variable": {
+                    "value": "self.node_embedding",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "self.node_count",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "embedding_dim": {
+                    "value": "self.args.dimensions",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "padding_idx": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Embedding_42": {
+                "variable": {
+                    "value": "self.node_noise_embedding",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "self.node_count",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "embedding_dim": {
+                    "value": "self.args.dimensions",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "padding_idx": {
+                    "value": "0",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "Parameter_53": {
+                "variable": {
+                    "value": "self.node_embedding.weight.data",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.Tensor(persona_embedding)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Parameter_54": {
+                "variable": {
+                    "value": "self.node_noise_embedding.weight.data",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.Tensor(persona_embedding)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Parameter_55": {
+                "variable": {
+                    "value": "self.base_node_embedding.weight.data",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.Tensor(base_node_embedding)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "requires_grad": {
+                    "value": "False",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "normalize_67": {
+                "variable": {
+                    "value": "node_f",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "node_f",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "self.node_embedding(sources)",
+                            "Call"
+                        ],
+                        [
+                            "torch.nn.functional.normalize(node_f, p=2, dim=1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "p": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "normalize_69": {
+                "variable": {
+                    "value": "feature_f",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "feature_f",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "self.node_noise_embedding(contexts)",
+                            "Call"
+                        ],
+                        [
+                            "torch.nn.functional.normalize(feature_f, p=2, dim=1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "p": {
+                    "value": "2",
+                    "type": "Constant",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "sum_70": {
+                "variable": {
+                    "value": "scores",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "node_f * feature_f",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "sigmoid_71": {
+                "variable": {
+                    "value": "scores",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "scores",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "torch.sum(node_f * feature_f, dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.sigmoid(scores)",
+                            "Call"
+                        ],
+                        [
+                            "torch.clamp(torch.sum(source_f * original_f, dim=1), -15, 15)",
+                            "Call"
+                        ],
+                        [
+                            "torch.sigmoid(scores)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "clamp_85": {
+                "variable": {
+                    "value": "scores",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.sum(source_f * original_f, dim=1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "min": {
+                    "value": "-15",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "max": {
+                    "value": "15",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "sigmoid_86": {
+                "variable": {
+                    "value": "scores",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "scores",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "torch.sum(node_f * feature_f, dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.sigmoid(scores)",
+                            "Call"
+                        ],
+                        [
+                            "torch.clamp(torch.sum(source_f * original_f, dim=1), -15, 15)",
+                            "Call"
+                        ],
+                        [
+                            "torch.sigmoid(scores)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "device_116": {
+                "variable": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda if torch.cuda.is_available() else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "Adam_231": {
+                "variable": {
+                    "value": "self.optimizer",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "self.model.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "self.args.learning_rate",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "mean_73": {
+                "input": {
+                    "value": "main_loss",
+                    "type": "Name",
+                    "possible_values": [
+                        [
+                            "targets * torch.log(scores) + (1 - targets) * torch.log(1 - scores)",
+                            "BinOp"
+                        ],
+                        [
+                            "-torch.mean(main_loss)",
+                            "UnaryOp"
+                        ],
+                        [
+                            "self.calculate_main_loss(sources, contexts, targets)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "sum_85": {
+                "input": {
+                    "value": "source_f * original_f",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "Constant",
+                    "possible_values": []
+                }
+            },
+            "mean_87": {
+                "input": {
+                    "value": "torch.log(scores)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "log_72": {
+                "input": {
+                    "value": "1 - scores",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "log_87": {
+                "input": {
+                    "value": "scores",
+                    "type": "Call",
+                    "possible_values": [
+                        [
+                            "torch.sum(node_f * feature_f, dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.sigmoid(scores)",
+                            "Call"
+                        ],
+                        [
+                            "torch.clamp(torch.sum(source_f * original_f, dim=1), -15, 15)",
+                            "Call"
+                        ],
+                        [
+                            "torch.sigmoid(scores)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "is_available_116": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}
