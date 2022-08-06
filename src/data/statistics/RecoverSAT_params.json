@@ -1,0 +1,2088 @@
+{
+    "beamsearch.py": {
+        "torch": {
+            "full_10": {
+                "variable": {
+                    "value": "self.alive_seq",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "size": {
+                    "value": "[batch_size * beam_size, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "fill_value": {
+                    "value": "bos_id",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.long",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "device",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "tensor_11": {
+                "variable": {
+                    "value": "self.topk_scores",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "[0.0] + [float('-inf')] * (beam_size - 1)",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "device",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "empty_12": {
+                "variable": {
+                    "value": "self.topk_ids",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(batch_size, beam_size)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.long",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "device",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "zeros_13": {
+                "variable": {
+                    "value": "self.is_finished",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "[batch_size, beam_size]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.uint8",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "device",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "arange_14": {
+                "variable": {
+                    "value": "self._batch_offset",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "start": {
+                    "value": "batch_size",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.long",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "device",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "arange_15": {
+                "variable": {
+                    "value": "self._beam_offset",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "start": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "end": {
+                    "value": "batch_size * beam_size",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "step": {
+                    "value": "beam_size",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "4",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "torch.long",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "device",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "tensor_19": {
+                "variable": {
+                    "value": "self.max_len_th",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "max_len_list",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "torch.long",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "device",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "topk_39": {
+                "variable": {
+                    "value": "(self.topk_scores, self.topk_ids)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "scores.view(cur_bsz, -1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "k": {
+                    "value": "self.beam_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "fmod_48": {
+                "variable": {
+                    "value": "self.topk_ids",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.topk_ids",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "vocab_size",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "log_prob.size(-1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "cat_49": {
+                "variable": {
+                    "value": "self.alive_seq",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[self.alive_seq.index_select(0, self.selected_indices), self.topk_ids.view(-1, 1)]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "max_65": {
+                "variable": {
+                    "value": "(best_alive_score, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self._length_normalized_score(self.topk_scores, self.max_len_th.float(), self.alpha)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "tensor_89": {
+                "variable": {
+                    "value": "non_finished",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "non_finished",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "torch.tensor(non_finished, device=self.device)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "device": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "div_44": {
+                "input": {
+                    "value": "self.topk_ids",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "vocab_size",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "log_prob.size(-1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "data.py": {
+        "torch": {}
+    },
+    "greedysearch.py": {
+        "torch": {
+            "arange_10": {
+                "variable": {
+                    "value": "self._batch_offset",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "start": {
+                    "value": "batch_size",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.long",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "device",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "full_11": {
+                "variable": {
+                    "value": "self.alive_seq",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "size": {
+                    "value": "[batch_size, segment_num, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "fill_value": {
+                    "value": "bos_id",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.long",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "device",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "zeros_13": {
+                "variable": {
+                    "value": "self.is_seg_finished",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "[batch_size, segment_num]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.uint8",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "device",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "tensor_18": {
+                "variable": {
+                    "value": "self.max_len_th",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "max_len_list",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "torch.long",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "device",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "cat_35": {
+                "variable": {
+                    "value": "self.alive_seq",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[self.alive_seq, topk_ids.view(-1, self.segment_num, 1)]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "predict.py": {
+        "torch": {
+            "device_64": {
+                "variable": {
+                    "value": "device",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda if torch.cuda.is_available() else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "device_count_65": {
+                "variable": {
+                    "value": "n_gpu",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "load_68": {
+                "variable": {
+                    "value": "model",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "args.model_path",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "no_grad_82": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "is_available_64": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "recoversat.py": {
+        "torch": {
+            "Embedding_24": {
+                "variable": {
+                    "value": "self.seg_embedding",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "segment_num",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "2",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "embedding_dim": {
+                    "value": "hidden_size",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "Dropout_28": {
+                "variable": {
+                    "value": "self.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "dropout",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "0.1",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "log_softmax_48": {
+                "variable": {
+                    "value": "log_prob",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "logit",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "F.linear(tgt_dec, self.tgt_embedding.weight)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "transpose_48": {
+                "variable": {
+                    "value": "log_prob",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dim0": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "linear_102": {
+                "variable": {
+                    "value": "logit",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "tgt_dec",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "self.decoder(tgt_emb, src_enc, src_pad_mask=src_mask, tgt_pad_mask=tgt_mask, step=step)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "weight": {
+                    "value": "self.tgt_embedding.weight",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Embedding_41": {
+                "num_embeddings": {
+                    "value": "vocab_size",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "emb_conf['vocab_size']",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "embedding_dim": {
+                    "value": "emb_size",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "emb_conf['emb_size']",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "padding_idx": {
+                    "value": "padding_idx",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "emb_conf.get('padding_idx', None)",
+                            "Call"
+                        ],
+                        [
+                            "self.tgt_embedding.padding_idx",
+                            "Attribute"
+                        ]
+                    ]
+                }
+            },
+            "NLLLoss_56": {
+                "variable": {
+                    "value": "loss_func",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "ignore_index": {
+                    "value": "self.tgt_embedding.padding_idx",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "reduction": {
+                    "value": "sum",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "sum_96": {
+                "input": {
+                    "value": "tgt_mask",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "tgt.data.eq(padding_idx)",
+                            "Call"
+                        ],
+                        [
+                            "tgt_mask | tgt.data.eq(self.eos_id)",
+                            "BinOp"
+                        ],
+                        [
+                            "tgt_mask | tgt.data.eq(self.delete_id)",
+                            "BinOp"
+                        ],
+                        [
+                            "tgt_mask.unsqueeze(1)",
+                            "Call"
+                        ],
+                        [
+                            "1 - segment_mask(tgt_len, tgt_max_len, self.segment_num, seg_lens)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "train.py": {
+        "torch": {
+            "no_grad_106": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "device_145": {
+                "variable": {
+                    "value": "device",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda if torch.cuda.is_available() else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "device_count_146": {
+                "variable": {
+                    "value": "n_gpu",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Adam_267": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "trainable_params",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "list(filter(lambda p: p.requires_grad, model.parameters()))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "lr": {
+                    "value": "args.learning_rate",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "weight_decay": {
+                    "value": "args.weight_decay",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "betas": {
+                    "value": "(0.9, 0.98)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "eps": {
+                    "value": "1e-09",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "load_255": {
+                "variable": {
+                    "value": "init_model",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "args.init_encoder_path",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "DataParallel_264": {
+                "variable": {
+                    "value": "model",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "module": {
+                    "value": "model",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "Transformer(enc_layers=args.enc_layers, dec_layers=args.dec_layers, hidden_size=args.hidden_size, head_num=args.head_num, ffn_size=args.ffn_size, src_emb_conf=src_emb_conf, tgt_emb_conf=tgt_emb_conf, dropout=args.dropout, use_label_smoothing=args.use_label_smoothing, smooth_rate=args.smooth_rate)",
+                            "Call"
+                        ],
+                        [
+                            "RecoverSAT(enc_layers=args.enc_layers, dec_layers=args.dec_layers, hidden_size=args.hidden_size, head_num=args.head_num, ffn_size=args.ffn_size, src_emb_conf=src_emb_conf, tgt_emb_conf=tgt_emb_conf, eos_id=tgt_vocab['<eos>'], delete_id=tgt_vocab['<delete>'], segment_num=args.segment_num, dropout=args.dropout, use_label_smoothing=args.use_label_smoothing, smooth_rate=args.smooth_rate)",
+                            "Call"
+                        ],
+                        [
+                            "torch.nn.DataParallel(model)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "LambdaLR_276": {
+                "variable": {
+                    "value": "lr_scheduler",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "optimizer": {
+                    "value": "optimizer",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "optim.Adam(params=trainable_params, lr=args.learning_rate, weight_decay=args.weight_decay, betas=(0.9, 0.98), eps=1e-09)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "lr_lambda": {
+                    "value": "Transformer_LR_Schedule(model_size=args.hidden_size, warmup_steps=args.warmup_steps)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "LambdaLR_282": {
+                "variable": {
+                    "value": "lr_scheduler",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "optimizer": {
+                    "value": "optimizer",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "optim.Adam(params=trainable_params, lr=args.learning_rate, weight_decay=args.weight_decay, betas=(0.9, 0.98), eps=1e-09)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "lr_lambda": {
+                    "value": "Linear_LR_Schedule(initial_lr=args.learning_rate, final_lr=1e-05, total_steps=total_steps)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "is_available_145": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "clamp_326": {
+                "variable": {
+                    "value": "token_num",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.sum(label != tgt_padding_idx).float()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "min": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "clamp_331": {
+                "variable": {
+                    "value": "token_num",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.sum(label != tgt_padding_idx).float()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "min": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "sum_326": {
+                "input": {
+                    "value": "label != tgt_padding_idx",
+                    "type": "Compare",
+                    "possible_values": []
+                }
+            },
+            "sum_331": {
+                "input": {
+                    "value": "label != tgt_padding_idx",
+                    "type": "Compare",
+                    "possible_values": []
+                }
+            },
+            "save_372": {
+                "obj": {
+                    "value": "model_to_save",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "model.module if hasattr(model, 'module') else model",
+                            "IfExp"
+                        ]
+                    ]
+                },
+                "f": {
+                    "value": "model_file",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "os.path.join(save_path, 'b%d-epoch-%d-batch-%d.ckp' % (beam_size, epoch, step + 1))",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "transformer.py": {
+        "torch": {
+            "zeros_like_14": {
+                "variable": {
+                    "value": "smoothed_label",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "log_prob",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "F.log_softmax(logit, dim=-1).transpose(1, 2)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "arange_17": {
+                "variable": {
+                    "value": "class_range",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "start": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "end": {
+                    "value": "nclass",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "log_prob.size(1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "sum_23": {
+                "variable": {
+                    "value": "loss",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "-log_prob * smoothed_label",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sin_48": {
+                "variable": {
+                    "value": "sin",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "pos / torch.pow(self.max_timescale, dim)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "cos_49": {
+                "variable": {
+                    "value": "cos",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "pos / torch.pow(self.max_timescale, dim)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "stack_51": {
+                "variable": {
+                    "value": "pos_emb",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(sin, cos)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "Linear_61": {
+                "variable": {
+                    "value": "self.layer_1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "input_size",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "hidden_size",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "Linear_62": {
+                "variable": {
+                    "value": "self.layer_2",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "hidden_size",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "input_size",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "Dropout_63": {
+                "variable": {
+                    "value": "self.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "dropout",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "0.1",
+                            "MethodArgument"
+                        ],
+                        [
+                            "0.1",
+                            "MethodArgument"
+                        ],
+                        [
+                            "0.1",
+                            "MethodArgument"
+                        ],
+                        [
+                            "0.1",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "relu_66": {
+                "variable": {
+                    "value": "mid",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.layer_1(inputs)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Linear_79": {
+                "variable": {
+                    "value": "self.linear_keys",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "hidden_size",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "head_num * self.head_size",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "Linear_80": {
+                "variable": {
+                    "value": "self.linear_values",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "hidden_size",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "head_num * self.head_size",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "Linear_81": {
+                "variable": {
+                    "value": "self.linear_query",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "hidden_size",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "head_num * self.head_size",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "Linear_82": {
+                "variable": {
+                    "value": "self.final_linear",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "hidden_size",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "hidden_size",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "Softmax_84": {
+                "variable": {
+                    "value": "self.softmax",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "Dropout_85": {
+                "variable": {
+                    "value": "self.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "dropout",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "0.1",
+                            "MethodArgument"
+                        ],
+                        [
+                            "0.1",
+                            "MethodArgument"
+                        ],
+                        [
+                            "0.1",
+                            "MethodArgument"
+                        ],
+                        [
+                            "0.1",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "matmul_139": {
+                "variable": {
+                    "value": "scores",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "query",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "self.linear_query(query)",
+                            "Call"
+                        ],
+                        [
+                            "shape(query)",
+                            "Call"
+                        ],
+                        [
+                            "query / head_size ** 0.5",
+                            "BinOp"
+                        ],
+                        [
+                            "self.linear_query(query)",
+                            "Call"
+                        ],
+                        [
+                            "self.self_attn(input_norm, input_norm, input_norm, mask=tgt_pad_mask, layer_cache=layer_cache, attn_type='self', mask_self=mask_self)",
+                            "Call"
+                        ],
+                        [
+                            "self.dropout(query) + inputs",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "key.transpose(2, 3)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "matmul_161": {
+                "variable": {
+                    "value": "context_original",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "drop_attn",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "self.dropout(attn)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "value",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "self.linear_values(value)",
+                            "Call"
+                        ],
+                        [
+                            "torch.cat((layer_cache['self_values'], value), dim=2)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "LayerNorm_176": {
+                "variable": {
+                    "value": "self.layer_norm_1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "normalized_shape": {
+                    "value": "hidden_size",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "eps": {
+                    "value": "1e-06",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "LayerNorm_177": {
+                "variable": {
+                    "value": "self.layer_norm_2",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "normalized_shape": {
+                    "value": "hidden_size",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "eps": {
+                    "value": "1e-06",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "Dropout_178": {
+                "variable": {
+                    "value": "self.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "dropout",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "0.1",
+                            "MethodArgument"
+                        ],
+                        [
+                            "0.1",
+                            "MethodArgument"
+                        ],
+                        [
+                            "0.1",
+                            "MethodArgument"
+                        ],
+                        [
+                            "0.1",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "ModuleList_197": {
+                "variable": {
+                    "value": "self.encoder_layers",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "modules": {
+                    "value": "[TransformerEncoderLayer(hidden_size, heads, ffn_size, dropout) for i in range(num_layers)]",
+                    "type": "ListComp",
+                    "possible_values": []
+                }
+            },
+            "LayerNorm_201": {
+                "variable": {
+                    "value": "self.layer_norm",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "normalized_shape": {
+                    "value": "hidden_size",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "eps": {
+                    "value": "1e-06",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "LayerNorm_225": {
+                "variable": {
+                    "value": "self.layer_norm_1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "normalized_shape": {
+                    "value": "hidden_size",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "eps": {
+                    "value": "1e-06",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "LayerNorm_226": {
+                "variable": {
+                    "value": "self.layer_norm_2",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "normalized_shape": {
+                    "value": "hidden_size",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "eps": {
+                    "value": "1e-06",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "LayerNorm_227": {
+                "variable": {
+                    "value": "self.layer_norm_3",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "normalized_shape": {
+                    "value": "hidden_size",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "eps": {
+                    "value": "1e-06",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "Dropout_228": {
+                "variable": {
+                    "value": "self.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "dropout",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "0.1",
+                            "MethodArgument"
+                        ],
+                        [
+                            "0.1",
+                            "MethodArgument"
+                        ],
+                        [
+                            "0.1",
+                            "MethodArgument"
+                        ],
+                        [
+                            "0.1",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "ModuleList_258": {
+                "variable": {
+                    "value": "self.decoder_layers",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "modules": {
+                    "value": "[TransformerDecoderLayer(hidden_size, head_num, ffn_size, dropout) for i in range(num_layers)]",
+                    "type": "ListComp",
+                    "possible_values": []
+                }
+            },
+            "LayerNorm_261": {
+                "variable": {
+                    "value": "self.layer_norm",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "normalized_shape": {
+                    "value": "hidden_size",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "eps": {
+                    "value": "1e-06",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "Dropout_333": {
+                "variable": {
+                    "value": "self.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "dropout",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "0.1",
+                            "MethodArgument"
+                        ],
+                        [
+                            "0.1",
+                            "MethodArgument"
+                        ],
+                        [
+                            "0.1",
+                            "MethodArgument"
+                        ],
+                        [
+                            "0.1",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "log_softmax_352": {
+                "variable": {
+                    "value": "log_prob",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "logit",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "F.linear(tgt_dec, self.tgt_embedding.weight)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "transpose_352": {
+                "variable": {
+                    "value": "log_prob",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dim0": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "linear_386": {
+                "variable": {
+                    "value": "logit",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "tgt_dec",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "self.decoder(tgt_emb, src_enc, src_pad_mask=src_mask, tgt_pad_mask=tgt_mask, step=step)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "weight": {
+                    "value": "self.tgt_embedding.weight",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "arange_39": {
+                "variable": {
+                    "value": "pos",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "start": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "end": {
+                    "value": "length",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "unsqueeze_39": {
+                "variable": {
+                    "value": "pos",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "tensor_41": {
+                "variable": {
+                    "value": "pos",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "[[step]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.float",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "diagflat_150": {
+                "variable": {
+                    "value": "diag_mask",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.ones(key.size(2), dtype=torch.uint8, device=scores.device)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "ones_280": {
+                "variable": {
+                    "value": "future_mask",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "[tgt_max_len, tgt_max_len]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "tgt_pad_mask.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.uint8",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "gt_285": {
+                "variable": {
+                    "value": "dec_mask",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "tgt_pad_mask + future_mask",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Embedding_343": {
+                "num_embeddings": {
+                    "value": "vocab_size",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "emb_conf['vocab_size']",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "embedding_dim": {
+                    "value": "emb_size",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "emb_conf['emb_size']",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "padding_idx": {
+                    "value": "padding_idx",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "emb_conf.get('padding_idx', None)",
+                            "Call"
+                        ],
+                        [
+                            "self.tgt_embedding.padding_idx",
+                            "Attribute"
+                        ]
+                    ]
+                }
+            },
+            "NLLLoss_355": {
+                "variable": {
+                    "value": "loss_func",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "ignore_index": {
+                    "value": "self.tgt_embedding.padding_idx",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "reduction": {
+                    "value": "none",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "NLLLoss_362": {
+                "variable": {
+                    "value": "loss_func",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "ignore_index": {
+                    "value": "self.tgt_embedding.padding_idx",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "reduction": {
+                    "value": "sum",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "arange_45": {
+                "start": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "end": {
+                    "value": "self.emb_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "step": {
+                    "value": "2.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "unsqueeze_45": {
+                "input": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "pow_48": {
+                "input": {
+                    "value": "self.max_timescale",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "exponent": {
+                    "value": "dim",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "torch.arange(0.0, self.emb_size, 2.0).unsqueeze(0) / self.emb_size",
+                            "BinOp"
+                        ],
+                        [
+                            "dim.to(pos.device)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "pow_49": {
+                "input": {
+                    "value": "self.max_timescale",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "exponent": {
+                    "value": "dim",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "torch.arange(0.0, self.emb_size, 2.0).unsqueeze(0) / self.emb_size",
+                            "BinOp"
+                        ],
+                        [
+                            "dim.to(pos.device)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "cat_111": {
+                "variable": {
+                    "value": "key",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(layer_cache['self_keys'], key)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_113": {
+                "variable": {
+                    "value": "value",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(layer_cache['self_values'], value)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_143": {
+                "variable": {
+                    "value": "mask",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(layer_cache['mask'], mask)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ones_151": {
+                "*size": {
+                    "value": "key.size(2)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.uint8",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "scores.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "translator.py": {
+        "torch": {
+            "zeros_114": {
+                "variable": {
+                    "value": "position_base",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(batch_size, self.model.segment_num)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.long",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "arange_115": {
+                "variable": {
+                    "value": "seg_id_base",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "start": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "end": {
+                    "value": "self.model.segment_num",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "unsqueeze_115": {
+                "variable": {
+                    "value": "seg_id_base",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "util.py": {
+        "torch": {
+            "cumsum_65": {
+                "variable": {
+                    "value": "cumlen",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "seg_lens",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "seg_lens.to(lengths.device)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "zeros_66": {
+                "variable": {
+                    "value": "zero_tensor",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(bsz, 1)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "cumlen.dtype",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "cumlen.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "cat_67": {
+                "variable": {
+                    "value": "seg_start",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(zero_tensor, cumlen[:, :-1])",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "arange_70": {
+                "variable": {
+                    "value": "len_range",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "start": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "end": {
+                    "value": "max_len",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "max_len or lengths.max()",
+                            "BoolOp"
+                        ],
+                        [
+                            "max_len or lengths.max()",
+                            "BoolOp"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "sum_78": {
+                "variable": {
+                    "value": "gen_order",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "gen_order",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "len_range - seg_start.unsqueeze(-1)",
+                            "BinOp"
+                        ],
+                        [
+                            "gen_order * upper_bound_mask.long() * lower_bound_mask.long()",
+                            "BinOp"
+                        ],
+                        [
+                            "torch.sum(gen_order, dim=1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "arange_50": {
+                "start": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "end": {
+                    "value": "max_len",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "max_len or lengths.max()",
+                            "BoolOp"
+                        ],
+                        [
+                            "max_len or lengths.max()",
+                            "BoolOp"
+                        ],
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "lt_50": {
+                "input": {
+                    "value": "lengths.unsqueeze(1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_38": {
+                "seed": {
+                    "value": "seed",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_42": {
+                "seed": {
+                    "value": "seed",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

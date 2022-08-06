@@ -1,0 +1,741 @@
+{
+    "config.py": {
+        "torch": {
+            "device_4": {
+                "variable": {
+                    "value": "DEVICE",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda:0 if torch.cuda.is_available() else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "is_available_4": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "eval.py": {
+        "torch": {
+            "argmax_19": {
+                "variable": {
+                    "value": "pred_classes",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "logits",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "loss.py": {
+        "torch": {
+            "log_softmax_26": {
+                "variable": {
+                    "value": "log_probs_flat",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "logits_flat",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "logits.view(-1, logits.size(-1))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "models/TDDMN.py": {
+        "torch": {
+            "Sequential_11": {
+                "variable": {
+                    "value": "self.attention_word",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Linear(in_features=int(config.get('word_gru_hidden_size')), out_features=int(config.get('word_attn_size')), bias=True)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "softmax_32": {
+                "variable": {
+                    "value": "normalized_attn",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "masked_attn",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "word_attns * attn_mask.float()",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "GRU_54": {
+                "variable": {
+                    "value": "self.word_gru",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_size": {
+                    "value": "WORD_EMBED_SIZE + int(config.get('entity_embed_size'))",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "hidden_size": {
+                    "value": "int(config.get('word_gru_hidden_size'))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "num_layers": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "bidirectional": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Linear_83": {
+                "variable": {
+                    "value": "self.Wr",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "self.hidden_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "self.hidden_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Linear_85": {
+                "variable": {
+                    "value": "self.Ur",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "self.hidden_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "self.hidden_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Linear_86": {
+                "variable": {
+                    "value": "self.W",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "self.hidden_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "self.hidden_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Linear_88": {
+                "variable": {
+                    "value": "self.U",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "self.hidden_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "self.hidden_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "sigmoid_91": {
+                "variable": {
+                    "value": "r",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.Wr(fact) + self.Ur(C)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "tanh_92": {
+                "variable": {
+                    "value": "h_tilda",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.W(fact) + r * self.U(C)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "Linear_127": {
+                "variable": {
+                    "value": "self.z1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "4 * int(config.get('memory_size'))",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "int(config.get('fact_attn_hidden'))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Linear_129": {
+                "variable": {
+                    "value": "self.z2",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "int(config.get('fact_attn_hidden'))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Linear_130": {
+                "variable": {
+                    "value": "self.next_mem",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "3 * int(config.get('memory_size'))",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "int(config.get('memory_size'))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Dropout_133": {
+                "variable": {
+                    "value": "self.after_attention_gru_dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "config.get('after_attentional_gru_dropout')",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Dropout_135": {
+                "variable": {
+                    "value": "self.after_memory_update_dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "config.get('after_memory_update_dropout')",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "tanh_170": {
+                "variable": {
+                    "value": "G",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.z1(z)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "softmax_180": {
+                "variable": {
+                    "value": "G",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "G",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "functional.tanh(self.z1(z))",
+                            "Call"
+                        ],
+                        [
+                            "self.z2(G).squeeze(3)",
+                            "Call"
+                        ],
+                        [
+                            "G * attn_mask.float()",
+                            "BinOp"
+                        ],
+                        [
+                            "functional.softmax(G, dim=2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "relu_215": {
+                "variable": {
+                    "value": "next_mem",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.next_mem(concat)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "GRU_225": {
+                "variable": {
+                    "value": "self.question_gru",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_size": {
+                    "value": "WORD_EMBED_SIZE + int(config.get('entity_embed_size'))",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "hidden_size": {
+                    "value": "int(config.get('memory_size'))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "num_layers": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "bidirectional": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Dropout_230": {
+                "variable": {
+                    "value": "self.after_question_gru_dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "config.get('after_question_gru_dropout')",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "GRU_287": {
+                "variable": {
+                    "value": "self.fusion_gru",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_size": {
+                    "value": "int(config.get('word_gru_hidden_size'))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "hidden_size": {
+                    "value": "int(config.get('memory_size'))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "num_layers": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "bidirectional": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Dropout_293": {
+                "variable": {
+                    "value": "self.word_dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "config.get('after_word_gru_dropout')",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Dropout_295": {
+                "variable": {
+                    "value": "self.fusion_dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "config.get('after_fusion_gru_dropout')",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "GRU_383": {
+                "variable": {
+                    "value": "self.answer_gru",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_size": {
+                    "value": "2 * config.get('memory_size')",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "hidden_size": {
+                    "value": "config.get('answer_gru_hidden')",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "bidirectional": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Linear_388": {
+                "variable": {
+                    "value": "self.hidden2tag",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "2 * config.get('answer_gru_hidden')",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "ANCHOR_NUM",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "Dropout_391": {
+                "variable": {
+                    "value": "self.before_answer_gru_dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "config.get('before_answer_gru_dropout')",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Dropout_394": {
+                "variable": {
+                    "value": "self.before_dense_dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "config.get('before_dense_dropout')",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_463": {
+                "variable": {
+                    "value": "self.input_conv2d",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_channels": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "WORD_EMBED_SIZE + int(config.get('entity_embed_size'))",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "(1, WORD_EMBED_SIZE + int(config.get('entity_embed_size')))",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_468": {
+                "variable": {
+                    "value": "self.question_conv2d",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_channels": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "WORD_EMBED_SIZE + int(config.get('entity_embed_size'))",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "(1, WORD_EMBED_SIZE + int(config.get('entity_embed_size')))",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "Embedding_478": {
+                "variable": {
+                    "value": "self.word_embed",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "*word_vocab.vectors.shape",
+                    "type": "Starred",
+                    "possible_values": []
+                },
+                "padding_idx": {
+                    "value": "word_vocab.stoi[PAD_TOKEN]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "Embedding_485": {
+                "variable": {
+                    "value": "self.entity_embed",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "len(entity_vocab.stoi)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "embedding_dim": {
+                    "value": "config.get('entity_embed_size')",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "padding_idx": {
+                    "value": "entity_vocab.stoi[PAD_TOKEN]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "relu_534": {
+                "variable": {
+                    "value": "doc_input_embedded_input_conv2d",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.input_conv2d(doc_input_embedded)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "relu_540": {
+                "variable": {
+                    "value": "doc_input_embedded_question_conv2d",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.question_conv2d(doc_input_embedded)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Linear_12": {
+                "in_features": {
+                    "value": "int(config.get('word_gru_hidden_size'))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "int(config.get('word_attn_size'))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Tanh_15": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Linear_16": {
+                "in_features": {
+                    "value": "int(config.get('word_attn_size'))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "train.py": {
+        "torch": {
+            "Adam_54": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "[p for p in model.parameters() if p.requires_grad]",
+                    "type": "ListComp",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "params.get('learning_rate')",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "weight_decay": {
+                    "value": "params.get('weight_decay')",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "no_grad_112": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "utils/utils.py": {
+        "torch": {
+            "range_10": {
+                "variable": {
+                    "value": "seq_range",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "start": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "end": {
+                    "value": "max_len - 1",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "empty_20": {
+                "variable": {
+                    "value": "masks",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "DEVICE",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "cat_23": {
+                "variable": {
+                    "value": "masks",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[masks, mask.view(-1).float()]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

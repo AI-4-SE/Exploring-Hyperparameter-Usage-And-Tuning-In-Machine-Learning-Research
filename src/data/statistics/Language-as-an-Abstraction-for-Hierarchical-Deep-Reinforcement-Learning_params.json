@@ -1,0 +1,437 @@
+{
+    "main.py": {
+        "torch": {
+            "device_15": {
+                "variable": {
+                    "value": "DEVICE",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda if torch.cuda.is_available() else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "Adam_40": {
+                "variable": {
+                    "value": "self.optimizer",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "self.model.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "stack_73": {
+                "variable": {
+                    "value": "curr_Q_prev_actions",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "curr_Q_prev_actions",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "[curr_Q[batch, actions[batch][0], actions[batch][1]] for batch in range(len(states))]",
+                            "ListComp"
+                        ],
+                        [
+                            "torch.stack(curr_Q_prev_actions)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "mse_loss_82": {
+                "variable": {
+                    "value": "loss",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "curr_Q_prev_actions",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "[curr_Q[batch, actions[batch][0], actions[batch][1]] for batch in range(len(states))]",
+                            "ListComp"
+                        ],
+                        [
+                            "torch.stack(curr_Q_prev_actions)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "target": {
+                    "value": "next_Q_max_actions.detach()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "is_available_15": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "argmax_53": {
+                "variable": {
+                    "value": "idx",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "q_values",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "self.model.forward(state, goal)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "max_77": {
+                "input": {
+                    "value": "next_Q",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "self.target_model(next_states, goals)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "max_78": {
+                "input": {
+                    "value": "next_Q_max_actions",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "torch.max(next_Q, -1).values",
+                            "Attribute"
+                        ],
+                        [
+                            "torch.max(next_Q_max_actions, -1).values",
+                            "Attribute"
+                        ],
+                        [
+                            "rewards + (1 - dones) * self.gamma * next_Q_max_actions",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "networks.py": {
+        "torch": {
+            "device_10": {
+                "variable": {
+                    "value": "DEVICE",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda if torch.cuda.is_available() else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "Sequential_15": {
+                "variable": {
+                    "value": "self.layers",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Linear(input_sz, output_sz // 2)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "GRU_27": {
+                "variable": {
+                    "value": "self.gru",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "emb_dim",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "Embedding_30": {
+                "variable": {
+                    "value": "self.embedding",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "len(self.vocab)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "embedding_dim": {
+                    "value": "self.output_sz",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Sequential_84": {
+                "variable": {
+                    "value": "self.f3",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Linear(f3_input_shape, 512)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "is_available_10": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "stack_72": {
+                "tensors": {
+                    "value": "outputs",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "[self.gru(embedings.unsqueeze(0))[0] for embedings in embeddings]",
+                            "ListComp"
+                        ],
+                        [
+                            "[output[0][-1] for output in outputs]",
+                            "ListComp"
+                        ]
+                    ]
+                }
+            },
+            "Linear_16": {
+                "in_features": {
+                    "value": "input_sz",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "output_sz // 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "ReLU_17": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Linear_18": {
+                "in_features": {
+                    "value": "output_sz // 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "output_sz",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "Linear_85": {
+                "in_features": {
+                    "value": "f3_input_shape",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "obs_shape[1] + encoder.output_sz + 5",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "512",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ReLU_86": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Linear_87": {
+                "in_features": {
+                    "value": "512",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "self.action_shape",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "util.py": {
+        "torch": {
+            "device_9": {
+                "variable": {
+                    "value": "DEVICE",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda if torch.cuda.is_available() else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "Tensor_29": {
+                "variable": {
+                    "value": "observation",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "stack_49": {
+                "variable": {
+                    "value": "w_matrix",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[torch.dot(z_vec, ghat[idx]) for (idx, batch) in enumerate(Z_matrix) for row in batch for z_vec in row]",
+                    "type": "ListComp",
+                    "possible_values": []
+                }
+            },
+            "softmax_50": {
+                "variable": {
+                    "value": "p_matrix",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "w_matrix.view(batch_size, -1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "stack_61": {
+                "tensors": {
+                    "value": "rows",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "stack_70": {
+                "tensors": {
+                    "value": "batch",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "is_available_9": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "stack_37": {
+                "tensors": {
+                    "value": "data",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                }
+            },
+            "cat_68": {
+                "variable": {
+                    "value": "state_rep[i][j]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[current_o, ghat[i], zhat[i]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "dot_49": {
+                "input": {
+                    "value": "z_vec",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "ghat[idx]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "sum_59": {
+                "variable": {
+                    "value": "z_vector[i][j][k]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "p_matrix[i][j][k] * Z_matrix[i][j][k]",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "cat_36": {
+                "tensors": {
+                    "value": "(observation[i, j, :], observation[i, k, :])",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "sum_61": {
+                "input": {
+                    "value": "torch.stack(rows)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

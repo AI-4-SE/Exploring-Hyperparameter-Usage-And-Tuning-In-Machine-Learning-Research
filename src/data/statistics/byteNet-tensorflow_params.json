@@ -1,0 +1,405 @@
+{
+    "ByteNet/generator.py": {
+        "tensorflow": {
+            "get_variable_8": {
+                "variable": {
+                    "value": "self.w_sentence_embedding",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "w_sentence_embedding",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[options['vocab_size'], source_embedding_channels]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.truncated_normal_initializer(stddev=0.02)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "placeholder_14": {
+                "variable": {
+                    "value": "self.t_sentence",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "int32",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, None]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "t_sentence",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "embedding_lookup_20": {
+                "variable": {
+                    "value": "source_embedding",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "self.w_sentence_embedding",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "ids": {
+                    "value": "source_sentence",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "self.t_sentence[:, 0:-1]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "name": {
+                    "value": "source_embedding",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "reshape_32": {
+                "variable": {
+                    "value": "logits_flat",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "logits",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "ops.conv1d(tf.nn.relu(curr_input), options['vocab_size'], name='logits')",
+                            "Call"
+                        ],
+                        [
+                            "ops.conv1d(tf.nn.relu(curr_input), options['vocab_size'], name='logits')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, options['vocab_size']]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "reshape_33": {
+                "variable": {
+                    "value": "target_flat",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "target_sentence",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "self.t_sentence[:, 1:]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "sparse_softmax_cross_entropy_with_logits_34": {
+                "variable": {
+                    "value": "loss",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "labels": {
+                    "value": "target_flat",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(target_sentence, [-1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "logits": {
+                    "value": "logits_flat",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(logits, [-1, options['vocab_size']])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(logits, [-1, options['vocab_size']])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reduce_mean_35": {
+                "variable": {
+                    "value": "self.loss",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "loss",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.sparse_softmax_cross_entropy_with_logits(labels=target_flat, logits=logits_flat)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "argmax_37": {
+                "variable": {
+                    "value": "self.arg_max_prediction",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "logits_flat",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(logits, [-1, options['vocab_size']])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(logits, [-1, options['vocab_size']])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "placeholder_46": {
+                "variable": {
+                    "value": "self.seed_sentence",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "int32",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, None]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "seed_sentence",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "embedding_lookup_49": {
+                "variable": {
+                    "value": "source_embedding",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "self.w_sentence_embedding",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "ids": {
+                    "value": "self.seed_sentence",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "source_embedding",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "reshape_60": {
+                "variable": {
+                    "value": "logits_flat",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "logits",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "ops.conv1d(tf.nn.relu(curr_input), options['vocab_size'], name='logits')",
+                            "Call"
+                        ],
+                        [
+                            "ops.conv1d(tf.nn.relu(curr_input), options['vocab_size'], name='logits')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, options['vocab_size']]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "softmax_61": {
+                "variable": {
+                    "value": "probs_flat",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "logits_flat",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(logits, [-1, options['vocab_size']])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(logits, [-1, options['vocab_size']])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reshape_63": {
+                "variable": {
+                    "value": "self.g_probs",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "probs_flat",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.softmax(logits_flat)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, tf.shape(self.seed_sentence)[1], options['vocab_size']]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "scalar_39": {
+                "name": {
+                    "value": "loss",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "self.loss",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "relu_29": {
+                "features": {
+                    "value": "curr_input",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "source_embedding",
+                            "Name"
+                        ],
+                        [
+                            "ops.byetenet_residual_block(curr_input, dilation, layer_no, options['residual_channels'], options['filter_width'], causal=True, train=True)",
+                            "Call"
+                        ],
+                        [
+                            "source_embedding",
+                            "Name"
+                        ],
+                        [
+                            "ops.byetenet_residual_block(curr_input, dilation, layer_no, options['residual_channels'], options['filter_width'], causal=True, train=False)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "get_variable_scope_43": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "relu_58": {
+                "features": {
+                    "value": "curr_input",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "source_embedding",
+                            "Name"
+                        ],
+                        [
+                            "ops.byetenet_residual_block(curr_input, dilation, layer_no, options['residual_channels'], options['filter_width'], causal=True, train=True)",
+                            "Call"
+                        ],
+                        [
+                            "source_embedding",
+                            "Name"
+                        ],
+                        [
+                            "ops.byetenet_residual_block(curr_input, dilation, layer_no, options['residual_channels'], options['filter_width'], causal=True, train=False)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "truncated_normal_initializer_10": {
+                "stddev": {
+                    "value": "0.02",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "shape_63": {
+                "input": {
+                    "value": "self.seed_sentence",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "ByteNet/ops.py": {
+        "tensorflow": {}
+    },
+    "ByteNet/translator.py": {
+        "tensorflow": {}
+    },
+    "data_loader.py": {
+        "tensorflow": {}
+    },
+    "generate.py": {
+        "tensorflow": {}
+    }
+}

@@ -1,0 +1,933 @@
+{
+    "helper.py": {
+        "torch": {
+            "argmax_29": {
+                "variable": {
+                    "value": "predicted",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "predictions",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "sum_31": {
+                "variable": {
+                    "value": "correct_pred",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "predicted == labels",
+                    "type": "Compare",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "load_dataset.py": {
+        "torch": {}
+    },
+    "model/cbam.py": {
+        "torch": {
+            "Sequential_22": {
+                "variable": {
+                    "value": "self.shared_mlp",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Flatten()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "stack_46": {
+                "variable": {
+                    "value": "pooling_sums",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "channel_attentions",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "sum_46": {
+                "variable": {
+                    "value": "pooling_sums",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "unsqueeze_47": {
+                "variable": {
+                    "value": "scaled",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Sequential_71": {
+                "variable": {
+                    "value": "self.spatial_attention",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Conv2d(in_channels=2, out_channels=1, kernel_size=kernel_size, stride=1, dilation=1, padding=(kernel_size - 1) // 2, bias=False)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "cat_57": {
+                "tensors": {
+                    "value": "(torch.max(x, 1)[0].unsqueeze(1), torch.mean(x, 1).unsqueeze(1))",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Flatten_23": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Linear_24": {
+                "in_features": {
+                    "value": "channel_in",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "channel_in // reduction_ratio",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "ReLU_25": {
+                "inplace": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Linear_26": {
+                "in_features": {
+                    "value": "channel_in // reduction_ratio",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "channel_in",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "AvgPool2d_38": {
+                "variable": {
+                    "value": "pool_init",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "(x.size(2), x.size(3))",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "(x.size(2), x.size(3))",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_72": {
+                "in_channels": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "kernel_size",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "7",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "stride": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dilation": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "(kernel_size - 1) // 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "BatchNorm2d_73": {
+                "num_features": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "eps": {
+                    "value": "1e-05",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "momentum": {
+                    "value": "0.01",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "affine": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Sigmoid_82": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "MaxPool2d_42": {
+                "variable": {
+                    "value": "pool_init",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "(x.size(2), x.size(3))",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "(x.size(2), x.size(3))",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "unsqueeze_57": {
+                "input": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "mean_57": {
+                "input": {
+                    "value": "x",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "max_57": {
+                "input": {
+                    "value": "x",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "Sigmoid_47": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "model/hierarchical_loss.py": {
+        "torch": {
+            "argmax_65": {
+                "variable": {
+                    "value": "current_lvl_pred",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "nn.Softmax(dim=1)(predictions[l])",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "argmax_66": {
+                "variable": {
+                    "value": "prev_lvl_pred",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "nn.Softmax(dim=1)(predictions[l - 1])",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "where_70": {
+                "variable": {
+                    "value": "l_prev",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "prev_lvl_pred == true_labels[l - 1]",
+                    "type": "Compare",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "torch.FloatTensor([0]).to(self.device)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "torch.FloatTensor([1]).to(self.device)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "where_71": {
+                "variable": {
+                    "value": "l_curr",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "current_lvl_pred == true_labels[l]",
+                    "type": "Compare",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "torch.FloatTensor([0]).to(self.device)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "torch.FloatTensor([1]).to(self.device)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "sum_73": {
+                "input": {
+                    "value": "torch.pow(self.p_loss, D_l * l_prev) * torch.pow(self.p_loss, D_l * l_curr) - 1",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "CrossEntropyLoss_54": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Softmax_65": {
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Softmax_66": {
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "pow_73": {
+                "input": {
+                    "value": "self.p_loss",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "exponent": {
+                    "value": "D_l * l_curr",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "model/resnet50.py": {
+        "torch": {
+            "Conv2d_19": {
+                "variable": {
+                    "value": "self.conv1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_channels": {
+                    "value": "in_channels",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "out_channels",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "stride",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "strides",
+                            "Name"
+                        ],
+                        [
+                            "1",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "BatchNorm2d_20": {
+                "variable": {
+                    "value": "self.bn1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_features": {
+                    "value": "out_channels",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_21": {
+                "variable": {
+                    "value": "self.conv2",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_channels": {
+                    "value": "out_channels",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "out_channels",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "BatchNorm2d_22": {
+                "variable": {
+                    "value": "self.bn2",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_features": {
+                    "value": "out_channels",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_23": {
+                "variable": {
+                    "value": "self.conv3",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_channels": {
+                    "value": "out_channels",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "out_channels * expansion",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "BatchNorm2d_24": {
+                "variable": {
+                    "value": "self.bn3",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_features": {
+                    "value": "out_channels * expansion",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "ReLU_25": {
+                "variable": {
+                    "value": "self.relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "inplace": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Sequential_29": {
+                "variable": {
+                    "value": "self.identity_connection",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Sequential_70": {
+                "variable": {
+                    "value": "self.conv_block1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Conv2d(kernel_size=3, stride=1, in_channels=image_depth, out_channels=self.in_channels, padding=1, bias=False)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "AdaptiveAvgPool2d_78": {
+                "variable": {
+                    "value": "self.avgpool",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "output_size": {
+                    "value": "(1, 1)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "Linear_80": {
+                "variable": {
+                    "value": "self.linear_lvl1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "512 * self.expansion",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "num_classes[0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "Linear_81": {
+                "variable": {
+                    "value": "self.linear_lvl2",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "512 * self.expansion",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "num_classes[1]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "Linear_83": {
+                "variable": {
+                    "value": "self.softmax_reg1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "num_classes[0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "num_classes[0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "Linear_84": {
+                "variable": {
+                    "value": "self.softmax_reg2",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "num_classes[0] + num_classes[1]",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "num_classes[1]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "Sequential_31": {
+                "variable": {
+                    "value": "self.identity_connection",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Conv2d(in_channels=in_channels, out_channels=expansion * out_channels, kernel_size=1, stride=stride, bias=False)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Sequential_96": {
+                "*args": {
+                    "value": "*layers",
+                    "type": "Starred",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_70": {
+                "kernel_size": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "in_channels": {
+                    "value": "image_depth",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "3",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "out_channels": {
+                    "value": "self.in_channels",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "BatchNorm2d_71": {
+                "num_features": {
+                    "value": "self.in_channels",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "ReLU_72": {
+                "inplace": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Flatten_109": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "cat_112": {
+                "tensors": {
+                    "value": "(level_1, self.linear_lvl2(x))",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_32": {
+                "in_channels": {
+                    "value": "in_channels",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "expansion * out_channels",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "stride",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "strides",
+                            "Name"
+                        ],
+                        [
+                            "1",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "bias": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "BatchNorm2d_33": {
+                "num_features": {
+                    "value": "out_channels * expansion",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "train.py": {
+        "torch": {
+            "device_20": {
+                "variable": {
+                    "value": "device",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda:0 if torch.cuda.is_available() and args.device == gpu else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_33": {
+                "variable": {
+                    "value": "train_generator",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "train_dataset",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "LoadDataset(image_size=args.img_size, image_depth=args.img_depth, csv_path=args.train_csv, cifar_metafile=args.metafile, transform=transforms.Compose([transforms.RandomAffine(40, scale=(0.85, 1.15), shear=0, resample=0), transforms.RandomHorizontalFlip(), transforms.RandomPerspective(distortion_scale=0.2), transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5), transforms.ToTensor()]))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "args.batch_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "args.no_shuffle",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_workers": {
+                    "value": "args.num_workers",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_34": {
+                "variable": {
+                    "value": "test_generator",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "test_dataset",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "LoadDataset(image_size=args.img_size, image_depth=args.img_depth, csv_path=args.test_csv, cifar_metafile=args.metafile, transform=transforms.ToTensor())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "args.batch_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "args.no_shuffle",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_workers": {
+                    "value": "args.num_workers",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Adam_37": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "model.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "args.learning_rate",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "save_131": {
+                "obj": {
+                    "value": "model.state_dict()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "args.model_save_path.rstrip('/') + 'dhc.pth'",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "set_grad_enabled_98": {
+                "mode": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "is_available_20": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

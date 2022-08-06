@@ -1,0 +1,722 @@
+{
+    "main/train.py": {
+        "tensorflow": {
+            "reshape_35": {
+                "variable": {
+                    "value": "gray",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "gray1",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "0.39 * y_pred[:, :, :, 0] + 0.5 * y_pred[:, :, :, 1] + 0.11 * y_pred[:, :, :, 2]",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, 256 * 256]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_38": {
+                "input": {
+                    "value": "yu",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "gray_sort[:, index]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.expand_dims(tf.expand_dims(yu, -1), -1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "to_float_39": {
+                "variable": {
+                    "value": "mask",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "gray1 <= yu",
+                    "type": "Compare",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_40": {
+                "variable": {
+                    "value": "mask1",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "mask",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "tf.to_float(gray1 <= yu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([mask1, mask1, mask1], -1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "concat_41": {
+                "variable": {
+                    "value": "mask",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[mask1, mask1, mask1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "multiply_43": {
+                "variable": {
+                    "value": "low_fake_clean",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "mask",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "tf.to_float(gray1 <= yu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([mask1, mask1, mask1], -1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "y_pred[:, :, :, :3]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "multiply_44": {
+                "variable": {
+                    "value": "high_fake_clean",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "1 - mask",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "y_pred[:, :, :, :3]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "multiply_45": {
+                "variable": {
+                    "value": "low_clean",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "mask",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "tf.to_float(gray1 <= yu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([mask1, mask1, mask1], -1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "y_true[:, :, :, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "multiply_46": {
+                "variable": {
+                    "value": "high_clean",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "1 - mask",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "y_true[:, :, :, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "reshape_66": {
+                "tensor": {
+                    "value": "x",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[-1, 256, 256, 16]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "top_k_36": {
+                "input": {
+                    "value": "-gray",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "k": {
+                    "value": "256 * 256",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_29": {
+                "input": {
+                    "value": "y_true[:, :, :, 2]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_27": {
+                "input": {
+                    "value": "y_true[:, :, :, 0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_28": {
+                "input": {
+                    "value": "y_true[:, :, :, 1]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "main/utls.py": {
+        "tensorflow": {
+            "constant_39": {
+                "variable": {
+                    "value": "x",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "x_data",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "np.expand_dims(x_data, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "np.expand_dims(x_data, axis=-1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "constant_40": {
+                "variable": {
+                    "value": "y",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "y_data",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "np.expand_dims(y_data, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "np.expand_dims(y_data, axis=-1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "exp_42": {
+                "variable": {
+                    "value": "g",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "-((x ** 2 + y ** 2) / (2.0 * sigma ** 2))",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "conv2d_52": {
+                "variable": {
+                    "value": "mu1",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "img1",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "filtered_im1",
+                            "Name"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "window",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "_tf_fspecial_gauss(size, sigma)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "strides": {
+                    "value": "[1, 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "VALID",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "conv2d_53": {
+                "variable": {
+                    "value": "mu2",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "img2",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "filtered_im2",
+                            "Name"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "window",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "_tf_fspecial_gauss(size, sigma)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "strides": {
+                    "value": "[1, 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "VALID",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "constant_73": {
+                "variable": {
+                    "value": "weight",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "[0.0448, 0.2856, 0.3001, 0.2363, 0.1333]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "stack_86": {
+                "variable": {
+                    "value": "mssim",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "mssim",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "tf.stack(mssim, axis=0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "stack_87": {
+                "variable": {
+                    "value": "mcs",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "mcs",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "tf.stack(mcs, axis=0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_69": {
+                "variable": {
+                    "value": "value",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "value",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "((2 * mu1_mu2 + C1) * (2 * sigma12 + C2) / ((mu1_sq + mu2_sq + C1) * (sigma1_sq + sigma2_sq + C2)), (2.0 * sigma12 + C2) / (sigma1_sq + sigma2_sq + C2))",
+                            "Tuple"
+                        ],
+                        [
+                            "(2 * mu1_mu2 + C1) * (2 * sigma12 + C2) / ((mu1_sq + mu2_sq + C1) * (sigma1_sq + sigma2_sq + C2))",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.reduce_mean(value)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reduce_prod(mcs[0:level - 1] ** weight[0:level - 1]) * mssim[level - 1] ** weight[level - 1]",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.reduce_mean(value)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "avg_pool_80": {
+                "variable": {
+                    "value": "filtered_im1",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "img1",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "filtered_im1",
+                            "Name"
+                        ]
+                    ]
+                },
+                "ksize": {
+                    "value": "[1, 2, 2, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "[1, 2, 2, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "SAME",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "avg_pool_81": {
+                "variable": {
+                    "value": "filtered_im2",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "img2",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "filtered_im2",
+                            "Name"
+                        ]
+                    ]
+                },
+                "ksize": {
+                    "value": "[1, 2, 2, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "[1, 2, 2, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "SAME",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_93": {
+                "variable": {
+                    "value": "value",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "value",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "((2 * mu1_mu2 + C1) * (2 * sigma12 + C2) / ((mu1_sq + mu2_sq + C1) * (sigma1_sq + sigma2_sq + C2)), (2.0 * sigma12 + C2) / (sigma1_sq + sigma2_sq + C2))",
+                            "Tuple"
+                        ],
+                        [
+                            "(2 * mu1_mu2 + C1) * (2 * sigma12 + C2) / ((mu1_sq + mu2_sq + C1) * (sigma1_sq + sigma2_sq + C2))",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.reduce_mean(value)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reduce_prod(mcs[0:level - 1] ** weight[0:level - 1]) * mssim[level - 1] ** weight[level - 1]",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.reduce_mean(value)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reduce_sum_43": {
+                "input_tensor": {
+                    "value": "g",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "tf.exp(-((x ** 2 + y ** 2) / (2.0 * sigma ** 2)))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "conv2d_57": {
+                "input": {
+                    "value": "img1 * img1",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "filters": {
+                    "value": "window",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "_tf_fspecial_gauss(size, sigma)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "strides": {
+                    "value": "[1, 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "VALID",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "conv2d_58": {
+                "input": {
+                    "value": "img2 * img2",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "filters": {
+                    "value": "window",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "_tf_fspecial_gauss(size, sigma)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "strides": {
+                    "value": "[1, 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "VALID",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "conv2d_59": {
+                "input": {
+                    "value": "img1 * img2",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "filters": {
+                    "value": "window",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "_tf_fspecial_gauss(size, sigma)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "strides": {
+                    "value": "[1, 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "VALID",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "reduce_prod_89": {
+                "input_tensor": {
+                    "value": "mcs[0:level - 1] ** weight[0:level - 1]",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_78": {
+                "input_tensor": {
+                    "value": "ssim_map",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_79": {
+                "input_tensor": {
+                    "value": "cs_map",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "False",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "expand_dims_97": {
+                "input": {
+                    "value": "y_true[:, :, :, 1]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}
