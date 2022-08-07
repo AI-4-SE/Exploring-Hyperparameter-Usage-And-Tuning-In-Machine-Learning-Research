@@ -3,9 +3,10 @@ import json
 from sklearn.utils import all_estimators
 
 def print_estimators():
-    estimators = all_estimators()
+    estimators = all_estimators(type_filter="transformer")
     estimator_names = [x[0] for x in estimators]
     print(estimator_names)
+    print(len(estimator_names))
 
 
 def main():
@@ -13,7 +14,7 @@ def main():
     sklearn_estimators = []
     sklearn_exp_settings = []
 
-    estimators = all_estimators()
+    estimators = all_estimators(type_filter=["classifier", "regressor", "cluster"])
     estimator_names = [x[0] for x in estimators]
 
     with open("modules/sklearn_default_values.json", "r", encoding="utf-8") as src:
@@ -34,4 +35,5 @@ def main():
 
 
 if __name__ == "__main__":
-    print_estimators()
+    #print_estimators()
+    main()
