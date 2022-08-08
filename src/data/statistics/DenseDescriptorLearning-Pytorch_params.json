@@ -1,0 +1,2095 @@
+{
+    "dataset.py": {
+        "torch": {
+            "from_numpy_444": {
+                "ndarray": {
+                    "value": "source_feature_1D_locations",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "np.zeros((sampled_feature_matches.shape[0], 1), dtype=np.int32)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "from_numpy_445": {
+                "ndarray": {
+                    "value": "target_feature_1D_locations",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "np.zeros((sampled_feature_matches.shape[0], 1), dtype=np.int32)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "from_numpy_446": {
+                "ndarray": {
+                    "value": "source_feature_2D_locations",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "sampled_feature_matches[:, :2]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "from_numpy_447": {
+                "ndarray": {
+                    "value": "target_feature_2D_locations",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "sampled_feature_matches[:, 2:]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "from_numpy_448": {
+                "ndarray": {
+                    "value": "training_heatmaps_1",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "from_numpy_449": {
+                "ndarray": {
+                    "value": "training_heatmaps_2",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "cat_498": {
+                "tensors": {
+                    "value": "img_list",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "from_numpy_490": {
+                "ndarray": {
+                    "value": "np.asarray(feature_matches)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "losses.py": {
+        "torch": {
+            "gather_27": {
+                "variable": {
+                    "value": "sampled_cosine_distance",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "response_map.view(batch_size, sampling_size, height * width)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "index": {
+                    "value": "source_feature_1d_locations.view(batch_size, sampling_size, 1).long()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "gather_31": {
+                "variable": {
+                    "value": "sampled_boundaries",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "boundaries.view(batch_size, 1, height * width).expand(-1, sampling_size, -1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "index": {
+                    "value": "source_feature_1d_locations.view(batch_size, sampling_size, 1).long()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "max_53": {
+                "variable": {
+                    "value": "(_, detected_target_1d_locations)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "response_map.view(batch_size, sampling_size, height * width)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keepdim": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "cat_56": {
+                "variable": {
+                    "value": "detected_target_2d_locations",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[torch.fmod(detected_target_1d_locations, width), torch.floor(detected_target_1d_locations / width)]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "norm_61": {
+                "variable": {
+                    "value": "distance",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "detected_target_2d_locations - source_feature_2d_locations",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keepdim": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "sum_25": {
+                "input": {
+                    "value": "response_map",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "response_map / torch.sum(response_map, dim=(2, 3), keepdim=True)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "(2, 3)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "keepdim": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "sum_35": {
+                "input": {
+                    "value": "sampled_boundaries",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.gather(boundaries.view(batch_size, 1, height * width).expand(-1, sampling_size, -1), 2, source_feature_1d_locations.view(batch_size, sampling_size, 1).long())",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "sum_37": {
+                "input": {
+                    "value": "sampled_boundaries * -torch.log(self.eps + sampled_cosine_distance)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sum_63": {
+                "input": {
+                    "value": "(distance < self.threshold).float()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "sum_64": {
+                "input": {
+                    "value": "(distance < 2.0 * self.threshold).float()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "sum_65": {
+                "input": {
+                    "value": "(distance < 4.0 * self.threshold).float()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "log_38": {
+                "input": {
+                    "value": "self.eps + sampled_cosine_distance",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "fmod_57": {
+                "input": {
+                    "value": "detected_target_1d_locations",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "detected_target_1d_locations.float()",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "width",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "floor_58": {
+                "input": {
+                    "value": "detected_target_1d_locations / width",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "models.py": {
+        "torch": {
+            "ModuleList_34": {
+                "variable": {
+                    "value": "self.layers",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "modules": {
+                    "value": "[DenseLayer(in_channels + i * growth_rate, growth_rate) for i in range(n_layers)]",
+                    "type": "ListComp",
+                    "possible_values": []
+                }
+            },
+            "Sequential_72": {
+                "variable": {
+                    "value": "self.convTrans",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Upsample(mode='nearest', scale_factor=2)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "cat_78": {
+                "variable": {
+                    "value": "out",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[out, skip]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ModuleList_119": {
+                "variable": {
+                    "value": "self.denseBlocksDown",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "modules": {
+                    "value": "[]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "ModuleList_120": {
+                "variable": {
+                    "value": "self.transDownBlocks",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "modules": {
+                    "value": "[]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "ModuleList_141": {
+                "variable": {
+                    "value": "self.transUpBlocks",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "modules": {
+                    "value": "[]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "ModuleList_142": {
+                "variable": {
+                    "value": "self.denseBlocksUp",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "modules": {
+                    "value": "[]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_163": {
+                "variable": {
+                    "value": "self.finalConv",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_channels": {
+                    "value": "cur_channels_count",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "0",
+                            "Constant"
+                        ],
+                        [
+                            "out_chans_first_conv",
+                            "Name"
+                        ],
+                        [
+                            "cur_channels_count + growth_rate * up_blocks[-1]",
+                            "BinOp"
+                        ],
+                        [
+                            "prev_block_channels + skip_connection_channel_counts[i]",
+                            "BinOp"
+                        ],
+                        [
+                            "prev_block_channels + skip_connection_channel_counts[-1]",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "out_channels": {
+                    "value": "feature_length",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "256",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "gather_206": {
+                "variable": {
+                    "value": "sampled_feature_vectors",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "source_feature_map.view(batch_size, channel, height * width)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "index": {
+                    "value": "source_feature_1D_locations.long()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "exp_228": {
+                "variable": {
+                    "value": "cosine_distance_map",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.scale * (cosine_distance_map - self.threshold)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "gather_250": {
+                "variable": {
+                    "value": "sampled_feature_vectors",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "source_feature_map.view(batch_size, channel, height * width)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "index": {
+                    "value": "source_feature_1D_locations.long()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "cat_267": {
+                "variable": {
+                    "value": "cosine_distance_map",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "temp",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[None for _ in range(batch_size)]",
+                            "ListComp"
+                        ],
+                        [
+                            "[None for _ in range(batch_size)]",
+                            "ListComp"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "conv2d_219": {
+                "variable": {
+                    "value": "temp[i]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "target_feature_map[i].view(1, channel, height, width)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "weight": {
+                    "value": "sampled_feature_vectors[i].view(sampling_size, channel, 1, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "conv2d_263": {
+                "variable": {
+                    "value": "temp[i]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "target_feature_map[i].view(1, channel, height, width)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "weight": {
+                    "value": "sampled_feature_vectors[i].view(sampling_size, channel, 1, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "BatchNorm2d_21": {
+                "num_features": {
+                    "value": "in_channels",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "3",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "ReLU_22": {
+                "inplace": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_23": {
+                "in_channels": {
+                    "value": "in_channels",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "3",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "out_channels": {
+                    "value": "growth_rate",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "16",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "kernel_size": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "cat_45": {
+                "variable": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[x, out]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_47": {
+                "tensors": {
+                    "value": "new_features",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_51": {
+                "variable": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[x, out]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "BatchNorm2d_58": {
+                "num_features": {
+                    "value": "in_channels",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "3",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "ReLU_59": {
+                "inplace": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_60": {
+                "in_channels": {
+                    "value": "in_channels",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "3",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "out_channels": {
+                    "value": "in_channels",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "3",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "MaxPool2d_63": {
+                "kernel_size": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Upsample_72": {
+                "mode": {
+                    "value": "nearest",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "scale_factor": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_73": {
+                "in_channels": {
+                    "value": "in_channels",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "3",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "out_channels": {
+                    "value": "out_channels",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Conv2d_110": {
+                "in_channels": {
+                    "value": "in_channels",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "3",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "out_channels": {
+                    "value": "out_chans_first_conv",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "48",
+                            "MethodArgument"
+                        ]
+                    ]
+                },
+                "kernel_size": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "norm_183": {
+                "input": {
+                    "value": "out",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "layer(x)",
+                            "Call"
+                        ],
+                        [
+                            "layer(x)",
+                            "Call"
+                        ],
+                        [
+                            "self.convTrans(x)",
+                            "Call"
+                        ],
+                        [
+                            "center_crop_(out, skip.size(2), skip.size(3))",
+                            "Call"
+                        ],
+                        [
+                            "torch.cat([out, skip], 1)",
+                            "Call"
+                        ],
+                        [
+                            "self.firstconv(x)",
+                            "Call"
+                        ],
+                        [
+                            "self.denseBlocksDown[i](out)",
+                            "Call"
+                        ],
+                        [
+                            "self.transDownBlocks[i](out)",
+                            "Call"
+                        ],
+                        [
+                            "self.bottleneck(out)",
+                            "Call"
+                        ],
+                        [
+                            "self.transUpBlocks[i](out, skip)",
+                            "Call"
+                        ],
+                        [
+                            "self.denseBlocksUp[i](out)",
+                            "Call"
+                        ],
+                        [
+                            "self.finalConv(out)",
+                            "Call"
+                        ],
+                        [
+                            "out / torch.norm(out, dim=1, keepdim=True)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keepdim": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "sum_229": {
+                "input": {
+                    "value": "cosine_distance_map",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "0.5 * torch.cat(temp, dim=0) + 0.5",
+                            "BinOp"
+                        ],
+                        [
+                            "torch.exp(self.scale * (cosine_distance_map - self.threshold))",
+                            "Call"
+                        ],
+                        [
+                            "cosine_distance_map / torch.sum(cosine_distance_map, dim=(2, 3), keepdim=True)",
+                            "BinOp"
+                        ],
+                        [
+                            "torch.cat(temp, dim=0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "(2, 3)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "keepdim": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "cat_225": {
+                "tensors": {
+                    "value": "temp",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[None for _ in range(batch_size)]",
+                            "ListComp"
+                        ],
+                        [
+                            "[None for _ in range(batch_size)]",
+                            "ListComp"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "scheduler.py": {
+        "torch": {}
+    },
+    "test.py": {
+        "torch": {
+            "DataParallel_111": {
+                "variable": {
+                    "value": "feature_descriptor_model",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "module": {
+                    "value": "feature_descriptor_model",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "models.FCDenseNet(in_channels=3, down_blocks=(3, 3, 3, 3, 3), up_blocks=(3, 3, 3, 3, 3), bottleneck_layers=4, growth_rate=filter_growth_rate, out_chans_first_conv=16, feature_length=feature_length)",
+                            "Call"
+                        ],
+                        [
+                            "torch.nn.DataParallel(feature_descriptor_model)",
+                            "Call"
+                        ],
+                        [
+                            "feature_descriptor_model.module",
+                            "Attribute"
+                        ],
+                        [
+                            "feature_descriptor_model.cuda(gpu_id)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "manual_seed_93": {
+                "seed": {
+                    "value": "10086",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "load_120": {
+                "variable": {
+                    "value": "pre_trained_state",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "str(trained_model_path)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_168": {
+                "variable": {
+                    "value": "test_loader",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "test_dataset",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dataset.SfMDataset(image_file_names=test_filenames, folder_list=folder_list, adjacent_range=adjacent_range, image_downsampling=image_downsampling, inlier_percentage=inlier_percentage, network_downsampling=network_downsampling, load_intermediate_data=load_intermediate_data, intermediate_data_root=precompute_root, phase='test', pre_workers=num_pre_workers, visible_interval=visibility_overlap)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "num_workers": {
+                    "value": "num_workers",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "args.num_workers",
+                            "Attribute"
+                        ]
+                    ]
+                }
+            },
+            "no_grad_174": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "round_182": {
+                "input": {
+                    "value": "feature_matches[i - 1][0, :, 0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "round_183": {
+                "input": {
+                    "value": "feature_matches[i - 1][0, :, 1]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "train.py": {
+        "torch": {
+            "DataLoader_172": {
+                "variable": {
+                    "value": "train_loader",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "train_dataset",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dataset.SfMDataset(image_file_names=train_filenames, folder_list=sequence_path_list, adjacent_range=adjacent_range, image_downsampling=image_downsampling, inlier_percentage=inlier_percentage, network_downsampling=network_downsampling, load_intermediate_data=load_intermediate_data, intermediate_data_root=precompute_root, sampling_size=sampling_size, phase='train', heatmap_sigma=heatmap_sigma, pre_workers=num_pre_workers, visible_interval=visibility_overlap, num_iter=num_iter)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "batch_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "args.batch_size",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "shuffle": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "num_workers": {
+                    "value": "num_workers",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "args.num_workers",
+                            "Attribute"
+                        ]
+                    ]
+                }
+            },
+            "DataLoader_188": {
+                "variable": {
+                    "value": "val_loader",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "val_dataset",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dataset.SfMDataset(image_file_names=val_filenames, folder_list=sequence_path_list, adjacent_range=adjacent_range, image_downsampling=image_downsampling, inlier_percentage=inlier_percentage, network_downsampling=network_downsampling, load_intermediate_data=load_intermediate_data, intermediate_data_root=precompute_root, sampling_size=sampling_size, phase='validation', heatmap_sigma=heatmap_sigma, pre_workers=num_pre_workers, visible_interval=visibility_overlap, num_iter=num_iter)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "batch_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "args.batch_size",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "shuffle": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "num_workers": {
+                    "value": "num_workers",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "args.num_workers",
+                            "Attribute"
+                        ]
+                    ]
+                }
+            },
+            "DataParallel_199": {
+                "variable": {
+                    "value": "feature_descriptor_model",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "module": {
+                    "value": "feature_descriptor_model",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "models.FCDenseNet(in_channels=3, down_blocks=(3, 3, 3, 3, 3), up_blocks=(3, 3, 3, 3, 3), bottleneck_layers=4, growth_rate=filter_growth_rate, out_chans_first_conv=16, feature_length=feature_length)",
+                            "Call"
+                        ],
+                        [
+                            "torch.nn.DataParallel(feature_descriptor_model)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "SGD_205": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "feature_descriptor_model.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "lr_range[1]",
+                    "type": "Subscript",
+                    "possible_values": [
+                        [
+                            "args.lr_range",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "momentum": {
+                    "value": "0.9",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_133": {
+                "seed": {
+                    "value": "10085",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "load_218": {
+                "variable": {
+                    "value": "pre_trained_state",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "str(trained_model_path)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_239": {
+                "seed": {
+                    "value": "10086 + cur_epoch",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_331": {
+                "seed": {
+                    "value": "10086",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "no_grad_334": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "clip_grad_norm__297": {
+                "parameters": {
+                    "value": "feature_descriptor_model.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "max_norm": {
+                    "value": "10.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "no_grad_307": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "utils.py": {
+        "torch": {
+            "max_689": {
+                "variable": {
+                    "value": "(max_1, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "display_1.view(-1, height * width)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "max_693": {
+                "variable": {
+                    "value": "(max_2, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "display_2.view(-1, height * width)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "DataParallel_974": {
+                "variable": {
+                    "value": "feature_descriptor_model",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "module": {
+                    "value": "feature_descriptor_model",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "models.FCDenseNet(in_channels=3, down_blocks=(3, 3, 3, 3, 3), up_blocks=(3, 3, 3, 3, 3), bottleneck_layers=4, growth_rate=filter_growth_rate, out_chans_first_conv=16, feature_length=feature_length)",
+                            "Call"
+                        ],
+                        [
+                            "torch.nn.DataParallel(feature_descriptor_model, device_ids=[gpu_id])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "device_ids": {
+                    "value": "[gpu_id]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_996": {
+                "variable": {
+                    "value": "video_loader",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "video_dataset",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dataset.SfMDataset(image_file_names=video_frame_filenames, folder_list=folder_list, image_downsampling=image_downsampling, network_downsampling=network_downsampling, load_intermediate_data=load_intermediate_data, intermediate_data_root=precompute_root, phase='image_loading')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "batch_size",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "num_workers": {
+                    "value": "batch_size",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "is_available_624": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "from_numpy_831": {
+                "variable": {
+                    "value": "source_feature_1d_locations",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "ndarray": {
+                    "value": "kps_1D_1",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                }
+            },
+            "gather_837": {
+                "variable": {
+                    "value": "sampled_feature_vectors",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "feature_map_1.view(1, feature_length, height * width)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "index": {
+                    "value": "source_feature_1d_locations.long()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "conv2d_849": {
+                "variable": {
+                    "value": "filter_response_map",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "feature_map_2.view(1, feature_length, height, width)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "weight": {
+                    "value": "sampled_feature_vectors.view(keypoint_number, feature_length, 1, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "max_859": {
+                "variable": {
+                    "value": "(max_reponses, max_indexes)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "filter_response_map.view(keypoint_number, -1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keepdim": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "gather_872": {
+                "variable": {
+                    "value": "sampled_feature_vectors_2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "feature_map_2.view(1, feature_length, height * width)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "index": {
+                    "value": "feature_1d_locations_2.long()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "conv2d_884": {
+                "variable": {
+                    "value": "source_filter_response_map",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "feature_map_1.view(1, feature_length, height, width)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "weight": {
+                    "value": "sampled_feature_vectors_2.view(keypoint_number, feature_length, 1, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "max_893": {
+                "variable": {
+                    "value": "(max_reponses_2, max_indexes_2)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "source_filter_response_map.view(keypoint_number, -1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keepdim": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "from_numpy_899": {
+                "variable": {
+                    "value": "keypoint_1d_locations_1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "ndarray": {
+                    "value": "np.asarray(kps_1D_1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "cat_901": {
+                "variable": {
+                    "value": "keypoint_2d_locations_1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[torch.fmod(keypoint_1d_locations_1, width), torch.floor(keypoint_1d_locations_1 / width)]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_907": {
+                "variable": {
+                    "value": "detected_source_keypoint_2d_locations",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[torch.fmod(detected_source_keypoint_1d_locations, width), torch.floor(detected_source_keypoint_1d_locations / width)]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "norm_914": {
+                "variable": {
+                    "value": "cross_check_correspondence_distances",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "keypoint_2d_locations_1 - detected_source_keypoint_2d_locations",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "nonzero_917": {
+                "variable": {
+                    "value": "valid_correspondence_indexes",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "cross_check_correspondence_distances < cross_check_distance",
+                    "type": "Compare",
+                    "possible_values": []
+                }
+            },
+            "gather_923": {
+                "variable": {
+                    "value": "valid_detected_1d_locations_2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "detected_target_1d_locations.long().view(-1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "index": {
+                    "value": "valid_correspondence_indexes.long()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "gather_925": {
+                "variable": {
+                    "value": "valid_max_responses",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "selected_max_responses.view(-1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "index": {
+                    "value": "valid_correspondence_indexes.long()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "load_979": {
+                "variable": {
+                    "value": "state",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "str(feature_descriptor_model_path)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "map_location": {
+                    "value": "'cuda:{}'.format(gpu_id)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "from_numpy_1031": {
+                "variable": {
+                    "value": "source_feature_1d_locations",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "ndarray": {
+                    "value": "kps_1D_1",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                }
+            },
+            "gather_1037": {
+                "variable": {
+                    "value": "sampled_feature_vectors",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "feature_map_1.view(1, feature_length, height * width)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "index": {
+                    "value": "source_feature_1d_locations.long()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "conv2d_1050": {
+                "variable": {
+                    "value": "filter_response_map",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "feature_map_2.view(1, feature_length, height, width)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "weight": {
+                    "value": "sampled_feature_vectors.view(keypoint_number, feature_length, 1, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "max_1056": {
+                "variable": {
+                    "value": "(max_reponses, max_indexes)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "filter_response_map.view(keypoint_number, -1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keepdim": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "gather_1067": {
+                "variable": {
+                    "value": "sampled_feature_vectors_2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "feature_map_2.view(1, feature_length, height * width)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "index": {
+                    "value": "feature_1d_locations_2.long()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "conv2d_1080": {
+                "variable": {
+                    "value": "source_filter_response_map",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "feature_map_1.view(1, feature_length, height, width)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "weight": {
+                    "value": "sampled_feature_vectors_2.view(keypoint_number, feature_length, 1, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "max_1086": {
+                "variable": {
+                    "value": "(max_reponses_2, max_indexes_2)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "source_filter_response_map.view(keypoint_number, -1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keepdim": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "from_numpy_1091": {
+                "variable": {
+                    "value": "keypoint_1d_locations_1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "ndarray": {
+                    "value": "np.asarray(kps_1D_1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "cat_1093": {
+                "variable": {
+                    "value": "keypoint_2d_locations_1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[torch.fmod(keypoint_1d_locations_1, width), torch.floor(keypoint_1d_locations_1 / width)]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_1099": {
+                "variable": {
+                    "value": "detected_source_keypoint_2d_locations",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[torch.fmod(detected_source_keypoint_1d_locations, width), torch.floor(detected_source_keypoint_1d_locations / width)]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "norm_1106": {
+                "variable": {
+                    "value": "cross_check_correspondence_distances",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "keypoint_2d_locations_1 - detected_source_keypoint_2d_locations",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "nonzero_1109": {
+                "variable": {
+                    "value": "valid_correspondence_indexes",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "cross_check_correspondence_distances < cross_check_distance",
+                    "type": "Compare",
+                    "possible_values": []
+                }
+            },
+            "gather_1115": {
+                "variable": {
+                    "value": "valid_detected_1d_locations_2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "detected_target_1d_locations.long().view(-1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "index": {
+                    "value": "valid_correspondence_indexes.long()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "cat_1118": {
+                "variable": {
+                    "value": "valid_detected_target_2d_locations",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[torch.fmod(valid_detected_1d_locations_2.float(), width).view(-1, 1), torch.floor(valid_detected_1d_locations_2.float() / width).view(-1, 1)]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "save_1192": {
+                "obj": {
+                    "value": "{'model': model.state_dict(), 'optimizer': optimizer.state_dict(), 'epoch': epoch, 'step': step, 'validation': validation_loss}",
+                    "type": "Dict",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "str(model_path)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "no_grad_822": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "no_grad_1002": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "no_grad_1025": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "fmod_902": {
+                "input": {
+                    "value": "keypoint_1d_locations_1",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.from_numpy(np.asarray(kps_1D_1)).float().cuda(gpu_id).view(keypoint_number, 1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.from_numpy(np.asarray(kps_1D_1)).float().cuda(gpu_id).view(keypoint_number, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "width",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "floor_903": {
+                "input": {
+                    "value": "keypoint_1d_locations_1 / width",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "fmod_908": {
+                "input": {
+                    "value": "detected_source_keypoint_1d_locations",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "max_indexes_2.float().view(keypoint_number, 1)",
+                            "Call"
+                        ],
+                        [
+                            "max_indexes_2.float().view(keypoint_number, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "width",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "floor_909": {
+                "input": {
+                    "value": "detected_source_keypoint_1d_locations / width",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "fmod_1094": {
+                "input": {
+                    "value": "keypoint_1d_locations_1",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.from_numpy(np.asarray(kps_1D_1)).float().cuda(gpu_id).view(keypoint_number, 1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.from_numpy(np.asarray(kps_1D_1)).float().cuda(gpu_id).view(keypoint_number, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "width",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "floor_1095": {
+                "input": {
+                    "value": "keypoint_1d_locations_1 / width",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "fmod_1100": {
+                "input": {
+                    "value": "detected_source_keypoint_1d_locations",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "max_indexes_2.float().view(keypoint_number, 1)",
+                            "Call"
+                        ],
+                        [
+                            "max_indexes_2.float().view(keypoint_number, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "width",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "floor_1101": {
+                "input": {
+                    "value": "detected_source_keypoint_1d_locations / width",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "fmod_1119": {
+                "input": {
+                    "value": "valid_detected_1d_locations_2.float()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "width",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "floor_1120": {
+                "input": {
+                    "value": "valid_detected_1d_locations_2.float() / width",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

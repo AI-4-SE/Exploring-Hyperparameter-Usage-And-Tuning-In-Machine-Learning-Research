@@ -1,0 +1,379 @@
+{
+    "Model.py": {
+        "tensorflow": {
+            "reshape_62": {
+                "variable": {
+                    "value": "scores_true_ref",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "scores_true_ref",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Multiply()([scores_true, batch_balanced_mask])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(scores_true_ref, [-1, 3, recap_len])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, 3, recap_len]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "reshape_71": {
+                "variable": {
+                    "value": "scores_predicted",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "scores_predicted",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "scores",
+                            "Name"
+                        ],
+                        [
+                            "Lambda(lambda x: x, output_shape=lambda s: s)(scores_predicted)",
+                            "Call"
+                        ],
+                        [
+                            "Multiply()([scores_predicted, batch_balanced_mask])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(scores_predicted, [-1, 3, recap_len])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, 3, recap_len]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "Model_prop.py": {
+        "tensorflow": {
+            "list_physical_devices_17": {
+                "variable": {
+                    "value": "gpu_devices",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "device_type": {
+                    "value": "GPU",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "set_memory_growth_18": {
+                "device": {
+                    "value": "gpu_devices[0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "enable": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "abs_51": {
+                "variable": {
+                    "value": "diff",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "y_true - y_pred",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "cast_53": {
+                "variable": {
+                    "value": "low",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "diff <= delta",
+                    "type": "Compare",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "cast_54": {
+                "variable": {
+                    "value": "high",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "diff > delta",
+                    "type": "Compare",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "multiply_57": {
+                "variable": {
+                    "value": "low_loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "low_loss",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "0.5 * tf.square(diff)",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.multiply(low_loss, low)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "low",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.cast(diff <= delta, dtype=tf.float32)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "multiply_60": {
+                "variable": {
+                    "value": "high_loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "high_loss",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "delta * (diff - 0.5 * delta)",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.multiply(high_loss, high)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "high",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.cast(diff > delta, dtype=tf.float32)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reduce_mean_63": {
+                "variable": {
+                    "value": "loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "loss",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "smooth_l1(score_true_ref, score_ref, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "high_loss + low_loss",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.reduce_mean(loss)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "square_56": {
+                "x": {
+                    "value": "diff",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.abs(y_true - y_pred)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "Model_prop_LTR.py": {
+        "tensorflow": {
+            "list_physical_devices_17": {
+                "variable": {
+                    "value": "gpu_devices",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "device_type": {
+                    "value": "GPU",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "set_memory_growth_18": {
+                "device": {
+                    "value": "gpu_devices[0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "enable": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_57": {
+                "input_tensor": {
+                    "value": "tf.reduce_sum(score_true_ref * tf.log(score_softmax))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_57": {
+                "input_tensor": {
+                    "value": "score_true_ref * tf.log(score_softmax)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "reshape_49": {
+                "tensor": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "d_1(batch_feat)",
+                            "Call"
+                        ],
+                        [
+                            "drop_1(x)",
+                            "Call"
+                        ],
+                        [
+                            "d_2(x)",
+                            "Call"
+                        ],
+                        [
+                            "drop_2(x)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "(1, -1)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "reshape_52": {
+                "tensor": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "d_1(batch_feat)",
+                            "Call"
+                        ],
+                        [
+                            "drop_1(x)",
+                            "Call"
+                        ],
+                        [
+                            "d_2(x)",
+                            "Call"
+                        ],
+                        [
+                            "drop_2(x)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "(1, -1)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "log_57": {
+                "x": {
+                    "value": "score_softmax",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Activation('softmax')(score_reshape)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "prop_feat.py": {
+        "tensorflow": {
+            "list_physical_devices_16": {
+                "variable": {
+                    "value": "gpu_devices",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "device_type": {
+                    "value": "GPU",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "set_memory_growth_17": {
+                "device": {
+                    "value": "gpu_devices[0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "enable": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

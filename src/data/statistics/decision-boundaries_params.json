@@ -1,0 +1,5159 @@
+{
+    "cifar10/cifar10_input.py": {
+        "tensorflow": {
+            "placeholder_95": {
+                "variable": {
+                    "value": "self.x_input_placeholder",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, 32, 32, 3]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "map_fn_96": {
+                "variable": {
+                    "value": "padded",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "fn": {
+                    "value": "lambda img: tf.image.resize_image_with_crop_or_pad(img, self.image_size + 4, self.image_size + 4)",
+                    "type": "Lambda",
+                    "possible_values": []
+                },
+                "elems": {
+                    "value": "self.x_input_placeholder",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "map_fn_99": {
+                "variable": {
+                    "value": "cropped",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "fn": {
+                    "value": "lambda img: tf.random_crop(img, [self.image_size, self.image_size, 3])",
+                    "type": "Lambda",
+                    "possible_values": []
+                },
+                "elems": {
+                    "value": "padded",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.map_fn(lambda img: tf.image.resize_image_with_crop_or_pad(img, self.image_size + 4, self.image_size + 4), self.x_input_placeholder)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "map_fn_102": {
+                "variable": {
+                    "value": "flipped",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "fn": {
+                    "value": "lambda img: tf.image.random_flip_left_right(img)",
+                    "type": "Lambda",
+                    "possible_values": []
+                },
+                "elems": {
+                    "value": "cropped",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.map_fn(lambda img: tf.random_crop(img, [self.image_size, self.image_size, 3]), padded)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "random_crop_99": {
+                "value": {
+                    "value": "img",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "size": {
+                    "value": "[self.image_size, self.image_size, 3]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "random_flip_left_right_102": {
+                "image": {
+                    "value": "img",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "cifar10/classify.py": {
+        "tensorflow": {}
+    },
+    "cifar10/classify_common.py": {
+        "tensorflow": {
+            "conv1d_5": {
+                "variable": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dist_sorted[:, :, None]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=8, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=16, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.contrib.layers.flatten(t)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([t, purity], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=32, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "8",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "8",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "4",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "tf.nn.relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "dropout_6": {
+                "variable": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dist_sorted[:, :, None]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=8, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=16, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.contrib.layers.flatten(t)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([t, purity], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=32, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "training": {
+                    "value": "training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "conv1d_7": {
+                "variable": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dist_sorted[:, :, None]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=8, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=16, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.contrib.layers.flatten(t)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([t, purity], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=32, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "16",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "8",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "4",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "tf.nn.relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "dropout_8": {
+                "variable": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dist_sorted[:, :, None]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=8, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=16, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.contrib.layers.flatten(t)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([t, purity], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=32, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "training": {
+                    "value": "training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "flatten_9": {
+                "variable": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "structure": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dist_sorted[:, :, None]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=8, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=16, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.contrib.layers.flatten(t)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([t, purity], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=32, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=2)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "concat_10": {
+                "variable": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[t, purity]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "dense_11": {
+                "variable": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dist_sorted[:, :, None]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=8, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=16, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.contrib.layers.flatten(t)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([t, purity], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=32, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "units": {
+                    "value": "32",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "tf.nn.relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "dropout_12": {
+                "variable": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dist_sorted[:, :, None]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=8, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=16, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.contrib.layers.flatten(t)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([t, purity], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=32, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "training": {
+                    "value": "training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "dense_13": {
+                "variable": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dist_sorted[:, :, None]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=8, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=16, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.contrib.layers.flatten(t)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([t, purity], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=32, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "units": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "cifar10/classify_test.py": {
+        "tensorflow": {}
+    },
+    "cifar10/eval_cg.py": {
+        "tensorflow": {}
+    },
+    "cifar10/gxr3.py": {
+        "tensorflow": {
+            "argmax_46": {
+                "variable": {
+                    "value": "m_pred",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "m_prob",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.softmax(m.pre_softmax)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Saver_48": {
+                "variable": {
+                    "value": "saver",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Session_49": {
+                "variable": {
+                    "value": "sess",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "softmax_42": {
+                "variable": {
+                    "value": "m_prob",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "m.pre_softmax",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "cifar10/l2_attack_ensemble.py": {
+        "tensorflow": {}
+    },
+    "cifar10/model.py": {
+        "tensorflow": {
+            "argmax_88": {
+                "variable": {
+                    "value": "self.predictions",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.pre_softmax",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "equal_89": {
+                "variable": {
+                    "value": "self.correct_prediction",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "self.predictions",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "self.y_input",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_90": {
+                "variable": {
+                    "value": "self.num_correct",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "tf.cast(self.correct_prediction, tf.int64)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_92": {
+                "variable": {
+                    "value": "self.accuracy",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "tf.cast(self.correct_prediction, tf.float32)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reshape_175": {
+                "variable": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self._conv('init_conv', input_standardized, 3, 3, 16, self._stride_arr(1))",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[0], filters[1], self._stride_arr(strides[0]), activate_before_residual[0])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[1], filters[1], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[1], filters[2], self._stride_arr(strides[1]), activate_before_residual[1])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[2], filters[2], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[2], filters[3], self._stride_arr(strides[2]), activate_before_residual[2])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[3], filters[3], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('final_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._global_avg_pool(x)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('init_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('init_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._conv('conv1', x, 3, in_filter, out_filter, stride)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('bn2', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._conv('conv2', x, 3, out_filter, out_filter, [1, 1, 1, 1])",
+                            "Call"
+                        ],
+                        [
+                            "x + orig_x",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.reshape(x, [tf.shape(x)[0], -1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[tf.shape(x)[0], -1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "get_variable_176": {
+                "variable": {
+                    "value": "w",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "DW",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[prod_non_batch_dimensions, out_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.uniform_unit_scaling_initializer(factor=1.0)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_179": {
+                "variable": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "biases",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[out_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.constant_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "placeholder_33": {
+                "variable": {
+                    "value": "self.x_input",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, 32, 32, 3]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "placeholder_37": {
+                "variable": {
+                    "value": "self.y_input",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.int64",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "None",
+                    "type": "NoneType",
+                    "possible_values": []
+                }
+            },
+            "map_fn_40": {
+                "variable": {
+                    "value": "input_standardized",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "fn": {
+                    "value": "lambda img: tf.image.per_image_standardization(img)",
+                    "type": "Lambda",
+                    "possible_values": []
+                },
+                "elems": {
+                    "value": "self.x_input",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "sparse_softmax_cross_entropy_with_logits_96": {
+                "variable": {
+                    "value": "self.y_xent",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "self.pre_softmax",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "labels": {
+                    "value": "self.y_input",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_98": {
+                "variable": {
+                    "value": "self.xent",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "self.y_xent",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "y_xent",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_99": {
+                "variable": {
+                    "value": "self.mean_xent",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "self.y_xent",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "debug_144": {
+                "msg": {
+                    "value": "image after unit %s",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "x.get_shape()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "trainable_variables_150": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "add_n_153": {
+                "inputs": {
+                    "value": "costs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                }
+            },
+            "get_variable_159": {
+                "variable": {
+                    "value": "kernel",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "DW",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[filter_size, filter_size, in_filters, out_filters]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.random_normal_initializer(stddev=np.sqrt(2.0 / n))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "where_167": {
+                "condition": {
+                    "value": "tf.less(x, 0.0)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "leakiness * x",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self._conv('init_conv', input_standardized, 3, 3, 16, self._stride_arr(1))",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[0], filters[1], self._stride_arr(strides[0]), activate_before_residual[0])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[1], filters[1], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[1], filters[2], self._stride_arr(strides[1]), activate_before_residual[1])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[2], filters[2], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[2], filters[3], self._stride_arr(strides[2]), activate_before_residual[2])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[3], filters[3], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('final_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._global_avg_pool(x)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('init_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('init_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._conv('conv1', x, 3, in_filter, out_filter, stride)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('bn2', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._conv('conv2', x, 3, out_filter, out_filter, [1, 1, 1, 1])",
+                            "Call"
+                        ],
+                        [
+                            "x + orig_x",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.reshape(x, [tf.shape(x)[0], -1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "name": {
+                    "value": "leaky_relu",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "xw_plus_b_181": {
+                "x": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self._conv('init_conv', input_standardized, 3, 3, 16, self._stride_arr(1))",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[0], filters[1], self._stride_arr(strides[0]), activate_before_residual[0])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[1], filters[1], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[1], filters[2], self._stride_arr(strides[1]), activate_before_residual[1])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[2], filters[2], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[2], filters[3], self._stride_arr(strides[2]), activate_before_residual[2])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[3], filters[3], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('final_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._global_avg_pool(x)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('init_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('init_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._conv('conv1', x, 3, in_filter, out_filter, stride)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('bn2', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._conv('conv2', x, 3, out_filter, out_filter, [1, 1, 1, 1])",
+                            "Call"
+                        ],
+                        [
+                            "x + orig_x",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.reshape(x, [tf.shape(x)[0], -1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "weights": {
+                    "value": "w",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('DW', [prod_non_batch_dimensions, out_dim], initializer=tf.uniform_unit_scaling_initializer(factor=1.0))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "biases": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('biases', [out_dim], initializer=tf.constant_initializer())",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reduce_mean_185": {
+                "input_tensor": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self._conv('init_conv', input_standardized, 3, 3, 16, self._stride_arr(1))",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[0], filters[1], self._stride_arr(strides[0]), activate_before_residual[0])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[1], filters[1], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[1], filters[2], self._stride_arr(strides[1]), activate_before_residual[1])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[2], filters[2], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[2], filters[3], self._stride_arr(strides[2]), activate_before_residual[2])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[3], filters[3], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('final_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._global_avg_pool(x)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('init_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('init_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._conv('conv1', x, 3, in_filter, out_filter, stride)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('bn2', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._conv('conv2', x, 3, out_filter, out_filter, [1, 1, 1, 1])",
+                            "Call"
+                        ],
+                        [
+                            "x + orig_x",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.reshape(x, [tf.shape(x)[0], -1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "[1, 2]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_31": {
+                "name_or_scope": {
+                    "value": "input",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_59": {
+                "name_or_scope": {
+                    "value": "unit_1_0",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_66": {
+                "name_or_scope": {
+                    "value": "unit_2_0",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_73": {
+                "name_or_scope": {
+                    "value": "unit_3_0",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_80": {
+                "name_or_scope": {
+                    "value": "unit_last",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_85": {
+                "name_or_scope": {
+                    "value": "logit",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "cast_91": {
+                "x": {
+                    "value": "self.correct_prediction",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.int64",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "cast_93": {
+                "x": {
+                    "value": "self.correct_prediction",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_95": {
+                "name_or_scope": {
+                    "value": "costs",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "name_scope_104": {
+                "name": {
+                    "value": "name",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_128": {
+                "name_or_scope": {
+                    "value": "sub1",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_131": {
+                "name_or_scope": {
+                    "value": "sub2",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_136": {
+                "name_or_scope": {
+                    "value": "sub_add",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "avg_pool_138": {
+                "variable": {
+                    "value": "orig_x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "orig_x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "x",
+                            "Name"
+                        ],
+                        [
+                            "x",
+                            "Name"
+                        ],
+                        [
+                            "tf.nn.avg_pool(orig_x, stride, stride, 'VALID')",
+                            "Call"
+                        ],
+                        [
+                            "tf.pad(orig_x, [[0, 0], [0, 0], [0, 0], [(out_filter - in_filter) // 2, (out_filter - in_filter) // 2]])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "ksize": {
+                    "value": "stride",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "stride",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "VALID",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "pad_139": {
+                "variable": {
+                    "value": "orig_x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "orig_x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "x",
+                            "Name"
+                        ],
+                        [
+                            "x",
+                            "Name"
+                        ],
+                        [
+                            "tf.nn.avg_pool(orig_x, stride, stride, 'VALID')",
+                            "Call"
+                        ],
+                        [
+                            "tf.pad(orig_x, [[0, 0], [0, 0], [0, 0], [(out_filter - in_filter) // 2, (out_filter - in_filter) // 2]])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "paddings": {
+                    "value": "[[0, 0], [0, 0], [0, 0], [(out_filter - in_filter) // 2, (out_filter - in_filter) // 2]]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_157": {
+                "name_or_scope": {
+                    "value": "name",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "conv2d_163": {
+                "input": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self._conv('init_conv', input_standardized, 3, 3, 16, self._stride_arr(1))",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[0], filters[1], self._stride_arr(strides[0]), activate_before_residual[0])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[1], filters[1], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[1], filters[2], self._stride_arr(strides[1]), activate_before_residual[1])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[2], filters[2], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[2], filters[3], self._stride_arr(strides[2]), activate_before_residual[2])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[3], filters[3], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('final_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._global_avg_pool(x)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('init_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('init_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._conv('conv1', x, 3, in_filter, out_filter, stride)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('bn2', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._conv('conv2', x, 3, out_filter, out_filter, [1, 1, 1, 1])",
+                            "Call"
+                        ],
+                        [
+                            "x + orig_x",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.reshape(x, [tf.shape(x)[0], -1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "kernel",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('DW', [filter_size, filter_size, in_filters, out_filters], tf.float32, initializer=tf.random_normal_initializer(stddev=np.sqrt(2.0 / n)))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "strides": {
+                    "value": "strides",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[1, 2, 2]",
+                            "List"
+                        ]
+                    ]
+                },
+                "padding": {
+                    "value": "SAME",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "less_167": {
+                "x": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self._conv('init_conv', input_standardized, 3, 3, 16, self._stride_arr(1))",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[0], filters[1], self._stride_arr(strides[0]), activate_before_residual[0])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[1], filters[1], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[1], filters[2], self._stride_arr(strides[1]), activate_before_residual[1])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[2], filters[2], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[2], filters[3], self._stride_arr(strides[2]), activate_before_residual[2])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[3], filters[3], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('final_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._global_avg_pool(x)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('init_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('init_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._conv('conv1', x, 3, in_filter, out_filter, stride)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('bn2', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._conv('conv2', x, 3, out_filter, out_filter, [1, 1, 1, 1])",
+                            "Call"
+                        ],
+                        [
+                            "x + orig_x",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.reshape(x, [tf.shape(x)[0], -1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_63": {
+                "name_or_scope": {
+                    "value": "'unit_1_%d' % i",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_70": {
+                "name_or_scope": {
+                    "value": "'unit_2_%d' % i",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_77": {
+                "name_or_scope": {
+                    "value": "'unit_3_%d' % i",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_118": {
+                "name_or_scope": {
+                    "value": "shared_activation",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_123": {
+                "name_or_scope": {
+                    "value": "residual_only_activation",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "uniform_unit_scaling_initializer_178": {
+                "factor": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "constant_initializer_180": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "per_image_standardization_40": {
+                "image": {
+                    "value": "img",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "l2_loss_152": {
+                "t": {
+                    "value": "var",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.trainable_variables()",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "random_normal_initializer_161": {
+                "stddev": {
+                    "value": "np.sqrt(2.0 / n)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "shape_175": {
+                "input": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self._conv('init_conv', input_standardized, 3, 3, 16, self._stride_arr(1))",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[0], filters[1], self._stride_arr(strides[0]), activate_before_residual[0])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[1], filters[1], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[1], filters[2], self._stride_arr(strides[1]), activate_before_residual[1])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[2], filters[2], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[2], filters[3], self._stride_arr(strides[2]), activate_before_residual[2])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[3], filters[3], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('final_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._global_avg_pool(x)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('init_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('init_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._conv('conv1', x, 3, in_filter, out_filter, stride)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('bn2', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._conv('conv2', x, 3, out_filter, out_filter, [1, 1, 1, 1])",
+                            "Call"
+                        ],
+                        [
+                            "x + orig_x",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.reshape(x, [tf.shape(x)[0], -1])",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "cifar10/model_2.py": {
+        "tensorflow": {
+            "argmax_86": {
+                "variable": {
+                    "value": "self.predictions",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.pre_softmax",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "equal_87": {
+                "variable": {
+                    "value": "self.correct_prediction",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "self.predictions",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "self.y_input",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_88": {
+                "variable": {
+                    "value": "self.num_correct",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "tf.cast(self.correct_prediction, tf.int64)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_90": {
+                "variable": {
+                    "value": "self.accuracy",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "tf.cast(self.correct_prediction, tf.float32)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reshape_173": {
+                "variable": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self._conv('init_conv', input_standardized, 3, 3, 16, self._stride_arr(1))",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[0], filters[1], self._stride_arr(strides[0]), activate_before_residual[0])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[1], filters[1], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[1], filters[2], self._stride_arr(strides[1]), activate_before_residual[1])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[2], filters[2], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[2], filters[3], self._stride_arr(strides[2]), activate_before_residual[2])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[3], filters[3], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('final_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._global_avg_pool(x)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('init_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('init_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._conv('conv1', x, 3, in_filter, out_filter, stride)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('bn2', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._conv('conv2', x, 3, out_filter, out_filter, [1, 1, 1, 1])",
+                            "Call"
+                        ],
+                        [
+                            "x + orig_x",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.reshape(x, [tf.shape(x)[0], -1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[tf.shape(x)[0], -1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "get_variable_174": {
+                "variable": {
+                    "value": "w",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "DW",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[prod_non_batch_dimensions, out_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.uniform_unit_scaling_initializer(factor=1.0)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_177": {
+                "variable": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "biases",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[out_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.constant_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "placeholder_35": {
+                "variable": {
+                    "value": "self.y_input",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.int64",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "None",
+                    "type": "NoneType",
+                    "possible_values": []
+                }
+            },
+            "map_fn_38": {
+                "variable": {
+                    "value": "input_standardized",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "fn": {
+                    "value": "lambda img: tf.image.per_image_standardization(img)",
+                    "type": "Lambda",
+                    "possible_values": []
+                },
+                "elems": {
+                    "value": "self.x_input",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "sparse_softmax_cross_entropy_with_logits_94": {
+                "variable": {
+                    "value": "self.y_xent",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "self.pre_softmax",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "labels": {
+                    "value": "self.y_input",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_96": {
+                "variable": {
+                    "value": "self.xent",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "self.y_xent",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "y_xent",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_97": {
+                "variable": {
+                    "value": "self.mean_xent",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "self.y_xent",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "debug_142": {
+                "msg": {
+                    "value": "image after unit %s",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "x.get_shape()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "trainable_variables_148": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "add_n_151": {
+                "inputs": {
+                    "value": "costs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                }
+            },
+            "get_variable_157": {
+                "variable": {
+                    "value": "kernel",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "DW",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[filter_size, filter_size, in_filters, out_filters]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.random_normal_initializer(stddev=np.sqrt(2.0 / n))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "where_165": {
+                "condition": {
+                    "value": "tf.less(x, 0.0)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "leakiness * x",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self._conv('init_conv', input_standardized, 3, 3, 16, self._stride_arr(1))",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[0], filters[1], self._stride_arr(strides[0]), activate_before_residual[0])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[1], filters[1], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[1], filters[2], self._stride_arr(strides[1]), activate_before_residual[1])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[2], filters[2], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[2], filters[3], self._stride_arr(strides[2]), activate_before_residual[2])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[3], filters[3], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('final_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._global_avg_pool(x)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('init_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('init_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._conv('conv1', x, 3, in_filter, out_filter, stride)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('bn2', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._conv('conv2', x, 3, out_filter, out_filter, [1, 1, 1, 1])",
+                            "Call"
+                        ],
+                        [
+                            "x + orig_x",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.reshape(x, [tf.shape(x)[0], -1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "name": {
+                    "value": "leaky_relu",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "xw_plus_b_179": {
+                "x": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self._conv('init_conv', input_standardized, 3, 3, 16, self._stride_arr(1))",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[0], filters[1], self._stride_arr(strides[0]), activate_before_residual[0])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[1], filters[1], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[1], filters[2], self._stride_arr(strides[1]), activate_before_residual[1])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[2], filters[2], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[2], filters[3], self._stride_arr(strides[2]), activate_before_residual[2])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[3], filters[3], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('final_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._global_avg_pool(x)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('init_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('init_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._conv('conv1', x, 3, in_filter, out_filter, stride)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('bn2', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._conv('conv2', x, 3, out_filter, out_filter, [1, 1, 1, 1])",
+                            "Call"
+                        ],
+                        [
+                            "x + orig_x",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.reshape(x, [tf.shape(x)[0], -1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "weights": {
+                    "value": "w",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('DW', [prod_non_batch_dimensions, out_dim], initializer=tf.uniform_unit_scaling_initializer(factor=1.0))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "biases": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('biases', [out_dim], initializer=tf.constant_initializer())",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reduce_mean_183": {
+                "input_tensor": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self._conv('init_conv', input_standardized, 3, 3, 16, self._stride_arr(1))",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[0], filters[1], self._stride_arr(strides[0]), activate_before_residual[0])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[1], filters[1], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[1], filters[2], self._stride_arr(strides[1]), activate_before_residual[1])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[2], filters[2], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[2], filters[3], self._stride_arr(strides[2]), activate_before_residual[2])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[3], filters[3], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('final_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._global_avg_pool(x)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('init_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('init_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._conv('conv1', x, 3, in_filter, out_filter, stride)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('bn2', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._conv('conv2', x, 3, out_filter, out_filter, [1, 1, 1, 1])",
+                            "Call"
+                        ],
+                        [
+                            "x + orig_x",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.reshape(x, [tf.shape(x)[0], -1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "[1, 2]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_33": {
+                "name_or_scope": {
+                    "value": "input",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_57": {
+                "name_or_scope": {
+                    "value": "unit_1_0",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_64": {
+                "name_or_scope": {
+                    "value": "unit_2_0",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_71": {
+                "name_or_scope": {
+                    "value": "unit_3_0",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_78": {
+                "name_or_scope": {
+                    "value": "unit_last",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_83": {
+                "name_or_scope": {
+                    "value": "logit",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "cast_89": {
+                "x": {
+                    "value": "self.correct_prediction",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.int64",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "cast_91": {
+                "x": {
+                    "value": "self.correct_prediction",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_93": {
+                "name_or_scope": {
+                    "value": "costs",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "name_scope_102": {
+                "name": {
+                    "value": "name",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_126": {
+                "name_or_scope": {
+                    "value": "sub1",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_129": {
+                "name_or_scope": {
+                    "value": "sub2",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_134": {
+                "name_or_scope": {
+                    "value": "sub_add",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "avg_pool_136": {
+                "variable": {
+                    "value": "orig_x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "orig_x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "x",
+                            "Name"
+                        ],
+                        [
+                            "x",
+                            "Name"
+                        ],
+                        [
+                            "tf.nn.avg_pool(orig_x, stride, stride, 'VALID')",
+                            "Call"
+                        ],
+                        [
+                            "tf.pad(orig_x, [[0, 0], [0, 0], [0, 0], [(out_filter - in_filter) // 2, (out_filter - in_filter) // 2]])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "ksize": {
+                    "value": "stride",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "stride",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "VALID",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "pad_137": {
+                "variable": {
+                    "value": "orig_x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "orig_x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "x",
+                            "Name"
+                        ],
+                        [
+                            "x",
+                            "Name"
+                        ],
+                        [
+                            "tf.nn.avg_pool(orig_x, stride, stride, 'VALID')",
+                            "Call"
+                        ],
+                        [
+                            "tf.pad(orig_x, [[0, 0], [0, 0], [0, 0], [(out_filter - in_filter) // 2, (out_filter - in_filter) // 2]])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "paddings": {
+                    "value": "[[0, 0], [0, 0], [0, 0], [(out_filter - in_filter) // 2, (out_filter - in_filter) // 2]]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_155": {
+                "name_or_scope": {
+                    "value": "name",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "conv2d_161": {
+                "input": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self._conv('init_conv', input_standardized, 3, 3, 16, self._stride_arr(1))",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[0], filters[1], self._stride_arr(strides[0]), activate_before_residual[0])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[1], filters[1], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[1], filters[2], self._stride_arr(strides[1]), activate_before_residual[1])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[2], filters[2], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[2], filters[3], self._stride_arr(strides[2]), activate_before_residual[2])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[3], filters[3], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('final_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._global_avg_pool(x)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('init_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('init_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._conv('conv1', x, 3, in_filter, out_filter, stride)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('bn2', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._conv('conv2', x, 3, out_filter, out_filter, [1, 1, 1, 1])",
+                            "Call"
+                        ],
+                        [
+                            "x + orig_x",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.reshape(x, [tf.shape(x)[0], -1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "kernel",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('DW', [filter_size, filter_size, in_filters, out_filters], tf.float32, initializer=tf.random_normal_initializer(stddev=np.sqrt(2.0 / n)))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "strides": {
+                    "value": "strides",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[1, 2, 2]",
+                            "List"
+                        ]
+                    ]
+                },
+                "padding": {
+                    "value": "SAME",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "less_165": {
+                "x": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self._conv('init_conv', input_standardized, 3, 3, 16, self._stride_arr(1))",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[0], filters[1], self._stride_arr(strides[0]), activate_before_residual[0])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[1], filters[1], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[1], filters[2], self._stride_arr(strides[1]), activate_before_residual[1])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[2], filters[2], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[2], filters[3], self._stride_arr(strides[2]), activate_before_residual[2])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[3], filters[3], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('final_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._global_avg_pool(x)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('init_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('init_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._conv('conv1', x, 3, in_filter, out_filter, stride)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('bn2', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._conv('conv2', x, 3, out_filter, out_filter, [1, 1, 1, 1])",
+                            "Call"
+                        ],
+                        [
+                            "x + orig_x",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.reshape(x, [tf.shape(x)[0], -1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_61": {
+                "name_or_scope": {
+                    "value": "'unit_1_%d' % i",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_68": {
+                "name_or_scope": {
+                    "value": "'unit_2_%d' % i",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_75": {
+                "name_or_scope": {
+                    "value": "'unit_3_%d' % i",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_116": {
+                "name_or_scope": {
+                    "value": "shared_activation",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_121": {
+                "name_or_scope": {
+                    "value": "residual_only_activation",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "uniform_unit_scaling_initializer_176": {
+                "factor": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "constant_initializer_178": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "per_image_standardization_38": {
+                "image": {
+                    "value": "img",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "l2_loss_150": {
+                "t": {
+                    "value": "var",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.trainable_variables()",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "random_normal_initializer_159": {
+                "stddev": {
+                    "value": "np.sqrt(2.0 / n)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "shape_173": {
+                "input": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self._conv('init_conv', input_standardized, 3, 3, 16, self._stride_arr(1))",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[0], filters[1], self._stride_arr(strides[0]), activate_before_residual[0])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[1], filters[1], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[1], filters[2], self._stride_arr(strides[1]), activate_before_residual[1])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[2], filters[2], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[2], filters[3], self._stride_arr(strides[2]), activate_before_residual[2])",
+                            "Call"
+                        ],
+                        [
+                            "res_func(x, filters[3], filters[3], self._stride_arr(1), False)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('final_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._global_avg_pool(x)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('init_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('init_bn', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._conv('conv1', x, 3, in_filter, out_filter, stride)",
+                            "Call"
+                        ],
+                        [
+                            "self._batch_norm('bn2', x)",
+                            "Call"
+                        ],
+                        [
+                            "self._relu(x, 0.1)",
+                            "Call"
+                        ],
+                        [
+                            "self._conv('conv2', x, 3, out_filter, out_filter, [1, 1, 1, 1])",
+                            "Call"
+                        ],
+                        [
+                            "x + orig_x",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.reshape(x, [tf.shape(x)[0], -1])",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "cifar10/optens_attack.py": {
+        "tensorflow": {
+            "Session_29": {
+                "variable": {
+                    "value": "sess",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Saver_60": {
+                "variable": {
+                    "value": "saver",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "var_list": {
+                    "value": "tf.global_variables()[model_var_slice]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "global_variables_60": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "global_variables_41": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "global_variables_44": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "cifar10/save_correctness.py": {
+        "tensorflow": {}
+    },
+    "cifar10/save_originals.py": {
+        "tensorflow": {}
+    },
+    "imagenet/attack_v2.py": {
+        "tensorflow": {
+            "placeholder_60": {
+                "variable": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, m.image_size, m.image_size, m.num_channels]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "placeholder_61": {
+                "variable": {
+                    "value": "y",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.uint16",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "sparse_softmax_cross_entropy_with_logits_63": {
+                "variable": {
+                    "value": "xent",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "logits",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "m.predict(x)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "labels": {
+                    "value": "tf.cast(y, tf.int32)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_64": {
+                "variable": {
+                    "value": "xent_tot",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "xent",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=tf.cast(y, tf.int32))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "gradients_65": {
+                "variable": {
+                    "value": "(grad,)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "ys": {
+                    "value": "xent_tot",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reduce_sum(xent)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "xs": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.placeholder(shape=[None, m.image_size, m.image_size, m.num_channels], dtype=tf.float32)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "clip_by_value_66": {
+                "variable": {
+                    "value": "x_adv",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "t": {
+                    "value": "x + epsilon * tf.sign(grad)",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "clip_value_min": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "clip_value_max": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "cast_63": {
+                "x": {
+                    "value": "y",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.placeholder(shape=[None], dtype=tf.uint16)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "tf.int32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "sign_66": {
+                "x": {
+                    "value": "grad",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "imagenet/classify.py": {
+        "tensorflow": {}
+    },
+    "imagenet/classify_common.py": {
+        "tensorflow": {
+            "conv1d_5": {
+                "variable": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dist_sorted[:, :, None]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=8, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=16, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.contrib.layers.flatten(t)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([t, purity], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=32, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "8",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "8",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "4",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "tf.nn.relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "dropout_6": {
+                "variable": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dist_sorted[:, :, None]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=8, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=16, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.contrib.layers.flatten(t)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([t, purity], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=32, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "training": {
+                    "value": "training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "conv1d_7": {
+                "variable": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dist_sorted[:, :, None]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=8, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=16, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.contrib.layers.flatten(t)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([t, purity], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=32, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "16",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "8",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "4",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "tf.nn.relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "dropout_8": {
+                "variable": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dist_sorted[:, :, None]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=8, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=16, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.contrib.layers.flatten(t)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([t, purity], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=32, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "training": {
+                    "value": "training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "flatten_9": {
+                "variable": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "structure": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dist_sorted[:, :, None]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=8, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=16, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.contrib.layers.flatten(t)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([t, purity], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=32, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=2)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "concat_10": {
+                "variable": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[t, purity]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "dense_11": {
+                "variable": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dist_sorted[:, :, None]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=8, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=16, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.contrib.layers.flatten(t)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([t, purity], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=32, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "units": {
+                    "value": "32",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "tf.nn.relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "dropout_12": {
+                "variable": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dist_sorted[:, :, None]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=8, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=16, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.contrib.layers.flatten(t)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([t, purity], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=32, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "training": {
+                    "value": "training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "dense_13": {
+                "variable": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dist_sorted[:, :, None]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=8, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=16, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.contrib.layers.flatten(t)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([t, purity], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=32, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "units": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "imagenet/classify_test.py": {
+        "tensorflow": {}
+    },
+    "imagenet/eval_cg.py": {
+        "tensorflow": {}
+    },
+    "imagenet/gxr3.py": {
+        "tensorflow": {
+            "placeholder_31": {
+                "variable": {
+                    "value": "m_x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "(None, ih, iw, ic)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "argmax_33": {
+                "variable": {
+                    "value": "m_pred",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "m_pre_softmax",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "m.predict(m_x)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "imagenet/l2_attack_ensemble.py": {
+        "tensorflow": {}
+    },
+    "imagenet/save_correctness.py": {
+        "tensorflow": {}
+    },
+    "imagenet/stuff_v2.py": {
+        "tensorflow": {}
+    },
+    "mnist/classify.py": {
+        "tensorflow": {}
+    },
+    "mnist/classify_common.py": {
+        "tensorflow": {
+            "conv1d_5": {
+                "variable": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dist_sorted[:, :, None]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=8, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=16, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.contrib.layers.flatten(t)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([t, purity], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=32, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "8",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "8",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "4",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "tf.nn.relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "dropout_6": {
+                "variable": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dist_sorted[:, :, None]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=8, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=16, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.contrib.layers.flatten(t)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([t, purity], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=32, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "training": {
+                    "value": "training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "conv1d_7": {
+                "variable": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dist_sorted[:, :, None]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=8, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=16, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.contrib.layers.flatten(t)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([t, purity], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=32, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "16",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "8",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "4",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "tf.nn.relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "dropout_8": {
+                "variable": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dist_sorted[:, :, None]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=8, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=16, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.contrib.layers.flatten(t)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([t, purity], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=32, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "training": {
+                    "value": "training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "flatten_9": {
+                "variable": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "structure": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dist_sorted[:, :, None]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=8, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=16, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.contrib.layers.flatten(t)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([t, purity], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=32, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=2)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "concat_10": {
+                "variable": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[t, purity]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "dense_11": {
+                "variable": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dist_sorted[:, :, None]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=8, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=16, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.contrib.layers.flatten(t)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([t, purity], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=32, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "units": {
+                    "value": "32",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "tf.nn.relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "dropout_12": {
+                "variable": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dist_sorted[:, :, None]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=8, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=16, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.contrib.layers.flatten(t)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([t, purity], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=32, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "training": {
+                    "value": "training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "dense_13": {
+                "variable": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dist_sorted[:, :, None]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=8, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.conv1d(t, filters=16, kernel_size=8, strides=4, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.contrib.layers.flatten(t)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([t, purity], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=32, activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dropout(t, rate=0.5, training=training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.dense(t, units=2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "units": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "mnist/classify_test.py": {
+        "tensorflow": {}
+    },
+    "mnist/eval_cg.py": {
+        "tensorflow": {}
+    },
+    "mnist/gxr3.py": {
+        "tensorflow": {
+            "argmax_46": {
+                "variable": {
+                    "value": "m_pred",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "m_prob",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.softmax(m.pre_softmax)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Saver_48": {
+                "variable": {
+                    "value": "saver",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Session_49": {
+                "variable": {
+                    "value": "sess",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "softmax_42": {
+                "variable": {
+                    "value": "m_prob",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "m.pre_softmax",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "mnist/l2_attack_ensemble.py": {
+        "tensorflow": {}
+    },
+    "mnist/model.py": {
+        "tensorflow": {
+            "placeholder_13": {
+                "variable": {
+                    "value": "self.x_input",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, 784]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "placeholder_14": {
+                "variable": {
+                    "value": "self.y_input",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.int64",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "reshape_16": {
+                "variable": {
+                    "value": "self.x_image",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "self.x_input",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[-1, 28, 28, 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "relu_22": {
+                "variable": {
+                    "value": "h_conv1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "features": {
+                    "value": "self._conv2d(self.x_image, W_conv1) + b_conv1",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "relu_29": {
+                "variable": {
+                    "value": "h_conv2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "features": {
+                    "value": "self._conv2d(h_pool1, W_conv2) + b_conv2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "reshape_36": {
+                "variable": {
+                    "value": "h_pool2_flat",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "h_pool2",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self._max_pool_2x2(h_conv2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, 7 * 7 * 64]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "relu_37": {
+                "variable": {
+                    "value": "h_fc1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "features": {
+                    "value": "tf.matmul(h_pool2_flat, W_fc1) + b_fc1",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sparse_softmax_cross_entropy_with_logits_45": {
+                "variable": {
+                    "value": "y_xent",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "labels": {
+                    "value": "self.y_input",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "self.pre_softmax",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_48": {
+                "variable": {
+                    "value": "self.xent",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "y_xent",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.sparse_softmax_cross_entropy_with_logits(labels=self.y_input, logits=self.pre_softmax)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "argmax_50": {
+                "variable": {
+                    "value": "self.y_pred",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.pre_softmax",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "equal_52": {
+                "variable": {
+                    "value": "correct_prediction",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "self.y_pred",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "self.y_input",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_54": {
+                "variable": {
+                    "value": "self.num_correct",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "tf.cast(correct_prediction, tf.int64)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_55": {
+                "variable": {
+                    "value": "self.accuracy",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "tf.cast(correct_prediction, tf.float32)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "truncated_normal_59": {
+                "variable": {
+                    "value": "initial",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "shape",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "stddev": {
+                    "value": "0.1",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "constant_64": {
+                "variable": {
+                    "value": "initial",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "0.1",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "shape",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Variable_60": {
+                "initial_value": {
+                    "value": "initial",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.truncated_normal(shape, stddev=0.1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.constant(0.1, shape=shape)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Variable_65": {
+                "initial_value": {
+                    "value": "initial",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.truncated_normal(shape, stddev=0.1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.constant(0.1, shape=shape)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "conv2d_69": {
+                "input": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "filters": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "[1, 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "SAME",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "max_pool_73": {
+                "input": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "ksize": {
+                    "value": "[1, 2, 2, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "[1, 2, 2, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "SAME",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "matmul_43": {
+                "a": {
+                    "value": "h_fc1",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "W_fc2",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self._weight_variable([1024, 10])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "cast_54": {
+                "x": {
+                    "value": "correct_prediction",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.equal(self.y_pred, self.y_input)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "tf.int64",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "cast_55": {
+                "x": {
+                    "value": "correct_prediction",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.equal(self.y_pred, self.y_input)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "matmul_37": {
+                "a": {
+                    "value": "h_pool2_flat",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(h_pool2, [-1, 7 * 7 * 64])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "W_fc1",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self._weight_variable([7 * 7 * 64, 1024])",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "mnist/model_alt.py": {
+        "tensorflow": {
+            "relu_27": {
+                "variable": {
+                    "value": "h_conv1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "features": {
+                    "value": "self._conv2d(x_image, self.W_conv1) + self.b_conv1",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "relu_31": {
+                "variable": {
+                    "value": "h_conv2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "features": {
+                    "value": "self._conv2d(h_pool1, self.W_conv2) + self.b_conv2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "reshape_35": {
+                "variable": {
+                    "value": "h_pool2_flat",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "h_pool2",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self._max_pool_2x2(h_conv2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, 7 * 7 * 64]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "relu_36": {
+                "variable": {
+                    "value": "h_fc1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "features": {
+                    "value": "tf.matmul(h_pool2_flat, self.W_fc1) + self.b_fc1",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "truncated_normal_44": {
+                "variable": {
+                    "value": "initial",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "shape",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "stddev": {
+                    "value": "0.1",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "constant_49": {
+                "variable": {
+                    "value": "initial",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "0.1",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "shape",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Variable_45": {
+                "initial_value": {
+                    "value": "initial",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.truncated_normal(shape, stddev=0.1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.constant(0.1, shape=shape)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Variable_50": {
+                "initial_value": {
+                    "value": "initial",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.truncated_normal(shape, stddev=0.1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.constant(0.1, shape=shape)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "conv2d_54": {
+                "input": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "filters": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "[1, 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "SAME",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "max_pool_58": {
+                "input": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "ksize": {
+                    "value": "[1, 2, 2, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "[1, 2, 2, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "SAME",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "matmul_39": {
+                "a": {
+                    "value": "h_fc1",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.relu(tf.matmul(h_pool2_flat, self.W_fc1) + self.b_fc1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "self.W_fc2",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "matmul_36": {
+                "a": {
+                    "value": "h_pool2_flat",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(h_pool2, [-1, 7 * 7 * 64])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "self.W_fc1",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "mnist/optens_attack.py": {
+        "tensorflow": {
+            "Session_39": {
+                "variable": {
+                    "value": "sess",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Saver_43": {
+                "variable": {
+                    "value": "saver",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "mnist/save_correctness.py": {
+        "tensorflow": {}
+    },
+    "mnist/save_orig.py": {
+        "tensorflow": {}
+    }
+}

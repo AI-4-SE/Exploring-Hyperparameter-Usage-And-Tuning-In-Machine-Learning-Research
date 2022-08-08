@@ -1,0 +1,267 @@
+{
+    "DELIMIT/SphericalConvolution.py": {
+        "torch": {
+            "Conv2d_91": {
+                "variable": {
+                    "value": "self.sconv",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_channels": {
+                    "value": "self.shells_in",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "self.shells_out",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "(1, self.kernel_sum)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Parameter_132": {
+                "variable": {
+                    "value": "self.weight",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.randn((shells_out, shells_in, int(self.sh_order / 2) + 1))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Parameter_133": {
+                "variable": {
+                    "value": "self.bias",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.zeros((shells_out, 1))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "zeros_135": {
+                "variable": {
+                    "value": "sh_indices",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "self.ncoeff",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Parameter_143": {
+                "variable": {
+                    "value": "self.sh_indices",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "sh_indices.long()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "requires_grad": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "index_select_151": {
+                "variable": {
+                    "value": "kernel",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.weight",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "index": {
+                    "value": "self.sh_indices",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "mean_153": {
+                "variable": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.mul(x.unsqueeze(1), kernel)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "randn_132": {
+                "*size": {
+                    "value": "(shells_out, shells_in, int(self.sh_order / 2) + 1)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "zeros_133": {
+                "*size": {
+                    "value": "(shells_out, 1)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "mul_153": {
+                "input": {
+                    "value": "x.unsqueeze(1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "kernel",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.index_select(self.weight, -1, self.sh_indices)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "DELIMIT/SphericalHarmonicTransformation.py": {
+        "torch": {
+            "Parameter_50": {
+                "variable": {
+                    "value": "self.Signal2SHMat",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.from_numpy(np.matmul(b_inv, b.transpose()).transpose()).float()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "requires_grad": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Parameter_99": {
+                "variable": {
+                    "value": "self.SH2SignalMat",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.from_numpy(SH2SignalMat).float()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "requires_grad": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "from_numpy_50": {
+                "ndarray": {
+                    "value": "np.matmul(b_inv, b.transpose()).transpose()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "from_numpy_99": {
+                "ndarray": {
+                    "value": "SH2SignalMat",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "np.zeros((self.num_coefficients, self.num_gradients))",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "DELIMIT/loss.py": {
+        "torch": {
+            "mean_38": {
+                "variable": {
+                    "value": "mse",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "(tmp_output - tmp_label) ** 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "masked_select_38": {
+                "variable": {
+                    "value": "mse",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "mask.byte()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "mean_40": {
+                "variable": {
+                    "value": "mse",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "mse",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.mean((tmp_output - tmp_label) ** 2, 1).masked_select(mask.byte())",
+                            "Call"
+                        ],
+                        [
+                            "torch.mean(mse)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    }
+}

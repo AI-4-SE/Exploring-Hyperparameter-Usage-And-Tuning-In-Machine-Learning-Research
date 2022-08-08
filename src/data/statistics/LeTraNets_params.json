@@ -1,0 +1,2645 @@
+{
+    "src/baggedcnn.py": {
+        "tensorflow": {
+            "placeholder_19": {
+                "variable": {
+                    "value": "self.inputs",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.int32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, sentence_len, segment_len]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "placeholder_20": {
+                "variable": {
+                    "value": "self.sen_length",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, sentence_len]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "placeholder_21": {
+                "variable": {
+                    "value": "self.sentiment",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.int32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, num_classes]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "placeholder_22": {
+                "variable": {
+                    "value": "self.keep_prob",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "get_variable_24": {
+                "variable": {
+                    "value": "self.embedding",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "embedding",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[vocab_size, embed_size]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "xav_init()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "transpose_26": {
+                "variable": {
+                    "value": "inputs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "self.inputs",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "perm": {
+                    "value": "[1, 0, 2]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "map_fn_27": {
+                "variable": {
+                    "value": "self.segments",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "fn": {
+                    "value": "lambda x: self.cnn(x, self.embedding, segment_len, 'cnn')",
+                    "type": "Lambda",
+                    "possible_values": []
+                },
+                "elems": {
+                    "value": "inputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.transpose(self.inputs, perm=[1, 0, 2])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "transpose_28": {
+                "variable": {
+                    "value": "self.segments",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "self.segments",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "perm": {
+                    "value": "[1, 0, 2]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "get_variable_31": {
+                "variable": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "W",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[embed_size, num_classes]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "xav_init()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Variable_32": {
+                "variable": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.constant(0.0, shape=[num_classes])",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "xw_plus_b_33": {
+                "variable": {
+                    "value": "self.scores",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "self.document",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "weights": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('W', [embed_size, num_classes], initializer=xav_init())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('W', filter_shape, initializer=xav_init())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "biases": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.constant(0.0, shape=[num_classes]))",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b', [num_filters[i]], initializer=tf.constant_initializer(0.1))",
+                            "Call"
+                        ],
+                        [
+                            "tf.Variable(tf.zeros([self.embed_size]))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "softmax_cross_entropy_with_logits_35": {
+                "variable": {
+                    "value": "losses",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "self.scores",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "labels": {
+                    "value": "self.sentiment",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_36": {
+                "variable": {
+                    "value": "self.loss",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "losses",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.softmax_cross_entropy_with_logits(logits=self.scores, labels=self.sentiment)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "argmax_39": {
+                "variable": {
+                    "value": "self.predicted",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.scores",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "argmax_40": {
+                "variable": {
+                    "value": "self.actual",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.sentiment",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cast_42": {
+                "variable": {
+                    "value": "correct",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.equal(self.predicted, self.actual)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "float",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_43": {
+                "variable": {
+                    "value": "self.count",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "correct",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.cast(tf.equal(self.predicted, self.actual), 'float')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reduce_sum_44": {
+                "variable": {
+                    "value": "self.se",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "tf.square(self.predicted - self.actual)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Saver_46": {
+                "variable": {
+                    "value": "self.saver",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "var_list": {
+                    "value": "tf.global_variables()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "AdadeltaOptimizer_49": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "learning_rate": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "rho": {
+                    "value": "0.95",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "epsilon": {
+                    "value": "1e-06",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "get_collection_50": {
+                "variable": {
+                    "value": "vars",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "key": {
+                    "value": "tf.GraphKeys.TRAINABLE_VARIABLES",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "scope": {
+                    "value": "scope",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "embedding_lookup_63": {
+                "variable": {
+                    "value": "embedding",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "embed",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "ids": {
+                    "value": "inputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.transpose(self.inputs, perm=[1, 0, 2])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "expand_dims_64": {
+                "variable": {
+                    "value": "embedding",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "embedding",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.embedding_lookup(embed, inputs)",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(embedding, -1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "concat_90": {
+                "variable": {
+                    "value": "outputs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "outputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "tf.concat(outputs, axis=3)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(outputs, [-1, self.embed_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(outputs, self.keep_prob)",
+                            "Call"
+                        ],
+                        [
+                            "session.run(output_feed, input_feed)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "reshape_91": {
+                "variable": {
+                    "value": "outputs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "outputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "tf.concat(outputs, axis=3)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(outputs, [-1, self.embed_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(outputs, self.keep_prob)",
+                            "Call"
+                        ],
+                        [
+                            "session.run(output_feed, input_feed)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, self.embed_size]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "dropout_92": {
+                "variable": {
+                    "value": "outputs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "outputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "tf.concat(outputs, axis=3)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(outputs, [-1, self.embed_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(outputs, self.keep_prob)",
+                            "Call"
+                        ],
+                        [
+                            "session.run(output_feed, input_feed)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "self.keep_prob",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "get_variable_97": {
+                "variable": {
+                    "value": "X",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "X",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[self.embed_size, self.embed_size]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "xav_init()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Variable_98": {
+                "variable": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.zeros([self.embed_size])",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_99": {
+                "variable": {
+                    "value": "z",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "z",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[self.embed_size]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "xav_init()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "tensordot_101": {
+                "variable": {
+                    "value": "sem",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "vector",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "b": {
+                    "value": "X",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('X', shape=[self.embed_size, self.embed_size], initializer=xav_init())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axes": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "tanh_104": {
+                "variable": {
+                    "value": "weights",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "sem + b",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "tensordot_106": {
+                "variable": {
+                    "value": "weights",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "weights",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.tanh(sem + b)",
+                            "Call"
+                        ],
+                        [
+                            "tf.tensordot(weights, z, 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.softmax(weights + length)",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(weights, -1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "z",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('z', shape=[self.embed_size], initializer=xav_init())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axes": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "softmax_109": {
+                "variable": {
+                    "value": "weights",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "weights + length",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_110": {
+                "variable": {
+                    "value": "weights",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "weights",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.tanh(sem + b)",
+                            "Call"
+                        ],
+                        [
+                            "tf.tensordot(weights, z, 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.softmax(weights + length)",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(weights, -1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "multiply_112": {
+                "variable": {
+                    "value": "attended",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "vector",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "weights",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.tanh(sem + b)",
+                            "Call"
+                        ],
+                        [
+                            "tf.tensordot(weights, z, 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.softmax(weights + length)",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(weights, -1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reduce_sum_113": {
+                "variable": {
+                    "value": "attended",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "attended",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.multiply(vector, weights)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reduce_sum(attended, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "constant_32": {
+                "value": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[num_classes]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "equal_42": {
+                "x": {
+                    "value": "self.predicted",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "self.actual",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "square_44": {
+                "x": {
+                    "value": "self.predicted - self.actual",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "global_variables_46": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "get_variable_73": {
+                "variable": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "W",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "filter_shape",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[filter_size, self.embed_size, 1, num_filters[i]]",
+                            "List"
+                        ]
+                    ]
+                },
+                "initializer": {
+                    "value": "xav_init()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_74": {
+                "variable": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "b",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[num_filters[i]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.constant_initializer(0.1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "conv2d_75": {
+                "variable": {
+                    "value": "conv",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "embedding",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.embedding_lookup(embed, inputs)",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(embedding, -1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('W', [embed_size, num_classes], initializer=xav_init())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('W', filter_shape, initializer=xav_init())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "strides": {
+                    "value": "[1, 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "VALID",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "conv",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "relu_81": {
+                "variable": {
+                    "value": "h",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "features": {
+                    "value": "tf.nn.bias_add(conv, b)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "relu",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "max_pool_82": {
+                "variable": {
+                    "value": "pooled",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "h",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.relu(tf.nn.bias_add(conv, b), name='relu')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "ksize": {
+                    "value": "[1, sequence_len - filter_size + 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "[1, 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "VALID",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "pool",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "zeros_98": {
+                "shape": {
+                    "value": "[self.embed_size]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_71": {
+                "name_or_scope": {
+                    "value": "name + '-conv-%s' % filter_size",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "reuse": {
+                    "value": "tf.AUTO_REUSE",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "clip_by_norm_55": {
+                "t": {
+                    "value": "gv[0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "clip_norm": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "axes": {
+                    "value": "[0]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "bias_add_81": {
+                "value": {
+                    "value": "conv",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.conv2d(embedding, W, strides=[1, 1, 1, 1], padding='VALID', name='conv')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "bias": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.constant(0.0, shape=[num_classes]))",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b', [num_filters[i]], initializer=tf.constant_initializer(0.1))",
+                            "Call"
+                        ],
+                        [
+                            "tf.Variable(tf.zeros([self.embed_size]))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "constant_initializer_74": {
+                "value": {
+                    "value": "0.1",
+                    "type": "float",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/lernets.py": {
+        "tensorflow": {
+            "placeholder_24": {
+                "variable": {
+                    "value": "self.full_inputs",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.int32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, sequence_len]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "placeholder_25": {
+                "variable": {
+                    "value": "self.seg_inputs",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.int32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, sentence_len, segment_len]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "placeholder_26": {
+                "variable": {
+                    "value": "self.sen_length",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, sentence_len]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "placeholder_27": {
+                "variable": {
+                    "value": "self.sentiment",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.int32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, num_classes]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "placeholder_28": {
+                "variable": {
+                    "value": "self.keep_prob",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "get_variable_30": {
+                "variable": {
+                    "value": "self.embedding",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "embedding",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[vocab_size, embed_size]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "xav_init()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "transpose_35": {
+                "variable": {
+                    "value": "seg_inputs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "self.seg_inputs",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "perm": {
+                    "value": "[1, 0, 2]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "map_fn_38": {
+                "variable": {
+                    "value": "self.s2s_vector",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "fn": {
+                    "value": "lambda x: self.cnn(x, self.embedding, segment_len, 'seg_cnn')",
+                    "type": "Lambda",
+                    "possible_values": []
+                },
+                "elems": {
+                    "value": "seg_inputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.transpose(self.seg_inputs, perm=[1, 0, 2])",
+                            "Call"
+                        ],
+                        [
+                            "self.seg_pad(seg_inputs, max_sen_len, max_seg_len)",
+                            "Call"
+                        ],
+                        [
+                            "np.array(seg_inputs)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "map_fn_39": {
+                "variable": {
+                    "value": "self.s2f_vector",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "fn": {
+                    "value": "lambda x: self.cnn(x, self.embedding, segment_len, 'full_cnn')",
+                    "type": "Lambda",
+                    "possible_values": []
+                },
+                "elems": {
+                    "value": "seg_inputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.transpose(self.seg_inputs, perm=[1, 0, 2])",
+                            "Call"
+                        ],
+                        [
+                            "self.seg_pad(seg_inputs, max_sen_len, max_seg_len)",
+                            "Call"
+                        ],
+                        [
+                            "np.array(seg_inputs)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "transpose_40": {
+                "variable": {
+                    "value": "self.s2s_vector",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "self.s2s_vector",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "perm": {
+                    "value": "[1, 0, 2]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "transpose_41": {
+                "variable": {
+                    "value": "self.s2f_vector",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "self.s2f_vector",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "perm": {
+                    "value": "[1, 0, 2]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "get_variable_43": {
+                "variable": {
+                    "value": "Wf",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "Wf",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[embed_size, num_classes]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "xav_init()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Variable_44": {
+                "variable": {
+                    "value": "bf",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.constant(0.0, shape=[num_classes])",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "xw_plus_b_45": {
+                "variable": {
+                    "value": "self.f_scores",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "self.f2f_vector",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "weights": {
+                    "value": "Wf",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('Wf', [embed_size, num_classes], initializer=xav_init())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "biases": {
+                    "value": "bf",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.constant(0.0, shape=[num_classes]))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "get_variable_47": {
+                "variable": {
+                    "value": "Ws",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "Ws",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[embed_size, num_classes]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "xav_init()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Variable_48": {
+                "variable": {
+                    "value": "bs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.constant(0.0, shape=[num_classes])",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "xw_plus_b_51": {
+                "variable": {
+                    "value": "self.s_scores",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "self.f2s_vector",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "weights": {
+                    "value": "Ws",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('Ws', [embed_size, num_classes], initializer=xav_init())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "biases": {
+                    "value": "bs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.constant(0.0, shape=[num_classes]))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "xw_plus_b_56": {
+                "variable": {
+                    "value": "self.a_scores",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.concat([self.f2f_vector, self.f2s_vector], -1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "weights": {
+                    "value": "Wa",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('Wa', [embed_size * 2, num_classes], initializer=xav_init())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "biases": {
+                    "value": "ba",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.constant(0.0, shape=[num_classes]), name='ba')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "softmax_cross_entropy_with_logits_69": {
+                "variable": {
+                    "value": "s_losses",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "self.s_scores",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "labels": {
+                    "value": "self.sentiment",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_70": {
+                "variable": {
+                    "value": "self.s_loss",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "s_losses",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.softmax_cross_entropy_with_logits(logits=self.s_scores, labels=self.sentiment)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "softmax_cross_entropy_with_logits_73": {
+                "variable": {
+                    "value": "f_losses",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "self.f_scores",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "labels": {
+                    "value": "self.sentiment",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "argmax_91": {
+                "variable": {
+                    "value": "self.actual",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.sentiment",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Saver_98": {
+                "variable": {
+                    "value": "self.saver",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "var_list": {
+                    "value": "tf.global_variables()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "argmax_101": {
+                "variable": {
+                    "value": "predicted",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "scores",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cast_102": {
+                "variable": {
+                    "value": "correct",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.equal(predicted, self.actual)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "float",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_103": {
+                "variable": {
+                    "value": "count",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "correct",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.cast(tf.equal(predicted, self.actual), 'float')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reduce_sum_104": {
+                "variable": {
+                    "value": "se",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "tf.square(predicted - self.actual)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "AdadeltaOptimizer_109": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "learning_rate": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "rho": {
+                    "value": "0.95",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "epsilon": {
+                    "value": "1e-06",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "get_collection_110": {
+                "variable": {
+                    "value": "vars",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "key": {
+                    "value": "tf.GraphKeys.TRAINABLE_VARIABLES",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "scope": {
+                    "value": "scope",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "None",
+                            "MethodArgument"
+                        ]
+                    ]
+                }
+            },
+            "embedding_lookup_123": {
+                "variable": {
+                    "value": "embedding",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "embed",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "ids": {
+                    "value": "inputs",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_124": {
+                "variable": {
+                    "value": "embedding",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "embedding",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.embedding_lookup(embed, inputs)",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(embedding, -1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "concat_150": {
+                "variable": {
+                    "value": "outputs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "outputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "tf.concat(outputs, axis=3)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(outputs, [-1, self.embed_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(outputs, self.keep_prob)",
+                            "Call"
+                        ],
+                        [
+                            "session.run(output_feed, input_feed)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "reshape_151": {
+                "variable": {
+                    "value": "outputs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "outputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "tf.concat(outputs, axis=3)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(outputs, [-1, self.embed_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(outputs, self.keep_prob)",
+                            "Call"
+                        ],
+                        [
+                            "session.run(output_feed, input_feed)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, self.embed_size]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "dropout_152": {
+                "variable": {
+                    "value": "outputs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "outputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "tf.concat(outputs, axis=3)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(outputs, [-1, self.embed_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(outputs, self.keep_prob)",
+                            "Call"
+                        ],
+                        [
+                            "session.run(output_feed, input_feed)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "self.keep_prob",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "get_variable_157": {
+                "variable": {
+                    "value": "X",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "X",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[self.embed_size, self.embed_size]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "xav_init()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Variable_158": {
+                "variable": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.zeros([self.embed_size])",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_159": {
+                "variable": {
+                    "value": "z",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "z",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[self.embed_size]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "xav_init()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "tensordot_161": {
+                "variable": {
+                    "value": "sem",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "vector",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "b": {
+                    "value": "X",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('X', shape=[self.embed_size, self.embed_size], initializer=xav_init())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axes": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "tanh_164": {
+                "variable": {
+                    "value": "weights",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "sem + b",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "tensordot_166": {
+                "variable": {
+                    "value": "weights",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "weights",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.tanh(sem + b)",
+                            "Call"
+                        ],
+                        [
+                            "tf.tensordot(weights, z, 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.softmax(weights + length)",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(weights, -1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "z",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('z', shape=[self.embed_size], initializer=xav_init())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axes": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "softmax_169": {
+                "variable": {
+                    "value": "weights",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "weights + length",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_170": {
+                "variable": {
+                    "value": "weights",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "weights",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.tanh(sem + b)",
+                            "Call"
+                        ],
+                        [
+                            "tf.tensordot(weights, z, 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.softmax(weights + length)",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(weights, -1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "multiply_172": {
+                "variable": {
+                    "value": "attended",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "vector",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "weights",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.tanh(sem + b)",
+                            "Call"
+                        ],
+                        [
+                            "tf.tensordot(weights, z, 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.softmax(weights + length)",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(weights, -1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reduce_sum_173": {
+                "variable": {
+                    "value": "attended",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "attended",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.multiply(vector, weights)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reduce_sum(attended, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "get_variable_54": {
+                "variable": {
+                    "value": "Wa",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "Wa",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[embed_size * 2, num_classes]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "xav_init()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Variable_55": {
+                "variable": {
+                    "value": "ba",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.constant(0.0, shape=[num_classes])",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "ba",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "softmax_59": {
+                "variable": {
+                    "value": "s2s_scores",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "tf.nn.xw_plus_b(tf.reshape(self.s2s_vector, [-1, 300]), Ws, bs)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "softmax_60": {
+                "variable": {
+                    "value": "s2f_scores",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "tf.nn.xw_plus_b(tf.reshape(self.s2f_vector, [-1, 300]), Wf, bf)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_62": {
+                "variable": {
+                    "value": "seg_reg",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "s2s_scores * tf.log(s2s_scores / s2f_scores)",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_65": {
+                "variable": {
+                    "value": "seg_reg",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "seg_reg",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reduce_sum(s2s_scores * tf.log(s2s_scores / s2f_scores), -1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reduce_mean(seg_reg)",
+                            "Call"
+                        ],
+                        [
+                            "0",
+                            "Constant"
+                        ]
+                    ]
+                }
+            },
+            "softmax_cross_entropy_with_logits_78": {
+                "variable": {
+                    "value": "a_losses",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "self.a_scores",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "labels": {
+                    "value": "self.sentiment",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_79": {
+                "variable": {
+                    "value": "self.a_loss",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "a_losses",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.softmax_cross_entropy_with_logits(logits=self.a_scores, labels=self.sentiment)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "constant_44": {
+                "value": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[num_classes]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "constant_48": {
+                "value": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[num_classes]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_53": {
+                "name_or_scope": {
+                    "value": "whole",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "concat_56": {
+                "values": {
+                    "value": "[self.f2f_vector, self.f2s_vector]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_74": {
+                "input_tensor": {
+                    "value": "f_losses",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.softmax_cross_entropy_with_logits(logits=self.f_scores, labels=self.sentiment)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "softmax_87": {
+                "logits": {
+                    "value": "self.s_scores",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "softmax_89": {
+                "logits": {
+                    "value": "self.a_scores",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "global_variables_98": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "equal_102": {
+                "x": {
+                    "value": "predicted",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.argmax(scores, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "self.actual",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "square_104": {
+                "x": {
+                    "value": "predicted - self.actual",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "get_variable_133": {
+                "variable": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "W",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "filter_shape",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[filter_size, self.embed_size, 1, num_filters[i]]",
+                            "List"
+                        ]
+                    ]
+                },
+                "initializer": {
+                    "value": "xav_init()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_134": {
+                "variable": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "b",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[num_filters[i]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.constant_initializer(0.1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "conv2d_135": {
+                "variable": {
+                    "value": "conv",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "embedding",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.embedding_lookup(embed, inputs)",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(embedding, -1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('W', filter_shape, initializer=xav_init())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "strides": {
+                    "value": "[1, 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "VALID",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "conv",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "relu_141": {
+                "variable": {
+                    "value": "h",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "features": {
+                    "value": "tf.nn.bias_add(conv, b)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "relu",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "max_pool_142": {
+                "variable": {
+                    "value": "pooled",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "h",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.relu(tf.nn.bias_add(conv, b), name='relu')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "ksize": {
+                    "value": "[1, sequence_len - filter_size + 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "[1, 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "VALID",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "pool",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "zeros_158": {
+                "shape": {
+                    "value": "[self.embed_size]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "constant_55": {
+                "value": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[num_classes]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "xw_plus_b_59": {
+                "x": {
+                    "value": "tf.reshape(self.s2s_vector, [-1, 300])",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "weights": {
+                    "value": "Ws",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('Ws', [embed_size, num_classes], initializer=xav_init())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "biases": {
+                    "value": "bs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.constant(0.0, shape=[num_classes]))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "xw_plus_b_60": {
+                "x": {
+                    "value": "tf.reshape(self.s2f_vector, [-1, 300])",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "weights": {
+                    "value": "Wf",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('Wf', [embed_size, num_classes], initializer=xav_init())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "biases": {
+                    "value": "bf",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.constant(0.0, shape=[num_classes]))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "variable_scope_131": {
+                "name_or_scope": {
+                    "value": "name + '-conv-%s' % filter_size",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "reuse": {
+                    "value": "tf.AUTO_REUSE",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "reshape_59": {
+                "tensor": {
+                    "value": "self.s2s_vector",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[-1, 300]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "reshape_60": {
+                "tensor": {
+                    "value": "self.s2f_vector",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[-1, 300]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "log_62": {
+                "x": {
+                    "value": "s2s_scores / s2f_scores",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "clip_by_norm_115": {
+                "t": {
+                    "value": "gv[0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "clip_norm": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "axes": {
+                    "value": "[0]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "bias_add_141": {
+                "value": {
+                    "value": "conv",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.conv2d(embedding, W, strides=[1, 1, 1, 1], padding='VALID', name='conv')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "bias": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('b', [num_filters[i]], initializer=tf.constant_initializer(0.1))",
+                            "Call"
+                        ],
+                        [
+                            "tf.Variable(tf.zeros([self.embed_size]))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "constant_initializer_134": {
+                "value": {
+                    "value": "0.1",
+                    "type": "float",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/main.py": {
+        "tensorflow": {
+            "Session_80": {
+                "variable": {
+                    "value": "sess",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "set_random_seed_81": {
+                "seed": {
+                    "value": "1234",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "global_variables_initializer_84": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "reset_default_graph_144": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/utils.py": {
+        "tensorflow": {}
+    }
+}
