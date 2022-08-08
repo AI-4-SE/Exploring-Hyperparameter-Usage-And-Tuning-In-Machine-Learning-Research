@@ -1,0 +1,1346 @@
+{
+    "test_utils.py": {
+        "tensorflow": {
+            "normal_12": {
+                "variable": {
+                    "value": "tf_tensor",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "test_shape",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "normal_34": {
+                "variable": {
+                    "value": "tf_tensor",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[10, 60, 60, 3]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            }
+        },
+        "torch": {
+            "rand_16": {
+                "variable": {
+                    "value": "torch_tensor",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "test_shape",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "rand_28": {
+                "variable": {
+                    "value": "torch_tensor",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "[10, 60, 60, 3]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "tf_code/self_atten_layer_tf.py": {
+        "tensorflow": {
+            "get_variable_14": {
+                "variable": {
+                    "value": "rel_embeddings_w",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "r_width",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "(2 * W - 1, dkh)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.random_normal_initializer(dkh ** (-0.5))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_30": {
+                "variable": {
+                    "value": "rel_embeddings_h",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "r_height",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "(2 * H - 1, dkh)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.random_normal_initializer(dkh ** (-0.5))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "conv2d_51": {
+                "variable": {
+                    "value": "kqv",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "inputs",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "filters": {
+                    "value": "2 * dk + dv",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "split_52": {
+                "variable": {
+                    "value": "(k, q, v)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "kqv",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "tf.layers.conv2d(inputs, 2 * dk + dv, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "num_or_size_splits": {
+                    "value": "[dk, dk, dv]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "matmul_61": {
+                "variable": {
+                    "value": "logits",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "flatten_hw(q, dkh)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "b": {
+                    "value": "flatten_hw(k, dkh)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "transpose_b": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "softmax_70": {
+                "variable": {
+                    "value": "weights",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "logits",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "tf.matmul(flatten_hw(q, dkh), flatten_hw(k, dkh), transpose_b=True)",
+                            "Call"
+                        ],
+                        [
+                            "logits + rel_logits_w",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "matmul_71": {
+                "variable": {
+                    "value": "attn_out",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "weights",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.softmax(logits)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "flatten_hw(v, dvh)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reshape_72": {
+                "variable": {
+                    "value": "attn_out",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "attn_out",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "tf.matmul(weights, flatten_hw(v, dvh))",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(attn_out, [-1, Nh, H, W, dvh])",
+                            "Call"
+                        ],
+                        [
+                            "combine_heads_2d(attn_out)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.conv2d(attn_out, dv, 1)",
+                            "Call"
+                        ],
+                        [
+                            "self_attention_2d(X, dk, dv, Nh, relative=relative)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, Nh, H, W, dvh]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "conv2d_75": {
+                "variable": {
+                    "value": "attn_out",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "attn_out",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "tf.matmul(weights, flatten_hw(v, dvh))",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(attn_out, [-1, Nh, H, W, dvh])",
+                            "Call"
+                        ],
+                        [
+                            "combine_heads_2d(attn_out)",
+                            "Call"
+                        ],
+                        [
+                            "tf.layers.conv2d(attn_out, dv, 1)",
+                            "Call"
+                        ],
+                        [
+                            "self_attention_2d(X, dk, dv, Nh, relative=relative)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "dv",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "conv2d_79": {
+                "variable": {
+                    "value": "conv_out",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "X",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "filters": {
+                    "value": "Fout - dv",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "k",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "split_heads_2d(k, Nh)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "padding": {
+                    "value": "same",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "concat_82": {
+                "values": {
+                    "value": "[conv_out, attn_out]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "transpose_36": {
+                "a": {
+                    "value": "q",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "q * dkh ** (-0.5)",
+                            "BinOp"
+                        ],
+                        [
+                            "split_heads_2d(q, Nh)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "perm": {
+                    "value": "[0, 1, 3, 2, 4]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "reshape_48": {
+                "tensor": {
+                    "value": "x",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[-1, Nh, H * W, d]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "random_normal_initializer_16": {
+                "mean": {
+                    "value": "dkh ** (-0.5)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "random_normal_initializer_32": {
+                "mean": {
+                    "value": "dkh ** (-0.5)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "tf_code/self_atten_utils_tf.py": {
+        "tensorflow": {
+            "shape_13": {
+                "variable": {
+                    "value": "shape",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "tf.concat([x, col_pad], axis=3)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reshape_25": {
+                "variable": {
+                    "value": "split",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "inputs",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "ret_shape",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "[B, H, W, Nh, d // Nh]",
+                            "List"
+                        ],
+                        [
+                            "shape_list(transposed)[:-2] + [Nh * channels]",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "transpose_30": {
+                "variable": {
+                    "value": "transposed",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "inputs",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "perm": {
+                    "value": "[0, 2, 3, 1, 4]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "zeros_40": {
+                "variable": {
+                    "value": "col_pad",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "(B, Nh, L, 1)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "concat_41": {
+                "variable": {
+                    "value": "x",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[x, col_pad]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "reshape_42": {
+                "variable": {
+                    "value": "flat_x",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "x",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "tf.concat([x, col_pad], axis=3)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[B, Nh, L * 2 * L]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "zeros_43": {
+                "variable": {
+                    "value": "flat_pad",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "(B, Nh, L - 1)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "concat_44": {
+                "variable": {
+                    "value": "flat_x_padded",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[flat_x, flat_pad]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "reshape_46": {
+                "variable": {
+                    "value": "final_x",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "flat_x_padded",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "tf.concat([flat_x, flat_pad], axis=2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[B, Nh, L + 1, 2 * L - 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "einsum_52": {
+                "variable": {
+                    "value": "rel_logits",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "equation": {
+                    "value": "bhxyd,md->bhxym",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "*inputs": {
+                    "value": "q",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "**kwargs": {
+                    "value": "rel_k",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "reshape_54": {
+                "variable": {
+                    "value": "rel_logits",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "rel_logits",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "tf.einsum('bhxyd,md->bhxym', q, rel_k)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(rel_logits, [-1, Nh * H, W, 2 * W - 1])",
+                            "Call"
+                        ],
+                        [
+                            "rel_to_abs(rel_logits)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(rel_logits, [-1, Nh, H, W, W])",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(rel_logits, axis=3)",
+                            "Call"
+                        ],
+                        [
+                            "tf.tile(rel_logits, [1, 1, 1, H, 1, 1])",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(rel_logits, transpose_mask)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(rel_logits, [-1, Nh, H * W, H * W])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, Nh * H, W, 2 * W - 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "reshape_59": {
+                "variable": {
+                    "value": "rel_logits",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "rel_logits",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "tf.einsum('bhxyd,md->bhxym', q, rel_k)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(rel_logits, [-1, Nh * H, W, 2 * W - 1])",
+                            "Call"
+                        ],
+                        [
+                            "rel_to_abs(rel_logits)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(rel_logits, [-1, Nh, H, W, W])",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(rel_logits, axis=3)",
+                            "Call"
+                        ],
+                        [
+                            "tf.tile(rel_logits, [1, 1, 1, H, 1, 1])",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(rel_logits, transpose_mask)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(rel_logits, [-1, Nh, H * W, H * W])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, Nh, H, W, W]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_60": {
+                "variable": {
+                    "value": "rel_logits",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "rel_logits",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "tf.einsum('bhxyd,md->bhxym', q, rel_k)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(rel_logits, [-1, Nh * H, W, 2 * W - 1])",
+                            "Call"
+                        ],
+                        [
+                            "rel_to_abs(rel_logits)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(rel_logits, [-1, Nh, H, W, W])",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(rel_logits, axis=3)",
+                            "Call"
+                        ],
+                        [
+                            "tf.tile(rel_logits, [1, 1, 1, H, 1, 1])",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(rel_logits, transpose_mask)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(rel_logits, [-1, Nh, H * W, H * W])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "tile_61": {
+                "variable": {
+                    "value": "rel_logits",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "rel_logits",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "tf.einsum('bhxyd,md->bhxym', q, rel_k)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(rel_logits, [-1, Nh * H, W, 2 * W - 1])",
+                            "Call"
+                        ],
+                        [
+                            "rel_to_abs(rel_logits)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(rel_logits, [-1, Nh, H, W, W])",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(rel_logits, axis=3)",
+                            "Call"
+                        ],
+                        [
+                            "tf.tile(rel_logits, [1, 1, 1, H, 1, 1])",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(rel_logits, transpose_mask)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(rel_logits, [-1, Nh, H * W, H * W])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "multiples": {
+                    "value": "[1, 1, 1, H, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "transpose_63": {
+                "variable": {
+                    "value": "rel_logits",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "rel_logits",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "tf.einsum('bhxyd,md->bhxym', q, rel_k)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(rel_logits, [-1, Nh * H, W, 2 * W - 1])",
+                            "Call"
+                        ],
+                        [
+                            "rel_to_abs(rel_logits)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(rel_logits, [-1, Nh, H, W, W])",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(rel_logits, axis=3)",
+                            "Call"
+                        ],
+                        [
+                            "tf.tile(rel_logits, [1, 1, 1, H, 1, 1])",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(rel_logits, transpose_mask)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(rel_logits, [-1, Nh, H * W, H * W])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "perm": {
+                    "value": "transpose_mask",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "reshape_64": {
+                "variable": {
+                    "value": "rel_logits",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "rel_logits",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "tf.einsum('bhxyd,md->bhxym', q, rel_k)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(rel_logits, [-1, Nh * H, W, 2 * W - 1])",
+                            "Call"
+                        ],
+                        [
+                            "rel_to_abs(rel_logits)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(rel_logits, [-1, Nh, H, W, W])",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(rel_logits, axis=3)",
+                            "Call"
+                        ],
+                        [
+                            "tf.tile(rel_logits, [1, 1, 1, H, 1, 1])",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(rel_logits, transpose_mask)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(rel_logits, [-1, Nh, H * W, H * W])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, Nh, H * W, H * W]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "transpose_26": {
+                "a": {
+                    "value": "split",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(inputs, ret_shape)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "perm": {
+                    "value": "[0, 3, 1, 2, 4]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "reshape_33": {
+                "tensor": {
+                    "value": "transposed",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "tf.transpose(inputs, [0, 2, 3, 1, 4])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "ret_shape",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "[B, H, W, Nh, d // Nh]",
+                            "List"
+                        ],
+                        [
+                            "shape_list(transposed)[:-2] + [Nh * channels]",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "pytorch_code/self_atten_utils.py": {
+        "torch": {
+            "reshape_19": {
+                "variable": {
+                    "value": "split",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "inputs",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "ret_shape",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "[B, H, W, Nh, d // Nh]",
+                            "List"
+                        ],
+                        [
+                            "shape_list(transposed)[:-2] + [Nh * channels]",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "zeros_36": {
+                "variable": {
+                    "value": "col_pad",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "[B, Nh, L, 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "cat_38": {
+                "variable": {
+                    "value": "x",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(x, col_pad)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "reshape_39": {
+                "variable": {
+                    "value": "flat_x",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "torch.cat((x, col_pad), dim=3)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[B, Nh, L * 2 * L]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "zeros_40": {
+                "variable": {
+                    "value": "flat_pad",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "[B, Nh, L - 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "concat_41": {
+                "variable": {
+                    "value": "flat_x_pad",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[flat_x, flat_pad]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "reshape_43": {
+                "variable": {
+                    "value": "final_x",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "flat_x_pad",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "torch.concat([flat_x, flat_pad], axis=2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[B, Nh, L + 1, 2 * L - 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "einsum_57": {
+                "variable": {
+                    "value": "rel_logits",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "equation": {
+                    "value": "bhxyd,md->bhxym",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "*operands": {
+                    "value": "q",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "reshape_59": {
+                "variable": {
+                    "value": "rel_logits",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "rel_logits",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "torch.einsum('bhxyd,md->bhxym', q, rel_k)",
+                            "Call"
+                        ],
+                        [
+                            "torch.reshape(rel_logits, [-1, Nh * H, W, 2 * W - 1])",
+                            "Call"
+                        ],
+                        [
+                            "rel_to_abs(rel_logits)",
+                            "Call"
+                        ],
+                        [
+                            "torch.reshape(rel_logits, [-1, Nh, H, W, W])",
+                            "Call"
+                        ],
+                        [
+                            "torch.expand_dims(rel_logits, axis=3)",
+                            "Call"
+                        ],
+                        [
+                            "torch.tile(rel_logits, [1, 1, 1, H, 1, 1])",
+                            "Call"
+                        ],
+                        [
+                            "torch.transpose(rel_logits, transpose_mask)",
+                            "Call"
+                        ],
+                        [
+                            "torch.reshape(rel_logits, [-1, Nh, H * W, H * W])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, Nh * H, W, 2 * W - 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "reshape_64": {
+                "variable": {
+                    "value": "rel_logits",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "rel_logits",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "torch.einsum('bhxyd,md->bhxym', q, rel_k)",
+                            "Call"
+                        ],
+                        [
+                            "torch.reshape(rel_logits, [-1, Nh * H, W, 2 * W - 1])",
+                            "Call"
+                        ],
+                        [
+                            "rel_to_abs(rel_logits)",
+                            "Call"
+                        ],
+                        [
+                            "torch.reshape(rel_logits, [-1, Nh, H, W, W])",
+                            "Call"
+                        ],
+                        [
+                            "torch.expand_dims(rel_logits, axis=3)",
+                            "Call"
+                        ],
+                        [
+                            "torch.tile(rel_logits, [1, 1, 1, H, 1, 1])",
+                            "Call"
+                        ],
+                        [
+                            "torch.transpose(rel_logits, transpose_mask)",
+                            "Call"
+                        ],
+                        [
+                            "torch.reshape(rel_logits, [-1, Nh, H * W, H * W])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, Nh, H, W, W]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "tile_66": {
+                "variable": {
+                    "value": "rel_logits",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "rel_logits",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "torch.einsum('bhxyd,md->bhxym', q, rel_k)",
+                            "Call"
+                        ],
+                        [
+                            "torch.reshape(rel_logits, [-1, Nh * H, W, 2 * W - 1])",
+                            "Call"
+                        ],
+                        [
+                            "rel_to_abs(rel_logits)",
+                            "Call"
+                        ],
+                        [
+                            "torch.reshape(rel_logits, [-1, Nh, H, W, W])",
+                            "Call"
+                        ],
+                        [
+                            "torch.expand_dims(rel_logits, axis=3)",
+                            "Call"
+                        ],
+                        [
+                            "torch.tile(rel_logits, [1, 1, 1, H, 1, 1])",
+                            "Call"
+                        ],
+                        [
+                            "torch.transpose(rel_logits, transpose_mask)",
+                            "Call"
+                        ],
+                        [
+                            "torch.reshape(rel_logits, [-1, Nh, H * W, H * W])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dims": {
+                    "value": "[1, 1, 1, H, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "transpose_68": {
+                "variable": {
+                    "value": "rel_logits",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "rel_logits",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "torch.einsum('bhxyd,md->bhxym', q, rel_k)",
+                            "Call"
+                        ],
+                        [
+                            "torch.reshape(rel_logits, [-1, Nh * H, W, 2 * W - 1])",
+                            "Call"
+                        ],
+                        [
+                            "rel_to_abs(rel_logits)",
+                            "Call"
+                        ],
+                        [
+                            "torch.reshape(rel_logits, [-1, Nh, H, W, W])",
+                            "Call"
+                        ],
+                        [
+                            "torch.expand_dims(rel_logits, axis=3)",
+                            "Call"
+                        ],
+                        [
+                            "torch.tile(rel_logits, [1, 1, 1, H, 1, 1])",
+                            "Call"
+                        ],
+                        [
+                            "torch.transpose(rel_logits, transpose_mask)",
+                            "Call"
+                        ],
+                        [
+                            "torch.reshape(rel_logits, [-1, Nh, H * W, H * W])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim0": {
+                    "value": "transpose_mask",
+                    "type": "Variable",
+                    "possible_values": []
+                }
+            },
+            "reshape_69": {
+                "variable": {
+                    "value": "rel_logits",
+                    "type": "Variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "rel_logits",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "torch.einsum('bhxyd,md->bhxym', q, rel_k)",
+                            "Call"
+                        ],
+                        [
+                            "torch.reshape(rel_logits, [-1, Nh * H, W, 2 * W - 1])",
+                            "Call"
+                        ],
+                        [
+                            "rel_to_abs(rel_logits)",
+                            "Call"
+                        ],
+                        [
+                            "torch.reshape(rel_logits, [-1, Nh, H, W, W])",
+                            "Call"
+                        ],
+                        [
+                            "torch.expand_dims(rel_logits, axis=3)",
+                            "Call"
+                        ],
+                        [
+                            "torch.tile(rel_logits, [1, 1, 1, H, 1, 1])",
+                            "Call"
+                        ],
+                        [
+                            "torch.transpose(rel_logits, transpose_mask)",
+                            "Call"
+                        ],
+                        [
+                            "torch.reshape(rel_logits, [-1, Nh, H * W, H * W])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, Nh, H * W, H * W]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "reshape_29": {
+                "input": {
+                    "value": "transposed",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "inputs.permute(0, 2, 3, 1, 4)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "ret_shape",
+                    "type": "Variable",
+                    "possible_values": [
+                        [
+                            "[B, H, W, Nh, d // Nh]",
+                            "List"
+                        ],
+                        [
+                            "shape_list(transposed)[:-2] + [Nh * channels]",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            }
+        }
+    }
+}
