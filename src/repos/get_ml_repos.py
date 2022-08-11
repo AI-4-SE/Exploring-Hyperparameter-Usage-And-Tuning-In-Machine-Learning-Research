@@ -8,6 +8,9 @@ import pandas as pd
 import git
 import ast
 from git import Repo
+import bz2
+import requests
+
 
 target_dir = "\\\\nfs.ceph.dw.webis.de\\cephfs\\data-tmp\\2021\\liju1602\\paperswithcode_crawl"
 
@@ -144,10 +147,63 @@ def check_python_version(url, url_final):
     print("Drop Counter: ", drop_counter)
 
 
+def get_sample_set():
+    sample_data_set = []
+    with bz2.BZ2File("../../data/5000/pswc_repos_papers.jsonl.bz2") as file:
+        json_list = list(file)
+
+    sample_data = random.sample(json_list, 5000)
+
+    for json_str in sample_data:
+        data = json.loads(json_str)
+        if any(x in data["code_stats"]["imports"] for x in ("tensorflow", "sklearn", "torch")) and data["papers"][0]["paper_title"] and data["repo_url"]:
+            sample_data_set.append(data)
+
+    print(len(sample_data_set))
+    with open("sample_set.json", "w", encoding="utf-8") as dest:
+        json.dump(sample_data_set, dest, indent=4, sort_keys=True)
+
+
+def check_url():
+    final_data_set = []
+
+    with open("sample_set.json", "r", encoding="utf-8") as src:
+        data = json.load(src)
+
+    for item in data:
+        url = item["repo_url"]
+        request = requests.get(url)
+        try:
+            if request.status_code == 200:
+                final_data_set.append(item)
+            else:
+                print('Url does not exist: ', url)
+        except Exception:
+            print("Exception occurred for: ", url)
+
+    print(len(final_data_set))
+    with open("final_sample_set.json", "w", encoding="utf-8") as dest:
+        json.dump(final_data_set, dest, indent=4, sort_keys=True)
+
+def get_urls():
+    urls = []
+
+    with open("sample_set.json", "r", encoding="utf-8") as src:
+        data = json.load(src)
+
+    data = random.sample(data, 2500)
+
+    for item in data:
+        urls.append(item["repo_url"])
+
+    with open("sample_set_urls.json", "w", encoding="utf-8") as dest:
+        json.dump(urls, dest, indent=4, sort_keys=True)  
+
+
 if __name__ == "__main__":
     #create_sample_set(5000)
     #find_ml_repos("\\src\\repos\\ml_samples_5000.txt")
-    get_urls("\\src\\repos\\ml_samples_5000.txt", "\\src\\repos\\ml_samples_url_5000.csv")
+    #get_urls("\\src\\repos\\ml_samples_5000.txt", "\\src\\repos\\ml_samples_url_5000.csv")
 
     #sklearn_path = "\\data\\sklearn\\sklearn_sample.txt"
     #sklearn_url = "\\data\\sklearn\\sklearn_sample_url.csv"
@@ -164,3 +220,5 @@ if __name__ == "__main__":
     #find_ml_repos(PYTORCH_REGEX, PYTORCH_FROM_REGEX, pytorch_path)
     #get_urls(pytorch_path, pytorch_url)
     #check_python_version(pytorch_url, pytorch_url_final)
+    #get_sample_set()
+    get_urls()

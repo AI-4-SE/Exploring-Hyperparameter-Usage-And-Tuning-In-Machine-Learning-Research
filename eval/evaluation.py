@@ -25,7 +25,7 @@ TEST_REPOS = [
 NOTEBOOK_REPO = ["https://github.com/simisimon/kaggle-notebooks"]
 
 def get_repos():
-    file_name = "final_sample_set.json"
+    file_name = "sample_set_urls.json"
 
     with open(file_name, "r", encoding="utf-8") as src:
         data = json.load(src)

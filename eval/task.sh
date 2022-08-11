@@ -18,7 +18,7 @@ LOCALPATH=/tmp/$USER/sklearn/$1
 # ----------------------------------------------------------------------------
 
 # Create and source virtual environment
-python3 -m venv $LOCALPATH/venv
+python3.10 -m venv $LOCALPATH/venv
 source $LOCALPATH/venv/bin/activate
 
 
@@ -35,12 +35,12 @@ rm -rf "$EVALUATION"
 
 # Get evaluation script
 cp $2/evaluation.py .
-cp $2/final_sample_set.json .
+cp $2/sample_set_urls.json .
 # ----------------------------------------------------------------------------
 # Run experiment
 # ----------------------------------------------------------------------------
 
-python3 evaluation.py $1
+python3.10 evaluation.py $1
 
 # ----------------------------------------------------------------------------
 # Copy results

@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --exclusive
-#SBATCH --array=0-1375%1
-#SBATCH --partition=brown
+#SBATCH --array=0-2499
+#SBATCH --partition=tesla
 #SBATCH --job-name=cfgnet_evaluation
 #SBATCH --output=output/cfgnet-%a.out
 #SBATCH --error=error/cfgnet-%a.err
