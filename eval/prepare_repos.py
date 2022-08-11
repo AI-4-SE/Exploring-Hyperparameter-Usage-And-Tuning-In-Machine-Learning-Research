@@ -1,76 +1,37 @@
-import bz2
+import glob
 import json
-import random
 
-sklearn_file = "../data/sklearn/sklearn_sample_url_final.csv"
-tf_file = "../data/tensorflow/tensorflow_samples_url_final.csv"
-torch_file = "../data/pytorch/pytorch_samples_url_final.csv"
+def main():
 
-new_files = "../data/5000/ml_samples_url_5000.csv"
-
-files = [new_files]
+    repo_names = set()
+    repo_urls = set()
+    repo_meta_data = []
 
 
-def get_urls():
-    urls = set()
+    for dir_name in glob.glob("results/*"):
+        for stat_file in glob.glob(f"{dir_name}/statistics/*.json"):
+            name = stat_file.split("/")[-1]
+            name = name.split("_params")[0]
+            repo_names.add(name)
 
-    for file_name in files:
-        with open(file_name, "r", encoding="utf-8") as src:
-            for line in src.readlines():
-                if "tar_filename" in line or "repo_url" in line:
-                    continue
-                else:
-                    url = line.split(",")[-1].strip()
-                    urls.add(url)
-
-    return urls
-
-
-def get_repo_metadata():
-    data = []
-    final_data = []
-
-    with bz2.BZ2File("../data/5000/pswc_repos_papers.jsonl.bz2") as file:
-        for line in file:
-            data.append(json.loads(line))
-
-
-    urls = get_urls()
-
-    for item in data:
-        if any(item["repo_url"] == url for url in urls):
-            final_data.append(item)
-
-
-    with open("../data/5000/final_metadata_5000.json", "w", encoding="utf-8") as src:
-        json.dump(final_data, src, indent=4, sort_keys=True)
-
-
-def get_final_sample_set():
-
-    urls = []
-
-    with open("../data/5000/final_metadata_5000.json", "r", encoding="utf-8") as src:
+    with open("sample_set_urls.json", "r", encoding="utf-8") as src:
         data = json.load(src)
 
-    print(len(data))
+    for url in data:
+        _name = url.split("/")[-1]
+        for name in repo_names:
+            if name == _name:
+                repo_urls.add(url)
+                break
+            
 
 
-    #random_data = random.sample(data, 1000)
+    print(len(repo_names))
+    print(len(repo_urls))
 
-    #with open("../data/5000/final_metadata_1000.json", "w", encoding="utf-8") as src:
-    #    json.dump(random_data, src, indent=4, sort_keys=True)
+    # TODO: Get metadata for final repositories
     
-    for item in data:
-        if not item["repo_url"].endswith(".py") and "tree/master" not in item["repo_url"]:
-            urls.append(item["repo_url"])
-        
-
-    print(len(urls))
-
-    with open("final_sample_set.json", "w", encoding="utf-8") as src:
-        json.dump(urls, src, indent=4, sort_keys=True)
-
 
 if __name__ == "__main__":
-    get_final_sample_set()
+    main()
+
