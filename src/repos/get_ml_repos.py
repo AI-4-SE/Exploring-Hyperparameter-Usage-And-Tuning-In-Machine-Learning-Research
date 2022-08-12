@@ -200,6 +200,31 @@ def get_urls():
         json.dump(urls, dest, indent=4, sort_keys=True)  
 
 
+
+def get_metadata():
+    metadata = []
+    
+    with open("final_sample_set_urls.json", "r", encoding="utf-8") as src:
+        data = json.load(src)
+
+
+    repo_papers = []
+    with bz2.BZ2File("pswc_repos_papers.jsonl.bz2") as bz2_file:
+        for line in bz2_file:
+            repo_papers.append(json.loads(line))
+
+    for url in data:
+        try:
+            repo_data = next(filter(lambda x : x["repo_url"] == url, repo_papers))
+            metadata.append(repo_data)
+        except StopIteration:
+            print("No data found for: ", url)
+
+
+    with open("final_metadata_set.json", "w", encoding="utf-8") as dest:
+        json.dump(metadata, dest, indent=4, sort_keys=True)
+
+
 if __name__ == "__main__":
     #create_sample_set(5000)
     #find_ml_repos("\\src\\repos\\ml_samples_5000.txt")
@@ -220,5 +245,10 @@ if __name__ == "__main__":
     #find_ml_repos(PYTORCH_REGEX, PYTORCH_FROM_REGEX, pytorch_path)
     #get_urls(pytorch_path, pytorch_url)
     #check_python_version(pytorch_url, pytorch_url_final)
-    #get_sample_set()
-    get_urls()
+
+    with open("final_metadata_set.json", "r", encoding="utf-8") as src:
+        data = json.load(src)
+        print(len(data))
+
+
+    #get_metadata()
