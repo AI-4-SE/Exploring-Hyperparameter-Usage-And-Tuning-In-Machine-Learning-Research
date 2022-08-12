@@ -1,0 +1,3539 @@
+{
+    "code/dataenv.py": {
+        "tensorflow": {
+            "uniform_94": {
+                "variable": {
+                    "value": "logits",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "(len(candidate_edges),)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "code/model.py": {
+        "tensorflow": {
+            "cond_69": {
+                "variable": {
+                    "value": "idx",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "pred": {
+                    "value": "tf.equal(batch_size, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "true_fn": {
+                    "value": "lambda : tf.zeros((n_selected_edges,), dtype='int32')",
+                    "type": "Lambda",
+                    "possible_values": []
+                },
+                "false_fn": {
+                    "value": "lambda : selected_edges[:, 0]",
+                    "type": "Lambda",
+                    "possible_values": []
+                }
+            },
+            "concat_29": {
+                "variable": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "inputs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "Dense_42": {
+                "variable": {
+                    "value": "self.left_dense",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "units": {
+                    "value": "self.n_dims",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "tf.nn.leaky_relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "left_dense",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Dense_43": {
+                "variable": {
+                    "value": "self.right_dense",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "units": {
+                    "value": "self.n_dims",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "tf.nn.leaky_relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "right_dense",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Dense_44": {
+                "variable": {
+                    "value": "self.center_dense",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "units": {
+                    "value": "self.n_dims",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "None",
+                    "type": "NoneType",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "center_dense",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "concat_52": {
+                "variable": {
+                    "value": "left_x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "left",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "concat_53": {
+                "variable": {
+                    "value": "right_x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "right",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "stack_72": {
+                "variable": {
+                    "value": "idx_and_vi",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[idx, selected_edges[:, 1]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "gather_nd_73": {
+                "variable": {
+                    "value": "hidden_vi",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "hidden",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "inputs",
+                            "variable"
+                        ],
+                        [
+                            "inputs",
+                            "variable"
+                        ],
+                        [
+                            "inputs",
+                            "variable"
+                        ],
+                        [
+                            "update_op(hidden, update)",
+                            "Call"
+                        ],
+                        [
+                            "ent_emb",
+                            "variable"
+                        ],
+                        [
+                            "inputs",
+                            "variable"
+                        ],
+                        [
+                            "update_op(hidden, update)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "indices": {
+                    "value": "idx_and_vi",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.stack([idx, selected_edges[:, 1]], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.stack([selected_edges[:, 0], selected_edges[:, 1]], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.cast(tf.math.segment_max(idx_and_vi, idx_vi), tf.int32)",
+                            "Call"
+                        ],
+                        [
+                            "tf.stack([scanned_edges[:, 0], scanned_edges[:, 1]], axis=1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "stack_76": {
+                "variable": {
+                    "value": "idx_and_vj",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[idx, selected_edges[:, 2]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "gather_nd_77": {
+                "variable": {
+                    "value": "hidden_vj",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "hidden",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "inputs",
+                            "variable"
+                        ],
+                        [
+                            "inputs",
+                            "variable"
+                        ],
+                        [
+                            "inputs",
+                            "variable"
+                        ],
+                        [
+                            "update_op(hidden, update)",
+                            "Call"
+                        ],
+                        [
+                            "ent_emb",
+                            "variable"
+                        ],
+                        [
+                            "inputs",
+                            "variable"
+                        ],
+                        [
+                            "update_op(hidden, update)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "indices": {
+                    "value": "idx_and_vj",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.stack([idx, selected_edges[:, 2]], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.stack([selected_edges[:, 0], selected_edges[:, 2]], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.cast(tf.math.unsorted_segment_max(idx_and_vj, idx_vj, max_idx_vj + 1), tf.int32)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "gather_92": {
+                "variable": {
+                    "value": "hidden_vi",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "hidden",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "inputs",
+                            "variable"
+                        ],
+                        [
+                            "inputs",
+                            "variable"
+                        ],
+                        [
+                            "inputs",
+                            "variable"
+                        ],
+                        [
+                            "update_op(hidden, update)",
+                            "Call"
+                        ],
+                        [
+                            "ent_emb",
+                            "variable"
+                        ],
+                        [
+                            "inputs",
+                            "variable"
+                        ],
+                        [
+                            "update_op(hidden, update)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "indices": {
+                    "value": "new_idx_e2vi",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "selected_edges[:, 6]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 6]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "gather_96": {
+                "variable": {
+                    "value": "hidden_vj",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "hidden",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "inputs",
+                            "variable"
+                        ],
+                        [
+                            "inputs",
+                            "variable"
+                        ],
+                        [
+                            "inputs",
+                            "variable"
+                        ],
+                        [
+                            "update_op(hidden, update)",
+                            "Call"
+                        ],
+                        [
+                            "ent_emb",
+                            "variable"
+                        ],
+                        [
+                            "inputs",
+                            "variable"
+                        ],
+                        [
+                            "update_op(hidden, update)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "indices": {
+                    "value": "new_idx_e2vj",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "selected_edges[:, 7]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 7]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "stack_123": {
+                "variable": {
+                    "value": "idx_and_vi",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[selected_edges[:, 0], selected_edges[:, 1]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cast_124": {
+                "variable": {
+                    "value": "idx_and_vi",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.math.segment_max(idx_and_vi, idx_vi)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.int32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "scatter_nd_125": {
+                "variable": {
+                    "value": "edge_vec_aggr",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "indices": {
+                    "value": "idx_and_vi",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.stack([idx, selected_edges[:, 1]], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.stack([selected_edges[:, 0], selected_edges[:, 1]], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.cast(tf.math.segment_max(idx_and_vi, idx_vi), tf.int32)",
+                            "Call"
+                        ],
+                        [
+                            "tf.stack([scanned_edges[:, 0], scanned_edges[:, 1]], axis=1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "updates": {
+                    "value": "edge_vec_aggr",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "aggr_op(edge_vec, idx_vi)",
+                            "Call"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.log(tf.math.exp(1.0) - 1 + edge_count)",
+                            "BinOp"
+                        ],
+                        [
+                            "aggr_op(edge_vec, idx_vj, max_idx_vj + 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.scatter_nd(idx_and_vi, edge_vec_aggr, output_shape)",
+                            "Call"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.sqrt(edge_count)",
+                            "BinOp"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.log(tf.math.exp(1.0) - 1 + edge_count)",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.scatter_nd(idx_and_vj, edge_vec_aggr, output_shape)",
+                            "Call"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.sqrt(edge_count)",
+                            "BinOp"
+                        ],
+                        [
+                            "aggr_op(edge_vec, idx_vi)",
+                            "Call"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.log(tf.math.exp(1.0) - 1 + edge_count)",
+                            "BinOp"
+                        ],
+                        [
+                            "aggr_op(edge_vec, idx_vj, max_idx_vj + 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.scatter_nd(reduced_idx_e2vi, edge_vec_aggr, output_shape)",
+                            "Call"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.sqrt(edge_count)",
+                            "BinOp"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.log(tf.math.exp(1.0) - 1 + edge_count)",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.scatter_nd(reduced_idx_e2vj, edge_vec_aggr, output_shape)",
+                            "Call"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.sqrt(edge_count)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "output_shape",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "cast_172": {
+                "variable": {
+                    "value": "reduced_idx_e2vi",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.math.segment_max(new_idx_e2vi, idx_vi)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.int32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_173": {
+                "variable": {
+                    "value": "reduced_idx_e2vi",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "reduced_idx_e2vi",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.cast(tf.math.segment_max(new_idx_e2vi, idx_vi), tf.int32)",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(reduced_idx_e2vi, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "scatter_nd_174": {
+                "variable": {
+                    "value": "edge_vec_aggr",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "indices": {
+                    "value": "reduced_idx_e2vi",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.cast(tf.math.segment_max(new_idx_e2vi, idx_vi), tf.int32)",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(reduced_idx_e2vi, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "updates": {
+                    "value": "edge_vec_aggr",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "aggr_op(edge_vec, idx_vi)",
+                            "Call"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.log(tf.math.exp(1.0) - 1 + edge_count)",
+                            "BinOp"
+                        ],
+                        [
+                            "aggr_op(edge_vec, idx_vj, max_idx_vj + 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.scatter_nd(idx_and_vi, edge_vec_aggr, output_shape)",
+                            "Call"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.sqrt(edge_count)",
+                            "BinOp"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.log(tf.math.exp(1.0) - 1 + edge_count)",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.scatter_nd(idx_and_vj, edge_vec_aggr, output_shape)",
+                            "Call"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.sqrt(edge_count)",
+                            "BinOp"
+                        ],
+                        [
+                            "aggr_op(edge_vec, idx_vi)",
+                            "Call"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.log(tf.math.exp(1.0) - 1 + edge_count)",
+                            "BinOp"
+                        ],
+                        [
+                            "aggr_op(edge_vec, idx_vj, max_idx_vj + 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.scatter_nd(reduced_idx_e2vi, edge_vec_aggr, output_shape)",
+                            "Call"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.sqrt(edge_count)",
+                            "BinOp"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.log(tf.math.exp(1.0) - 1 + edge_count)",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.scatter_nd(reduced_idx_e2vj, edge_vec_aggr, output_shape)",
+                            "Call"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.sqrt(edge_count)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "output_shape",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "segment_max_201": {
+                "variable": {
+                    "value": "logits_max",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "logits",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "segment_ids": {
+                    "value": "segment_ids",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "gather_202": {
+                "variable": {
+                    "value": "logits_max",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "logits_max",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.math.segment_max(logits, segment_ids)",
+                            "Call"
+                        ],
+                        [
+                            "tf.gather(logits_max, segment_ids)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.unsorted_segment_max(logits, segment_ids, num_segments)",
+                            "Call"
+                        ],
+                        [
+                            "tf.gather(logits_max, segment_ids)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "indices": {
+                    "value": "segment_ids",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "exp_204": {
+                "variable": {
+                    "value": "logits_exp",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "logits_diff",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "logits - logits_max",
+                            "BinOp"
+                        ],
+                        [
+                            "logits - logits_max",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "segment_sum_205": {
+                "variable": {
+                    "value": "logits_expsum",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "logits_exp",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.math.exp(logits_diff)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.exp(logits_diff)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "segment_ids": {
+                    "value": "segment_ids",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "gather_206": {
+                "variable": {
+                    "value": "logits_expsum",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "logits_expsum",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.math.segment_sum(logits_exp, segment_ids)",
+                            "Call"
+                        ],
+                        [
+                            "tf.gather(logits_expsum, segment_ids)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.unsorted_segment_sum(logits_exp, segment_ids, num_segments)",
+                            "Call"
+                        ],
+                        [
+                            "tf.gather(logits_expsum, segment_ids)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "indices": {
+                    "value": "segment_ids",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "unsorted_segment_max_210": {
+                "variable": {
+                    "value": "logits_max",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "logits",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "segment_ids": {
+                    "value": "segment_ids",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "num_segments": {
+                    "value": "num_segments",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reduce_max(segment_ids) + 1",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "gather_211": {
+                "variable": {
+                    "value": "logits_max",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "logits_max",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.math.segment_max(logits, segment_ids)",
+                            "Call"
+                        ],
+                        [
+                            "tf.gather(logits_max, segment_ids)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.unsorted_segment_max(logits, segment_ids, num_segments)",
+                            "Call"
+                        ],
+                        [
+                            "tf.gather(logits_max, segment_ids)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "indices": {
+                    "value": "segment_ids",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "exp_213": {
+                "variable": {
+                    "value": "logits_exp",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "logits_diff",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "logits - logits_max",
+                            "BinOp"
+                        ],
+                        [
+                            "logits - logits_max",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "unsorted_segment_sum_214": {
+                "variable": {
+                    "value": "logits_expsum",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "logits_exp",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.math.exp(logits_diff)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.exp(logits_diff)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "segment_ids": {
+                    "value": "segment_ids",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "num_segments": {
+                    "value": "num_segments",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reduce_max(segment_ids) + 1",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "gather_215": {
+                "variable": {
+                    "value": "logits_expsum",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "logits_expsum",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.math.segment_sum(logits_exp, segment_ids)",
+                            "Call"
+                        ],
+                        [
+                            "tf.gather(logits_expsum, segment_ids)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.unsorted_segment_sum(logits_exp, segment_ids, num_segments)",
+                            "Call"
+                        ],
+                        [
+                            "tf.gather(logits_expsum, segment_ids)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "indices": {
+                    "value": "segment_ids",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Embedding_241": {
+                "variable": {
+                    "value": "self.entity_embedding",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_dim": {
+                    "value": "n_entities",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "output_dim": {
+                    "value": "self.n_dims",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "entities",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Embedding_242": {
+                "variable": {
+                    "value": "self.relation_embedding",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_dim": {
+                    "value": "n_relations",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "output_dim": {
+                    "value": "self.n_dims",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "relations",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_297": {
+                "variable": {
+                    "value": "ent_idx",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "tf.range(0, self.n_nodes)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Dense_328": {
+                "variable": {
+                    "value": "self.intervention_fn",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "units": {
+                    "value": "self.n_dims",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "None",
+                    "type": "NoneType",
+                    "possible_values": []
+                },
+                "use_bias": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "intervention_fn",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "gather_358": {
+                "variable": {
+                    "value": "query_head_vec",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "query_head_emb",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "None",
+                            "Method Argument"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "indices": {
+                    "value": "eg_idx",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "seen_edges[:, 0]",
+                            "Subscript"
+                        ],
+                        [
+                            "scanned_edges[:, 0]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "gather_359": {
+                "variable": {
+                    "value": "query_rel_vec",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "query_rel_emb",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "None",
+                            "Method Argument"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "indices": {
+                    "value": "eg_idx",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "seen_edges[:, 0]",
+                            "Subscript"
+                        ],
+                        [
+                            "scanned_edges[:, 0]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "squeeze_370": {
+                "variable": {
+                    "value": "hidden_uncon",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "hidden_uncon",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.squeeze(hidden_uncon, axis=0)",
+                            "Call"
+                        ],
+                        [
+                            "tf.gather(hidden_uncon, v)",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(node_attention, 1) * hidden_uncon",
+                            "BinOp"
+                        ],
+                        [
+                            "self.intervention_fn(hidden_uncon)",
+                            "Call"
+                        ],
+                        [
+                            "tf.squeeze(hidden_uncon, axis=0)",
+                            "Call"
+                        ],
+                        [
+                            "tf.gather(hidden_uncon, v)",
+                            "Call"
+                        ],
+                        [
+                            "self.proj(hidden_uncon)",
+                            "Call"
+                        ],
+                        [
+                            "self.uncon_flow.get_init_hidden(self.shared_embedding)",
+                            "Call"
+                        ],
+                        [
+                            "self.uncon_flow(hidden_uncon, selected_edges=selected_edges, shared_embedding=self.shared_embedding, tc=get(tc, 'model'))",
+                            "Call"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "gather_371": {
+                "variable": {
+                    "value": "hidden_uncon",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "hidden_uncon",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.squeeze(hidden_uncon, axis=0)",
+                            "Call"
+                        ],
+                        [
+                            "tf.gather(hidden_uncon, v)",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(node_attention, 1) * hidden_uncon",
+                            "BinOp"
+                        ],
+                        [
+                            "self.intervention_fn(hidden_uncon)",
+                            "Call"
+                        ],
+                        [
+                            "tf.squeeze(hidden_uncon, axis=0)",
+                            "Call"
+                        ],
+                        [
+                            "tf.gather(hidden_uncon, v)",
+                            "Call"
+                        ],
+                        [
+                            "self.proj(hidden_uncon)",
+                            "Call"
+                        ],
+                        [
+                            "self.uncon_flow.get_init_hidden(self.shared_embedding)",
+                            "Call"
+                        ],
+                        [
+                            "self.uncon_flow(hidden_uncon, selected_edges=selected_edges, shared_embedding=self.shared_embedding, tc=get(tc, 'model'))",
+                            "Call"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "indices": {
+                    "value": "v",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "gather_372": {
+                "variable": {
+                    "value": "query_head_vec",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "query_head_emb",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "None",
+                            "Method Argument"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "indices": {
+                    "value": "eg_idx",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "seen_edges[:, 0]",
+                            "Subscript"
+                        ],
+                        [
+                            "scanned_edges[:, 0]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "gather_373": {
+                "variable": {
+                    "value": "query_rel_vec",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "query_rel_emb",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "None",
+                            "Method Argument"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "indices": {
+                    "value": "eg_idx",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "seen_edges[:, 0]",
+                            "Subscript"
+                        ],
+                        [
+                            "scanned_edges[:, 0]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "stack_376": {
+                "variable": {
+                    "value": "idx_and_v",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[eg_idx, v]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "gather_nd_377": {
+                "variable": {
+                    "value": "node_attention",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "node_attention",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.gather_nd(node_attention, idx_and_v)",
+                            "Call"
+                        ],
+                        [
+                            "inputs",
+                            "variable"
+                        ],
+                        [
+                            "tf.one_hot(heads, self.n_nodes)",
+                            "Call"
+                        ],
+                        [
+                            "self.att_flow.get_init_node_attention(self.heads)",
+                            "Call"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "indices": {
+                    "value": "idx_and_v",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.stack([eg_idx, v], axis=1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Dense_415": {
+                "variable": {
+                    "value": "self.proj",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "units": {
+                    "value": "self.n_dims",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "tf.tanh",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "proj",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "gather_456": {
+                "variable": {
+                    "value": "q_head_vec",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "query_head_vec",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.gather(query_head_emb, eg_idx)",
+                            "Call"
+                        ],
+                        [
+                            "tf.gather(query_head_emb, eg_idx)",
+                            "Call"
+                        ],
+                        [
+                            "self.proj(query_head_emb)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "indices": {
+                    "value": "eg_idx",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "seen_edges[:, 0]",
+                            "Subscript"
+                        ],
+                        [
+                            "scanned_edges[:, 0]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "gather_457": {
+                "variable": {
+                    "value": "q_rel_vec",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "query_rel_vec",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.gather(query_rel_emb, eg_idx)",
+                            "Call"
+                        ],
+                        [
+                            "tf.gather(query_rel_emb, eg_idx)",
+                            "Call"
+                        ],
+                        [
+                            "self.proj(query_rel_emb)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "indices": {
+                    "value": "eg_idx",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "seen_edges[:, 0]",
+                            "Subscript"
+                        ],
+                        [
+                            "scanned_edges[:, 0]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "stack_467": {
+                "variable": {
+                    "value": "idx_and_vi",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[scanned_edges[:, 0], scanned_edges[:, 1]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "gather_nd_468": {
+                "variable": {
+                    "value": "gathered_node_attention",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "node_attention",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.gather_nd(node_attention, idx_and_v)",
+                            "Call"
+                        ],
+                        [
+                            "inputs",
+                            "variable"
+                        ],
+                        [
+                            "tf.one_hot(heads, self.n_nodes)",
+                            "Call"
+                        ],
+                        [
+                            "self.att_flow.get_init_node_attention(self.heads)",
+                            "Call"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "indices": {
+                    "value": "idx_and_vi",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.stack([idx, selected_edges[:, 1]], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.stack([selected_edges[:, 0], selected_edges[:, 1]], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.cast(tf.math.segment_max(idx_and_vi, idx_vi), tf.int32)",
+                            "Call"
+                        ],
+                        [
+                            "tf.stack([scanned_edges[:, 0], scanned_edges[:, 1]], axis=1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reduce_sum_476": {
+                "variable": {
+                    "value": "new_node_attention_sum",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "new_node_attention",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "aggregate_op(trans_attention, scanned_edges, (batch_size, self.n_nodes), aggr_op_name='sum')",
+                            "Call"
+                        ],
+                        [
+                            "new_node_attention / new_node_attention_sum",
+                            "BinOp"
+                        ],
+                        [
+                            "self.att_flow(node_attention, scanned_edges=aug_scanned_edges, hidden_uncon=hidden_uncon, hidden_con=hidden_con, shared_embedding=self.shared_embedding, new_idx_for_memorized=new_idx_for_memorized, n_memorized_and_scanned_nodes=n_memorized_and_scanned_nodes, query_head_emb=query_head_emb, query_rel_emb=query_rel_emb, tc=get(tc, 'model'))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keepdims": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Dense_19": {
+                "variable": {
+                    "value": "self.dense_1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "units": {
+                    "value": "self.n_dims",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "tf.tanh",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "dense_1",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_54": {
+                "input_tensor": {
+                    "value": "self.left_dense(left_x) * self.center_dense(self.right_dense(right_x))",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "shape_67": {
+                "input": {
+                    "value": "inputs",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "equal_69": {
+                "x": {
+                    "value": "batch_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.shape(inputs)[0]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.shape(inputs)[0]",
+                            "Subscript"
+                        ],
+                        [
+                            "len(self.heads)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "segment_sum_118": {
+                "variable": {
+                    "value": "edge_count",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "tf.ones((len(idx_vi), 1))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "segment_ids": {
+                    "value": "idx_vi",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "selected_edges[:, 4]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 4]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 4]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "reduce_max_128": {
+                "variable": {
+                    "value": "max_idx_vj",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "idx_vj",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "selected_edges[:, 5]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 5]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 5]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "stack_141": {
+                "variable": {
+                    "value": "idx_and_vj",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[selected_edges[:, 0], selected_edges[:, 2]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cast_142": {
+                "variable": {
+                    "value": "idx_and_vj",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.math.unsorted_segment_max(idx_and_vj, idx_vj, max_idx_vj + 1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.int32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "scatter_nd_143": {
+                "variable": {
+                    "value": "edge_vec_aggr",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "indices": {
+                    "value": "idx_and_vj",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.stack([idx, selected_edges[:, 2]], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.stack([selected_edges[:, 0], selected_edges[:, 2]], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.cast(tf.math.unsorted_segment_max(idx_and_vj, idx_vj, max_idx_vj + 1), tf.int32)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "updates": {
+                    "value": "edge_vec_aggr",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "aggr_op(edge_vec, idx_vi)",
+                            "Call"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.log(tf.math.exp(1.0) - 1 + edge_count)",
+                            "BinOp"
+                        ],
+                        [
+                            "aggr_op(edge_vec, idx_vj, max_idx_vj + 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.scatter_nd(idx_and_vi, edge_vec_aggr, output_shape)",
+                            "Call"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.sqrt(edge_count)",
+                            "BinOp"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.log(tf.math.exp(1.0) - 1 + edge_count)",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.scatter_nd(idx_and_vj, edge_vec_aggr, output_shape)",
+                            "Call"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.sqrt(edge_count)",
+                            "BinOp"
+                        ],
+                        [
+                            "aggr_op(edge_vec, idx_vi)",
+                            "Call"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.log(tf.math.exp(1.0) - 1 + edge_count)",
+                            "BinOp"
+                        ],
+                        [
+                            "aggr_op(edge_vec, idx_vj, max_idx_vj + 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.scatter_nd(reduced_idx_e2vi, edge_vec_aggr, output_shape)",
+                            "Call"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.sqrt(edge_count)",
+                            "BinOp"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.log(tf.math.exp(1.0) - 1 + edge_count)",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.scatter_nd(reduced_idx_e2vj, edge_vec_aggr, output_shape)",
+                            "Call"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.sqrt(edge_count)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "output_shape",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "segment_sum_166": {
+                "variable": {
+                    "value": "edge_count",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "tf.ones((len(idx_vi), 1))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "segment_ids": {
+                    "value": "idx_vi",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "selected_edges[:, 4]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 4]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 4]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "reduce_max_177": {
+                "variable": {
+                    "value": "max_idx_vj",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "idx_vj",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "selected_edges[:, 5]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 5]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 5]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "cast_191": {
+                "variable": {
+                    "value": "reduced_idx_e2vj",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.math.unsorted_segment_max(new_idx_e2vj, idx_vj, max_idx_vj + 1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.int32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_192": {
+                "variable": {
+                    "value": "reduced_idx_e2vj",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "reduced_idx_e2vj",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.cast(tf.math.unsorted_segment_max(new_idx_e2vj, idx_vj, max_idx_vj + 1), tf.int32)",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(reduced_idx_e2vj, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "scatter_nd_193": {
+                "variable": {
+                    "value": "edge_vec_aggr",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "indices": {
+                    "value": "reduced_idx_e2vj",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.cast(tf.math.unsorted_segment_max(new_idx_e2vj, idx_vj, max_idx_vj + 1), tf.int32)",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(reduced_idx_e2vj, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "updates": {
+                    "value": "edge_vec_aggr",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "aggr_op(edge_vec, idx_vi)",
+                            "Call"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.log(tf.math.exp(1.0) - 1 + edge_count)",
+                            "BinOp"
+                        ],
+                        [
+                            "aggr_op(edge_vec, idx_vj, max_idx_vj + 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.scatter_nd(idx_and_vi, edge_vec_aggr, output_shape)",
+                            "Call"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.sqrt(edge_count)",
+                            "BinOp"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.log(tf.math.exp(1.0) - 1 + edge_count)",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.scatter_nd(idx_and_vj, edge_vec_aggr, output_shape)",
+                            "Call"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.sqrt(edge_count)",
+                            "BinOp"
+                        ],
+                        [
+                            "aggr_op(edge_vec, idx_vi)",
+                            "Call"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.log(tf.math.exp(1.0) - 1 + edge_count)",
+                            "BinOp"
+                        ],
+                        [
+                            "aggr_op(edge_vec, idx_vj, max_idx_vj + 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.scatter_nd(reduced_idx_e2vi, edge_vec_aggr, output_shape)",
+                            "Call"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.sqrt(edge_count)",
+                            "BinOp"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.log(tf.math.exp(1.0) - 1 + edge_count)",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.scatter_nd(reduced_idx_e2vj, edge_vec_aggr, output_shape)",
+                            "Call"
+                        ],
+                        [
+                            "edge_vec_aggr * tf.math.sqrt(edge_count)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "output_shape",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_308": {
+                "variable": {
+                    "value": "ent_idx",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "tf.range(0, self.n_nodes)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "squeeze_395": {
+                "variable": {
+                    "value": "hidden_uncon",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "hidden_uncon",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.squeeze(hidden_uncon, axis=0)",
+                            "Call"
+                        ],
+                        [
+                            "tf.gather(hidden_uncon, v)",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(node_attention, 1) * hidden_uncon",
+                            "BinOp"
+                        ],
+                        [
+                            "self.intervention_fn(hidden_uncon)",
+                            "Call"
+                        ],
+                        [
+                            "tf.squeeze(hidden_uncon, axis=0)",
+                            "Call"
+                        ],
+                        [
+                            "tf.gather(hidden_uncon, v)",
+                            "Call"
+                        ],
+                        [
+                            "self.proj(hidden_uncon)",
+                            "Call"
+                        ],
+                        [
+                            "self.uncon_flow.get_init_hidden(self.shared_embedding)",
+                            "Call"
+                        ],
+                        [
+                            "self.uncon_flow(hidden_uncon, selected_edges=selected_edges, shared_embedding=self.shared_embedding, tc=get(tc, 'model'))",
+                            "Call"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "gather_396": {
+                "variable": {
+                    "value": "hidden_uncon",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "hidden_uncon",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.squeeze(hidden_uncon, axis=0)",
+                            "Call"
+                        ],
+                        [
+                            "tf.gather(hidden_uncon, v)",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(node_attention, 1) * hidden_uncon",
+                            "BinOp"
+                        ],
+                        [
+                            "self.intervention_fn(hidden_uncon)",
+                            "Call"
+                        ],
+                        [
+                            "tf.squeeze(hidden_uncon, axis=0)",
+                            "Call"
+                        ],
+                        [
+                            "tf.gather(hidden_uncon, v)",
+                            "Call"
+                        ],
+                        [
+                            "self.proj(hidden_uncon)",
+                            "Call"
+                        ],
+                        [
+                            "self.uncon_flow.get_init_hidden(self.shared_embedding)",
+                            "Call"
+                        ],
+                        [
+                            "self.uncon_flow(hidden_uncon, selected_edges=selected_edges, shared_embedding=self.shared_embedding, tc=get(tc, 'model'))",
+                            "Call"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "indices": {
+                    "value": "v",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "scatter_nd_441": {
+                "variable": {
+                    "value": "hidden_con",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "indices": {
+                    "value": "new_idx_for_memorized",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "None",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "updates": {
+                    "value": "hidden_con",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.proj(hidden_con)",
+                            "Call"
+                        ],
+                        [
+                            "tf.scatter_nd(new_idx_for_memorized, hidden_con, tf.TensorShape((n_memorized_and_scanned_nodes, self.n_dims)))",
+                            "Call"
+                        ],
+                        [
+                            "self.con_flow.get_init_hidden(hidden_uncon, memorized_v)",
+                            "Call"
+                        ],
+                        [
+                            "tf.scatter_nd(new_idx_for_memorized, hidden_con, tf.TensorShape((n_memorized_and_seen_nodes, self.hparams.n_dims)))",
+                            "Call"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "tf.TensorShape((n_memorized_and_scanned_nodes, self.n_dims))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "one_hot_486": {
+                "variable": {
+                    "value": "node_attention",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "indices": {
+                    "value": "heads",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "depth": {
+                    "value": "self.n_nodes",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "scatter_nd_640": {
+                "variable": {
+                    "value": "hidden_con",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "indices": {
+                    "value": "new_idx_for_memorized",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "None",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "updates": {
+                    "value": "hidden_con",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.proj(hidden_con)",
+                            "Call"
+                        ],
+                        [
+                            "tf.scatter_nd(new_idx_for_memorized, hidden_con, tf.TensorShape((n_memorized_and_scanned_nodes, self.n_dims)))",
+                            "Call"
+                        ],
+                        [
+                            "self.con_flow.get_init_hidden(hidden_uncon, memorized_v)",
+                            "Call"
+                        ],
+                        [
+                            "tf.scatter_nd(new_idx_for_memorized, hidden_con, tf.TensorShape((n_memorized_and_seen_nodes, self.hparams.n_dims)))",
+                            "Call"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "tf.TensorShape((n_memorized_and_seen_nodes, self.hparams.n_dims))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Dense_21": {
+                "variable": {
+                    "value": "self.dense_1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "units": {
+                    "value": "self.n_dims",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "tf.nn.leaky_relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "dense_1",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Dense_22": {
+                "variable": {
+                    "value": "self.dense_2",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "units": {
+                    "value": "self.n_dims",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "tf.tanh",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "dense_2",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "zeros_69": {
+                "shape": {
+                    "value": "(n_selected_edges,)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "int32",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "segment_sum_121": {
+                "variable": {
+                    "value": "edge_count",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "tf.ones((len(idx_vi), 1))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "segment_ids": {
+                    "value": "idx_vi",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "selected_edges[:, 4]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 4]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 4]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "segment_max_124": {
+                "data": {
+                    "value": "idx_and_vi",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.stack([idx, selected_edges[:, 1]], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.stack([selected_edges[:, 0], selected_edges[:, 1]], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.cast(tf.math.segment_max(idx_and_vi, idx_vi), tf.int32)",
+                            "Call"
+                        ],
+                        [
+                            "tf.stack([scanned_edges[:, 0], scanned_edges[:, 1]], axis=1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "segment_ids": {
+                    "value": "idx_vi",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "selected_edges[:, 4]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 4]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 4]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "unsorted_segment_sum_136": {
+                "variable": {
+                    "value": "edge_count",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "tf.ones((len(idx_vj), 1))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "segment_ids": {
+                    "value": "idx_vj",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "selected_edges[:, 5]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 5]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 5]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "num_segments": {
+                    "value": "max_idx_vj + 1",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "segment_sum_169": {
+                "variable": {
+                    "value": "edge_count",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "tf.ones((len(idx_vi), 1))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "segment_ids": {
+                    "value": "idx_vi",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "selected_edges[:, 4]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 4]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 4]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "segment_max_172": {
+                "data": {
+                    "value": "new_idx_e2vi",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "selected_edges[:, 6]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 6]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "segment_ids": {
+                    "value": "idx_vi",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "selected_edges[:, 4]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 4]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 4]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "unsorted_segment_sum_185": {
+                "variable": {
+                    "value": "edge_count",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "tf.ones((len(idx_vj), 1))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "segment_ids": {
+                    "value": "idx_vj",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "selected_edges[:, 5]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 5]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 5]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "num_segments": {
+                    "value": "max_idx_vj + 1",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_max_209": {
+                "input_tensor": {
+                    "value": "segment_ids",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "name_scope_254": {
+                "name": {
+                    "value": "self.name",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "name_scope_307": {
+                "name": {
+                    "value": "self.name",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "shape_364": {
+                "input": {
+                    "value": "hidden",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "inputs",
+                            "variable"
+                        ],
+                        [
+                            "inputs",
+                            "variable"
+                        ],
+                        [
+                            "inputs",
+                            "variable"
+                        ],
+                        [
+                            "update_op(hidden, update)",
+                            "Call"
+                        ],
+                        [
+                            "ent_emb",
+                            "variable"
+                        ],
+                        [
+                            "inputs",
+                            "variable"
+                        ],
+                        [
+                            "update_op(hidden, update)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "expand_dims_378": {
+                "input": {
+                    "value": "node_attention",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.gather_nd(node_attention, idx_and_v)",
+                            "Call"
+                        ],
+                        [
+                            "inputs",
+                            "variable"
+                        ],
+                        [
+                            "tf.one_hot(heads, self.n_nodes)",
+                            "Call"
+                        ],
+                        [
+                            "self.att_flow.get_init_node_attention(self.heads)",
+                            "Call"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "name_scope_393": {
+                "name": {
+                    "value": "self.name",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "shape_472": {
+                "input": {
+                    "value": "inputs",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "name_scope_485": {
+                "name": {
+                    "value": "self.name",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "ones_118": {
+                "shape": {
+                    "value": "(len(idx_vi), 1)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "log_119": {
+                "x": {
+                    "value": "tf.math.exp(1.0) - 1 + edge_count",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "unsorted_segment_sum_139": {
+                "variable": {
+                    "value": "edge_count",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "tf.ones((len(idx_vj), 1))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "segment_ids": {
+                    "value": "idx_vj",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "selected_edges[:, 5]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 5]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 5]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "num_segments": {
+                    "value": "max_idx_vj + 1",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "unsorted_segment_max_142": {
+                "data": {
+                    "value": "idx_and_vj",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.stack([idx, selected_edges[:, 2]], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.stack([selected_edges[:, 0], selected_edges[:, 2]], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.cast(tf.math.unsorted_segment_max(idx_and_vj, idx_vj, max_idx_vj + 1), tf.int32)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "segment_ids": {
+                    "value": "idx_vj",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "selected_edges[:, 5]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 5]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 5]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "num_segments": {
+                    "value": "max_idx_vj + 1",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "ones_166": {
+                "shape": {
+                    "value": "(len(idx_vi), 1)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "log_167": {
+                "x": {
+                    "value": "tf.math.exp(1.0) - 1 + edge_count",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "unsorted_segment_sum_188": {
+                "variable": {
+                    "value": "edge_count",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "tf.ones((len(idx_vj), 1))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "segment_ids": {
+                    "value": "idx_vj",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "selected_edges[:, 5]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 5]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 5]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "num_segments": {
+                    "value": "max_idx_vj + 1",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "unsorted_segment_max_191": {
+                "data": {
+                    "value": "new_idx_e2vj",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "selected_edges[:, 7]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 7]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "segment_ids": {
+                    "value": "idx_vj",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "selected_edges[:, 5]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 5]",
+                            "Subscript"
+                        ],
+                        [
+                            "selected_edges[:, 5]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "num_segments": {
+                    "value": "max_idx_vj + 1",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "TensorShape_442": {
+                "dims": {
+                    "value": "(n_memorized_and_scanned_nodes, self.n_dims)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_560": {
+                "input_tensor": {
+                    "value": "entropy(node_attention)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_561": {
+                "input_tensor": {
+                    "value": "topk_occupy(node_attention, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_562": {
+                "input_tensor": {
+                    "value": "topk_occupy(node_attention, 3)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_563": {
+                "input_tensor": {
+                    "value": "topk_occupy(node_attention, 5)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "TensorShape_641": {
+                "dims": {
+                    "value": "(n_memorized_and_seen_nodes, self.hparams.n_dims)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_657": {
+                "input_tensor": {
+                    "value": "entropy(new_node_attention)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_658": {
+                "input_tensor": {
+                    "value": "topk_occupy(new_node_attention, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_659": {
+                "input_tensor": {
+                    "value": "topk_occupy(new_node_attention, 3)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_660": {
+                "input_tensor": {
+                    "value": "topk_occupy(new_node_attention, 5)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "gather_nd_670": {
+                "params": {
+                    "value": "final_node_attention",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "indices": {
+                    "value": "attended_nodes",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.graph.get_topk_nodes(node_attention, max_attended_nodes, tc=get(tc, 'graph'))",
+                            "Call"
+                        ],
+                        [
+                            "self.graph.get_topk_nodes(final_node_attention, max_attended_nodes)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "ones_121": {
+                "shape": {
+                    "value": "(len(idx_vi), 1)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "sqrt_122": {
+                "x": {
+                    "value": "edge_count",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.math.segment_sum(tf.ones((len(idx_vi), 1)), idx_vi)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.segment_sum(tf.ones((len(idx_vi), 1)), idx_vi)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.unsorted_segment_sum(tf.ones((len(idx_vj), 1)), idx_vj, max_idx_vj + 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.unsorted_segment_sum(tf.ones((len(idx_vj), 1)), idx_vj, max_idx_vj + 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.segment_sum(tf.ones((len(idx_vi), 1)), idx_vi)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.segment_sum(tf.ones((len(idx_vi), 1)), idx_vi)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.unsorted_segment_sum(tf.ones((len(idx_vj), 1)), idx_vj, max_idx_vj + 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.unsorted_segment_sum(tf.ones((len(idx_vj), 1)), idx_vj, max_idx_vj + 1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "ones_136": {
+                "shape": {
+                    "value": "(len(idx_vj), 1)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "log_137": {
+                "x": {
+                    "value": "tf.math.exp(1.0) - 1 + edge_count",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "ones_169": {
+                "shape": {
+                    "value": "(len(idx_vi), 1)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "sqrt_170": {
+                "x": {
+                    "value": "edge_count",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.math.segment_sum(tf.ones((len(idx_vi), 1)), idx_vi)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.segment_sum(tf.ones((len(idx_vi), 1)), idx_vi)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.unsorted_segment_sum(tf.ones((len(idx_vj), 1)), idx_vj, max_idx_vj + 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.unsorted_segment_sum(tf.ones((len(idx_vj), 1)), idx_vj, max_idx_vj + 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.segment_sum(tf.ones((len(idx_vi), 1)), idx_vi)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.segment_sum(tf.ones((len(idx_vi), 1)), idx_vi)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.unsorted_segment_sum(tf.ones((len(idx_vj), 1)), idx_vj, max_idx_vj + 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.unsorted_segment_sum(tf.ones((len(idx_vj), 1)), idx_vj, max_idx_vj + 1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "ones_185": {
+                "shape": {
+                    "value": "(len(idx_vj), 1)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "log_186": {
+                "x": {
+                    "value": "tf.math.exp(1.0) - 1 + edge_count",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "gather_nd_583": {
+                "params": {
+                    "value": "node_attention",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.gather_nd(node_attention, idx_and_v)",
+                            "Call"
+                        ],
+                        [
+                            "inputs",
+                            "variable"
+                        ],
+                        [
+                            "tf.one_hot(heads, self.n_nodes)",
+                            "Call"
+                        ],
+                        [
+                            "self.att_flow.get_init_node_attention(self.heads)",
+                            "Call"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "indices": {
+                    "value": "attended_nodes",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.graph.get_topk_nodes(node_attention, max_attended_nodes, tc=get(tc, 'graph'))",
+                            "Call"
+                        ],
+                        [
+                            "self.graph.get_topk_nodes(final_node_attention, max_attended_nodes)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "ones_139": {
+                "shape": {
+                    "value": "(len(idx_vj), 1)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "sqrt_140": {
+                "x": {
+                    "value": "edge_count",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.math.segment_sum(tf.ones((len(idx_vi), 1)), idx_vi)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.segment_sum(tf.ones((len(idx_vi), 1)), idx_vi)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.unsorted_segment_sum(tf.ones((len(idx_vj), 1)), idx_vj, max_idx_vj + 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.unsorted_segment_sum(tf.ones((len(idx_vj), 1)), idx_vj, max_idx_vj + 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.segment_sum(tf.ones((len(idx_vi), 1)), idx_vi)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.segment_sum(tf.ones((len(idx_vi), 1)), idx_vi)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.unsorted_segment_sum(tf.ones((len(idx_vj), 1)), idx_vj, max_idx_vj + 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.unsorted_segment_sum(tf.ones((len(idx_vj), 1)), idx_vj, max_idx_vj + 1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "ones_188": {
+                "shape": {
+                    "value": "(len(idx_vj), 1)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "sqrt_189": {
+                "x": {
+                    "value": "edge_count",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.math.segment_sum(tf.ones((len(idx_vi), 1)), idx_vi)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.segment_sum(tf.ones((len(idx_vi), 1)), idx_vi)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.unsorted_segment_sum(tf.ones((len(idx_vj), 1)), idx_vj, max_idx_vj + 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.unsorted_segment_sum(tf.ones((len(idx_vj), 1)), idx_vj, max_idx_vj + 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.segment_sum(tf.ones((len(idx_vi), 1)), idx_vi)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.segment_sum(tf.ones((len(idx_vi), 1)), idx_vi)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.unsorted_segment_sum(tf.ones((len(idx_vj), 1)), idx_vj, max_idx_vj + 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.math.unsorted_segment_sum(tf.ones((len(idx_vj), 1)), idx_vj, max_idx_vj + 1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "exp_119": {
+                "x": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "exp_167": {
+                "x": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "exp_137": {
+                "x": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "exp_186": {
+                "x": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "code/run.py": {
+        "tensorflow": {
+            "stack_25": {
+                "variable": {
+                    "value": "pred_idx",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[tf.range(0, len(tails)), tails]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "gather_nd_26": {
+                "variable": {
+                    "value": "pred_prob",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "prediction",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "node_attention",
+                            "variable"
+                        ],
+                        [
+                            "node_attention",
+                            "variable"
+                        ],
+                        [
+                            "np.concatenate(self.prediction, axis=0)",
+                            "Call"
+                        ],
+                        [
+                            "np.concatenate(self.prediction, axis=0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "indices": {
+                    "value": "pred_idx",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.stack([tf.range(0, len(tails)), tails], axis=1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reduce_mean_27": {
+                "variable": {
+                    "value": "pred_loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "-tf.math.log(pred_prob + 1e-20)",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "Adam_102": {
+                "variable": {
+                    "value": "self.optimizer",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "learning_rate": {
+                    "value": "self.get_lr()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Adam_104": {
+                "variable": {
+                    "value": "self.optimizer",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "learning_rate": {
+                    "value": "self.get_lr()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "clipnorm": {
+                    "value": "hparams.clipnorm",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "log_27": {
+                "x": {
+                    "value": "pred_prob + 1e-20",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_161": {
+                "input_tensor": {
+                    "value": "tf.cast(tf.equal(tf.argmax(prediction, axis=1), tails), tf.float32)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_250": {
+                "input_tensor": {
+                    "value": "tf.cast(tf.equal(tf.argmax(prediction, axis=1), tails), tf.float32)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "GradientTape_133": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "cast_161": {
+                "x": {
+                    "value": "tf.equal(tf.argmax(prediction, axis=1), tails)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "cast_250": {
+                "x": {
+                    "value": "tf.equal(tf.argmax(prediction, axis=1), tails)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "equal_161": {
+                "x": {
+                    "value": "tf.argmax(prediction, axis=1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "tails",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "equal_250": {
+                "x": {
+                    "value": "tf.argmax(prediction, axis=1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "tails",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "argmax_161": {
+                "input": {
+                    "value": "prediction",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "node_attention",
+                            "variable"
+                        ],
+                        [
+                            "node_attention",
+                            "variable"
+                        ],
+                        [
+                            "np.concatenate(self.prediction, axis=0)",
+                            "Call"
+                        ],
+                        [
+                            "np.concatenate(self.prediction, axis=0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "argmax_250": {
+                "input": {
+                    "value": "prediction",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "node_attention",
+                            "variable"
+                        ],
+                        [
+                            "node_attention",
+                            "variable"
+                        ],
+                        [
+                            "np.concatenate(self.prediction, axis=0)",
+                            "Call"
+                        ],
+                        [
+                            "np.concatenate(self.prediction, axis=0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "code/utils.py": {
+        "tensorflow": {
+            "top_k_116": {
+                "variable": {
+                    "value": "(values, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "k": {
+                    "value": "k",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_112": {
+                "input_tensor": {
+                    "value": "-tf.math.log(tf.math.maximum(x, 1e-20)) * x",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_117": {
+                "input_tensor": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "log_112": {
+                "x": {
+                    "value": "tf.math.maximum(x, 1e-20)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "maximum_112": {
+                "x": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "1e-20",
+                    "type": "float",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,1079 @@
+{
+    "drqa/layers.py": {
+        "torch": {
+            "ModuleList_29": {
+                "variable": {
+                    "value": "self.rnns",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "sort_89": {
+                "variable": {
+                    "value": "(_, idx_sort)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "lengths",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "x_mask.data.eq(0).long().sum(1).squeeze()",
+                            "Call"
+                        ],
+                        [
+                            "list(lengths[idx_sort])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "descending": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "sort_90": {
+                "variable": {
+                    "value": "(_, idx_unsort)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "idx_sort",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Variable(idx_sort)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "pack_padded_sequence_103": {
+                "variable": {
+                    "value": "rnn_input",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "x.transpose(0, 1)",
+                            "Call"
+                        ],
+                        [
+                            "x.index_select(0, idx_sort)",
+                            "Call"
+                        ],
+                        [
+                            "x.transpose(0, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "lengths": {
+                    "value": "lengths",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "x_mask.data.eq(0).long().sum(1).squeeze()",
+                            "Call"
+                        ],
+                        [
+                            "list(lengths[idx_sort])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "softmax_186": {
+                "variable": {
+                    "value": "alpha_flat",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "scores.view(-1, y.size(1))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Linear_231": {
+                "variable": {
+                    "value": "self.linear",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "input_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "input_size if i == 0 else 2 * hidden_size",
+                            "IfExp"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "softmax_241": {
+                "variable": {
+                    "value": "alpha",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "scores",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "x_proj.bmm(y_proj.transpose(2, 1))",
+                            "Call"
+                        ],
+                        [
+                            "self.linear(x_flat).view(x.size(0), x.size(1))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_70": {
+                "variable": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "outputs[1:]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "dropout_79": {
+                "variable": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.cat(outputs[1:], 2)",
+                            "Call"
+                        ],
+                        [
+                            "outputs[-1]",
+                            "Subscript"
+                        ],
+                        [
+                            "output.transpose(0, 1)",
+                            "Call"
+                        ],
+                        [
+                            "F.dropout(output, p=self.dropout_rate, training=self.training)",
+                            "Call"
+                        ],
+                        [
+                            "torch.cat(outputs[1:], 2)",
+                            "Call"
+                        ],
+                        [
+                            "outputs[-1]",
+                            "Subscript"
+                        ],
+                        [
+                            "output.transpose(0, 1)",
+                            "Call"
+                        ],
+                        [
+                            "output.index_select(0, idx_unsort)",
+                            "Call"
+                        ],
+                        [
+                            "torch.cat([output, Variable(padding)], 1)",
+                            "Call"
+                        ],
+                        [
+                            "F.dropout(output, p=self.dropout_rate, training=self.training)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "p": {
+                    "value": "self.dropout_rate",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "training": {
+                    "value": "self.training",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "cat_125": {
+                "variable": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "outputs[1:]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "zeros_135": {
+                "variable": {
+                    "value": "padding",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "output.size(0)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "x_mask.size(1) - output.size(1)",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "output.size(2)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "cat_138": {
+                "variable": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[output, Variable(padding)]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "dropout_142": {
+                "variable": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.cat(outputs[1:], 2)",
+                            "Call"
+                        ],
+                        [
+                            "outputs[-1]",
+                            "Subscript"
+                        ],
+                        [
+                            "output.transpose(0, 1)",
+                            "Call"
+                        ],
+                        [
+                            "F.dropout(output, p=self.dropout_rate, training=self.training)",
+                            "Call"
+                        ],
+                        [
+                            "torch.cat(outputs[1:], 2)",
+                            "Call"
+                        ],
+                        [
+                            "outputs[-1]",
+                            "Subscript"
+                        ],
+                        [
+                            "output.transpose(0, 1)",
+                            "Call"
+                        ],
+                        [
+                            "output.index_select(0, idx_unsort)",
+                            "Call"
+                        ],
+                        [
+                            "torch.cat([output, Variable(padding)], 1)",
+                            "Call"
+                        ],
+                        [
+                            "F.dropout(output, p=self.dropout_rate, training=self.training)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "p": {
+                    "value": "self.dropout_rate",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "training": {
+                    "value": "self.training",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Linear_156": {
+                "variable": {
+                    "value": "self.linear",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "input_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "input_size if i == 0 else 2 * hidden_size",
+                            "IfExp"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "input_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "input_size if i == 0 else 2 * hidden_size",
+                            "IfExp"
+                        ]
+                    ]
+                }
+            },
+            "relu_171": {
+                "variable": {
+                    "value": "x_proj",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x_proj",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.linear(x.view(-1, x.size(2))).view(x.size())",
+                            "Call"
+                        ],
+                        [
+                            "F.relu(x_proj)",
+                            "Call"
+                        ],
+                        [
+                            "x",
+                            "variable"
+                        ]
+                    ]
+                }
+            },
+            "relu_173": {
+                "variable": {
+                    "value": "y_proj",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "y_proj",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.linear(y.view(-1, y.size(2))).view(y.size())",
+                            "Call"
+                        ],
+                        [
+                            "F.relu(y_proj)",
+                            "Call"
+                        ],
+                        [
+                            "y",
+                            "variable"
+                        ]
+                    ]
+                }
+            },
+            "Linear_203": {
+                "variable": {
+                    "value": "self.linear",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "y_size",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "x_size",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "log_softmax_218": {
+                "variable": {
+                    "value": "alpha",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "xWy",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "x.bmm(Wy.unsqueeze(2)).squeeze(2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "softmax_221": {
+                "variable": {
+                    "value": "alpha",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "xWy",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "x.bmm(Wy.unsqueeze(2)).squeeze(2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ones_252": {
+                "*size": {
+                    "value": "x.size(0)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "x.size(1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "dropout_61": {
+                "variable": {
+                    "value": "rnn_input",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "rnn_input",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "outputs[-1]",
+                            "Subscript"
+                        ],
+                        [
+                            "F.dropout(rnn_input, p=self.dropout_rate, training=self.training)",
+                            "Call"
+                        ],
+                        [
+                            "nn.utils.rnn.pack_padded_sequence(x, lengths)",
+                            "Call"
+                        ],
+                        [
+                            "outputs[-1]",
+                            "Subscript"
+                        ],
+                        [
+                            "nn.utils.rnn.PackedSequence(dropout_input, rnn_input.batch_sizes)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "p": {
+                    "value": "self.dropout_rate",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "training": {
+                    "value": "self.training",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "dropout_112": {
+                "variable": {
+                    "value": "dropout_input",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "rnn_input.data",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "self.dropout_rate",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "training": {
+                    "value": "self.training",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "PackedSequence_115": {
+                "variable": {
+                    "value": "rnn_input",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "dropout_input",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "F.dropout(rnn_input.data, p=self.dropout_rate, training=self.training)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_sizes": {
+                    "value": "rnn_input.batch_sizes",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "pad_packed_sequence_121": {
+                "sequence": {
+                    "value": "o",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "drqa/model.py": {
+        "torch": {
+            "SGD_59": {
+                "variable": {
+                    "value": "self.optimizer",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "parameters",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[p for p in self.network.parameters() if p.requires_grad]",
+                            "ListComp"
+                        ]
+                    ]
+                },
+                "lr": {
+                    "value": "self.opt['learning_rate']",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "momentum": {
+                    "value": "self.opt['momentum']",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "weight_decay": {
+                    "value": "self.opt['weight_decay']",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "clip_grad_norm__91": {
+                "parameters": {
+                    "value": "self.network.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "max_norm": {
+                    "value": "self.opt['grad_clipping']",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "ger_122": {
+                "variable": {
+                    "value": "scores",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "score_s[i]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "vec2": {
+                    "value": "score_e[i]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "current_device_36": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "device_36": {
+                "type": {
+                    "value": "cpu",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Adamax_63": {
+                "variable": {
+                    "value": "self.optimizer",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "parameters",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[p for p in self.network.parameters() if p.requires_grad]",
+                            "ListComp"
+                        ]
+                    ]
+                },
+                "weight_decay": {
+                    "value": "self.opt['weight_decay']",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "nll_loss_83": {
+                "input": {
+                    "value": "score_e",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "score_e.data.cpu()",
+                            "Call"
+                        ]
+                    ]
+                },
+                "target": {
+                    "value": "target_e",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "ex[8].to(self.device)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "no_grad_109": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "get_rng_state_146": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "get_rng_state_147": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "save_150": {
+                "obj": {
+                    "value": "params",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "{'state_dict': {'network': self.network.state_dict(), 'optimizer': self.optimizer.state_dict(), 'updates': self.updates, 'loss': self.train_loss.state_dict()}, 'config': self.opt, 'epoch': epoch, 'em': em, 'f1': f1, 'best_eval': best_eval, 'random_state': random.getstate(), 'torch_state': torch.random.get_rng_state(), 'torch_cuda_state': torch.cuda.get_rng_state()}",
+                            "Dict"
+                        ]
+                    ]
+                },
+                "f": {
+                    "value": "filename",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "drqa/rnn_reader.py": {
+        "torch": {
+            "cat_136": {
+                "variable": {
+                    "value": "drnn_input",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "drnn_input_list",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[x1_emb, x1_f]",
+                            "List"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Embedding_43": {
+                "variable": {
+                    "value": "self.embedding",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "opt['vocab_size']",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "embedding_dim": {
+                    "value": "opt['embedding_dim']",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "padding_idx": {
+                    "value": "padding_idx",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "0",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "dropout_122": {
+                "variable": {
+                    "value": "x1_emb",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x1_emb",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.embedding(x1)",
+                            "Call"
+                        ],
+                        [
+                            "nn.functional.dropout(x1_emb, p=self.opt['dropout_emb'], training=self.training)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "p": {
+                    "value": "self.opt['dropout_emb']",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "training": {
+                    "value": "self.training",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "dropout_124": {
+                "variable": {
+                    "value": "x2_emb",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x2_emb",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.embedding(x2)",
+                            "Call"
+                        ],
+                        [
+                            "nn.functional.dropout(x2_emb, p=self.opt['dropout_emb'], training=self.training)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "p": {
+                    "value": "self.opt['dropout_emb']",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "training": {
+                    "value": "self.training",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "interact.py": {
+        "torch": {
+            "Tensor_37": {
+                "variable": {
+                    "value": "embedding",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "load_29": {
+                "variable": {
+                    "value": "checkpoint",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "args.model_file",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "load_31": {
+                "variable": {
+                    "value": "checkpoint",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "args.model_file",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "map_location": {
+                    "value": "lambda storage, loc: storage",
+                    "type": "Lambda",
+                    "possible_values": []
+                }
+            },
+            "is_available_23": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "train.py": {
+        "torch": {
+            "Tensor_215": {
+                "variable": {
+                    "value": "embedding",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "load_30": {
+                "variable": {
+                    "value": "checkpoint",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "os.path.join(args.model_dir, args.resume)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_174": {
+                "seed": {
+                    "value": "args.seed",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "set_rng_state_38": {
+                "new_state": {
+                    "value": "checkpoint['torch_state']",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_176": {
+                "seed": {
+                    "value": "args.seed",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Tensor_276": {
+                "variable": {
+                    "value": "context_feature",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Tensor_281": {
+                "variable": {
+                    "value": "context_tag",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Tensor_286": {
+                "variable": {
+                    "value": "context_ent",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "eq_296": {
+                "variable": {
+                    "value": "context_mask",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "context_id",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.LongTensor(batch_size, context_len).fill_(0)",
+                            "Call"
+                        ],
+                        [
+                            "context_id.pin_memory()",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "eq_297": {
+                "variable": {
+                    "value": "question_mask",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "question_id",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.LongTensor(batch_size, question_len).fill_(0)",
+                            "Call"
+                        ],
+                        [
+                            "question_id.pin_memory()",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "set_rng_state_40": {
+                "new_state": {
+                    "value": "checkpoint['torch_cuda_state']",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "is_available_114": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Tensor_279": {
+                "variable": {
+                    "value": "context_feature[i, j, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

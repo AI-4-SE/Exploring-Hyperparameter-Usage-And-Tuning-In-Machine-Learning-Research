@@ -1,0 +1,390 @@
+{
+    "src/SupCsTrainer.py": {
+        "torch": {
+            "normalize_91": {
+                "variable": {
+                    "value": "logits",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "logits",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "output.last_hidden_state.mean(dim=1, keepdim=True)",
+                            "Call"
+                        ],
+                        [
+                            "output.pooler_output.unsqueeze(1)",
+                            "Call"
+                        ],
+                        [
+                            "output.last_hidden_state.mean(dim=1, keepdim=True)",
+                            "Call"
+                        ],
+                        [
+                            "FF.normalize(logits, p=2, dim=2)",
+                            "Call"
+                        ],
+                        [
+                            "torch.cat((logits, model(**inputs).last_hidden_state.mean(dim=1, keepdim=True)), 1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.cat((logits, model(**inputs).pooler_output.unsqueeze(1)), 1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.cat((logits, model(**inputs).last_hidden_state.mean(dim=1, keepdim=True)), 1)",
+                            "Call"
+                        ],
+                        [
+                            "anchor_dot_contrast - logits_max.detach()",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "p": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_174": {
+                "variable": {
+                    "value": "contrast_feature",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "torch.unbind(features, dim=1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "div_185": {
+                "variable": {
+                    "value": "anchor_dot_contrast",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.matmul(anchor_feature, contrast_feature.T)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "self.temperature",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "max_189": {
+                "variable": {
+                    "value": "(logits_max, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "anchor_dot_contrast",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.div(torch.matmul(anchor_feature, contrast_feature.T), self.temperature)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keepdim": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "scatter_195": {
+                "variable": {
+                    "value": "logits_mask",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.ones_like(mask)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "index": {
+                    "value": "torch.arange(batch_size * anchor_count).view(-1, 1).to(device)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "src": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_88": {
+                "variable": {
+                    "value": "logits",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(logits, model(**inputs).last_hidden_state.mean(dim=1, keepdim=True))",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "device_150": {
+                "type": {
+                    "value": "cuda",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "device_152": {
+                "type": {
+                    "value": "cpu",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "eye_164": {
+                "variable": {
+                    "value": "mask",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "n": {
+                    "value": "batch_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "features.shape[0]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "torch.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "unbind_174": {
+                "input": {
+                    "value": "features",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "features.view(features.shape[0], features.shape[1], -1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "matmul_186": {
+                "input": {
+                    "value": "anchor_feature",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "features[:, 0]",
+                            "Subscript"
+                        ],
+                        [
+                            "contrast_feature",
+                            "variable"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "contrast_feature.T",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "ones_like_196": {
+                "input": {
+                    "value": "mask",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.eye(batch_size, dtype=torch.float32).to(device)",
+                            "Call"
+                        ],
+                        [
+                            "mask.float().to(device)",
+                            "Call"
+                        ],
+                        [
+                            "torch.eq(labels, labels.T).float().to(device)",
+                            "Call"
+                        ],
+                        [
+                            "mask.repeat(anchor_count, contrast_count)",
+                            "Call"
+                        ],
+                        [
+                            "mask * logits_mask",
+                            "BinOp"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "arange_198": {
+                "start": {
+                    "value": "batch_size * anchor_count",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "exp_204": {
+                "input": {
+                    "value": "logits",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "output.last_hidden_state.mean(dim=1, keepdim=True)",
+                            "Call"
+                        ],
+                        [
+                            "output.pooler_output.unsqueeze(1)",
+                            "Call"
+                        ],
+                        [
+                            "output.last_hidden_state.mean(dim=1, keepdim=True)",
+                            "Call"
+                        ],
+                        [
+                            "FF.normalize(logits, p=2, dim=2)",
+                            "Call"
+                        ],
+                        [
+                            "torch.cat((logits, model(**inputs).last_hidden_state.mean(dim=1, keepdim=True)), 1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.cat((logits, model(**inputs).pooler_output.unsqueeze(1)), 1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.cat((logits, model(**inputs).last_hidden_state.mean(dim=1, keepdim=True)), 1)",
+                            "Call"
+                        ],
+                        [
+                            "anchor_dot_contrast - logits_max.detach()",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "log_205": {
+                "input": {
+                    "value": "exp_logits.sum(1, keepdim=True)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "cat_84": {
+                "variable": {
+                    "value": "logits",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(logits, model(**inputs).pooler_output.unsqueeze(1))",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "eq_169": {
+                "variable": {
+                    "value": "mask",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "labels",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "inputs.pop('labels')",
+                            "Call"
+                        ],
+                        [
+                            "labels.contiguous().view(-1, 1)",
+                            "Call"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "labels.T",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "cat_86": {
+                "variable": {
+                    "value": "logits",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(logits, model(**inputs).last_hidden_state.mean(dim=1, keepdim=True))",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

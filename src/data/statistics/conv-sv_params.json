@@ -1,0 +1,418 @@
+{
+    "conv2d_singular_values.py": {
+        "tensorflow": {
+            "cast_25": {
+                "variable": {
+                    "value": "conv_tr",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.transpose(conv, perm=[2, 3, 0, 1])",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.complex64",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "constant_27": {
+                "variable": {
+                    "value": "padding",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "[[0, 0], [0, 0], [0, inp_shape[0] - conv_shape[0]], [0, inp_shape[1] - conv_shape[1]]]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "fft2d_30": {
+                "variable": {
+                    "value": "transform_coeff",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "tf.pad(conv_tr, padding)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "svd_31": {
+                "variable": {
+                    "value": "singular_values",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "tf.transpose(transform_coeff, perm=[2, 3, 0, 1])",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "compute_uv": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "cast_36": {
+                "variable": {
+                    "value": "conv_tr",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.transpose(conv, perm=[2, 3, 0, 1])",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.complex64",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "constant_38": {
+                "variable": {
+                    "value": "padding",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "[[0, 0], [0, 0], [0, inp_shape[0] - conv_shape[0]], [0, inp_shape[1] - conv_shape[1]]]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "fft2d_41": {
+                "variable": {
+                    "value": "transform_coeff",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "tf.pad(conv_tr, padding)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "svd_42": {
+                "variable": {
+                    "value": "(D, U, V)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "tf.transpose(transform_coeff, perm=[2, 3, 0, 1])",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reduce_max_43": {
+                "variable": {
+                    "value": "norm",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "D",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "cast_44": {
+                "variable": {
+                    "value": "D_clipped",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.minimum(D, clip_to)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.complex64",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "matmul_45": {
+                "a": {
+                    "value": "tf.linalg.diag(D_clipped)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "b": {
+                    "value": "V",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "adjoint_b": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "real_47": {
+                "variable": {
+                    "value": "clipped_conv_padded",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "tf.ifft2d(tf.transpose(clipped_coeff, perm=[2, 3, 0, 1]))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "transpose_25": {
+                "a": {
+                    "value": "conv",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "perm": {
+                    "value": "[2, 3, 0, 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "pad_30": {
+                "tensor": {
+                    "value": "conv_tr",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.cast(tf.transpose(conv, perm=[2, 3, 0, 1]), tf.complex64)",
+                            "Call"
+                        ],
+                        [
+                            "tf.cast(tf.transpose(conv, perm=[2, 3, 0, 1]), tf.complex64)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "paddings": {
+                    "value": "padding",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.constant([[0, 0], [0, 0], [0, inp_shape[0] - conv_shape[0]], [0, inp_shape[1] - conv_shape[1]]])",
+                            "Call"
+                        ],
+                        [
+                            "tf.constant([[0, 0], [0, 0], [0, inp_shape[0] - conv_shape[0]], [0, inp_shape[1] - conv_shape[1]]])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "transpose_31": {
+                "a": {
+                    "value": "transform_coeff",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.fft2d(tf.pad(conv_tr, padding))",
+                            "Call"
+                        ],
+                        [
+                            "tf.fft2d(tf.pad(conv_tr, padding))",
+                            "Call"
+                        ],
+                        [
+                            "np.fft.fft2(filter, inp_size, axes=[0, 1])",
+                            "Call"
+                        ],
+                        [
+                            "np.fft.fft2(filter, inp_shape, axes=[0, 1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "perm": {
+                    "value": "[2, 3, 0, 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "transpose_36": {
+                "a": {
+                    "value": "conv",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "perm": {
+                    "value": "[2, 3, 0, 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "pad_41": {
+                "tensor": {
+                    "value": "conv_tr",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.cast(tf.transpose(conv, perm=[2, 3, 0, 1]), tf.complex64)",
+                            "Call"
+                        ],
+                        [
+                            "tf.cast(tf.transpose(conv, perm=[2, 3, 0, 1]), tf.complex64)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "paddings": {
+                    "value": "padding",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.constant([[0, 0], [0, 0], [0, inp_shape[0] - conv_shape[0]], [0, inp_shape[1] - conv_shape[1]]])",
+                            "Call"
+                        ],
+                        [
+                            "tf.constant([[0, 0], [0, 0], [0, inp_shape[0] - conv_shape[0]], [0, inp_shape[1] - conv_shape[1]]])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "transpose_42": {
+                "a": {
+                    "value": "transform_coeff",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.fft2d(tf.pad(conv_tr, padding))",
+                            "Call"
+                        ],
+                        [
+                            "tf.fft2d(tf.pad(conv_tr, padding))",
+                            "Call"
+                        ],
+                        [
+                            "np.fft.fft2(filter, inp_size, axes=[0, 1])",
+                            "Call"
+                        ],
+                        [
+                            "np.fft.fft2(filter, inp_shape, axes=[0, 1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "perm": {
+                    "value": "[2, 3, 0, 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "minimum_44": {
+                "x": {
+                    "value": "D",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "clip_to",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "ifft2d_47": {
+                "input": {
+                    "value": "tf.transpose(clipped_coeff, perm=[2, 3, 0, 1])",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "slice_49": {
+                "input_": {
+                    "value": "tf.transpose(clipped_conv_padded, perm=[2, 3, 0, 1])",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "begin": {
+                    "value": "[0] * len(conv_shape)",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "size": {
+                    "value": "conv_shape",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "conv.get_shape().as_list()",
+                            "Call"
+                        ],
+                        [
+                            "conv.get_shape().as_list()",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "diag_45": {
+                "diagonal": {
+                    "value": "D_clipped",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.cast(tf.minimum(D, clip_to), tf.complex64)",
+                            "Call"
+                        ],
+                        [
+                            "np.minimum(D, clip_to)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "transpose_48": {
+                "a": {
+                    "value": "clipped_coeff",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.matmul(U, tf.matmul(tf.linalg.diag(D_clipped), V, adjoint_b=True))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "perm": {
+                    "value": "[2, 3, 0, 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "transpose_49": {
+                "a": {
+                    "value": "clipped_conv_padded",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.real(tf.ifft2d(tf.transpose(clipped_coeff, perm=[2, 3, 0, 1])))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "perm": {
+                    "value": "[2, 3, 0, 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "conv2d_singular_values_test.py": {
+        "tensorflow": {}
+    },
+    "resnet_conv_svs.py": {
+        "tensorflow": {}
+    }
+}

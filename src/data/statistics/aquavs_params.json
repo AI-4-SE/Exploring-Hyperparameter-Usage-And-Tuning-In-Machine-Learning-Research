@@ -1,0 +1,2103 @@
+{
+    "fashionmnist_AQUAVS.py": {
+        "sklearn": {},
+        "tensorflow": {
+            "Input_46": {
+                "variable": {
+                    "value": "inputNode",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "img_dimensions",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "(28, 28, 1)",
+                            "Tuple"
+                        ]
+                    ]
+                },
+                "name": {
+                    "value": "EncoderInput",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Model_57": {
+                "variable": {
+                    "value": "encoder",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "inputNode",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Input(shape=img_dimensions, name='EncoderInput')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "**kwargs": {
+                    "value": "[z_mean, z_var, z]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "Encoder",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Input_61": {
+                "variable": {
+                    "value": "clf_latent_inputs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "(latent_dim,)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "ClassifierInput",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Model_63": {
+                "variable": {
+                    "value": "clf_supervised",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "clf_latent_inputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Input(shape=(latent_dim,), name='ClassifierInput')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "**kwargs": {
+                    "value": "clf_outputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Dense(10, activation='softmax', name='ClassifierOutput')(clf_latent_inputs)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "name": {
+                    "value": "Classifier",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Input_67": {
+                "variable": {
+                    "value": "inputNode2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "(latent_dim,)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "DecoderInput",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Model_74": {
+                "variable": {
+                    "value": "decoder",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "inputNode2",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Input(shape=(latent_dim,), name='DecoderInput')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "**kwargs": {
+                    "value": "decoder_node",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Conv2DTranspose(num_channels, kernel_size=4, strides=1, padding='same')(dec_inter)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "name": {
+                    "value": "Decoder",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Model_77": {
+                "variable": {
+                    "value": "vae",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "inputNode",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Input(shape=img_dimensions, name='EncoderInput')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "**kwargs": {
+                    "value": "output_combined",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[decoder(encoder(inputNode)[2]), clf_supervised(encoder(inputNode)[2])]",
+                            "List"
+                        ]
+                    ]
+                },
+                "name": {
+                    "value": "S-VAE",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "load_data_198": {
+                "variable": {
+                    "value": "((train_data, train_labels), (test_data, test_labels))",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "to_categorical_225": {
+                "variable": {
+                    "value": "y_enc_noisy_labels",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "noisy_labels",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "add_noise_SystematicNoiseModel(train_labels, noisePerc, [cl for cl in range(10)])",
+                            "Call"
+                        ],
+                        [
+                            "add_noise_UniformNoiseModel(train_labels, noisePerc, [cl for cl in range(10)])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "EarlyStopping_232": {
+                "variable": {
+                    "value": "earlyStopCallback",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "monitor": {
+                    "value": "val_loss",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "min_delta": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "patience": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "verbose": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "mode": {
+                    "value": "auto",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "baseline": {
+                    "value": "None",
+                    "type": "NoneType",
+                    "possible_values": []
+                },
+                "restore_best_weights": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "LearningRateScheduler_242": {
+                "variable": {
+                    "value": "lrScheduler",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "schedule": {
+                    "value": "scheduler",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "binary_crossentropy_25": {
+                "variable": {
+                    "value": "reconstruction_loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "y_true": {
+                    "value": "data",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "y_pred": {
+                    "value": "reconstruction",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_26": {
+                "variable": {
+                    "value": "reconstruction_loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "reconstruction_loss",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "keras.losses.binary_crossentropy(data, reconstruction)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reduce_mean(reconstruction_loss, axis=[1, 2])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "[1, 2]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_28": {
+                "variable": {
+                    "value": "kl_loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "kl_loss",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "1 + z_log_var - tf.square(z_mean) - tf.exp(z_log_var)",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.reduce_mean(kl_loss, axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "kl_loss * -0.5",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Conv2D_47": {
+                "filters": {
+                    "value": "32",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "4",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "same",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "kernel_initializer": {
+                    "value": "he_uniform",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Conv2D_48": {
+                "filters": {
+                    "value": "64",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "4",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "same",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "kernel_initializer": {
+                    "value": "he_uniform",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "relu",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Conv2D_49": {
+                "filters": {
+                    "value": "128",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "4",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "same",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "kernel_initializer": {
+                    "value": "he_uniform",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "tf.nn.relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Flatten_53": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Dense_54": {
+                "units": {
+                    "value": "latent_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "100",
+                            "int"
+                        ]
+                    ]
+                },
+                "name": {
+                    "value": "Mean",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Dense_55": {
+                "units": {
+                    "value": "latent_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "100",
+                            "int"
+                        ]
+                    ]
+                },
+                "name": {
+                    "value": "Variance",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Lambda_56": {
+                "function": {
+                    "value": "sampling",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "output_shape": {
+                    "value": "(latent_dim,)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "Dense_62": {
+                "units": {
+                    "value": "10",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "softmax",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "ClassifierOutput",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Dense_68": {
+                "units": {
+                    "value": "conv_shape[1] * conv_shape[2] * conv_shape[3]",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "Reshape_69": {
+                "target_shape": {
+                    "value": "(conv_shape[1], conv_shape[2], conv_shape[3])",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "Conv2DTranspose_70": {
+                "filters": {
+                    "value": "128",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "4",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "same",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "kernel_initializer": {
+                    "value": "he_uniform",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "relu",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Conv2DTranspose_71": {
+                "filters": {
+                    "value": "64",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "4",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "same",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "kernel_initializer": {
+                    "value": "he_uniform",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "relu",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Conv2DTranspose_72": {
+                "filters": {
+                    "value": "32",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "4",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "same",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "kernel_initializer": {
+                    "value": "he_uniform",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "relu",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Conv2DTranspose_73": {
+                "filters": {
+                    "value": "num_channels",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "1",
+                            "int"
+                        ]
+                    ]
+                },
+                "kernel_size": {
+                    "value": "4",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "same",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "exp_27": {
+                "x": {
+                    "value": "z_log_var",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_30": {
+                "input_tensor": {
+                    "value": "reconstruction_loss + kl_loss",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "square_27": {
+                "x": {
+                    "value": "z_mean",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Dense(latent_dim, name='Mean')(enc_inter)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "exp_36": {
+                "x": {
+                    "value": "z_var / 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "shape_35": {
+                "input": {
+                    "value": "z_mean",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Dense(latent_dim, name='Mean')(enc_inter)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "mnist_AQUAVS.py": {
+        "sklearn": {},
+        "tensorflow": {
+            "Input_48": {
+                "variable": {
+                    "value": "inputNode",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "img_dimensions",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "(28, 28, 1)",
+                            "Tuple"
+                        ]
+                    ]
+                },
+                "name": {
+                    "value": "EncoderInput",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Model_59": {
+                "variable": {
+                    "value": "encoder",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "inputNode",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Input(shape=img_dimensions, name='EncoderInput')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "**kwargs": {
+                    "value": "[z_mean, z_var, z]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "Encoder",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Input_63": {
+                "variable": {
+                    "value": "clf_latent_inputs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "(latent_dim,)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "ClassifierInput",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Model_65": {
+                "variable": {
+                    "value": "clf_supervised",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "clf_latent_inputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Input(shape=(latent_dim,), name='ClassifierInput')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "**kwargs": {
+                    "value": "clf_outputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Dense(10, activation='softmax', name='ClassifierOutput')(clf_latent_inputs)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "name": {
+                    "value": "Classifier",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Input_69": {
+                "variable": {
+                    "value": "inputNode2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "(latent_dim,)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "DecoderInput",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Model_76": {
+                "variable": {
+                    "value": "decoder",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "inputNode2",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Input(shape=(latent_dim,), name='DecoderInput')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "**kwargs": {
+                    "value": "decoder_node",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Conv2DTranspose(num_channels, kernel_size=4, strides=1, padding='same')(dec_inter)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "name": {
+                    "value": "Decoder",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Model_79": {
+                "variable": {
+                    "value": "vae",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "inputNode",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Input(shape=img_dimensions, name='EncoderInput')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "**kwargs": {
+                    "value": "output_combined",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[decoder(encoder(inputNode)[2]), clf_supervised(encoder(inputNode)[2])]",
+                            "List"
+                        ]
+                    ]
+                },
+                "name": {
+                    "value": "S-VAE",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "load_data_204": {
+                "variable": {
+                    "value": "((train_data, train_labels), (test_data, test_labels))",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "to_categorical_231": {
+                "variable": {
+                    "value": "y_enc_noisy_labels",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "noisy_labels",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "add_noise_SystematicNoiseModel(train_labels, noisePerc, [cl for cl in range(10)])",
+                            "Call"
+                        ],
+                        [
+                            "add_noise_UniformNoiseModel(train_labels, noisePerc, [cl for cl in range(10)])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "EarlyStopping_238": {
+                "variable": {
+                    "value": "earlyStopCallback",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "monitor": {
+                    "value": "val_loss",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "min_delta": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "patience": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "verbose": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "mode": {
+                    "value": "auto",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "baseline": {
+                    "value": "None",
+                    "type": "NoneType",
+                    "possible_values": []
+                },
+                "restore_best_weights": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "LearningRateScheduler_248": {
+                "variable": {
+                    "value": "lrScheduler",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "schedule": {
+                    "value": "scheduler",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "binary_crossentropy_27": {
+                "variable": {
+                    "value": "reconstruction_loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "y_true": {
+                    "value": "data",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "y_pred": {
+                    "value": "reconstruction",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_28": {
+                "variable": {
+                    "value": "reconstruction_loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "reconstruction_loss",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "keras.losses.binary_crossentropy(data, reconstruction)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reduce_mean(reconstruction_loss, axis=[1, 2])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "[1, 2]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_30": {
+                "variable": {
+                    "value": "kl_loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "kl_loss",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "1 + z_log_var - tf.square(z_mean) - tf.exp(z_log_var)",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.reduce_mean(kl_loss, axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "kl_loss * -0.5",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Conv2D_49": {
+                "filters": {
+                    "value": "32",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "4",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "same",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "kernel_initializer": {
+                    "value": "he_uniform",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Conv2D_50": {
+                "filters": {
+                    "value": "64",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "4",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "same",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "kernel_initializer": {
+                    "value": "he_uniform",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "relu",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Conv2D_51": {
+                "filters": {
+                    "value": "128",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "4",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "same",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "kernel_initializer": {
+                    "value": "he_uniform",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "tf.nn.relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Flatten_55": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Dense_56": {
+                "units": {
+                    "value": "latent_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "100",
+                            "int"
+                        ]
+                    ]
+                },
+                "name": {
+                    "value": "Mean",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Dense_57": {
+                "units": {
+                    "value": "latent_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "100",
+                            "int"
+                        ]
+                    ]
+                },
+                "name": {
+                    "value": "Variance",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Lambda_58": {
+                "function": {
+                    "value": "sampling",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "output_shape": {
+                    "value": "(latent_dim,)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "Dense_64": {
+                "units": {
+                    "value": "10",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "softmax",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "ClassifierOutput",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Dense_70": {
+                "units": {
+                    "value": "conv_shape[1] * conv_shape[2] * conv_shape[3]",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "Reshape_71": {
+                "target_shape": {
+                    "value": "(conv_shape[1], conv_shape[2], conv_shape[3])",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "Conv2DTranspose_72": {
+                "filters": {
+                    "value": "128",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "4",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "same",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "kernel_initializer": {
+                    "value": "he_uniform",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "relu",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Conv2DTranspose_73": {
+                "filters": {
+                    "value": "64",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "4",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "same",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "kernel_initializer": {
+                    "value": "he_uniform",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "relu",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Conv2DTranspose_74": {
+                "filters": {
+                    "value": "32",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "4",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "same",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "kernel_initializer": {
+                    "value": "he_uniform",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "relu",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Conv2DTranspose_75": {
+                "filters": {
+                    "value": "num_channels",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "1",
+                            "int"
+                        ]
+                    ]
+                },
+                "kernel_size": {
+                    "value": "4",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "same",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "exp_29": {
+                "x": {
+                    "value": "z_log_var",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_32": {
+                "input_tensor": {
+                    "value": "reconstruction_loss + kl_loss",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "square_29": {
+                "x": {
+                    "value": "z_mean",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Dense(latent_dim, name='Mean')(enc_inter)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "exp_38": {
+                "x": {
+                    "value": "z_var / 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "shape_37": {
+                "input": {
+                    "value": "z_mean",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Dense(latent_dim, name='Mean')(enc_inter)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "mnist_fashionmnist_training.py": {
+        "tensorflow": {
+            "to_categorical_72": {
+                "variable": {
+                    "value": "train_y",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "noisy_labels",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "np.load(str(noisePerc) + '_NoisyLabels_' + datasetName + '.npy')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "num_classes": {
+                    "value": "10",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "to_categorical_73": {
+                "variable": {
+                    "value": "test_y",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "test_labels",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "test_labels.reshape(test_labels.shape[0])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "num_classes": {
+                    "value": "10",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "EarlyStopping_78": {
+                "variable": {
+                    "value": "earlyStopCallback",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "patience": {
+                    "value": "10",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "restore_best_weights": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Sequential_16": {
+                "variable": {
+                    "value": "model",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "layers": {
+                    "value": "[layers.Conv2D(32, (5, 5), activation='relu', input_shape=(28, 28, 1)), layers.MaxPooling2D((2, 2), strides=(2, 2)), layers.Conv2D(32, (5, 5), activation='relu'), layers.MaxPooling2D((2, 2), strides=(2, 2)), layers.Flatten(), layers.Dense(100, activation='relu'), layers.Dense(10, activation='softmax')]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "load_data_32": {
+                "variable": {
+                    "value": "((train_data, train_labels), (test_data, test_labels))",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "load_data_34": {
+                "variable": {
+                    "value": "((train_data, train_labels), (test_data, test_labels))",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Conv2D_17": {
+                "filters": {
+                    "value": "32",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "(5, 5)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "relu",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "input_shape": {
+                    "value": "(28, 28, 1)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "MaxPooling2D_18": {
+                "pool_size": {
+                    "value": "(2, 2)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "(2, 2)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "Conv2D_19": {
+                "filters": {
+                    "value": "32",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "(5, 5)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "relu",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "MaxPooling2D_20": {
+                "pool_size": {
+                    "value": "(2, 2)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "(2, 2)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "Flatten_21": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Dense_22": {
+                "units": {
+                    "value": "100",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "relu",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Dense_23": {
+                "units": {
+                    "value": "10",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "softmax",
+                    "type": "str",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "cifar_training.py": {
+        "torch": {
+            "DataLoader_276": {
+                "variable": {
+                    "value": "testloader",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "testset",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torchvision.datasets.CIFAR100(root='./data', train=False, download=True, transform=test_transforms)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "batch_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "64",
+                            "int"
+                        ]
+                    ]
+                },
+                "shuffle": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "num_workers": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Subset_283": {
+                "variable": {
+                    "value": "train_now",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "trainset",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torchvision.datasets.CIFAR100(root='./data', train=True, download=True, transform=train_transforms)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "indices": {
+                    "value": "filterIdx",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "getFilterIdx(filteredPrediction)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "DataLoader_287": {
+                "variable": {
+                    "value": "trainloader",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "train_now",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.utils.data.dataset.Subset(trainset, filterIdx)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "batch_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "64",
+                            "int"
+                        ]
+                    ]
+                },
+                "shuffle": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "num_workers": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_35": {
+                "seed": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_all_36": {
+                "seed": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "CrossEntropyLoss_163": {
+                "variable": {
+                    "value": "criterion",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "SGD_167": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "model.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "lr",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "0.1",
+                            "float"
+                        ]
+                    ]
+                },
+                "weight_decay": {
+                    "value": "wd",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "0.0001",
+                            "float"
+                        ]
+                    ]
+                },
+                "momentum": {
+                    "value": "momentum",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "0.9",
+                            "float"
+                        ]
+                    ]
+                },
+                "nesterov": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "MultiStepLR_172": {
+                "variable": {
+                    "value": "scheduler",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "optimizer": {
+                    "value": "optimizer",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.optim.SGD(model.parameters(), lr=lr, weight_decay=wd, momentum=momentum, nesterov=True)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "milestones": {
+                    "value": "milestones",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[int(lr_drop * num_epochs) for lr_drop in lr_drops or []]",
+                            "ListComp"
+                        ]
+                    ]
+                },
+                "gamma": {
+                    "value": "0.1",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "set_device_256": {
+                "device": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "save_292": {
+                "obj": {
+                    "value": "model.state_dict()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "noisePerc + '_' + datasetName + '_' + 'Filter'",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "BatchNorm2d_52": {
+                "variable": {
+                    "value": "self.bn1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_features": {
+                    "value": "planes",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "ReLU_53": {
+                "variable": {
+                    "value": "self.relu1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "inplace": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "BatchNorm2d_55": {
+                "variable": {
+                    "value": "self.bn2",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_features": {
+                    "value": "planes",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "ReLU_56": {
+                "variable": {
+                    "value": "self.relu2",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "inplace": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "AvgPool2d_78": {
+                "variable": {
+                    "value": "self.avg",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "stride",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "1",
+                            "Method Argument"
+                        ],
+                        [
+                            "1",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "Conv2d_93": {
+                "variable": {
+                    "value": "self.conv1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_channels": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "16",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "initial_stride",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "1",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "padding": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "BatchNorm2d_94": {
+                "variable": {
+                    "value": "self.bn1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_features": {
+                    "value": "16",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ReLU_95": {
+                "variable": {
+                    "value": "self.relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "inplace": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "AvgPool2d_99": {
+                "variable": {
+                    "value": "self.avgpool",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "8",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Linear_100": {
+                "variable": {
+                    "value": "self.fc",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "64 * block.expansion",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "num_classes",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tc",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "is_available_153": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "cat_83": {
+                "tensors": {
+                    "value": "[x] + [x.mul(0)] * (self.expand_ratio - 1)",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Sequential_120": {
+                "*args": {
+                    "value": "*layers",
+                    "type": "Starred",
+                    "possible_values": []
+                }
+            },
+            "ne_194": {
+                "variable": {
+                    "value": "error",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "targets",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "targets.cuda()",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "preds",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "outputs.argmax(dim=-1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "mean_194": {
+                "variable": {
+                    "value": "error",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "no_grad_219": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "max_228": {
+                "variable": {
+                    "value": "(_, predicted)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "outputs.data",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "cross_entropy_232": {
+                "variable": {
+                    "value": "losses",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "outputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "model(inputs)",
+                            "Call"
+                        ],
+                        [
+                            "model(images)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "target": {
+                    "value": "labels",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "labels.cuda()",
+                            "Call"
+                        ]
+                    ]
+                },
+                "reduction": {
+                    "value": "none",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "is_available_184": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "is_available_223": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

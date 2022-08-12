@@ -1,0 +1,440 @@
+{
+    "coco.py": {
+        "torch": {}
+    },
+    "models.py": {
+        "torch": {
+            "Parameter_16": {
+                "variable": {
+                    "value": "self.weight",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.Tensor(in_features, out_features)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "matmul_30": {
+                "variable": {
+                    "value": "support",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "input",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "self.weight",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "matmul_31": {
+                "variable": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "adj",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "gen_adj(self.A).detach()",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "support",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.matmul(input, self.weight)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Sequential_46": {
+                "variable": {
+                    "value": "self.features",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "model.conv1",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "MaxPool2d_57": {
+                "variable": {
+                    "value": "self.pooling",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "14",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "14",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "LeakyReLU_61": {
+                "variable": {
+                    "value": "self.relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "negative_slope": {
+                    "value": "0.2",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "Parameter_64": {
+                "variable": {
+                    "value": "self.A",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.from_numpy(_adj).float()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "matmul_82": {
+                "variable": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "feature",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.features(feature)",
+                            "Call"
+                        ],
+                        [
+                            "self.pooling(feature)",
+                            "Call"
+                        ],
+                        [
+                            "feature.view(feature.size(0), -1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.gc1(inp, adj)",
+                            "Call"
+                        ],
+                        [
+                            "self.relu(x)",
+                            "Call"
+                        ],
+                        [
+                            "self.gc2(x, adj)",
+                            "Call"
+                        ],
+                        [
+                            "x.transpose(0, 1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.matmul(feature, x)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Parameter_18": {
+                "variable": {
+                    "value": "self.bias",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.Tensor(1, 1, out_features)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "from_numpy_64": {
+                "ndarray": {
+                    "value": "_adj",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "gen_A(num_classes, t, adj_file)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "util.py": {
+        "torch": {
+            "pow_305": {
+                "variable": {
+                    "value": "D",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "A.sum(1).float()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "exponent": {
+                    "value": "-0.5",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "diag_306": {
+                "variable": {
+                    "value": "D",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "D",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.pow(A.sum(1).float(), -0.5)",
+                            "Call"
+                        ],
+                        [
+                            "torch.diag(D)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "matmul_307": {
+                "input": {
+                    "value": "A",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "D",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.pow(A.sum(1).float(), -0.5)",
+                            "Call"
+                        ],
+                        [
+                            "torch.diag(D)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "zeros_217": {
+                "variable": {
+                    "value": "ap",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "self.scores.size(1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "arange_218": {
+                "variable": {
+                    "value": "rg",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "start": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "end": {
+                    "value": "self.scores.size(0)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "sort_232": {
+                "variable": {
+                    "value": "(sorted, indices)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.from_numpy(output)",
+                            "Call"
+                        ],
+                        [
+                            "output.view(-1, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "descending": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "from_numpy_176": {
+                "variable": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "ndarray": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.from_numpy(output)",
+                            "Call"
+                        ],
+                        [
+                            "output.view(-1, 1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "from_numpy_178": {
+                "variable": {
+                    "value": "target",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "ndarray": {
+                    "value": "target",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.from_numpy(target)",
+                            "Call"
+                        ],
+                        [
+                            "target.view(-1, 1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "t_307": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "FloatStorage_158": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "LongStorage_159": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "is_tensor_175": {
+                "obj": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.from_numpy(output)",
+                            "Call"
+                        ],
+                        [
+                            "output.view(-1, 1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "is_tensor_177": {
+                "obj": {
+                    "value": "target",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.from_numpy(target)",
+                            "Call"
+                        ],
+                        [
+                            "target.view(-1, 1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "voc.py": {
+        "torch": {
+            "from_numpy_97": {
+                "variable": {
+                    "value": "labels",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "ndarray": {
+                    "value": "labels",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "np.zeros(num_classes)",
+                            "Call"
+                        ],
+                        [
+                            "np.asarray(row[1:num_categories + 1]).astype(np.float32)",
+                            "Call"
+                        ],
+                        [
+                            "torch.from_numpy(labels)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    }
+}

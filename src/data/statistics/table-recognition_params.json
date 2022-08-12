@@ -1,0 +1,1795 @@
+{
+    "code/image_caption/caption.py": {
+        "torch": {
+            "device_13": {
+                "variable": {
+                    "value": "device",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda if torch.cuda.is_available() else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "zeros_69": {
+                "variable": {
+                    "value": "top_k_scores",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "k",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "beam_size",
+                            "variable"
+                        ],
+                        [
+                            "k - len(complete_inds)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ones_72": {
+                "variable": {
+                    "value": "seqs_alpha",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "k",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "beam_size",
+                            "variable"
+                        ],
+                        [
+                            "k - len(complete_inds)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "enc_image_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "encoder_out.size(1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "layout": {
+                    "value": "enc_image_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "encoder_out.size(1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "load_219": {
+                "variable": {
+                    "value": "checkpoint",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "args.model",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "map_location": {
+                    "value": "str(device)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "log_softmax_104": {
+                "variable": {
+                    "value": "scores",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "scores",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "decoder.fc(h)",
+                            "Call"
+                        ],
+                        [
+                            "F.log_softmax(scores, dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "top_k_scores.expand_as(scores) + scores",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_122": {
+                "variable": {
+                    "value": "seqs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[seqs[prev_word_inds], next_word_inds.unsqueeze(1)]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_124": {
+                "variable": {
+                    "value": "seqs_alpha",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[seqs_alpha[prev_word_inds], alpha[prev_word_inds].unsqueeze(1)]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "is_available_13": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "cat_101": {
+                "tensors": {
+                    "value": "[embeddings, awe]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "code/image_caption/dataset.py": {
+        "torch": {}
+    },
+    "code/image_caption/eval.py": {
+        "torch": {}
+    },
+    "code/image_caption/models.py": {
+        "torch": {
+            "device_6": {
+                "variable": {
+                    "value": "device",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda if torch.cuda.is_available() else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "Sequential_23": {
+                "variable": {
+                    "value": "self.resnet",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "*modules",
+                    "type": "Starred",
+                    "possible_values": []
+                }
+            },
+            "AdaptiveAvgPool2d_26": {
+                "variable": {
+                    "value": "self.adaptive_pool",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "output_size": {
+                    "value": "(encoded_image_size, encoded_image_size)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "Linear_70": {
+                "variable": {
+                    "value": "self.encoder_att",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "encoder_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "encoder_out.size(-1)",
+                            "Call"
+                        ],
+                        [
+                            "encoder_out.size(-1)",
+                            "Call"
+                        ],
+                        [
+                            "2048",
+                            "Method Argument"
+                        ],
+                        [
+                            "2048",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "attention_dim",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Linear_72": {
+                "variable": {
+                    "value": "self.decoder_att",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "decoder_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "attention_dim",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Linear_74": {
+                "variable": {
+                    "value": "self.full_att",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "attention_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ReLU_75": {
+                "variable": {
+                    "value": "self.relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Softmax_76": {
+                "variable": {
+                    "value": "self.softmax",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Embedding_129": {
+                "variable": {
+                    "value": "self.embedding",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "self.vocab_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "embedding_dim": {
+                    "value": "embed_dim",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Dropout_131": {
+                "variable": {
+                    "value": "self.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "self.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "LSTMCell_132": {
+                "variable": {
+                    "value": "self.decode_step",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_size": {
+                    "value": "embed_dim + encoder_dim",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "hidden_size": {
+                    "value": "decoder_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Linear_135": {
+                "variable": {
+                    "value": "self.init_h",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "encoder_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "encoder_out.size(-1)",
+                            "Call"
+                        ],
+                        [
+                            "encoder_out.size(-1)",
+                            "Call"
+                        ],
+                        [
+                            "2048",
+                            "Method Argument"
+                        ],
+                        [
+                            "2048",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "decoder_dim",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Linear_137": {
+                "variable": {
+                    "value": "self.init_c",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "encoder_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "encoder_out.size(-1)",
+                            "Call"
+                        ],
+                        [
+                            "encoder_out.size(-1)",
+                            "Call"
+                        ],
+                        [
+                            "2048",
+                            "Method Argument"
+                        ],
+                        [
+                            "2048",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "decoder_dim",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Linear_140": {
+                "variable": {
+                    "value": "self.f_beta",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "decoder_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "encoder_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "encoder_out.size(-1)",
+                            "Call"
+                        ],
+                        [
+                            "encoder_out.size(-1)",
+                            "Call"
+                        ],
+                        [
+                            "2048",
+                            "Method Argument"
+                        ],
+                        [
+                            "2048",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "Sigmoid_141": {
+                "variable": {
+                    "value": "self.sigmoid",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Linear_143": {
+                "variable": {
+                    "value": "self.fc",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "decoder_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "self.vocab_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Parameter_160": {
+                "variable": {
+                    "value": "self.embedding.weight",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "embeddings",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.embedding(encoded_captions)",
+                            "Call"
+                        ],
+                        [
+                            "self.embedding(encoded_captions)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "zeros_221": {
+                "variable": {
+                    "value": "predictions",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "batch_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "encoder_out.size(0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "max(decode_lengths)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "vocab_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.vocab_size",
+                            "Attribute"
+                        ],
+                        [
+                            "self.vocab_size",
+                            "Attribute"
+                        ]
+                    ]
+                }
+            },
+            "zeros_223": {
+                "variable": {
+                    "value": "alphas",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "batch_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "encoder_out.size(0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "max(decode_lengths)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "num_pixels",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "encoder_out.size(1)",
+                            "Call"
+                        ],
+                        [
+                            "encoder_out.size(1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Embedding_281": {
+                "variable": {
+                    "value": "self.embedding",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "vocab_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.vocab_size",
+                            "Attribute"
+                        ],
+                        [
+                            "self.vocab_size",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "embedding_dim": {
+                    "value": "embed_dim",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Dropout_282": {
+                "variable": {
+                    "value": "self.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "self.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "LSTMCell_283": {
+                "variable": {
+                    "value": "self.decode_step",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_size": {
+                    "value": "embed_dim + encoder_dim + decoder_structure_dim",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "hidden_size": {
+                    "value": "decoder_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Linear_286": {
+                "variable": {
+                    "value": "self.init_h",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "encoder_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "encoder_out.size(-1)",
+                            "Call"
+                        ],
+                        [
+                            "encoder_out.size(-1)",
+                            "Call"
+                        ],
+                        [
+                            "2048",
+                            "Method Argument"
+                        ],
+                        [
+                            "2048",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "decoder_dim",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Linear_288": {
+                "variable": {
+                    "value": "self.init_c",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "encoder_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "encoder_out.size(-1)",
+                            "Call"
+                        ],
+                        [
+                            "encoder_out.size(-1)",
+                            "Call"
+                        ],
+                        [
+                            "2048",
+                            "Method Argument"
+                        ],
+                        [
+                            "2048",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "decoder_dim",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Linear_291": {
+                "variable": {
+                    "value": "self.f_beta",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "decoder_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "encoder_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "encoder_out.size(-1)",
+                            "Call"
+                        ],
+                        [
+                            "encoder_out.size(-1)",
+                            "Call"
+                        ],
+                        [
+                            "2048",
+                            "Method Argument"
+                        ],
+                        [
+                            "2048",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "Sigmoid_292": {
+                "variable": {
+                    "value": "self.sigmoid",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Linear_294": {
+                "variable": {
+                    "value": "self.fc",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "decoder_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "vocab_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.vocab_size",
+                            "Attribute"
+                        ],
+                        [
+                            "self.vocab_size",
+                            "Attribute"
+                        ]
+                    ]
+                }
+            },
+            "Parameter_311": {
+                "variable": {
+                    "value": "self.embedding.weight",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "embeddings",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.embedding(encoded_captions)",
+                            "Call"
+                        ],
+                        [
+                            "self.embedding(encoded_captions)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "zeros_367": {
+                "variable": {
+                    "value": "predictions",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "batch_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "encoder_out.size(0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "max(decode_lengths)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "vocab_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.vocab_size",
+                            "Attribute"
+                        ],
+                        [
+                            "self.vocab_size",
+                            "Attribute"
+                        ]
+                    ]
+                }
+            },
+            "zeros_369": {
+                "variable": {
+                    "value": "alphas",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "batch_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "encoder_out.size(0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "max(decode_lengths)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "num_pixels",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "encoder_out.size(1)",
+                            "Call"
+                        ],
+                        [
+                            "encoder_out.size(1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "is_available_6": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "cat_383": {
+                "variable": {
+                    "value": "attention_weighted_encoding",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(attention_weighted_encoding, hidden_state_structures[:batch_size_t])",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_243": {
+                "tensors": {
+                    "value": "[embeddings[:batch_size_t, t, :], attention_weighted_encoding]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_386": {
+                "tensors": {
+                    "value": "[embeddings[:batch_size_t, t, :], attention_weighted_encoding]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "code/image_caption/test.py": {
+        "torch": {
+            "device_14": {
+                "variable": {
+                    "value": "device",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda if torch.cuda.is_available() else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "zeros_64": {
+                "variable": {
+                    "value": "top_k_scores",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "k",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "beam_size",
+                            "variable"
+                        ],
+                        [
+                            "k - len(complete_inds)",
+                            "BinOp"
+                        ],
+                        [
+                            "beam_size",
+                            "variable"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ones_67": {
+                "variable": {
+                    "value": "seqs_alpha",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "k",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "beam_size",
+                            "variable"
+                        ],
+                        [
+                            "k - len(complete_inds)",
+                            "BinOp"
+                        ],
+                        [
+                            "beam_size",
+                            "variable"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "enc_image_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "encoder_out.size(1)",
+                            "Call"
+                        ],
+                        [
+                            "encoder_out.size(1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "layout": {
+                    "value": "enc_image_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "encoder_out.size(1)",
+                            "Call"
+                        ],
+                        [
+                            "encoder_out.size(1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "zeros_70": {
+                "variable": {
+                    "value": "seqs_hidden_states",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "k",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "beam_size",
+                            "variable"
+                        ],
+                        [
+                            "k - len(complete_inds)",
+                            "BinOp"
+                        ],
+                        [
+                            "beam_size",
+                            "variable"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "decoder_structure_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "256",
+                            "int"
+                        ],
+                        [
+                            "256",
+                            "int"
+                        ]
+                    ]
+                }
+            },
+            "zeros_187": {
+                "variable": {
+                    "value": "top_k_scores",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "k",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "beam_size",
+                            "variable"
+                        ],
+                        [
+                            "k - len(complete_inds)",
+                            "BinOp"
+                        ],
+                        [
+                            "beam_size",
+                            "variable"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ones_190": {
+                "variable": {
+                    "value": "seqs_alpha",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "k",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "beam_size",
+                            "variable"
+                        ],
+                        [
+                            "k - len(complete_inds)",
+                            "BinOp"
+                        ],
+                        [
+                            "beam_size",
+                            "variable"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "enc_image_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "encoder_out.size(1)",
+                            "Call"
+                        ],
+                        [
+                            "encoder_out.size(1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "layout": {
+                    "value": "enc_image_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "encoder_out.size(1)",
+                            "Call"
+                        ],
+                        [
+                            "encoder_out.size(1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "load_342": {
+                "variable": {
+                    "value": "checkpoint",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "args.model",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "map_location": {
+                    "value": "str(device)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "log_softmax_100": {
+                "variable": {
+                    "value": "scores",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "scores",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "decoder.fc(h)",
+                            "Call"
+                        ],
+                        [
+                            "F.log_softmax(scores, dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "decoder.fc(h)",
+                            "Call"
+                        ],
+                        [
+                            "F.log_softmax(scores, dim=1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_112": {
+                "variable": {
+                    "value": "seqs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[seqs[prev_word_inds], next_word_inds.unsqueeze(1)]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_115": {
+                "variable": {
+                    "value": "seqs_alpha",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[seqs_alpha[prev_word_inds], alpha[prev_word_inds].unsqueeze(1)]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "stack_214": {
+                "variable": {
+                    "value": "hidden_state_structure",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "hidden_state_structure",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "hidden_states[index]",
+                            "Subscript"
+                        ],
+                        [
+                            "torch.stack(hidden_state_structure)",
+                            "Call"
+                        ],
+                        [
+                            "hidden_state_structure.expand(s, decoder_structure_dim)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "cat_218": {
+                "variable": {
+                    "value": "awe",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(awe, hidden_state_structure)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "log_softmax_225": {
+                "variable": {
+                    "value": "scores",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "scores",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "decoder.fc(h)",
+                            "Call"
+                        ],
+                        [
+                            "F.log_softmax(scores, dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "decoder.fc(h)",
+                            "Call"
+                        ],
+                        [
+                            "F.log_softmax(scores, dim=1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_237": {
+                "variable": {
+                    "value": "seqs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[seqs[prev_word_inds], next_word_inds.unsqueeze(1)]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_240": {
+                "variable": {
+                    "value": "seqs_alpha",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[seqs_alpha[prev_word_inds], alpha[prev_word_inds].unsqueeze(1)]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "is_available_14": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "cat_121": {
+                "variable": {
+                    "value": "seqs_hidden_states",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[seqs_hidden_states[prev_word_inds], h[prev_word_inds].unsqueeze(1)]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_97": {
+                "tensors": {
+                    "value": "[embeddings, awe]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_222": {
+                "tensors": {
+                    "value": "[embeddings, awe]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "code/image_caption/test_function.py": {
+        "torch": {
+            "device_8": {
+                "variable": {
+                    "value": "device",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda if torch.cuda.is_available() else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_12": {
+                "variable": {
+                    "value": "train_loader",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "CaptionDataset(data_folder, 'TRAIN', transform=transforms.Compose([normalize]))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "batch_size": {
+                    "value": "batch_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "2",
+                            "int"
+                        ]
+                    ]
+                },
+                "shuffle": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "num_workers": {
+                    "value": "workers",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "1",
+                            "int"
+                        ]
+                    ]
+                },
+                "pin_memory": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "is_available_8": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "code/image_caption/train.py": {
+        "torch": {
+            "CrossEntropyLoss_106": {
+                "variable": {
+                    "value": "criterion",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "pack_padded_sequence_188": {
+                "input": {
+                    "value": "scores",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "pack_padded_sequence(scores, decode_lengths, batch_first=True).data",
+                            "Attribute"
+                        ],
+                        [
+                            "pack_padded_sequence(scores, decode_lengths, batch_first=True).data",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "lengths": {
+                    "value": "decode_lengths",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "pack_padded_sequence_190": {
+                "input": {
+                    "value": "targets",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "caps_sorted[:, 1:]",
+                            "Subscript"
+                        ],
+                        [
+                            "pack_padded_sequence(targets, decode_lengths, batch_first=True).data",
+                            "Attribute"
+                        ],
+                        [
+                            "caps_sorted[:, 1:]",
+                            "Subscript"
+                        ],
+                        [
+                            "pack_padded_sequence(targets, decode_lengths, batch_first=True).data",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "lengths": {
+                    "value": "decode_lengths",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "pack_padded_sequence_217": {
+                "input": {
+                    "value": "scores_cell",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "pack_padded_sequence(scores_cell, decode_lengths_cell, batch_first=True).data",
+                            "Attribute"
+                        ],
+                        [
+                            "pack_padded_sequence(scores_cell, decode_lengths_cell, batch_first=True).data",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "lengths": {
+                    "value": "decode_lengths_cell",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "pack_padded_sequence_219": {
+                "input": {
+                    "value": "target_cells",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "caps_sorted_cell[:, 1:]",
+                            "Subscript"
+                        ],
+                        [
+                            "pack_padded_sequence(target_cells, decode_lengths_cell, batch_first=True).data",
+                            "Attribute"
+                        ],
+                        [
+                            "caps_sorted_cell[:, 1:]",
+                            "Subscript"
+                        ],
+                        [
+                            "caps_sorted_cell[:, 1:]",
+                            "Subscript"
+                        ],
+                        [
+                            "pack_padded_sequence(target_cells, decode_lengths_cell, batch_first=True).data",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "lengths": {
+                    "value": "decode_lengths_cell",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "pack_padded_sequence_307": {
+                "input": {
+                    "value": "scores",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "pack_padded_sequence(scores, decode_lengths, batch_first=True).data",
+                            "Attribute"
+                        ],
+                        [
+                            "pack_padded_sequence(scores, decode_lengths, batch_first=True).data",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "lengths": {
+                    "value": "decode_lengths",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "pack_padded_sequence_309": {
+                "input": {
+                    "value": "targets",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "caps_sorted[:, 1:]",
+                            "Subscript"
+                        ],
+                        [
+                            "pack_padded_sequence(targets, decode_lengths, batch_first=True).data",
+                            "Attribute"
+                        ],
+                        [
+                            "caps_sorted[:, 1:]",
+                            "Subscript"
+                        ],
+                        [
+                            "pack_padded_sequence(targets, decode_lengths, batch_first=True).data",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "lengths": {
+                    "value": "decode_lengths",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "pack_padded_sequence_344": {
+                "input": {
+                    "value": "scores_cell",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "pack_padded_sequence(scores_cell, decode_lengths_cell, batch_first=True).data",
+                            "Attribute"
+                        ],
+                        [
+                            "pack_padded_sequence(scores_cell, decode_lengths_cell, batch_first=True).data",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "lengths": {
+                    "value": "decode_lengths_cell",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "pack_padded_sequence_346": {
+                "input": {
+                    "value": "target_cells",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "caps_sorted_cell[:, 1:]",
+                            "Subscript"
+                        ],
+                        [
+                            "pack_padded_sequence(target_cells, decode_lengths_cell, batch_first=True).data",
+                            "Attribute"
+                        ],
+                        [
+                            "caps_sorted_cell[:, 1:]",
+                            "Subscript"
+                        ],
+                        [
+                            "caps_sorted_cell[:, 1:]",
+                            "Subscript"
+                        ],
+                        [
+                            "pack_padded_sequence(target_cells, decode_lengths_cell, batch_first=True).data",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "lengths": {
+                    "value": "decode_lengths_cell",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "code/image_caption/utils.py": {
+        "torch": {
+            "save_296": {
+                "obj": {
+                    "value": "state",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "{'epoch': epoch, 'epochs_since_improvement': epochs_since_improvement, 'ted_score': recent_ted_score, 'encoder': encoder, 'decoder_structure': decoder_structure, 'encoder_optimizer': encoder_optimizer, 'decoder_structure_optimizer': decoder_structure_optimizer, 'decoder_cell': decoder_cell, 'decoder_cell_optimizer': decoder_cell_optimizer}",
+                            "Dict"
+                        ]
+                    ]
+                },
+                "f": {
+                    "value": "filename",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "'checkpoint_table' + '.pth.tar'",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "save_299": {
+                "obj": {
+                    "value": "state",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "{'epoch': epoch, 'epochs_since_improvement': epochs_since_improvement, 'ted_score': recent_ted_score, 'encoder': encoder, 'decoder_structure': decoder_structure, 'encoder_optimizer': encoder_optimizer, 'decoder_structure_optimizer': decoder_structure_optimizer, 'decoder_cell': decoder_cell, 'decoder_cell_optimizer': decoder_cell_optimizer}",
+                            "Dict"
+                        ]
+                    ]
+                },
+                "f": {
+                    "value": "'BEST_' + filename",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

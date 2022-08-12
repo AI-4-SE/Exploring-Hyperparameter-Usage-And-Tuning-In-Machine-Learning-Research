@@ -1,0 +1,2047 @@
+{
+    "preprocess.py": {
+        "torch": {
+            "manual_seed_199": {
+                "seed": {
+                    "value": "123",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_200": {
+                "seed": {
+                    "value": "123",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "device_205": {
+                "variable": {
+                    "value": "device",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda:0 if torch.cuda.is_available() else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "tensor_190": {
+                "data": {
+                    "value": "d_x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[pad_convert(pair[2], d_vocab, batch_max_d_len, pad_type) for pair in batch]",
+                            "ListComp"
+                        ]
+                    ]
+                }
+            },
+            "is_available_205": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/dssm_model.py": {
+        "torch": {
+            "device_22": {
+                "variable": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda:0 if torch.cuda.is_available() else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "Embedding_25": {
+                "variable": {
+                    "value": "self.q_word_embeds",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "q_vocab_size",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "embedding_dim": {
+                    "value": "self.embed_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Embedding_27": {
+                "variable": {
+                    "value": "self.d_word_embeds",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "d_vocab_size",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "embedding_dim": {
+                    "value": "self.embed_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Linear_29": {
+                "variable": {
+                    "value": "self.crosslin",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "self.embed_dim * 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "self.out_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "randn_58": {
+                "variable": {
+                    "value": "temp_tensor",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "len(vocab)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "args.embed_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "normalize_122": {
+                "variable": {
+                    "value": "d_norm",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "d.view(d.size(0), -1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "LogSigmoid_192": {
+                "variable": {
+                    "value": "m",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Dropout_306": {
+                "variable": {
+                    "value": "self.drop_out",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "Conv1d_307": {
+                "variable": {
+                    "value": "self.q_conv",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_channels": {
+                    "value": "self.WORD_DEPTH",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "self.K",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Linear_314": {
+                "variable": {
+                    "value": "self.q_fc",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "self.K",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "self.L",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Dropout_317": {
+                "variable": {
+                    "value": "self.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "tanh_330": {
+                "variable": {
+                    "value": "q_rep",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.mean(qs_emb, dim=1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "tanh_331": {
+                "variable": {
+                    "value": "d_rep",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.mean(ds_emb, dim=1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Dropout_359": {
+                "variable": {
+                    "value": "self.drop_out",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "Conv1d_360": {
+                "variable": {
+                    "value": "self.q_conv",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_channels": {
+                    "value": "self.WORD_DEPTH",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "self.K",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Conv1d_361": {
+                "variable": {
+                    "value": "self.d_conv",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_channels": {
+                    "value": "self.WORD_DEPTH",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "self.K",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Linear_367": {
+                "variable": {
+                    "value": "self.q_fc",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "self.K",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "self.L",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Linear_368": {
+                "variable": {
+                    "value": "self.d_fc",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "self.K",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "self.L",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Dropout_370": {
+                "variable": {
+                    "value": "self.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "0.4",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "tanh_411": {
+                "variable": {
+                    "value": "qs_conv",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.q_conv(qs_ngram)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "tanh_412": {
+                "variable": {
+                    "value": "ds_conv",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.d_conv(ds_ngram)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "LSTM_443": {
+                "variable": {
+                    "value": "self.q_lstm",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "self.embed_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "bidirectional": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "LSTM_444": {
+                "variable": {
+                    "value": "self.d_lstm",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "self.embed_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "bidirectional": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Dropout_447": {
+                "variable": {
+                    "value": "self.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "0.4",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "Linear_449": {
+                "variable": {
+                    "value": "self.q_lin",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "self.hidden_size * 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "self.out_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Linear_450": {
+                "variable": {
+                    "value": "self.d_lin",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "self.hidden_size * 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "self.out_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "tanh_489": {
+                "variable": {
+                    "value": "q_rep",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.q_lin(qs_lin)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "tanh_496": {
+                "variable": {
+                    "value": "d_rep",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.d_lin(ds_lin)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "norm_105": {
+                "variable": {
+                    "value": "x_n",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "norm_106": {
+                "variable": {
+                    "value": "y_n",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "y",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "einsum_107": {
+                "variable": {
+                    "value": "ret_1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "equation": {
+                    "value": "bs,bs->b",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "*operands": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "div_110": {
+                "variable": {
+                    "value": "ret",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "ret_1",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.einsum('bs,bs->b', x, y)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "norm",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "(x_n + self.args.epsilon) * (y_n + self.args.epsilon)",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "normalize_112": {
+                "variable": {
+                    "value": "norm_x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "normalize_113": {
+                "variable": {
+                    "value": "norm_y",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "y",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "einsum_115": {
+                "variable": {
+                    "value": "ret",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "equation": {
+                    "value": "bs,bs->b",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "*operands": {
+                    "value": "norm_x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "F.normalize(x, p=2, dim=1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "tanh_149": {
+                "variable": {
+                    "value": "q_rep",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "q_avg",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.batchnorm(torch.mean(qs_emb, dim=1))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "tanh_150": {
+                "variable": {
+                    "value": "d_rep",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "d_avg",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.batchnorm(torch.mean(ds_emb, dim=1))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "tanh_152": {
+                "variable": {
+                    "value": "q_rep",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.mean(qs_emb, dim=1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "tanh_153": {
+                "variable": {
+                    "value": "d_rep",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.mean(ds_emb, dim=1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "cat_156": {
+                "variable": {
+                    "value": "qd_cat",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[q_rep, d_rep]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "relu_206": {
+                "variable": {
+                    "value": "loss_type0",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "(rels == 0).float() * (sims - self.theta[0])",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "pow_206": {
+                "variable": {
+                    "value": "loss_type0",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.args.m",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "relu_207": {
+                "variable": {
+                    "value": "loss_type1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "(rels == 1).float() * (sims - self.theta[1])",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "pow_207": {
+                "variable": {
+                    "value": "loss_type1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.args.m",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "relu_208": {
+                "variable": {
+                    "value": "loss_type2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "(rels == 2).float() * (self.theta[2] - sims)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "pow_208": {
+                "variable": {
+                    "value": "loss_type2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.args.m",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "DataParallel_311": {
+                "variable": {
+                    "value": "self.q_conv",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "module": {
+                    "value": "self.q_conv",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "cat_334": {
+                "variable": {
+                    "value": "qd_cat",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[q_rep, d_rep]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "DataParallel_364": {
+                "variable": {
+                    "value": "self.q_conv",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "module": {
+                    "value": "self.q_conv",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "cat_382": {
+                "variable": {
+                    "value": "temp",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(temp, word_tensor[:, i:sent_len - self.WINDOW_SIZE + i + 1, :])",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "squeeze_392": {
+                "input": {
+                    "value": "x.topk(1, dim=2)[0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "gt_171": {
+                "input": {
+                    "value": "sims",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.cal_sim(q_rep, d_rep)",
+                            "Call"
+                        ],
+                        [
+                            "self.cal_sim(q_rep, d_rep)",
+                            "Call"
+                        ],
+                        [
+                            "self.cal_sim(qs_sem, ds_sem)",
+                            "Call"
+                        ],
+                        [
+                            "self.cal_sim(q_rep, d_rep)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "self.theta[0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "ge_184": {
+                "input": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "lt_185": {
+                "input": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "lt_189": {
+                "input": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "lt_193": {
+                "input": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "mean_209": {
+                "input": {
+                    "value": "loss_type0 + loss_type1 + loss_type2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "CrossEntropyLoss_212": {
+                "variable": {
+                    "value": "loss_f",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "device_count_310": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "mean_330": {
+                "input": {
+                    "value": "qs_emb",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.q_word_embeds.forward(qs)",
+                            "Call"
+                        ],
+                        [
+                            "self.dropout(qs_emb)",
+                            "Call"
+                        ],
+                        [
+                            "qs_emb + q_perturb",
+                            "BinOp"
+                        ],
+                        [
+                            "self.q_word_embeds.forward(qs)",
+                            "Call"
+                        ],
+                        [
+                            "self.q_word_embeds.forward(qs)",
+                            "Call"
+                        ],
+                        [
+                            "self.dropout(qs_emb)",
+                            "Call"
+                        ],
+                        [
+                            "self.q_word_embeds.forward(qs)",
+                            "Call"
+                        ],
+                        [
+                            "self.dropout(qs_emb)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "mean_331": {
+                "input": {
+                    "value": "ds_emb",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.d_word_embeds.forward(ds)",
+                            "Call"
+                        ],
+                        [
+                            "self.dropout(ds_emb)",
+                            "Call"
+                        ],
+                        [
+                            "ds_emb + d_perturb",
+                            "BinOp"
+                        ],
+                        [
+                            "self.d_word_embeds.forward(ds)",
+                            "Call"
+                        ],
+                        [
+                            "self.q_word_embeds.forward(ds)",
+                            "Call"
+                        ],
+                        [
+                            "self.dropout(ds_emb)",
+                            "Call"
+                        ],
+                        [
+                            "self.d_word_embeds.forward(ds)",
+                            "Call"
+                        ],
+                        [
+                            "self.dropout(ds_emb)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "device_count_363": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "is_available_22": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "mean_146": {
+                "input": {
+                    "value": "qs_emb",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.q_word_embeds.forward(qs)",
+                            "Call"
+                        ],
+                        [
+                            "self.dropout(qs_emb)",
+                            "Call"
+                        ],
+                        [
+                            "qs_emb + q_perturb",
+                            "BinOp"
+                        ],
+                        [
+                            "self.q_word_embeds.forward(qs)",
+                            "Call"
+                        ],
+                        [
+                            "self.q_word_embeds.forward(qs)",
+                            "Call"
+                        ],
+                        [
+                            "self.dropout(qs_emb)",
+                            "Call"
+                        ],
+                        [
+                            "self.q_word_embeds.forward(qs)",
+                            "Call"
+                        ],
+                        [
+                            "self.dropout(qs_emb)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "mean_147": {
+                "input": {
+                    "value": "ds_emb",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.d_word_embeds.forward(ds)",
+                            "Call"
+                        ],
+                        [
+                            "self.dropout(ds_emb)",
+                            "Call"
+                        ],
+                        [
+                            "ds_emb + d_perturb",
+                            "BinOp"
+                        ],
+                        [
+                            "self.d_word_embeds.forward(ds)",
+                            "Call"
+                        ],
+                        [
+                            "self.q_word_embeds.forward(ds)",
+                            "Call"
+                        ],
+                        [
+                            "self.dropout(ds_emb)",
+                            "Call"
+                        ],
+                        [
+                            "self.d_word_embeds.forward(ds)",
+                            "Call"
+                        ],
+                        [
+                            "self.dropout(ds_emb)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "mean_152": {
+                "input": {
+                    "value": "qs_emb",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.q_word_embeds.forward(qs)",
+                            "Call"
+                        ],
+                        [
+                            "self.dropout(qs_emb)",
+                            "Call"
+                        ],
+                        [
+                            "qs_emb + q_perturb",
+                            "BinOp"
+                        ],
+                        [
+                            "self.q_word_embeds.forward(qs)",
+                            "Call"
+                        ],
+                        [
+                            "self.q_word_embeds.forward(qs)",
+                            "Call"
+                        ],
+                        [
+                            "self.dropout(qs_emb)",
+                            "Call"
+                        ],
+                        [
+                            "self.q_word_embeds.forward(qs)",
+                            "Call"
+                        ],
+                        [
+                            "self.dropout(qs_emb)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "mean_153": {
+                "input": {
+                    "value": "ds_emb",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.d_word_embeds.forward(ds)",
+                            "Call"
+                        ],
+                        [
+                            "self.dropout(ds_emb)",
+                            "Call"
+                        ],
+                        [
+                            "ds_emb + d_perturb",
+                            "BinOp"
+                        ],
+                        [
+                            "self.d_word_embeds.forward(ds)",
+                            "Call"
+                        ],
+                        [
+                            "self.q_word_embeds.forward(ds)",
+                            "Call"
+                        ],
+                        [
+                            "self.dropout(ds_emb)",
+                            "Call"
+                        ],
+                        [
+                            "self.d_word_embeds.forward(ds)",
+                            "Call"
+                        ],
+                        [
+                            "self.dropout(ds_emb)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ge_180": {
+                "input": {
+                    "value": "rels",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "index",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "log_184": {
+                "input": {
+                    "value": "2 - torch.exp(-x)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "mean_227": {
+                "input": {
+                    "value": "loss_type0 + loss_type1 + loss_type2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "from_numpy_73": {
+                "variable": {
+                    "value": "temp_tensor[vocab[word]]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "ndarray": {
+                    "value": "vec",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "np.fromstring(value, dtype=float, sep=' ')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "exp_184": {
+                "input": {
+                    "value": "-x",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "mean_237": {
+                "input": {
+                    "value": "loss_type0 + loss_type1 + loss_type2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "from_numpy_80": {
+                "variable": {
+                    "value": "temp_tensor[vocab[word]]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "ndarray": {
+                    "value": "vec",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "np.fromstring(value, dtype=float, sep=' ')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "mean_245": {
+                "input": {
+                    "value": "loss_type0 + loss_type1 + loss_type2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "Sigmoid_250": {
+                "variable": {
+                    "value": "m",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "mean_254": {
+                "input": {
+                    "value": "-1 * (loss_type0 + loss_type1 + loss_type2)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "mean_264": {
+                "input": {
+                    "value": "loss_type0 + loss_type1 + loss_type2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "relu_282": {
+                "variable": {
+                    "value": "loss_theta1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.__threshold(rels, 1) * (self.theta[0] - sims)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "pow_282": {
+                "variable": {
+                    "value": "loss_theta1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.args.m",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "relu_283": {
+                "variable": {
+                    "value": "loss_theta2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.__threshold(rels, 2) * (self.theta[1] - sims)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "pow_283": {
+                "variable": {
+                    "value": "loss_theta2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.args.m",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "log_251": {
+                "input": {
+                    "value": "1 - m(-1 - sims)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "log_252": {
+                "input": {
+                    "value": "1 - m(self.theta[0] - sims)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "log_253": {
+                "input": {
+                    "value": "1 - m(self.theta[1] - sims)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "mean_277": {
+                "input": {
+                    "value": "loss_im + loss_laplace",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "mean_284": {
+                "input": {
+                    "value": "loss_theta1 + loss_theta2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "relu_268": {
+                "input": {
+                    "value": "sims - self.theta[0]",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "relu_270": {
+                "input": {
+                    "value": "self.theta[1] - sims",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "relu_269": {
+                "input": {
+                    "value": "self.theta[0] - sims",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/dt_processor.py": {
+        "torch": {}
+    },
+    "src/evaluator.py": {
+        "torch": {
+            "tensor_105": {
+                "variable": {
+                    "value": "rels",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "rels",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "rels + rels_index[i]",
+                            "BinOp"
+                        ],
+                        [
+                            "torch.tensor(rels)",
+                            "Call"
+                        ],
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                }
+            },
+            "zeros_150": {
+                "variable": {
+                    "value": "pre_mat",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "[4, 4]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "gt_12": {
+                "input": {
+                    "value": "sims",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "theta[1]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "sort_44": {
+                "input": {
+                    "value": "r",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "sims[qd_index[i]:qd_index[i + 1]]",
+                            "Subscript"
+                        ],
+                        [
+                            "sims[qd_index[i]:qd_index[i + 1]]",
+                            "Subscript"
+                        ],
+                        [
+                            "np.asarray(result) != 0",
+                            "Compare"
+                        ]
+                    ]
+                },
+                "descending": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "sort_74": {
+                "input": {
+                    "value": "r",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "sims[qd_index[i]:qd_index[i + 1]]",
+                            "Subscript"
+                        ],
+                        [
+                            "sims[qd_index[i]:qd_index[i + 1]]",
+                            "Subscript"
+                        ],
+                        [
+                            "np.asarray(result) != 0",
+                            "Compare"
+                        ]
+                    ]
+                },
+                "descending": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "sort_179": {
+                "input": {
+                    "value": "sims_q",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "sims[qd_index[i]:qd_index[i + 1]]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "descending": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/train_function.py": {
+        "torch": {
+            "cat_120": {
+                "variable": {
+                    "value": "sims_dev",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[sims_dev, sims.data]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "cat_175": {
+                "variable": {
+                    "value": "sims_dev",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[sims_dev, sims.data]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "cat_215": {
+                "variable": {
+                    "value": "sims_test",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[sims_test, sims.data]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "cat_254": {
+                "variable": {
+                    "value": "sims_dev",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[sims_dev, sims.data]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "cat_300": {
+                "variable": {
+                    "value": "sims_test",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[sims_test, sims.data]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "clip_grad_norm__56": {
+                "parameters": {
+                    "value": "model.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "max_norm": {
+                    "value": "args.clip_grad",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "clip_grad_norm__90": {
+                "parameters": {
+                    "value": "model.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "max_norm": {
+                    "value": "args.clip_grad",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "tensor_112": {
+                "data": {
+                    "value": "[]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "tensor_167": {
+                "data": {
+                    "value": "[]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "tensor_207": {
+                "data": {
+                    "value": "[]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "tensor_246": {
+                "data": {
+                    "value": "[]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "tensor_292": {
+                "data": {
+                    "value": "[]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "grad_48": {
+                "outputs": {
+                    "value": "loss",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "model.cal_loss(sims_l, rels)",
+                            "Call"
+                        ],
+                        [
+                            "loss + 0.5 * loss_adv",
+                            "BinOp"
+                        ],
+                        [
+                            "model.cal_loss(sims_l, rels)",
+                            "Call"
+                        ],
+                        [
+                            "model.cal_loss(sims, rels_dev)",
+                            "Call"
+                        ],
+                        [
+                            "model.cal_loss(sims, rels_dev)",
+                            "Call"
+                        ],
+                        [
+                            "model.cal_loss(sims, rels_test)",
+                            "Call"
+                        ],
+                        [
+                            "model.cal_loss(sims, rels_dev)",
+                            "Call"
+                        ],
+                        [
+                            "model.cal_loss(sims, rels_test)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "inputs": {
+                    "value": "model.qs_emb",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "retain_graph": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "grad_49": {
+                "outputs": {
+                    "value": "loss",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "model.cal_loss(sims_l, rels)",
+                            "Call"
+                        ],
+                        [
+                            "loss + 0.5 * loss_adv",
+                            "BinOp"
+                        ],
+                        [
+                            "model.cal_loss(sims_l, rels)",
+                            "Call"
+                        ],
+                        [
+                            "model.cal_loss(sims, rels_dev)",
+                            "Call"
+                        ],
+                        [
+                            "model.cal_loss(sims, rels_dev)",
+                            "Call"
+                        ],
+                        [
+                            "model.cal_loss(sims, rels_test)",
+                            "Call"
+                        ],
+                        [
+                            "model.cal_loss(sims, rels_dev)",
+                            "Call"
+                        ],
+                        [
+                            "model.cal_loss(sims, rels_test)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "inputs": {
+                    "value": "model.ds_emb",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "retain_graph": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/utils.py": {
+        "torch": {
+            "tensor_47": {
+                "data": {
+                    "value": "d_x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[pad_convert(pair[2], d_vocab, batch_max_d_len, pad_type) for pair in batch]",
+                            "ListComp"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "train_crossentropy.py": {
+        "torch": {
+            "device_41": {
+                "variable": {
+                    "value": "device",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda:0 if torch.cuda.is_available() and args.use_gpu else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "Adam_80": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "model.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "args.lr",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "StepLR_81": {
+                "variable": {
+                    "value": "scheduler",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "optimizer": {
+                    "value": "optimizer",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.optim.Adam(model.parameters(), lr=args.lr)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "step_size": {
+                    "value": "5",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "gamma": {
+                    "value": "0.9",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_32": {
+                "seed": {
+                    "value": "666",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_33": {
+                "seed": {
+                    "value": "666",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "is_available_41": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "train_driver.py": {
+        "torch": {
+            "AdamW_88": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "model.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "args.lr",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_27": {
+                "seed": {
+                    "value": "123",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_28": {
+                "seed": {
+                    "value": "123",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "device_39": {
+                "variable": {
+                    "value": "device",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda:0 if torch.cuda.is_available() else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "cat_145": {
+                "variable": {
+                    "value": "sims_dev",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[sims_dev, sims.data]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "clip_grad_norm__121": {
+                "parameters": {
+                    "value": "model.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "max_norm": {
+                    "value": "args.clip_grad",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "tensor_136": {
+                "data": {
+                    "value": "[]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "is_available_39": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "grad_113": {
+                "outputs": {
+                    "value": "loss",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "model.cal_loss(sims, rels)",
+                            "Call"
+                        ],
+                        [
+                            "loss + 0.5 * loss_adv",
+                            "BinOp"
+                        ],
+                        [
+                            "model.cal_loss(sims, rels_dev)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "inputs": {
+                    "value": "model.qs_emb",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "retain_graph": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "grad_114": {
+                "outputs": {
+                    "value": "loss",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "model.cal_loss(sims, rels)",
+                            "Call"
+                        ],
+                        [
+                            "loss + 0.5 * loss_adv",
+                            "BinOp"
+                        ],
+                        [
+                            "model.cal_loss(sims, rels_dev)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "inputs": {
+                    "value": "model.ds_emb",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "retain_graph": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

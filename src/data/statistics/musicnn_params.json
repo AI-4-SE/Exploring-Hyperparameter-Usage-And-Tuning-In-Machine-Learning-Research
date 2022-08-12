@@ -1,0 +1,1964 @@
+{
+    "musicnn/extractor.py": {
+        "tensorflow": {
+            "disable_eager_execution_7": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Session_145": {
+                "variable": {
+                    "value": "sess",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Saver_147": {
+                "variable": {
+                    "value": "saver",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "reset_default_graph_134": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "placeholder_136": {
+                "variable": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, n_frames, config.N_MELS]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "placeholder_137": {
+                "variable": {
+                    "value": "is_training",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.bool",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "sigmoid_142": {
+                "variable": {
+                    "value": "normalized_y",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "y",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "name_scope_135": {
+                "name": {
+                    "value": "model",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "global_variables_initializer_146": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "musicnn/models.py": {
+        "tensorflow": {
+            "set_verbosity_5": {
+                "level": {
+                    "value": "tf.compat.v1.logging.ERROR",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "concat_34": {
+                "variable": {
+                    "value": "frontend_features",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "frontend_features_list",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "frontend(x, is_training, config.N_MELS, num_filt=1.6, type='7774timbraltemporal')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "concat_39": {
+                "variable": {
+                    "value": "midend_features",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "midend_features_list",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "midend(frontend_features, is_training, num_filt_midend)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "concat_45": {
+                "variable": {
+                    "value": "timbral",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[frontend_features_list[0], frontend_features_list[1]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "concat_46": {
+                "variable": {
+                    "value": "temporal",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[frontend_features_list[2], frontend_features_list[3], frontend_features_list[4]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "squeeze_49": {
+                "variable": {
+                    "value": "mean_pool",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "mean_pool",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.squeeze(mean_pool, [2])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "[2]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "squeeze_50": {
+                "variable": {
+                    "value": "max_pool",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "max_pool",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.squeeze(max_pool, [2])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reduce_max(feature_map, axis=1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "[2]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_57": {
+                "variable": {
+                    "value": "expand_input",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "batch_normalization_58": {
+                "variable": {
+                    "value": "normalized_input",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "expand_input",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.expand_dims(x, 3)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "training": {
+                    "value": "is_training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "conv2d_103": {
+                "variable": {
+                    "value": "conv",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "inputs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "filters": {
+                    "value": "filters",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "kernel_size",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "padding",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "'valid'",
+                            "Method Argument"
+                        ],
+                        [
+                            "'same'",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "activation": {
+                    "value": "activation",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.relu",
+                            "Method Argument"
+                        ],
+                        [
+                            "tf.nn.relu",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "batch_normalization_108": {
+                "variable": {
+                    "value": "bn_conv",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "conv",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.conv2d(inputs=inputs, filters=filters, kernel_size=kernel_size, padding=padding, activation=activation)",
+                            "Call"
+                        ],
+                        [
+                            "tf.compat.v1.layers.conv2d(inputs=inputs, filters=filters, kernel_size=kernel_size, padding=padding, activation=activation)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "training": {
+                    "value": "is_training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "max_pooling2d_109": {
+                "variable": {
+                    "value": "pool",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "bn_conv",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.batch_normalization(conv, training=is_training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.compat.v1.layers.batch_normalization(conv, training=is_training)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "pool_size": {
+                    "value": "[1, bn_conv.shape[2]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "[1, bn_conv.shape[2]]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "conv2d_117": {
+                "variable": {
+                    "value": "conv",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "inputs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "filters": {
+                    "value": "filters",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "kernel_size",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "padding",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "'valid'",
+                            "Method Argument"
+                        ],
+                        [
+                            "'same'",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "activation": {
+                    "value": "activation",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.relu",
+                            "Method Argument"
+                        ],
+                        [
+                            "tf.nn.relu",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "batch_normalization_122": {
+                "variable": {
+                    "value": "bn_conv",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "conv",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.conv2d(inputs=inputs, filters=filters, kernel_size=kernel_size, padding=padding, activation=activation)",
+                            "Call"
+                        ],
+                        [
+                            "tf.compat.v1.layers.conv2d(inputs=inputs, filters=filters, kernel_size=kernel_size, padding=padding, activation=activation)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "training": {
+                    "value": "is_training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "max_pooling2d_123": {
+                "variable": {
+                    "value": "pool",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "bn_conv",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.batch_normalization(conv, training=is_training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.compat.v1.layers.batch_normalization(conv, training=is_training)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "pool_size": {
+                    "value": "[1, bn_conv.shape[2]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "[1, bn_conv.shape[2]]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_131": {
+                "variable": {
+                    "value": "front_end_output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "front_end_output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.expand_dims(front_end_output, 3)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "pad_134": {
+                "variable": {
+                    "value": "front_end_pad",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "front_end_output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.expand_dims(front_end_output, 3)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "paddings": {
+                    "value": "[[0, 0], [3, 3], [0, 0], [0, 0]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "mode": {
+                    "value": "CONSTANT",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "conv2d_135": {
+                "variable": {
+                    "value": "conv1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "front_end_pad",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.pad(front_end_output, [[0, 0], [3, 3], [0, 0], [0, 0]], 'CONSTANT')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "num_filt",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "[7, front_end_pad.shape[2]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "valid",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "tf.nn.relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "batch_normalization_140": {
+                "variable": {
+                    "value": "bn_conv1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "conv1",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.conv2d(inputs=front_end_pad, filters=num_filt, kernel_size=[7, front_end_pad.shape[2]], padding='valid', activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.compat.v1.layers.conv2d(inputs=bn_input, filters=num_filters, kernel_size=[3, 3], padding='same', activation=tf.nn.relu, name='1CNN')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "training": {
+                    "value": "is_training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "transpose_141": {
+                "variable": {
+                    "value": "bn_conv1_t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "bn_conv1",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.batch_normalization(conv1, training=is_training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.compat.v1.layers.batch_normalization(conv1, training=is_training)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "perm": {
+                    "value": "[0, 1, 3, 2]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "pad_144": {
+                "variable": {
+                    "value": "bn_conv1_pad",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "bn_conv1_t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.transpose(bn_conv1, [0, 1, 3, 2])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "paddings": {
+                    "value": "[[0, 0], [3, 3], [0, 0], [0, 0]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "mode": {
+                    "value": "CONSTANT",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "conv2d_145": {
+                "variable": {
+                    "value": "conv2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "bn_conv1_pad",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.pad(bn_conv1_t, [[0, 0], [3, 3], [0, 0], [0, 0]], 'CONSTANT')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "num_filt",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "[7, bn_conv1_pad.shape[2]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "valid",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "tf.nn.relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "batch_normalization_150": {
+                "variable": {
+                    "value": "bn_conv2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "conv2",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.conv2d(inputs=bn_conv1_pad, filters=num_filt, kernel_size=[7, bn_conv1_pad.shape[2]], padding='valid', activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(bn_conv2, [0, 1, 3, 2])",
+                            "Call"
+                        ],
+                        [
+                            "tf.compat.v1.layers.conv2d(inputs=do_pool1, filters=num_filters, kernel_size=[3, 3], padding='same', activation=tf.nn.relu, name='2CNN')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "training": {
+                    "value": "is_training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "transpose_151": {
+                "variable": {
+                    "value": "conv2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "bn_conv2",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.batch_normalization(conv2, training=is_training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.compat.v1.layers.batch_normalization(conv2, training=is_training)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "perm": {
+                    "value": "[0, 1, 3, 2]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "add_152": {
+                "variable": {
+                    "value": "res_conv2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "conv2",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.conv2d(inputs=bn_conv1_pad, filters=num_filt, kernel_size=[7, bn_conv1_pad.shape[2]], padding='valid', activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(bn_conv2, [0, 1, 3, 2])",
+                            "Call"
+                        ],
+                        [
+                            "tf.compat.v1.layers.conv2d(inputs=do_pool1, filters=num_filters, kernel_size=[3, 3], padding='same', activation=tf.nn.relu, name='2CNN')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "bn_conv1_t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.transpose(bn_conv1, [0, 1, 3, 2])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "pad_155": {
+                "variable": {
+                    "value": "bn_conv2_pad",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "res_conv2",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.add(conv2, bn_conv1_t)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "paddings": {
+                    "value": "[[0, 0], [3, 3], [0, 0], [0, 0]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "mode": {
+                    "value": "CONSTANT",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "conv2d_156": {
+                "variable": {
+                    "value": "conv3",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "bn_conv2_pad",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.pad(res_conv2, [[0, 0], [3, 3], [0, 0], [0, 0]], 'CONSTANT')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "num_filt",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "[7, bn_conv2_pad.shape[2]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "valid",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "tf.nn.relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "batch_normalization_161": {
+                "variable": {
+                    "value": "bn_conv3",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "conv3",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.conv2d(inputs=bn_conv2_pad, filters=num_filt, kernel_size=[7, bn_conv2_pad.shape[2]], padding='valid', activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(bn_conv3, [0, 1, 3, 2])",
+                            "Call"
+                        ],
+                        [
+                            "tf.compat.v1.layers.conv2d(inputs=do_pool2, filters=num_filters, kernel_size=[3, 3], padding='same', activation=tf.nn.relu, name='3CNN')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "training": {
+                    "value": "is_training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "transpose_162": {
+                "variable": {
+                    "value": "conv3",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "bn_conv3",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.batch_normalization(conv3, training=is_training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.compat.v1.layers.batch_normalization(conv3, training=is_training)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "perm": {
+                    "value": "[0, 1, 3, 2]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "add_163": {
+                "variable": {
+                    "value": "res_conv3",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "conv3",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.conv2d(inputs=bn_conv2_pad, filters=num_filt, kernel_size=[7, bn_conv2_pad.shape[2]], padding='valid', activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(bn_conv3, [0, 1, 3, 2])",
+                            "Call"
+                        ],
+                        [
+                            "tf.compat.v1.layers.conv2d(inputs=do_pool2, filters=num_filters, kernel_size=[3, 3], padding='same', activation=tf.nn.relu, name='3CNN')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "res_conv2",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.add(conv2, bn_conv1_t)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reduce_max_171": {
+                "variable": {
+                    "value": "max_pool",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "feature_map",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "moments_172": {
+                "variable": {
+                    "value": "(mean_pool, var_pool)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "feature_map",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "axes": {
+                    "value": "[1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "concat_173": {
+                "variable": {
+                    "value": "tmp_pool",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[max_pool, mean_pool]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "flatten_176": {
+                "variable": {
+                    "value": "flat_pool",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "structure": {
+                    "value": "tmp_pool",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.concat([max_pool, mean_pool], 2)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "batch_normalization_177": {
+                "variable": {
+                    "value": "flat_pool",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "flat_pool",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.flatten(tmp_pool)",
+                            "Call"
+                        ],
+                        [
+                            "tf.compat.v1.layers.batch_normalization(flat_pool, training=is_training)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "training": {
+                    "value": "is_training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "dropout_178": {
+                "variable": {
+                    "value": "flat_pool_dropout",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "flat_pool",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.flatten(tmp_pool)",
+                            "Call"
+                        ],
+                        [
+                            "tf.compat.v1.layers.batch_normalization(flat_pool, training=is_training)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "training": {
+                    "value": "is_training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "dense_179": {
+                "variable": {
+                    "value": "dense",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "flat_pool_dropout",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.dropout(flat_pool, rate=0.5, training=is_training)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "units": {
+                    "value": "output_units",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "tf.nn.relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "batch_normalization_182": {
+                "variable": {
+                    "value": "bn_dense",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "dense",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.dense(inputs=flat_pool_dropout, units=output_units, activation=tf.nn.relu)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "training": {
+                    "value": "is_training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "dropout_183": {
+                "variable": {
+                    "value": "dense_dropout",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "bn_dense",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.batch_normalization(dense, training=is_training)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "training": {
+                    "value": "is_training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "dense_186": {
+                "variable": {
+                    "value": "logits",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "dense_dropout",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.dropout(bn_dense, rate=0.5, training=is_training)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "activation": {
+                    "value": "None",
+                    "type": "NoneType",
+                    "possible_values": []
+                },
+                "units": {
+                    "value": "num_classes",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_194": {
+                "variable": {
+                    "value": "input_layer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "batch_normalization_195": {
+                "variable": {
+                    "value": "bn_input",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "input_layer",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.expand_dims(x, 3)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "training": {
+                    "value": "is_training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "conv2d_197": {
+                "variable": {
+                    "value": "conv1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "bn_input",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.batch_normalization(input_layer, training=is_training)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "num_filters",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "32",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "kernel_size": {
+                    "value": "[3, 3]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "same",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "tf.nn.relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "1CNN",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "batch_normalization_203": {
+                "variable": {
+                    "value": "bn_conv1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "conv1",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.conv2d(inputs=front_end_pad, filters=num_filt, kernel_size=[7, front_end_pad.shape[2]], padding='valid', activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.compat.v1.layers.conv2d(inputs=bn_input, filters=num_filters, kernel_size=[3, 3], padding='same', activation=tf.nn.relu, name='1CNN')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "training": {
+                    "value": "is_training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "max_pooling2d_204": {
+                "variable": {
+                    "value": "pool1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "bn_conv1",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.batch_normalization(conv1, training=is_training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.compat.v1.layers.batch_normalization(conv1, training=is_training)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "pool_size": {
+                    "value": "[4, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "[2, 2]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "dropout_206": {
+                "variable": {
+                    "value": "do_pool1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "pool1",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.max_pooling2d(inputs=bn_conv1, pool_size=[4, 1], strides=[2, 2])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "0.25",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "training": {
+                    "value": "is_training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "conv2d_207": {
+                "variable": {
+                    "value": "conv2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "do_pool1",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.dropout(pool1, rate=0.25, training=is_training)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "num_filters",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "32",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "kernel_size": {
+                    "value": "[3, 3]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "same",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "tf.nn.relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "2CNN",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "batch_normalization_213": {
+                "variable": {
+                    "value": "bn_conv2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "conv2",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.conv2d(inputs=bn_conv1_pad, filters=num_filt, kernel_size=[7, bn_conv1_pad.shape[2]], padding='valid', activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(bn_conv2, [0, 1, 3, 2])",
+                            "Call"
+                        ],
+                        [
+                            "tf.compat.v1.layers.conv2d(inputs=do_pool1, filters=num_filters, kernel_size=[3, 3], padding='same', activation=tf.nn.relu, name='2CNN')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "training": {
+                    "value": "is_training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "max_pooling2d_214": {
+                "variable": {
+                    "value": "pool2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "bn_conv2",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.batch_normalization(conv2, training=is_training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.compat.v1.layers.batch_normalization(conv2, training=is_training)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "pool_size": {
+                    "value": "[2, 2]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "[2, 2]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "dropout_216": {
+                "variable": {
+                    "value": "do_pool2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "pool2",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.max_pooling2d(inputs=bn_conv2, pool_size=[2, 2], strides=[2, 2])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "0.25",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "training": {
+                    "value": "is_training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "conv2d_217": {
+                "variable": {
+                    "value": "conv3",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "do_pool2",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.dropout(pool2, rate=0.25, training=is_training)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "num_filters",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "32",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "kernel_size": {
+                    "value": "[3, 3]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "same",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "tf.nn.relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "3CNN",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "batch_normalization_223": {
+                "variable": {
+                    "value": "bn_conv3",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "conv3",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.conv2d(inputs=bn_conv2_pad, filters=num_filt, kernel_size=[7, bn_conv2_pad.shape[2]], padding='valid', activation=tf.nn.relu)",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(bn_conv3, [0, 1, 3, 2])",
+                            "Call"
+                        ],
+                        [
+                            "tf.compat.v1.layers.conv2d(inputs=do_pool2, filters=num_filters, kernel_size=[3, 3], padding='same', activation=tf.nn.relu, name='3CNN')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "training": {
+                    "value": "is_training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "max_pooling2d_224": {
+                "variable": {
+                    "value": "pool3",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "bn_conv3",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.batch_normalization(conv3, training=is_training)",
+                            "Call"
+                        ],
+                        [
+                            "tf.compat.v1.layers.batch_normalization(conv3, training=is_training)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "pool_size": {
+                    "value": "[2, 2]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "[2, 2]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "dropout_226": {
+                "variable": {
+                    "value": "do_pool3",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "pool3",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.max_pooling2d(inputs=bn_conv3, pool_size=[2, 2], strides=[2, 2])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "0.25",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "training": {
+                    "value": "is_training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "conv2d_227": {
+                "variable": {
+                    "value": "conv4",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "do_pool3",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.dropout(pool3, rate=0.25, training=is_training)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "num_filters",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "32",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "kernel_size": {
+                    "value": "[3, 3]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "same",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "tf.nn.relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "4CNN",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "batch_normalization_233": {
+                "variable": {
+                    "value": "bn_conv4",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "conv4",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.conv2d(inputs=do_pool3, filters=num_filters, kernel_size=[3, 3], padding='same', activation=tf.nn.relu, name='4CNN')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "training": {
+                    "value": "is_training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "max_pooling2d_234": {
+                "variable": {
+                    "value": "pool4",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "bn_conv4",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.batch_normalization(conv4, training=is_training)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "pool_size": {
+                    "value": "[2, 2]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "[2, 2]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "dropout_236": {
+                "variable": {
+                    "value": "do_pool4",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "pool4",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.max_pooling2d(inputs=bn_conv4, pool_size=[2, 2], strides=[2, 2])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "0.25",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "training": {
+                    "value": "is_training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "conv2d_237": {
+                "variable": {
+                    "value": "conv5",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "do_pool4",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.dropout(pool4, rate=0.25, training=is_training)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "num_filters",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "32",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "kernel_size": {
+                    "value": "[3, 3]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "same",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "tf.nn.relu",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "5CNN",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "batch_normalization_243": {
+                "variable": {
+                    "value": "bn_conv5",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "conv5",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.conv2d(inputs=do_pool4, filters=num_filters, kernel_size=[3, 3], padding='same', activation=tf.nn.relu, name='5CNN')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "training": {
+                    "value": "is_training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "max_pooling2d_244": {
+                "variable": {
+                    "value": "pool5",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "bn_conv5",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.batch_normalization(conv5, training=is_training)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "pool_size": {
+                    "value": "[4, 4]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "[4, 4]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "flatten_246": {
+                "variable": {
+                    "value": "flat_pool5",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "structure": {
+                    "value": "pool5",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.max_pooling2d(inputs=bn_conv5, pool_size=[4, 4], strides=[4, 4])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "dropout_247": {
+                "variable": {
+                    "value": "do_pool5",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "flat_pool5",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.flatten(pool5)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "training": {
+                    "value": "is_training",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "dense_248": {
+                "variable": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "do_pool5",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.dropout(flat_pool5, rate=0.5, training=is_training)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "activation": {
+                    "value": "None",
+                    "type": "NoneType",
+                    "possible_values": []
+                },
+                "units": {
+                    "value": "num_classes",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "pad_64": {
+                "variable": {
+                    "value": "input_pad_7",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "normalized_input",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.batch_normalization(expand_input, training=is_training)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "paddings": {
+                    "value": "[[0, 0], [3, 3], [0, 0], [0, 0]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "mode": {
+                    "value": "CONSTANT",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "squeeze_112": {
+                "input": {
+                    "value": "pool",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.max_pooling2d(inputs=bn_conv, pool_size=[1, bn_conv.shape[2]], strides=[1, bn_conv.shape[2]])",
+                            "Call"
+                        ],
+                        [
+                            "tf.compat.v1.layers.max_pooling2d(inputs=bn_conv, pool_size=[1, bn_conv.shape[2]], strides=[1, bn_conv.shape[2]])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "[2]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "squeeze_126": {
+                "input": {
+                    "value": "pool",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.compat.v1.layers.max_pooling2d(inputs=bn_conv, pool_size=[1, bn_conv.shape[2]], strides=[1, bn_conv.shape[2]])",
+                            "Call"
+                        ],
+                        [
+                            "tf.compat.v1.layers.max_pooling2d(inputs=bn_conv, pool_size=[1, bn_conv.shape[2]], strides=[1, bn_conv.shape[2]])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "[2]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}
