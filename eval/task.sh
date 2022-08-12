@@ -35,7 +35,7 @@ rm -rf "$EVALUATION"
 
 # Get evaluation script
 cp $2/evaluation.py .
-cp $2/sample_set_urls.json .
+cp $2/final_sample_set_urls.json .
 # ----------------------------------------------------------------------------
 # Run experiment
 # ----------------------------------------------------------------------------
