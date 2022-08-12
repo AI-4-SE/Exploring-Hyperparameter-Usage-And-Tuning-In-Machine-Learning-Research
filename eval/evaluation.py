@@ -27,7 +27,7 @@ def get_repo_name_from_url(url):
     :return: Repository name
     """
     repo_name = url.split("/")[-1]
-    repo_name = repo_name.split(".")[0]
+    #repo_name = repo_name.split(".")[0]
     return repo_name
 
 

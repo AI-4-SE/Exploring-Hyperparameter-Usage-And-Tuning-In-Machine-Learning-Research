@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --exclusive
-#SBATCH --array=0-2499
+#SBATCH --array=0-1999
 #SBATCH --partition=tesla
 #SBATCH --job-name=cfgnet_evaluation
 #SBATCH --output=output/cfgnet-%a.out

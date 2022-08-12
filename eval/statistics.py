@@ -31,14 +31,16 @@ def copy_random_statistics_files(target, n = 1000):
         for csv_file in glob.glob(f"{repo}/statistics/*"):
             if csv_file.endswith("params.json"):
                 name = csv_file.split("/")[-1]
-                print(csv_file)
+                #print(csv_file)
                 files.append(csv_file)
 
-    random_files = random.sample(files, n)
+    print(len(files))
 
-    for f in random_files:
-        name = f.split("/")[-1]
-        shutil.copyfile(f, target + name)
+    #random_files = random.sample(files, n)
+
+    #for f in random_files:
+    #    name = f.split("/")[-1]
+    #    shutil.copyfile(f, target + name)
 
 def find_module(name):
     with open(sklearn_data, "r") as source:
@@ -110,9 +112,34 @@ def get_failed_repos():
         json.dump(failed_repos, src, indent=4, sort_keys=True)
     
 
+def test():
+    
+    with open("final_sample_set_urls.json", "r", encoding="utf-8") as src:
+        urls = json.load(src)
+
+    
+
+    url_repo_names = [x.split("/")[-1] for x in urls]
+
+    repos = []
+    for repo_name in glob.glob("results/**"):
+        name = repo_name.split("/")[-1]
+        repos.append(name)
+
+    
+    print("Len Urls: ", len(urls))
+    print("Len Url repo names: ", len(url_repo_names))
+    print("Len Repos: ", len(repos)) 
+
+    for name in url_repo_names:
+        if name not in repos:
+            print(name)
+
+
 
 if __name__ == "__main__":
     #copy_random_statistics_files(statistics_dir)
 
-    files = glob.glob(f"{statistics_dir}/*")
-    print(len(files))
+    #files = glob.glob(f"{statistics_dir}/*")
+    #print(len(files))
+    test()
