@@ -1,0 +1,869 @@
+{
+    "ActorCriticNetwork.py": {
+        "tensorflow": {
+            "Graph_27": {
+                "variable": {
+                    "value": "self.graph",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "placeholder_59": {
+                "variable": {
+                    "value": "self.R",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "R",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "softmax_78": {
+                "variable": {
+                    "value": "actor",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "actor_layer",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "squeeze_79": {
+                "variable": {
+                    "value": "critic",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "critic_layer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "[1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "placeholder_89": {
+                "variable": {
+                    "value": "actions_one_hot",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, action_space]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_91": {
+                "variable": {
+                    "value": "action_probability",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "actor * actions_one_hot",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "log_93": {
+                "variable": {
+                    "value": "log_prob",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.maximum(action_probability, Config.LOG_NOISE)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_95": {
+                "variable": {
+                    "value": "entropy",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "tf.log(tf.maximum(actor, Config.LOG_NOISE)) * actor",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_98": {
+                "variable": {
+                    "value": "critic_loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "tf.square(self.R - critic)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "global_variables_263": {
+                "variable": {
+                    "value": "variables",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Saver_264": {
+                "variable": {
+                    "value": "saver",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "var_list": {
+                    "value": "{var.name: var for var in variables}",
+                    "type": "DictComp",
+                    "possible_values": []
+                },
+                "max_to_keep": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "global_variables_277": {
+                "variable": {
+                    "value": "graph_parameters",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "NewCheckpointReader_278": {
+                "variable": {
+                    "value": "saved_parameters",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "filepattern": {
+                    "value": "filename",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.train.latest_checkpoint(os.path.dirname(self.checkpoint_filename(episode=Config.LOAD_EPISODE)))",
+                            "Call"
+                        ],
+                        [
+                            "Config.SAVE_DIRECTORY + '/' + 'checkpoint'",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "Saver_290": {
+                "variable": {
+                    "value": "saver",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "var_list": {
+                    "value": "graph_parameters_to_load",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "{var.name: var for var in graph_parameters}",
+                            "DictComp"
+                        ]
+                    ]
+                },
+                "max_to_keep": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Session_341": {
+                "variable": {
+                    "value": "self.session",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "graph": {
+                    "value": "self.graph",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "config": {
+                    "value": "tf.ConfigProto(allow_soft_placement=True, log_device_placement=False, gpu_options=tf.GPUOptions(allow_growth=True))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "placeholder_375": {
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "shape",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "name",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "random_uniform_initializer_385": {
+                "variable": {
+                    "value": "weight_initializer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "minval": {
+                    "value": "-random_initializer",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "maxval": {
+                    "value": "random_initializer",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "1.0 / np.sqrt(input_shape)",
+                            "BinOp"
+                        ],
+                        [
+                            "1.0 / np.sqrt(filter_size * filter_size * input_shape)",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "random_uniform_initializer_386": {
+                "variable": {
+                    "value": "bias_initializer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "minval": {
+                    "value": "-random_initializer",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "maxval": {
+                    "value": "random_initializer",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "1.0 / np.sqrt(input_shape)",
+                            "BinOp"
+                        ],
+                        [
+                            "1.0 / np.sqrt(filter_size * filter_size * input_shape)",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "get_variable_387": {
+                "variable": {
+                    "value": "weights",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "w",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[input_shape, output_shape]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "weight_initializer",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.random_uniform_initializer(-random_initializer, random_initializer)",
+                            "Call"
+                        ],
+                        [
+                            "tf.random_uniform_initializer(-random_initializer, random_initializer)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "get_variable_388": {
+                "variable": {
+                    "value": "biases",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "b",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[output_shape]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "bias_initializer",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.random_uniform_initializer(-random_initializer, random_initializer)",
+                            "Call"
+                        ],
+                        [
+                            "tf.random_uniform_initializer(-random_initializer, random_initializer)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "random_uniform_initializer_404": {
+                "variable": {
+                    "value": "weight_initializer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "minval": {
+                    "value": "-random_initializer",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "maxval": {
+                    "value": "random_initializer",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "1.0 / np.sqrt(input_shape)",
+                            "BinOp"
+                        ],
+                        [
+                            "1.0 / np.sqrt(filter_size * filter_size * input_shape)",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "random_uniform_initializer_405": {
+                "variable": {
+                    "value": "bias_initializer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "minval": {
+                    "value": "-random_initializer",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "maxval": {
+                    "value": "random_initializer",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "1.0 / np.sqrt(input_shape)",
+                            "BinOp"
+                        ],
+                        [
+                            "1.0 / np.sqrt(filter_size * filter_size * input_shape)",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "get_variable_407": {
+                "variable": {
+                    "value": "weights",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "w",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[filter_size, filter_size, input_shape, output_shape]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "weight_initializer",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.random_uniform_initializer(-random_initializer, random_initializer)",
+                            "Call"
+                        ],
+                        [
+                            "tf.random_uniform_initializer(-random_initializer, random_initializer)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "get_variable_412": {
+                "variable": {
+                    "value": "biases",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "b",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[output_shape]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "bias_initializer",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.random_uniform_initializer(-random_initializer, random_initializer)",
+                            "Call"
+                        ],
+                        [
+                            "tf.random_uniform_initializer(-random_initializer, random_initializer)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reshape_423": {
+                "tensor": {
+                    "value": "previous_layer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[-1, (previous_layer.get_shape()[1] * previous_layer.get_shape()[2] * previous_layer.get_shape()[3])._value]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_383": {
+                "name_or_scope": {
+                    "value": "name",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_402": {
+                "name_or_scope": {
+                    "value": "name",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "RMSPropOptimizer_33": {
+                "variable": {
+                    "value": "self.optimizer",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "learning_rate": {
+                    "value": "Config.LEARNING_RATE",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "decay": {
+                    "value": "Config.RMS_DECAY",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "momentum": {
+                    "value": "Config.RMS_MOMENTUM",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "epsilon": {
+                    "value": "Config.RMS_EPSILON",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "maximum_93": {
+                "x": {
+                    "value": "action_probability",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reduce_sum(actor * actions_one_hot, axis=1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "Config.LOG_NOISE",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "stop_gradient_94": {
+                "input": {
+                    "value": "critic",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.squeeze(critic_layer, axis=[1])",
+                            "Call"
+                        ],
+                        [
+                            "actor_critic_wrapper.critic",
+                            "Attribute"
+                        ]
+                    ]
+                }
+            },
+            "square_98": {
+                "x": {
+                    "value": "self.R - critic",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_114": {
+                "variable": {
+                    "value": "sum_fisher",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "tf.multiply(F_i, tf.square(theta_i - theta_star_i))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "latest_checkpoint_246": {
+                "variable": {
+                    "value": "filename",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "checkpoint_dir": {
+                    "value": "os.path.dirname(self.checkpoint_filename(episode=Config.LOAD_EPISODE))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "global_variables_initializer_347": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "matmul_390": {
+                "a": {
+                    "value": "previous_layer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "b": {
+                    "value": "weights",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('w', dtype=tf.float32, shape=[input_shape, output_shape], initializer=weight_initializer)",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w', shape=[filter_size, filter_size, input_shape, output_shape], dtype=tf.float32, initializer=weight_initializer)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "conv2d_416": {
+                "input": {
+                    "value": "previous_layer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "filters": {
+                    "value": "weights",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('w', dtype=tf.float32, shape=[input_shape, output_shape], initializer=weight_initializer)",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w', shape=[filter_size, filter_size, input_shape, output_shape], dtype=tf.float32, initializer=weight_initializer)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "strides": {
+                    "value": "[1, stride, stride, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "padding",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "'SAME'",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "device_31": {
+                "device_name": {
+                    "value": "Config.DEVICE",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "log_95": {
+                "x": {
+                    "value": "tf.maximum(actor, Config.LOG_NOISE)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_97": {
+                "input_tensor": {
+                    "value": "-1 * Config.ENTROPY_BETA * entropy",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "device_153": {
+                "device_name": {
+                    "value": "Config.DEVICE",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "to_int32_167": {
+                "variable": {
+                    "value": "action_index",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.multinomial(tf.log(actor), 1)[0][0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "device_244": {
+                "device_name": {
+                    "value": "Config.DEVICE",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "ConfigProto_343": {
+                "allow_soft_placement": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "log_device_placement": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "gpu_options": {
+                    "value": "tf.GPUOptions(allow_growth=True)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "maximum_95": {
+                "x": {
+                    "value": "actor",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.softmax(actor_layer)",
+                            "Call"
+                        ],
+                        [
+                            "actor_critic_wrapper.actor",
+                            "Attribute"
+                        ],
+                        [
+                            "actor_critic_wrapper.actor",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "Config.LOG_NOISE",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "multiply_114": {
+                "x": {
+                    "value": "F_i",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "F[i].astype(np.float32)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "tf.square(theta_i - theta_star_i)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "device_235": {
+                "device_name": {
+                    "value": "Config.DEVICE",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "square_114": {
+                "x": {
+                    "value": "theta_i - theta_star_i",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "GPUOptions_346": {
+                "allow_growth": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "gradients_173": {
+                "ys": {
+                    "value": "tf.log(actor[0, action_index])",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "xs": {
+                    "value": "self.shared_parameters",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "multinomial_167": {
+                "logits": {
+                    "value": "tf.log(actor)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "num_samples": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "log_174": {
+                "x": {
+                    "value": "actor[0, action_index]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "log_167": {
+                "x": {
+                    "value": "actor",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.softmax(actor_layer)",
+                            "Call"
+                        ],
+                        [
+                            "actor_critic_wrapper.actor",
+                            "Attribute"
+                        ],
+                        [
+                            "actor_critic_wrapper.actor",
+                            "Attribute"
+                        ]
+                    ]
+                }
+            }
+        }
+    }
+}

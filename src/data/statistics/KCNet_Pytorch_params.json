@@ -1,0 +1,1200 @@
+{
+    "data/modelnet.py": {
+        "torch": {
+            "from_numpy_45": {
+                "variable": {
+                    "value": "pc",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "ndarray": {
+                    "value": "data.transpose().astype(np.float32)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "transpose_45": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "data/shapenet.py": {
+        "torch": {
+            "from_numpy_81": {
+                "variable": {
+                    "value": "pc",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "ndarray": {
+                    "value": "pc_data.transpose().astype(np.float32)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "from_numpy_82": {
+                "variable": {
+                    "value": "seg",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "ndarray": {
+                    "value": "seg_data.astype(np.long)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "models/kcnet.py": {
+        "torch": {
+            "Sequential_28": {
+                "variable": {
+                    "value": "self.mlp1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Conv1d(32 + 3, 64, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Sequential_36": {
+                "variable": {
+                    "value": "self.mlp2",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Conv1d(64, 64, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Sequential_44": {
+                "variable": {
+                    "value": "self.mlp3",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Conv1d(192, 1024, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Sequential_49": {
+                "variable": {
+                    "value": "self.classify",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Linear(1024, 512)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "CrossEntropyLoss_60": {
+                "variable": {
+                    "value": "self.criterion",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Adam_61": {
+                "variable": {
+                    "value": "self.optimizer",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "self.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "weight_decay": {
+                    "value": "1e-05",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "StepLR_62": {
+                "variable": {
+                    "value": "self.schedule",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "optimizer": {
+                    "value": "self.optimizer",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "step_size": {
+                    "value": "20",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "gamma": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "cat_69": {
+                "variable": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[points, x]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_73": {
+                "variable": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[x, y]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "max_pool1d_75": {
+                "variable": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.kc(points, knn_graph[:, :, 1:].contiguous())",
+                            "Call"
+                        ],
+                        [
+                            "torch.cat([points, x], dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "self.mlp1(x)",
+                            "Call"
+                        ],
+                        [
+                            "self.mlp2(x)",
+                            "Call"
+                        ],
+                        [
+                            "torch.cat([x, y], dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "self.mlp3(x)",
+                            "Call"
+                        ],
+                        [
+                            "F.max_pool1d(x, x.size(2), stride=1).squeeze(2)",
+                            "Call"
+                        ],
+                        [
+                            "self.classify(x)",
+                            "Call"
+                        ],
+                        [
+                            "torch.cat([x1, x2, x3, x4, x5, x6, x7, one_hot], dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "self.mlp7(x)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "kernel_size": {
+                    "value": "x.size(2)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "squeeze_75": {
+                "variable": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Sequential_158": {
+                "variable": {
+                    "value": "self.mlp1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Conv1d(3 + 16, 64, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Sequential_163": {
+                "variable": {
+                    "value": "self.mlp2",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Conv1d(64, 64, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Sequential_168": {
+                "variable": {
+                    "value": "self.mlp3",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Conv1d(64, 128, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Sequential_173": {
+                "variable": {
+                    "value": "self.mlp4",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Conv1d(128, 128, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Sequential_178": {
+                "variable": {
+                    "value": "self.mlp5",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Conv1d(128, 512, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Sequential_183": {
+                "variable": {
+                    "value": "self.mlp6",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Conv1d(512, 1024, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Sequential_188": {
+                "variable": {
+                    "value": "self.mlp7",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.Conv1d(3 + 16 + 64 + 64 + 128 + 128 + 512 + 1024 + category_nums, 512, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "CrossEntropyLoss_202": {
+                "variable": {
+                    "value": "self.criterion",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Adam_203": {
+                "variable": {
+                    "value": "self.optimizer",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "self.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "weight_decay": {
+                    "value": "1e-05",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "StepLR_204": {
+                "variable": {
+                    "value": "self.schedule",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "optimizer": {
+                    "value": "self.optimizer",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "step_size": {
+                    "value": "20",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "gamma": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "cat_211": {
+                "variable": {
+                    "value": "x1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[points, x1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "max_pool1d_220": {
+                "variable": {
+                    "value": "x7",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x7",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "graph_max_pooling(x6, knn_graph)",
+                            "Call"
+                        ],
+                        [
+                            "self.mlp6(x7)",
+                            "Call"
+                        ],
+                        [
+                            "F.max_pool1d(x7, x7.size(2), stride=1)",
+                            "Call"
+                        ],
+                        [
+                            "x7.repeat([1, 1, knn_graph.size(1)])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "kernel_size": {
+                    "value": "x7.size(2)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "zeros_224": {
+                "variable": {
+                    "value": "one_hot",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "[knn_graph.size(0), self.category_nums, knn_graph.size(1)]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "cat_228": {
+                "variable": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[x1, x2, x3, x4, x5, x6, x7, one_hot]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Conv1d_29": {
+                "in_channels": {
+                    "value": "32 + 3",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "64",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "BatchNorm1d_30": {
+                "num_features": {
+                    "value": "64",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ReLU_31": {
+                "inplace": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Conv1d_32": {
+                "in_channels": {
+                    "value": "64",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "64",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "BatchNorm1d_33": {
+                "num_features": {
+                    "value": "64",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ReLU_34": {
+                "inplace": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Conv1d_37": {
+                "in_channels": {
+                    "value": "64",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "64",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "BatchNorm1d_38": {
+                "num_features": {
+                    "value": "64",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ReLU_39": {
+                "inplace": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Conv1d_40": {
+                "in_channels": {
+                    "value": "64",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "128",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "BatchNorm1d_41": {
+                "num_features": {
+                    "value": "128",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ReLU_42": {
+                "inplace": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Conv1d_45": {
+                "in_channels": {
+                    "value": "192",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "1024",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "BatchNorm1d_46": {
+                "num_features": {
+                    "value": "1024",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ReLU_47": {
+                "inplace": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Linear_50": {
+                "in_features": {
+                    "value": "1024",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "512",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "BatchNorm1d_51": {
+                "num_features": {
+                    "value": "512",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ReLU_52": {
+                "inplace": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Linear_53": {
+                "in_features": {
+                    "value": "512",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "256",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "BatchNorm1d_54": {
+                "num_features": {
+                    "value": "256",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ReLU_55": {
+                "inplace": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Dropout_56": {
+                "p": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "Linear_57": {
+                "in_features": {
+                    "value": "256",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "class_nums",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "no_grad_132": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "max_138": {
+                "variable": {
+                    "value": "(_, predicted)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "outputs.data",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Conv1d_159": {
+                "in_channels": {
+                    "value": "3 + 16",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "64",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "BatchNorm1d_160": {
+                "num_features": {
+                    "value": "64",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ReLU_161": {
+                "inplace": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Conv1d_164": {
+                "in_channels": {
+                    "value": "64",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "64",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "BatchNorm1d_165": {
+                "num_features": {
+                    "value": "64",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ReLU_166": {
+                "inplace": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Conv1d_169": {
+                "in_channels": {
+                    "value": "64",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "128",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "BatchNorm1d_170": {
+                "num_features": {
+                    "value": "128",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ReLU_171": {
+                "inplace": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Conv1d_174": {
+                "in_channels": {
+                    "value": "128",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "128",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "BatchNorm1d_175": {
+                "num_features": {
+                    "value": "128",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ReLU_176": {
+                "inplace": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Conv1d_179": {
+                "in_channels": {
+                    "value": "128",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "512",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "BatchNorm1d_180": {
+                "num_features": {
+                    "value": "512",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ReLU_181": {
+                "inplace": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Conv1d_184": {
+                "in_channels": {
+                    "value": "512",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "1024",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "BatchNorm1d_185": {
+                "num_features": {
+                    "value": "1024",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ReLU_186": {
+                "inplace": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Conv1d_189": {
+                "in_channels": {
+                    "value": "3 + 16 + 64 + 64 + 128 + 128 + 512 + 1024 + category_nums",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "512",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "BatchNorm1d_190": {
+                "num_features": {
+                    "value": "512",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ReLU_191": {
+                "inplace": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Conv1d_192": {
+                "in_channels": {
+                    "value": "512",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "256",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "BatchNorm1d_193": {
+                "num_features": {
+                    "value": "256",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ReLU_194": {
+                "inplace": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Dropout_195": {
+                "p": {
+                    "value": "0.3",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "Conv1d_196": {
+                "in_channels": {
+                    "value": "256",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "class_nums",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "no_grad_287": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "max_294": {
+                "variable": {
+                    "value": "(_, predicted)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "outputs.data",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "train_cls.py": {
+        "torch": {
+            "DataLoader_6": {
+                "variable": {
+                    "value": "trainloader",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "trainset",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "ModelNetDataset('/opt/modelnet40_normal_resampled', train=True)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "64",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "num_workers": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_8": {
+                "variable": {
+                    "value": "testloader",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "testset",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "ModelNetDataset('/opt/modelnet40_normal_resampled', train=False)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "128",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "num_workers": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "train_seg.py": {
+        "torch": {
+            "DataLoader_6": {
+                "variable": {
+                    "value": "trainloader",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "trainset",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "ShapeNetDataset('/opt/shapenetcore_partanno_segmentation_benchmark_v0', split='val')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "64",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "num_workers": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_8": {
+                "variable": {
+                    "value": "testloader",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "testset",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "ShapeNetDataset('/opt/shapenetcore_partanno_segmentation_benchmark_v0', split='test')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "128",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "num_workers": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "utils/kcnet_utils.py": {
+        "torch": {
+            "load_7": {
+                "variable": {
+                    "value": "extension_",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "extension_",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "sources": {
+                    "value": "['utils/wrap.cc', 'utils/batch_knn.cu', 'utils/graph_pooling.cu', 'utils/group_points.cu', 'utils/kernel_correlation.cu']",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "extra_include_paths": {
+                    "value": "['/usr/local/cuda/include', os.path.join(os.getcwd(), 'utils', 'include')]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "verbose": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Parameter_167": {
+                "variable": {
+                    "value": "self.kernel",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.Tensor(out_channels, kernel_size, 3)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

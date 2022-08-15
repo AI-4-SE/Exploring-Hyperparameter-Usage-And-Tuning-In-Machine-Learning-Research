@@ -1,0 +1,3280 @@
+{
+    "train_bc/bc_policy.py": {
+        "tensorflow": {
+            "placeholder_14": {
+                "variable": {
+                    "value": "self.actions",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.batch_size, args.action_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "actions_encode",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Variable_15": {
+                "variable": {
+                    "value": "self.learning_rate",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "trainable": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "learning_rate",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "LSTMCell_26": {
+                "variable": {
+                    "value": "lstm",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "units": {
+                    "value": "args.policy_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "state_is_tuple": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "initializers.xavier_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "MultiRNNCell_27": {
+                "variable": {
+                    "value": "self.full_lstm",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "cells": {
+                    "value": "[lstm] * args.num_policy_layers",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "state_is_tuple": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "reshape_33": {
+                "variable": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "tf.concat(1, output)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[-1, args.policy_size]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "get_variable_36": {
+                "variable": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "lstm_w",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.policy_size, args.action_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "initializers.xavier_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_37": {
+                "variable": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "lstm_b",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.action_dim]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "xw_plus_b_38": {
+                "variable": {
+                    "value": "self.a_mean",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(tf.concat(1, output), [-1, args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(tf.nn.relu(tf.nn.xw_plus_b(policy_input, W, b)), args.dropout_level)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(tf.nn.relu(tf.nn.xw_plus_b(output, W, b)), args.dropout_level)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "weights": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('lstm_w', [args.policy_size, args.action_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_0', [args.state_dim + args.num_classes, args.policy_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_0', [args.state_dim, args.policy_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_' + str(i), [args.policy_size, args.policy_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_end', [args.policy_size, args.action_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "biases": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('lstm_b', [args.action_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_0', [args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_' + str(i), [args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_end', [args.action_dim])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Variable_41": {
+                "variable": {
+                    "value": "self.a_logstd",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "np.zeros(args.action_dim)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "a_logstd",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "get_variable_53": {
+                "variable": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "b_0",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.policy_size]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "dropout_54": {
+                "variable": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.nn.relu(tf.nn.xw_plus_b(policy_input, W, b))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "rate": {
+                    "value": "args.dropout_level",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "get_variable_61": {
+                "variable": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "w_end",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.policy_size, args.action_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "initializers.xavier_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_62": {
+                "variable": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "b_end",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.action_dim]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "xw_plus_b_63": {
+                "variable": {
+                    "value": "self.a_mean",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(tf.concat(1, output), [-1, args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(tf.nn.relu(tf.nn.xw_plus_b(policy_input, W, b)), args.dropout_level)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(tf.nn.relu(tf.nn.xw_plus_b(output, W, b)), args.dropout_level)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "weights": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('lstm_w', [args.policy_size, args.action_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_0', [args.state_dim + args.num_classes, args.policy_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_0', [args.state_dim, args.policy_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_' + str(i), [args.policy_size, args.policy_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_end', [args.policy_size, args.action_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "biases": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('lstm_b', [args.action_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_0', [args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_' + str(i), [args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_end', [args.action_dim])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Variable_66": {
+                "variable": {
+                    "value": "self.a_logstd",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "np.zeros(args.action_dim)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "a_logstd",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_72": {
+                "variable": {
+                    "value": "pl_2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "tf.log(std_a)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_74": {
+                "variable": {
+                    "value": "policy_loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "pl_1 + pl_2 + pl_3",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_77": {
+                "variable": {
+                    "value": "self.cost",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "policy_loss / args.seq_length",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "scalar_78": {
+                "variable": {
+                    "value": "self.summary_loss",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "Overall loss",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "self.cost",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "trainable_variables_81": {
+                "variable": {
+                    "value": "tvars",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "clip_by_global_norm_82": {
+                "variable": {
+                    "value": "(grads, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "t_list": {
+                    "value": "tf.gradients(self.cost, tvars)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "clip_norm": {
+                    "value": "args.grad_clip",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "AdamOptimizer_83": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "learning_rate": {
+                    "value": "self.learning_rate",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "placeholder_11": {
+                "variable": {
+                    "value": "self.states",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.batch_size, args.state_dim + args.num_classes]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "states_encode",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "placeholder_13": {
+                "variable": {
+                    "value": "self.states",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.batch_size, args.state_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "states_encode",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "get_variable_50": {
+                "variable": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "w_0",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.state_dim + args.num_classes, args.policy_size]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "initializers.xavier_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_52": {
+                "variable": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "w_0",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.state_dim, args.policy_size]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "initializers.xavier_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_57": {
+                "variable": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "'w_' + str(i)",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.policy_size, args.policy_size]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "initializers.xavier_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_58": {
+                "variable": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "'b_' + str(i)",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.policy_size]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "dropout_59": {
+                "variable": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.nn.relu(tf.nn.xw_plus_b(output, W, b))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "rate": {
+                    "value": "args.dropout_level",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "concat_33": {
+                "values": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(tf.concat(1, output), [-1, args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(tf.nn.relu(tf.nn.xw_plus_b(policy_input, W, b)), args.dropout_level)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(tf.nn.relu(tf.nn.xw_plus_b(output, W, b)), args.dropout_level)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "relu_54": {
+                "features": {
+                    "value": "tf.nn.xw_plus_b(policy_input, W, b)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "exp_70": {
+                "x": {
+                    "value": "self.a_logstd",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "log_72": {
+                "x": {
+                    "value": "std_a",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.exp(self.a_logstd) + 0.001",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "reduce_sum_73": {
+                "input_tensor": {
+                    "value": "tf.square((self.actions - self.a_mean) / std_a)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "gradients_82": {
+                "ys": {
+                    "value": "self.cost",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "xs": {
+                    "value": "tvars",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.trainable_variables()",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "xw_plus_b_54": {
+                "x": {
+                    "value": "policy_input",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.states",
+                            "Attribute"
+                        ],
+                        [
+                            "self.states",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "weights": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('lstm_w', [args.policy_size, args.action_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_0', [args.state_dim + args.num_classes, args.policy_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_0', [args.state_dim, args.policy_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_' + str(i), [args.policy_size, args.policy_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_end', [args.policy_size, args.action_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "biases": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('lstm_b', [args.action_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_0', [args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_' + str(i), [args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_end', [args.action_dim])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "relu_59": {
+                "features": {
+                    "value": "tf.nn.xw_plus_b(output, W, b)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "to_float_71": {
+                "x": {
+                    "value": "args.action_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "square_73": {
+                "x": {
+                    "value": "(self.actions - self.a_mean) / std_a",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "xw_plus_b_59": {
+                "x": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(tf.concat(1, output), [-1, args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(tf.nn.relu(tf.nn.xw_plus_b(policy_input, W, b)), args.dropout_level)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(tf.nn.relu(tf.nn.xw_plus_b(output, W, b)), args.dropout_level)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "weights": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('lstm_w', [args.policy_size, args.action_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_0', [args.state_dim + args.num_classes, args.policy_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_0', [args.state_dim, args.policy_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_' + str(i), [args.policy_size, args.policy_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_end', [args.policy_size, args.action_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "biases": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('lstm_b', [args.action_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_0', [args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_' + str(i), [args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_end', [args.action_dim])",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "train_bc/dataloader.py": {
+        "tensorflow": {}
+    },
+    "train_bc/train_bc.py": {
+        "tensorflow": {}
+    },
+    "train_bc/utils.py": {
+        "tensorflow": {}
+    },
+    "train_vae/dataloader.py": {
+        "tensorflow": {}
+    },
+    "train_vae/train.py": {
+        "tensorflow": {}
+    },
+    "train_vae/utils.py": {
+        "tensorflow": {}
+    },
+    "train_vae/vae.py": {
+        "tensorflow": {
+            "placeholder_10": {
+                "variable": {
+                    "value": "self.states_encode",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.batch_size, args.state_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "states_encode",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "placeholder_11": {
+                "variable": {
+                    "value": "self.actions_encode",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.batch_size, args.action_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "actions_encode",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "placeholder_12": {
+                "variable": {
+                    "value": "self.states",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.batch_size, args.sample_size, args.state_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "states",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "placeholder_13": {
+                "variable": {
+                    "value": "self.actions",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.batch_size, args.sample_size, args.action_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "actions",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "placeholder_14": {
+                "variable": {
+                    "value": "self.rec_in",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.batch_size, args.sample_size, args.action_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "actions",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Variable_15": {
+                "variable": {
+                    "value": "self.kl_weight",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "trainable": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "kl_weight",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Variable_16": {
+                "variable": {
+                    "value": "self.learning_rate",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "trainable": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "learning_rate",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "LSTMCell_29": {
+                "variable": {
+                    "value": "lstm",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "units": {
+                    "value": "args.encoder_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "state_is_tuple": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "initializers.xavier_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "MultiRNNCell_30": {
+                "variable": {
+                    "value": "self.full_lstm",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "cells": {
+                    "value": "[lstm] * args.num_encoder_layers",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "state_is_tuple": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "concat_34": {
+                "variable": {
+                    "value": "encoder_input",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "[self.states_encode, self.actions_encode]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "reshape_36": {
+                "variable": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "tf.concat(1, output)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[-1, args.encoder_size]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "get_variable_39": {
+                "variable": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "latent_w",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.encoder_size, 2 * args.z_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "initializers.xavier_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_40": {
+                "variable": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "latent_b",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[2 * args.z_dim]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "xw_plus_b_41": {
+                "variable": {
+                    "value": "logits",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(tf.concat(1, output), [-1, args.encoder_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(tf.concat(1, output), [-1, args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(tf.nn.relu(tf.nn.xw_plus_b(enc_in, W, b)), args.dropout_level)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(tf.nn.relu(tf.nn.xw_plus_b(output, W, b)), args.dropout_level)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(tf.nn.xw_plus_b(rec_in, W, b))",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(tf.nn.xw_plus_b(output, W, b))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "weights": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('latent_w', [args.encoder_size, 2 * args.z_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('lstm_w', [args.policy_size, args.action_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_0', [args.state_dim + args.z_dim, args.policy_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_' + str(i), [args.policy_size, args.policy_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_end', [args.policy_size, args.action_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_w_0', [args.state_dim + args.action_dim, args.rec_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_w_' + str(i), [args.rec_size, args.rec_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_w_end', [args.rec_size, args.z_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "biases": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('latent_b', [2 * args.z_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('lstm_b', [args.action_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_0', [args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_' + str(i), [args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_end', [args.action_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_b_0', [args.rec_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_b_' + str(i), [args.rec_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_b_end', [args.z_dim])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "split_44": {
+                "variable": {
+                    "value": "(self.z_mean, self.z_logstd)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "num_or_size_splits": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "logits",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.xw_plus_b(output, W, b)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "LSTMCell_48": {
+                "variable": {
+                    "value": "lstm",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "units": {
+                    "value": "args.policy_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "state_is_tuple": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "initializers.xavier_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "MultiRNNCell_49": {
+                "variable": {
+                    "value": "self.policy_lstm",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "cells": {
+                    "value": "[lstm] * args.num_policy_layers",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "state_is_tuple": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "transpose_55": {
+                "variable": {
+                    "value": "self.z_samples",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "self.z_samples",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "perm": {
+                    "value": "[1, 0, 2]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "concat_58": {
+                "variable": {
+                    "value": "policy_input",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "[self.states, self.z_samples]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "reshape_59": {
+                "variable": {
+                    "value": "policy_input",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "policy_input",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.concat(2, [self.states, self.z_samples])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(policy_input, [args.batch_size * args.sample_size, args.state_dim + args.z_dim], name='policy_input')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[args.batch_size * args.sample_size, args.state_dim + args.z_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "policy_input",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "reshape_64": {
+                "variable": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "tf.concat(1, output)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[-1, args.policy_size]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "get_variable_67": {
+                "variable": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "lstm_w",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.policy_size, args.action_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "initializers.xavier_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_68": {
+                "variable": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "lstm_b",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.action_dim]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "xw_plus_b_69": {
+                "variable": {
+                    "value": "a_mean",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(tf.concat(1, output), [-1, args.encoder_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(tf.concat(1, output), [-1, args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(tf.nn.relu(tf.nn.xw_plus_b(enc_in, W, b)), args.dropout_level)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(tf.nn.relu(tf.nn.xw_plus_b(output, W, b)), args.dropout_level)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(tf.nn.xw_plus_b(rec_in, W, b))",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(tf.nn.xw_plus_b(output, W, b))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "weights": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('latent_w', [args.encoder_size, 2 * args.z_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('lstm_w', [args.policy_size, args.action_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_0', [args.state_dim + args.z_dim, args.policy_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_' + str(i), [args.policy_size, args.policy_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_end', [args.policy_size, args.action_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_w_0', [args.state_dim + args.action_dim, args.rec_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_w_' + str(i), [args.rec_size, args.rec_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_w_end', [args.rec_size, args.z_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "biases": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('latent_b', [2 * args.z_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('lstm_b', [args.action_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_0', [args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_' + str(i), [args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_end', [args.action_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_b_0', [args.rec_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_b_' + str(i), [args.rec_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_b_end', [args.z_dim])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reshape_70": {
+                "variable": {
+                    "value": "self.a_mean",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "a_mean",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.xw_plus_b(output, W, b)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.xw_plus_b(output, W, b)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[args.batch_size, args.sample_size, args.action_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "a_mean",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Variable_73": {
+                "variable": {
+                    "value": "self.a_logstd",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "np.zeros(args.action_dim)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "a_logstd",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "transpose_79": {
+                "variable": {
+                    "value": "self.z_samples",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "self.z_samples",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "perm": {
+                    "value": "[1, 0, 2]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "concat_82": {
+                "variable": {
+                    "value": "enc_in",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "[self.states, self.z_samples]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "reshape_83": {
+                "variable": {
+                    "value": "enc_in",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "enc_in",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.concat(2, [self.states, self.z_samples])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(enc_in, [args.batch_size * args.sample_size, args.state_dim + args.z_dim], name='enc_in')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[args.batch_size * args.sample_size, args.state_dim + args.z_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "enc_in",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "get_variable_86": {
+                "variable": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "w_0",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.state_dim + args.z_dim, args.policy_size]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "initializers.xavier_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_87": {
+                "variable": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "b_0",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.policy_size]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "dropout_88": {
+                "variable": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.nn.relu(tf.nn.xw_plus_b(enc_in, W, b))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "rate": {
+                    "value": "args.dropout_level",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "get_variable_95": {
+                "variable": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "w_end",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.policy_size, args.action_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "initializers.xavier_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_96": {
+                "variable": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "b_end",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.action_dim]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "xw_plus_b_97": {
+                "variable": {
+                    "value": "a_mean",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(tf.concat(1, output), [-1, args.encoder_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(tf.concat(1, output), [-1, args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(tf.nn.relu(tf.nn.xw_plus_b(enc_in, W, b)), args.dropout_level)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(tf.nn.relu(tf.nn.xw_plus_b(output, W, b)), args.dropout_level)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(tf.nn.xw_plus_b(rec_in, W, b))",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(tf.nn.xw_plus_b(output, W, b))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "weights": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('latent_w', [args.encoder_size, 2 * args.z_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('lstm_w', [args.policy_size, args.action_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_0', [args.state_dim + args.z_dim, args.policy_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_' + str(i), [args.policy_size, args.policy_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_end', [args.policy_size, args.action_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_w_0', [args.state_dim + args.action_dim, args.rec_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_w_' + str(i), [args.rec_size, args.rec_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_w_end', [args.rec_size, args.z_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "biases": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('latent_b', [2 * args.z_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('lstm_b', [args.action_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_0', [args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_' + str(i), [args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_end', [args.action_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_b_0', [args.rec_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_b_' + str(i), [args.rec_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_b_end', [args.z_dim])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reshape_98": {
+                "variable": {
+                    "value": "self.a_mean",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "a_mean",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.xw_plus_b(output, W, b)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.xw_plus_b(output, W, b)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[args.batch_size, args.sample_size, args.action_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "a_mean",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Variable_101": {
+                "variable": {
+                    "value": "self.a_logstd",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "np.zeros(args.action_dim)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "a_logstd",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "concat_109": {
+                "variable": {
+                    "value": "rec_in",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "[self.states, self.a_samples]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "reshape_110": {
+                "variable": {
+                    "value": "rec_in",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "rec_in",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.concat(2, [self.states, self.a_samples])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(rec_in, [args.batch_size * args.sample_size, args.state_dim + args.action_dim], name='rec_in')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[args.batch_size * args.sample_size, args.state_dim + args.action_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "rec_in",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "get_variable_113": {
+                "variable": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "rec_w_0",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.state_dim + args.action_dim, args.rec_size]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "initializers.xavier_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_114": {
+                "variable": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "rec_b_0",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.rec_size]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "relu_115": {
+                "variable": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "features": {
+                    "value": "tf.nn.xw_plus_b(rec_in, W, b)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_122": {
+                "variable": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "rec_w_end",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.rec_size, args.z_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "initializers.xavier_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_123": {
+                "variable": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "rec_b_end",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.z_dim]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "xw_plus_b_124": {
+                "variable": {
+                    "value": "z_rec_mean",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(tf.concat(1, output), [-1, args.encoder_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(tf.concat(1, output), [-1, args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(tf.nn.relu(tf.nn.xw_plus_b(enc_in, W, b)), args.dropout_level)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(tf.nn.relu(tf.nn.xw_plus_b(output, W, b)), args.dropout_level)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(tf.nn.xw_plus_b(rec_in, W, b))",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(tf.nn.xw_plus_b(output, W, b))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "weights": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('latent_w', [args.encoder_size, 2 * args.z_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('lstm_w', [args.policy_size, args.action_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_0', [args.state_dim + args.z_dim, args.policy_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_' + str(i), [args.policy_size, args.policy_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_end', [args.policy_size, args.action_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_w_0', [args.state_dim + args.action_dim, args.rec_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_w_' + str(i), [args.rec_size, args.rec_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_w_end', [args.rec_size, args.z_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "biases": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('latent_b', [2 * args.z_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('lstm_b', [args.action_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_0', [args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_' + str(i), [args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_end', [args.action_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_b_0', [args.rec_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_b_' + str(i), [args.rec_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_b_end', [args.z_dim])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reshape_125": {
+                "variable": {
+                    "value": "self.z_rec_mean",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "z_rec_mean",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.xw_plus_b(output, W, b)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[args.batch_size, args.sample_size, args.z_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "z_rec_mean",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Variable_128": {
+                "variable": {
+                    "value": "self.z_rec_logstd",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "np.zeros(args.z_dim)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "z_rec_logstd",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_134": {
+                "variable": {
+                    "value": "pl_2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "tf.log(std_a)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_136": {
+                "variable": {
+                    "value": "policy_loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "pl_1 + pl_2 + pl_3",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_149": {
+                "variable": {
+                    "value": "rl_2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "tf.log(std_z_rec)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_151": {
+                "variable": {
+                    "value": "rec_loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "rl_1 + rl_2 + rl_3",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_155": {
+                "variable": {
+                    "value": "self.policy_cost",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "policy_loss / args.seq_length",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_156": {
+                "variable": {
+                    "value": "self.rec_cost",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "rec_loss / args.seq_length",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_157": {
+                "variable": {
+                    "value": "self.cost",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "(policy_loss + self.kl_weight * encoder_loss + args.rec_weight * rec_loss) / args.seq_length",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "scalar_159": {
+                "variable": {
+                    "value": "self.summary_policy",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "Policy loss",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "tf.reduce_mean(policy_loss) / args.seq_length",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "scalar_160": {
+                "variable": {
+                    "value": "self.summary_encoder",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "Encoder loss",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "tf.reduce_mean(encoder_loss) / args.seq_length",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "scalar_161": {
+                "variable": {
+                    "value": "self.summary_loss",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "Overall loss",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "self.cost",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "trainable_variables_164": {
+                "variable": {
+                    "value": "tvars",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "clip_by_global_norm_165": {
+                "variable": {
+                    "value": "(grads, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "t_list": {
+                    "value": "tf.gradients(self.cost, tvars)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "clip_norm": {
+                    "value": "args.grad_clip",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "AdamOptimizer_166": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "learning_rate": {
+                    "value": "self.learning_rate",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "get_variable_91": {
+                "variable": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "'w_' + str(i)",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.policy_size, args.policy_size]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "initializers.xavier_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_92": {
+                "variable": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "'b_' + str(i)",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.policy_size]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "dropout_93": {
+                "variable": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.nn.relu(tf.nn.xw_plus_b(output, W, b))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "rate": {
+                    "value": "args.dropout_level",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "get_variable_118": {
+                "variable": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "'rec_w_' + str(i)",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.rec_size, args.rec_size]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "initializers.xavier_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_119": {
+                "variable": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "'rec_b_' + str(i)",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[args.rec_size]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "relu_120": {
+                "variable": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "features": {
+                    "value": "tf.nn.xw_plus_b(output, W, b)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "concat_36": {
+                "values": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(tf.concat(1, output), [-1, args.encoder_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(tf.concat(1, output), [-1, args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(tf.nn.relu(tf.nn.xw_plus_b(enc_in, W, b)), args.dropout_level)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(tf.nn.relu(tf.nn.xw_plus_b(output, W, b)), args.dropout_level)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(tf.nn.xw_plus_b(rec_in, W, b))",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(tf.nn.xw_plus_b(output, W, b))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "variable_scope_62": {
+                "name_or_scope": {
+                    "value": "policy",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "concat_64": {
+                "values": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(tf.concat(1, output), [-1, args.encoder_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(tf.concat(1, output), [-1, args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(tf.nn.relu(tf.nn.xw_plus_b(enc_in, W, b)), args.dropout_level)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(tf.nn.relu(tf.nn.xw_plus_b(output, W, b)), args.dropout_level)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(tf.nn.xw_plus_b(rec_in, W, b))",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(tf.nn.xw_plus_b(output, W, b))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "relu_88": {
+                "features": {
+                    "value": "tf.nn.xw_plus_b(enc_in, W, b)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "xw_plus_b_115": {
+                "x": {
+                    "value": "rec_in",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.concat(2, [self.states, self.a_samples])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(rec_in, [args.batch_size * args.sample_size, args.state_dim + args.action_dim], name='rec_in')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "weights": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('latent_w', [args.encoder_size, 2 * args.z_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('lstm_w', [args.policy_size, args.action_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_0', [args.state_dim + args.z_dim, args.policy_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_' + str(i), [args.policy_size, args.policy_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_end', [args.policy_size, args.action_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_w_0', [args.state_dim + args.action_dim, args.rec_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_w_' + str(i), [args.rec_size, args.rec_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_w_end', [args.rec_size, args.z_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "biases": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('latent_b', [2 * args.z_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('lstm_b', [args.action_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_0', [args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_' + str(i), [args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_end', [args.action_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_b_0', [args.rec_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_b_' + str(i), [args.rec_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_b_end', [args.z_dim])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "exp_132": {
+                "x": {
+                    "value": "self.a_logstd",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "log_134": {
+                "x": {
+                    "value": "std_a",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.exp(self.a_logstd) + 0.001",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "reduce_sum_135": {
+                "input_tensor": {
+                    "value": "tf.square((self.actions - self.a_mean) / std_a)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "exp_139": {
+                "x": {
+                    "value": "self.z_logstd",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "to_float_140": {
+                "x": {
+                    "value": "args.z_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_141": {
+                "input_tensor": {
+                    "value": "tf.log(std_z)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_142": {
+                "input_tensor": {
+                    "value": "tf.square(std_z)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_143": {
+                "input_tensor": {
+                    "value": "tf.square(self.z_mean)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "exp_147": {
+                "x": {
+                    "value": "self.z_rec_logstd",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "log_149": {
+                "x": {
+                    "value": "std_z_rec",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.exp(self.z_rec_logstd) + 0.001",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "reduce_sum_150": {
+                "input_tensor": {
+                    "value": "tf.square((self.z_samples - self.z_rec_mean) / std_z_rec)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "gradients_165": {
+                "ys": {
+                    "value": "self.cost",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "xs": {
+                    "value": "tvars",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.trainable_variables()",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "exp_54": {
+                "x": {
+                    "value": "self.z_logstd",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "exp_78": {
+                "x": {
+                    "value": "self.z_logstd",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "xw_plus_b_88": {
+                "x": {
+                    "value": "enc_in",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.concat(2, [self.states, self.z_samples])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(enc_in, [args.batch_size * args.sample_size, args.state_dim + args.z_dim], name='enc_in')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "weights": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('latent_w', [args.encoder_size, 2 * args.z_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('lstm_w', [args.policy_size, args.action_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_0', [args.state_dim + args.z_dim, args.policy_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_' + str(i), [args.policy_size, args.policy_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_end', [args.policy_size, args.action_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_w_0', [args.state_dim + args.action_dim, args.rec_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_w_' + str(i), [args.rec_size, args.rec_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_w_end', [args.rec_size, args.z_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "biases": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('latent_b', [2 * args.z_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('lstm_b', [args.action_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_0', [args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_' + str(i), [args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_end', [args.action_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_b_0', [args.rec_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_b_' + str(i), [args.rec_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_b_end', [args.z_dim])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "relu_93": {
+                "features": {
+                    "value": "tf.nn.xw_plus_b(output, W, b)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "exp_106": {
+                "x": {
+                    "value": "self.a_logstd",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "xw_plus_b_120": {
+                "x": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(tf.concat(1, output), [-1, args.encoder_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(tf.concat(1, output), [-1, args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(tf.nn.relu(tf.nn.xw_plus_b(enc_in, W, b)), args.dropout_level)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(tf.nn.relu(tf.nn.xw_plus_b(output, W, b)), args.dropout_level)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(tf.nn.xw_plus_b(rec_in, W, b))",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(tf.nn.xw_plus_b(output, W, b))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "weights": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('latent_w', [args.encoder_size, 2 * args.z_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('lstm_w', [args.policy_size, args.action_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_0', [args.state_dim + args.z_dim, args.policy_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_' + str(i), [args.policy_size, args.policy_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_end', [args.policy_size, args.action_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_w_0', [args.state_dim + args.action_dim, args.rec_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_w_' + str(i), [args.rec_size, args.rec_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_w_end', [args.rec_size, args.z_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "biases": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('latent_b', [2 * args.z_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('lstm_b', [args.action_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_0', [args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_' + str(i), [args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_end', [args.action_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_b_0', [args.rec_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_b_' + str(i), [args.rec_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_b_end', [args.z_dim])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "to_float_133": {
+                "x": {
+                    "value": "args.action_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "square_135": {
+                "x": {
+                    "value": "(self.actions - self.a_mean) / std_a",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "log_141": {
+                "x": {
+                    "value": "std_z",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.exp(self.z_logstd) + 0.001",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "square_142": {
+                "x": {
+                    "value": "std_z",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.exp(self.z_logstd) + 0.001",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "square_143": {
+                "x": {
+                    "value": "self.z_mean",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "to_float_148": {
+                "x": {
+                    "value": "args.z_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "square_150": {
+                "x": {
+                    "value": "(self.z_samples - self.z_rec_mean) / std_z_rec",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_159": {
+                "input_tensor": {
+                    "value": "policy_loss",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reduce_mean(pl_1 + pl_2 + pl_3, 1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reduce_mean_160": {
+                "input_tensor": {
+                    "value": "encoder_loss",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "el_1 + el_2 + el_3 + el_4",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "xw_plus_b_93": {
+                "x": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(tf.concat(1, output), [-1, args.encoder_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(tf.concat(1, output), [-1, args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(tf.nn.relu(tf.nn.xw_plus_b(enc_in, W, b)), args.dropout_level)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.dropout(tf.nn.relu(tf.nn.xw_plus_b(output, W, b)), args.dropout_level)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(tf.nn.xw_plus_b(rec_in, W, b))",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(tf.nn.xw_plus_b(output, W, b))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "weights": {
+                    "value": "W",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('latent_w', [args.encoder_size, 2 * args.z_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('lstm_w', [args.policy_size, args.action_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_0', [args.state_dim + args.z_dim, args.policy_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_' + str(i), [args.policy_size, args.policy_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('w_end', [args.policy_size, args.action_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_w_0', [args.state_dim + args.action_dim, args.rec_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_w_' + str(i), [args.rec_size, args.rec_size], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_w_end', [args.rec_size, args.z_dim], initializer=initializers.xavier_initializer())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "biases": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('latent_b', [2 * args.z_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('lstm_b', [args.action_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_0', [args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_' + str(i), [args.policy_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('b_end', [args.action_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_b_0', [args.rec_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_b_' + str(i), [args.rec_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('rec_b_end', [args.z_dim])",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    }
+}

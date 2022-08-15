@@ -1,0 +1,2068 @@
+{
+    "experiments/oraac.py": {
+        "torch": {
+            "set_num_threads_35": {
+                "int": {
+                    "value": "args.num_threads",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "load_76": {
+                "variable": {
+                    "value": "model_net",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "model_dict_name",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "find_file(args.model_path, path_name=folder_model, extension='.tar')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "manual_seed_65": {
+                "seed": {
+                    "value": "p.agent.SEED",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_95": {
+                "seed": {
+                    "value": "seed",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "args.SEED if args.SEED is not None else 20",
+                            "IfExp"
+                        ]
+                    ]
+                }
+            },
+            "SummaryWriter_63": {
+                "log_dir": {
+                    "value": "'{}'.format(name_tb)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "experiments/run.py": {
+        "torch": {
+            "set_num_threads_28": {
+                "int": {
+                    "value": "args.num_threads",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_58": {
+                "seed": {
+                    "value": "p.agent.SEED",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "SummaryWriter_56": {
+                "log_dir": {
+                    "value": "'{}'.format(name_tb)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "oraaclib/agent/BCQ.py": {
+        "torch": {
+            "Adam_23": {
+                "variable": {
+                    "value": "self.optimizer_actor",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "self.policy.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Adam_34": {
+                "variable": {
+                    "value": "self.vae_optimizer",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "self.vae.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "mse_loss_71": {
+                "variable": {
+                    "value": "recon_loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "recon",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "target": {
+                    "value": "action",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.policy(state, self.vae.decode(state))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "mse_loss_99": {
+                "variable": {
+                    "value": "critic_loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "current_q",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.critic(state, action)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "target": {
+                    "value": "target_q",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.target_critic(next_state, self.target_policy(next_state, self.vae.decode(next_state)))",
+                            "Call"
+                        ],
+                        [
+                            "self._get_target(reward, done, target_q)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "tensor_49": {
+                "variable": {
+                    "value": "state",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "state.reshape(1, -1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "repeat_interleave_86": {
+                "variable": {
+                    "value": "next_state",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "next_state",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.repeat_interleave(next_state, 10, 0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "repeats": {
+                    "value": "10",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "tensor_41": {
+                "variable": {
+                    "value": "state",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "state.reshape(1, -1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "no_grad_48": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "no_grad_84": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "no_grad_40": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "log_72": {
+                "input": {
+                    "value": "std.pow(2)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "oraaclib/agent/BEAR.py": {
+        "torch": {
+            "square_12": {
+                "variable": {
+                    "value": "diff",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x.repeat(1, m, 1) - y.repeat_interleave(n, 1)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sum_12": {
+                "variable": {
+                    "value": "diff",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "square_16": {
+                "variable": {
+                    "value": "diff",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x - y",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sum_16": {
+                "variable": {
+                    "value": "diff",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "abs_25": {
+                "variable": {
+                    "value": "diff",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x.repeat(1, m, 1) - y.repeat_interleave(n, 1)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sum_25": {
+                "variable": {
+                    "value": "diff",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "abs_28": {
+                "variable": {
+                    "value": "diff",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x - y",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sum_28": {
+                "variable": {
+                    "value": "diff",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "Adam_89": {
+                "variable": {
+                    "value": "self.optimizer_dual",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "[self.mmd_loss.dual_raw]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "0.1",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "exp_14": {
+                "input": {
+                    "value": "-diff / sigma",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "reshape_14": {
+                "input": {
+                    "value": "b1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "n",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "exp_17": {
+                "input": {
+                    "value": "-diff / sigma",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "exp_26": {
+                "input": {
+                    "value": "-diff / sigma",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "reshape_26": {
+                "input": {
+                    "value": "b1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "n",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "exp_29": {
+                "input": {
+                    "value": "-diff / sigma",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "log_48": {
+                "variable": {
+                    "value": "self.dual_raw",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.exp(epsilon) - 1.0",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "tensor_51": {
+                "variable": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "log_52": {
+                "variable": {
+                    "value": "self.dual_raw",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.exp(x) - 1.0",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "tensor_47": {
+                "variable": {
+                    "value": "epsilon",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "epsilon",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.tensor(epsilon).float()",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "softplus_59": {
+                "input": {
+                    "value": "self.dual_raw",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "exp_48": {
+                "input": {
+                    "value": "epsilon",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.tensor(epsilon).float()",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "exp_52": {
+                "input": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.tensor(1.0).float()",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "oraaclib/agent/DDPG.py": {
+        "torch": {
+            "Adam_51": {
+                "variable": {
+                    "value": "self.optimizer_actor",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "self.policy.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Adam_55": {
+                "variable": {
+                    "value": "self.optimizer_critic",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "self.critic.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "mse_loss_164": {
+                "variable": {
+                    "value": "critic_loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "current_q",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.critic(state, action)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "target": {
+                    "value": "target_q",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "lambda_ * q_min + (1 - lambda_) * q_max",
+                            "BinOp"
+                        ],
+                        [
+                            "target_q.reshape(self.batch_size, -1).max(1)[0].reshape(-1)",
+                            "Call"
+                        ],
+                        [
+                            "(reward + (1 - done) * self.gamma * target_q).detach()",
+                            "Call"
+                        ],
+                        [
+                            "target_q.unsqueeze(-1).repeat_interleave(self.critic.num_heads, -1)",
+                            "Call"
+                        ],
+                        [
+                            "(reward + (1 - done) * self.gamma * target_q).detach()",
+                            "Call"
+                        ],
+                        [
+                            "self.target_critic(next_state, self.target_policy(next_state))",
+                            "Call"
+                        ],
+                        [
+                            "self._get_target(reward, done, target_q)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "tensor_88": {
+                "variable": {
+                    "value": "state",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "state.reshape(1, -1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "save_83": {
+                "obj": {
+                    "value": "model_dict",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.model_dict",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "f": {
+                    "value": "directory_dict",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "f'{self.name_save}_mean{self.mean_:.2f}_cvar{self.cvar_:.2f}epoch{self.eval_episode}.tar'",
+                            "JoinedStr"
+                        ]
+                    ]
+                }
+            },
+            "no_grad_87": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "no_grad_94": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "oraaclib/agent/ORAAC.py": {
+        "torch": {
+            "Normal_196": {
+                "variable": {
+                    "value": "u",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "loc": {
+                    "value": "torch.zeros_like(mu)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "scale": {
+                    "value": "torch.ones_like(mu)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Normal_197": {
+                "variable": {
+                    "value": "v",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "loc": {
+                    "value": "mu",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "scale": {
+                    "value": "std",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Uniform_67": {
+                "variable": {
+                    "value": "self.distr_taus_uniform",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "low": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "high": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "Adam_70": {
+                "variable": {
+                    "value": "self.optimizer_actor",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "self.policy.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "hyper_params['lr_actor']",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "Adam_74": {
+                "variable": {
+                    "value": "self.optimizer_critic",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "self.critic.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "hyper_params['lr_critic']",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "Adam_78": {
+                "variable": {
+                    "value": "self.optimizer_vae",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "self.vae.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "mse_loss_105": {
+                "variable": {
+                    "value": "recon_loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "recon",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "target": {
+                    "value": "action",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.policy(state, vae_action)",
+                            "Call"
+                        ],
+                        [
+                            "self.policy(state)",
+                            "Call"
+                        ],
+                        [
+                            "self.policy(state, vae_action)",
+                            "Call"
+                        ],
+                        [
+                            "self.policy(state)",
+                            "Call"
+                        ],
+                        [
+                            "self.act(state)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Uniform_57": {
+                "variable": {
+                    "value": "self.distr_taus_risk",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "low": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "high": {
+                    "value": "self.alpha_cvar",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "no_grad_169": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "no_grad_181": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "no_grad_220": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "no_grad_234": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "save_355": {
+                "obj": {
+                    "value": "model_dict",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "{'critic': self.critic.state_dict(), 'actor': self.policy.state_dict(), 'vae': self.vae.state_dict()}",
+                            "Dict"
+                        ],
+                        [
+                            "{'critic': self.critic.state_dict(), 'actor': self.policy.state_dict(), 'vae': self.vae.state_dict()}",
+                            "Dict"
+                        ]
+                    ]
+                },
+                "f": {
+                    "value": "directory_dict",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "f'{self.name_save}_mean{self.mean_:.2f}_cvar{self.cvar_:.2f}epoch{self.eval_episode}.tar'",
+                            "JoinedStr"
+                        ]
+                    ]
+                }
+            },
+            "zeros_like_196": {
+                "input": {
+                    "value": "mu",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "ones_like_196": {
+                "input": {
+                    "value": "mu",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "oraaclib/dataset/experience_replay.py": {
+        "torch": {
+            "ones_488": {
+                "variable": {
+                    "value": "self.weights",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "self.max_len",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "as_tensor_428": {
+                "data": {
+                    "value": "self.dataset[k][idx]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "as_tensor_430": {
+                "data": {
+                    "value": "self.dataset['observations'][idx + 1]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "oraaclib/dataset/utilities.py": {
+        "torch": {}
+    },
+    "oraaclib/environment/reward_wrappers.py": {
+        "torch": {
+            "Bernoulli_31": {
+                "variable": {
+                    "value": "self.penal_v_distr",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "probs": {
+                    "value": "kwargs['prob_vel_penal']",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "Bernoulli_94": {
+                "variable": {
+                    "value": "self.penal_distr",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "probs": {
+                    "value": "kwargs['prob_pose_penal']",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "oraaclib/util/create_hdf5.py": {
+        "torch": {
+            "Bernoulli_105": {
+                "variable": {
+                    "value": "penal_distr",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "probs": {
+                    "value": "self.properties_env['prob_pose_penal']",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_61": {
+                "seed": {
+                    "value": "10",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "oraaclib/util/logger.py": {
+        "torch": {}
+    },
+    "oraaclib/util/losses.py": {
+        "torch": {
+            "abs_36": {
+                "variable": {
+                    "value": "quantile_loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "tau - error.le(0.0).float()",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "mean_37": {
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "abs_72": {
+                "variable": {
+                    "value": "quantile_loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "tau - error.le(0.0).float()",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "smooth_l1_loss_74": {
+                "variable": {
+                    "value": "huber_loss_",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "Theta_.expand(-1, -1, num_quantiles)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "target": {
+                    "value": "T_theta_.expand(-1, num_quantiles, -1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "reduction": {
+                    "value": "none",
+                    "type": "str",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "oraaclib/util/neural_networks/neural_networks.py": {
+        "torch": {
+            "Linear_36": {
+                "variable": {
+                    "value": "self.e1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "dim_state + dim_action",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "750",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Linear_37": {
+                "variable": {
+                    "value": "self.e2",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "750",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "750",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Linear_39": {
+                "variable": {
+                    "value": "self.mean",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "750",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "latent_dim",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Linear_40": {
+                "variable": {
+                    "value": "self.log_std",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "750",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "latent_dim",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Linear_42": {
+                "variable": {
+                    "value": "self.d1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "dim_state + latent_dim",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "750",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Linear_43": {
+                "variable": {
+                    "value": "self.d2",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "750",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "750",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Linear_44": {
+                "variable": {
+                    "value": "self.d3",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "750",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "dim_action",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "relu_62": {
+                "variable": {
+                    "value": "z",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.e1(torch.cat([state, action], 1))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "relu_63": {
+                "variable": {
+                    "value": "z",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.e2(z)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "exp_68": {
+                "variable": {
+                    "value": "std",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "log_std",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.log_std(z).clamp(-4, 15)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "relu_83": {
+                "variable": {
+                    "value": "a",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.d1(torch.cat([state, z], 1))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "relu_84": {
+                "variable": {
+                    "value": "a",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.d2(a)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Linear_108": {
+                "variable": {
+                    "value": "self.l1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "dim_state + dim_action",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "400",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Linear_109": {
+                "variable": {
+                    "value": "self.l2",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "400",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "300",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Linear_110": {
+                "variable": {
+                    "value": "self.l3",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "300",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "dim_action",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Parameter_113": {
+                "variable": {
+                    "value": "self.phi",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.tensor(lamda)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "requires_grad": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "relu_131": {
+                "variable": {
+                    "value": "a",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.l1(torch.cat([state, action], 1))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "relu_132": {
+                "variable": {
+                    "value": "a",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.l2(a)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Linear_167": {
+                "variable": {
+                    "value": "self.l1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "dim_state",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "400",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Linear_168": {
+                "variable": {
+                    "value": "self.l2",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "400",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "300",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Linear_169": {
+                "variable": {
+                    "value": "self.l3",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "300",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "dim_action",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "relu_186": {
+                "variable": {
+                    "value": "a",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.l1(state)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "relu_187": {
+                "variable": {
+                    "value": "a",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.l2(a)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Linear_295": {
+                "variable": {
+                    "value": "self.head",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "in_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "biased_head",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "True",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "Sequential_296": {
+                "variable": {
+                    "value": "self.output_layer",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "self.hidden_layers_f",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Linear_379": {
+                "variable": {
+                    "value": "self.l1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "state_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "400",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Linear_380": {
+                "variable": {
+                    "value": "self.l2",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "400",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "300",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Linear_381": {
+                "variable": {
+                    "value": "self.l3",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "300",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "action_dim",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "relu_387": {
+                "variable": {
+                    "value": "a",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.l1(state)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "relu_388": {
+                "variable": {
+                    "value": "a",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.l2(a)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Linear_405": {
+                "variable": {
+                    "value": "self.l1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "state_dim + action_dim",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "400",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Linear_406": {
+                "variable": {
+                    "value": "self.l2",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "400",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "300",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Linear_407": {
+                "variable": {
+                    "value": "self.l3",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "300",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "action_dim",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "relu_414": {
+                "variable": {
+                    "value": "a",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.l1(torch.cat([state, action], 1))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "relu_415": {
+                "variable": {
+                    "value": "a",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.l2(a)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Linear_434": {
+                "variable": {
+                    "value": "self.l1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "state_dim + action_dim",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "400",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Linear_435": {
+                "variable": {
+                    "value": "self.l2",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "400",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "300",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Linear_436": {
+                "variable": {
+                    "value": "self.l3",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "300",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "num_heads",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "2",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "relu_442": {
+                "variable": {
+                    "value": "q",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.l1(torch.cat([state, action], 1))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "relu_443": {
+                "variable": {
+                    "value": "q",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.l2(q)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "randn_79": {
+                "variable": {
+                    "value": "z",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(state.shape[0], self.latent_dim)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "clamp_79": {
+                "variable": {
+                    "value": "z",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "-0.5",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "min": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "zeros_81": {
+                "variable": {
+                    "value": "z",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(state.shape[0], self.latent_dim)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "cos_330": {
+                "variable": {
+                    "value": "a",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.Tensor([math.pi]) * self.i_ * tau_quantile",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "tanh_85": {
+                "input": {
+                    "value": "self.d3(a)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "tensor_113": {
+                "data": {
+                    "value": "lamda",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "0.05",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.05",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.05",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "tanh_133": {
+                "input": {
+                    "value": "self.l3(a)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "tanh_188": {
+                "input": {
+                    "value": "self.l3(a)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "cat_325": {
+                "tensors": {
+                    "value": "(state_output, action_output)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "tanh_389": {
+                "input": {
+                    "value": "self.l3(a)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "tanh_416": {
+                "input": {
+                    "value": "self.l3(a)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "cat_62": {
+                "tensors": {
+                    "value": "[state, action]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "randn_like_71": {
+                "input": {
+                    "value": "std",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.exp(log_std)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "cat_83": {
+                "tensors": {
+                    "value": "[state, z]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_131": {
+                "tensors": {
+                    "value": "[state, action]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_414": {
+                "tensors": {
+                    "value": "[state, action]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_442": {
+                "tensors": {
+                    "value": "[state, action]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "mul_336": {
+                "input": {
+                    "value": "state_action_output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.fc_state_action(torch.cat((state_output, action_output), dim=-1))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "tau_output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.head_tau(a)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Tensor_330": {}
+        }
+    },
+    "oraaclib/util/neural_networks/utilities.py": {
+        "torch": {
+            "Sequential_41": {
+                "*args": {
+                    "value": "*layers_",
+                    "type": "Starred",
+                    "possible_values": []
+                }
+            },
+            "Linear_35": {
+                "in_features": {
+                    "value": "in_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "layer",
+                            "variable"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "layer",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "layers",
+                            "variable"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "oraaclib/util/torch_utilities.py": {
+        "torch": {
+            "device_4": {
+                "variable": {
+                    "value": "DEVICE",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cpu",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "save_103": {
+                "obj": {
+                    "value": "model_dict",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "directory_dict",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "'{}_{}.tar'.format(self.name_save, self.evol_type)",
+                            "Call"
+                        ],
+                        [
+                            "'{}_{}.tar'.format(self.name_save, self.evol_type)",
+                            "Call"
+                        ],
+                        [
+                            "'{}_{}.tar'.format(self.name_save, self.evol_type)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "save_123": {
+                "obj": {
+                    "value": "model_dict",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "directory_dict",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "'{}_{}.tar'.format(self.name_save, self.evol_type)",
+                            "Call"
+                        ],
+                        [
+                            "'{}_{}.tar'.format(self.name_save, self.evol_type)",
+                            "Call"
+                        ],
+                        [
+                            "'{}_{}.tar'.format(self.name_save, self.evol_type)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "save_147": {
+                "obj": {
+                    "value": "model_dict",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "directory_dict",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "'{}_{}.tar'.format(self.name_save, self.evol_type)",
+                            "Call"
+                        ],
+                        [
+                            "'{}_{}.tar'.format(self.name_save, self.evol_type)",
+                            "Call"
+                        ],
+                        [
+                            "'{}_{}.tar'.format(self.name_save, self.evol_type)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "oraaclib/util/utilities.py": {
+        "torch": {
+            "sort_47": {
+                "variable": {
+                    "value": "(sorted_data, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "data",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.Tensor(data)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Normal_78": {
+                "variable": {
+                    "value": "self.normal",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "loc": {
+                    "value": "torch.Tensor([0])",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "scale": {
+                    "value": "torch.Tensor([1])",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Uniform_87": {
+                "variable": {
+                    "value": "taus_uniform",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "low": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "high": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "Uniform_111": {
+                "variable": {
+                    "value": "taus_uniform",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "low": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "high": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "Uniform_138": {
+                "variable": {
+                    "value": "taus_uniform",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "low": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "high": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "isnan_53": {
+                "input": {
+                    "value": "cvar",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "sorted_data[:, :int(alpha * N)].mean(1)",
+                            "Call"
+                        ],
+                        [
+                            "sorted_data[:, int(alpha * N):].mean(1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Tensor_78": {}
+        }
+    }
+}

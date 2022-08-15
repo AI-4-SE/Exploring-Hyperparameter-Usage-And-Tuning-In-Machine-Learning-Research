@@ -1,0 +1,1016 @@
+{
+    "convolution/cnn.py": {
+        "tensorflow": {
+            "InteractiveSession_19": {
+                "variable": {
+                    "value": "session",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "placeholder_51": {
+                "variable": {
+                    "value": "self.input_x",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.int32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, max_text_length]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "input_x",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "placeholder_54": {
+                "variable": {
+                    "value": "self.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "dropout",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_63": {
+                "variable": {
+                    "value": "self.mb_embeddings",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "tf.nn.embedding_lookup(self.W_embeddings, self.input_x)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "reshape_98": {
+                "variable": {
+                    "value": "self.pooled_flat",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "pooled",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(pooled, [-1, self.k_max_pools[i - 1], sum_filt, 1])",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.max_pool(h, ksize=[1, num_units - filter_size + 1 - current_max_pool_size + 1, 1, 1], strides=[1, 1, 1, 1], padding='VALID', name='pool_' + str(i) + '_' + str(filter_size))",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat(axis=3, values=[pooled, new_pool])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, self.k_max_pools[-1] * sum_filt]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "dropout_99": {
+                "variable": {
+                    "value": "self.pooled_dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "self.pooled_flat",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "rate": {
+                    "value": "self.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "get_variable_101": {
+                "variable": {
+                    "value": "W_softmax",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "W_softmax",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[self.k_max_pools[-1] * sum_filt + self.manual_features_size, num_classes]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.contrib.layers.xavier_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Variable_104": {
+                "variable": {
+                    "value": "b_softmax",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.constant(0.1, shape=[num_classes], dtype=tf.float32)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "b_softmax",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "xw_plus_b_108": {
+                "variable": {
+                    "value": "self.preds",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "self.final_features",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "weights": {
+                    "value": "W_softmax",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('W_softmax', shape=[self.k_max_pools[-1] * sum_filt + self.manual_features_size, num_classes], initializer=tf.contrib.layers.xavier_initializer(), dtype=tf.float32)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "biases": {
+                    "value": "b_softmax",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.constant(0.1, shape=[num_classes], dtype=tf.float32), name='b_softmax')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "name": {
+                    "value": "scores",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "constant_111": {
+                "variable": {
+                    "value": "self.l2_loss",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "placeholder_117": {
+                "variable": {
+                    "value": "self.input_y",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, self.num_classes]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "input_y",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "RMSPropOptimizer_122": {
+                "variable": {
+                    "value": "self.train_step",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "learning_rate": {
+                    "value": "learning_rate",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "0.001",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "global_variables_initializer_20": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "placeholder_53": {
+                "variable": {
+                    "value": "self.manual_features",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, self.manual_features_size]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "man_feats",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Variable_57": {
+                "variable": {
+                    "value": "self.W_embeddings",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.random_uniform([vocab_size, self.emb_size], -1.0, 1.0)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "W_embeddings",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "l2_loss_112": {
+                "t": {
+                    "value": "W_softmax",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('W_softmax', shape=[self.k_max_pools[-1] * sum_filt + self.manual_features_size, num_classes], initializer=tf.contrib.layers.xavier_initializer(), dtype=tf.float32)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "l2_loss_113": {
+                "t": {
+                    "value": "b_softmax",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.constant(0.1, shape=[num_classes], dtype=tf.float32), name='b_softmax')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Variable_59": {
+                "variable": {
+                    "value": "self.W_embeddings",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "self.embs",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "W_embeddings",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "constant_61": {
+                "variable": {
+                    "value": "self.W_embeddings",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "self.embs",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "W_embeddings",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "embedding_lookup_63": {
+                "params": {
+                    "value": "self.W_embeddings",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "ids": {
+                    "value": "self.input_x",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "reshape_70": {
+                "variable": {
+                    "value": "pooled",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "pooled",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(pooled, [-1, self.k_max_pools[i - 1], sum_filt, 1])",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.max_pool(h, ksize=[1, num_units - filter_size + 1 - current_max_pool_size + 1, 1, 1], strides=[1, 1, 1, 1], padding='VALID', name='pool_' + str(i) + '_' + str(filter_size))",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat(axis=3, values=[pooled, new_pool])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, self.k_max_pools[i - 1], sum_filt, 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "Variable_80": {
+                "variable": {
+                    "value": "W_conv",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.truncated_normal(filter_shape, stddev=0.1, dtype=tf.float32)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "'W_conv_' + str(i) + '_' + str(filter_size)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "Variable_83": {
+                "variable": {
+                    "value": "b_conv",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "tf.constant(0.1, shape=[num_filters], dtype=tf.float32)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "'b_' + str(i) + '_' + str(filter_size)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "conv2d_86": {
+                "variable": {
+                    "value": "conv",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "input",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.mb_embeddings if i == 0 else pooled",
+                            "IfExp"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "W_conv",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.truncated_normal(filter_shape, stddev=0.1, dtype=tf.float32), name='W_conv_' + str(i) + '_' + str(filter_size))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "strides": {
+                    "value": "[1, 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "VALID",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "'conv_' + str(i) + '_' + str(filter_size)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "relu_87": {
+                "variable": {
+                    "value": "h",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "features": {
+                    "value": "tf.nn.bias_add(conv, b_conv)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "'relu' + str(i) + '_' + str(filter_size)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "constant_104": {
+                "value": {
+                    "value": "0.1",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[num_classes]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "concat_107": {
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[self.pooled_dropout, self.manual_features]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "max_pool_90": {
+                "variable": {
+                    "value": "pooled",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "h",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.relu(tf.nn.bias_add(conv, b_conv), name='relu' + str(i) + '_' + str(filter_size))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "ksize": {
+                    "value": "[1, num_units - filter_size + 1 - current_max_pool_size + 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "[1, 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "VALID",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "'pool_' + str(i) + '_' + str(filter_size)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "max_pool_93": {
+                "variable": {
+                    "value": "new_pool",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "h",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.relu(tf.nn.bias_add(conv, b_conv), name='relu' + str(i) + '_' + str(filter_size))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "ksize": {
+                    "value": "[1, num_units - filter_size + 1 - current_max_pool_size + 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "[1, 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "VALID",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "'pool_' + str(i) + '_' + str(filter_size)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "concat_94": {
+                "variable": {
+                    "value": "pooled",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[pooled, new_pool]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "truncated_normal_80": {
+                "shape": {
+                    "value": "filter_shape",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[filter_size, input_dim, 1, num_filters]",
+                            "List"
+                        ]
+                    ]
+                },
+                "stddev": {
+                    "value": "0.1",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "constant_83": {
+                "value": {
+                    "value": "0.1",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[num_filters]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "bias_add_87": {
+                "value": {
+                    "value": "conv",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.conv2d(input, W_conv, strides=[1, 1, 1, 1], padding='VALID', name='conv_' + str(i) + '_' + str(filter_size))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "bias": {
+                    "value": "b_conv",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.Variable(tf.constant(0.1, shape=[num_filters], dtype=tf.float32), name='b_' + str(i) + '_' + str(filter_size))",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "ml/loss_functions.py": {
+        "tensorflow": {
+            "softmax_cross_entropy_with_logits_4": {
+                "variable": {
+                    "value": "losses",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "predictions",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "labels": {
+                    "value": "golds",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_5": {
+                "variable": {
+                    "value": "loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "losses",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.softmax_cross_entropy_with_logits(logits=predictions, labels=golds)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "unstack_13": {
+                "variable": {
+                    "value": "preds_unstacked",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "predictions",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "num": {
+                    "value": "batch_size",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "unstack_14": {
+                "variable": {
+                    "value": "golds_unstacked",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "golds",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "num": {
+                    "value": "batch_size",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "unstack_38": {
+                "variable": {
+                    "value": "preds_unstacked",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "predictions",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "unstack_59": {
+                "variable": {
+                    "value": "preds_unstacked",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "predictions",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "num": {
+                    "value": "batch_size",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "unstack_60": {
+                "variable": {
+                    "value": "golds_unstacked",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "golds",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "num": {
+                    "value": "batch_size",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "softmax_23": {
+                "variable": {
+                    "value": "preds_micro_batch",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "tf.stack(preds_unstacked[k * micro_batch_size:(k + 1) * micro_batch_size])",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "softmax_24": {
+                "variable": {
+                    "value": "golds_micro_batch",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "tf.stack(golds_unstacked[k * micro_batch_size:(k + 1) * micro_batch_size])",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_30": {
+                "input_tensor": {
+                    "value": "tf.maximum(tf.subtract(tf.constant(1.0, dtype=tf.float64), tf.multiply(predictions, golds)), 0.0)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_33": {
+                "input_tensor": {
+                    "value": "tf.square(tf.subtract(predictions, golds))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "maximum_30": {
+                "x": {
+                    "value": "tf.subtract(tf.constant(1.0, dtype=tf.float64), tf.multiply(predictions, golds))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "square_33": {
+                "x": {
+                    "value": "tf.subtract(predictions, golds)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "stack_23": {
+                "values": {
+                    "value": "preds_unstacked[k * micro_batch_size:(k + 1) * micro_batch_size]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "stack_24": {
+                "values": {
+                    "value": "golds_unstacked[k * micro_batch_size:(k + 1) * micro_batch_size]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "subtract_30": {
+                "x": {
+                    "value": "tf.constant(1.0, dtype=tf.float64)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "tf.multiply(predictions, golds)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "subtract_33": {
+                "x": {
+                    "value": "predictions",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "golds",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "constant_30": {
+                "value": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float64",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "multiply_30": {
+                "x": {
+                    "value": "predictions",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "golds",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "maximum_52": {
+                "x": {
+                    "value": "tf.constant(0.0, dtype=tf.float64)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "gamma - (p - n)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "constant_52": {
+                "value": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float64",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "square_83": {
+                "x": {
+                    "value": "pos_golds[i] - neg_golds[j] - (pos_pairs[i] - neg_pairs[j])",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "maximum_87": {
+                "x": {
+                    "value": "tf.constant(0.0, dtype=tf.float64)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "pos_golds[i] - neg_golds[j] - (pos_pairs[i] - neg_pairs[j])",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "constant_87": {
+                "value": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float64",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "ml/trainer.py": {
+        "tensorflow": {
+            "reset_default_graph_211": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "reset_default_graph_250": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "nlp.py": {
+        "tensorflow": {
+            "InteractiveSession_97": {
+                "variable": {
+                    "value": "session",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "global_variables_initializer_98": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

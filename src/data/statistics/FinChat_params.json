@@ -1,0 +1,1415 @@
+{
+    "evaluation/automatic-evaluation/encoderDecoder_evaluate_script.py": {
+        "torch": {
+            "is_available_51": {
+                "variable": {
+                    "value": "USE_CUDA",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "device_52": {
+                "variable": {
+                    "value": "device",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda if USE_CUDA else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "Embedding_87": {
+                "variable": {
+                    "value": "embedding",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "voc.num_words",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "embedding_dim": {
+                    "value": "hidden_size",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_55": {
+                "seed": {
+                    "value": "SEED",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "load_76": {
+                "variable": {
+                    "value": "checkpoint",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "args.model_tar",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "map_location": {
+                    "value": "torch.device('cpu')",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "device_76": {
+                "type": {
+                    "value": "cpu",
+                    "type": "str",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "evaluation/automatic-evaluation/encoderDecoder_evaluation.py": {
+        "torch": {
+            "tensor_84": {
+                "variable": {
+                    "value": "lengths",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "[len(indexes) for indexes in indexes_batch]",
+                    "type": "ListComp",
+                    "possible_values": []
+                }
+            },
+            "transpose_86": {
+                "variable": {
+                    "value": "input_batch",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dim0": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "zeros_58": {
+                "variable": {
+                    "value": "all_tokens",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "[0]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "device",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.long",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "zeros_59": {
+                "variable": {
+                    "value": "all_scores",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "[0]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "device",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "max_65": {
+                "variable": {
+                    "value": "(decoder_scores, decoder_input)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "decoder_output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_67": {
+                "variable": {
+                    "value": "all_tokens",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(all_tokens, decoder_input)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_68": {
+                "variable": {
+                    "value": "all_scores",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(all_scores, decoder_scores)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "unsqueeze_70": {
+                "variable": {
+                    "value": "decoder_input",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "decoder_input",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.LongTensor([[SOS_token for _ in range(batch_size)]])",
+                            "Call"
+                        ],
+                        [
+                            "decoder_input.to(device)",
+                            "Call"
+                        ],
+                        [
+                            "target_variable[t].view(1, -1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.ones(1, 1, device=device, dtype=torch.long) * SOS_token",
+                            "BinOp"
+                        ],
+                        [
+                            "torch.unsqueeze(decoder_input, 0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ones_56": {
+                "*size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "device",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.long",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "evaluation/automatic-evaluation/transformer_evaluate_script.py": {
+        "torch": {
+            "is_available_51": {
+                "variable": {
+                    "value": "USE_CUDA",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "device_52": {
+                "variable": {
+                    "value": "device",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda if USE_CUDA else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "Embedding_85": {
+                "variable": {
+                    "value": "embedding",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "ntokens",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "voc.num_words",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "embedding_dim": {
+                    "value": "emsize",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_55": {
+                "seed": {
+                    "value": "SEED",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "load_76": {
+                "variable": {
+                    "value": "checkpoint",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "args.model_tar",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "map_location": {
+                    "value": "torch.device('cpu')",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "device_76": {
+                "type": {
+                    "value": "cpu",
+                    "type": "str",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "evaluation/automatic-evaluation/transformer_evaluation.py": {
+        "torch": {
+            "Tensor_49": {
+                "variable": {
+                    "value": "input",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Tensor_54": {
+                "variable": {
+                    "value": "word_tensor",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "cat_55": {
+                "variable": {
+                    "value": "input",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[input, word_tensor]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "NLLLoss_128": {
+                "variable": {
+                    "value": "criterion",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "ignore_index": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Tensor_52": {
+                "variable": {
+                    "value": "word_tensor",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "cat_53": {
+                "variable": {
+                    "value": "input",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[input, word_tensor]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "no_grad_60": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Tensor_65": {
+                "variable": {
+                    "value": "word_tensor",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "cat_66": {
+                "variable": {
+                    "value": "input",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[input, word_tensor]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "multinomial_64": {
+                "input": {
+                    "value": "word_weights",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "output[-1].squeeze().div(temperature).exp().cpu()",
+                            "Call"
+                        ]
+                    ]
+                },
+                "num_samples": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "training/encoderDecoder_main.py": {
+        "torch": {
+            "is_available_50": {
+                "variable": {
+                    "value": "USE_CUDA",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "device_51": {
+                "variable": {
+                    "value": "device",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda if USE_CUDA else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "Embedding_129": {
+                "variable": {
+                    "value": "embedding",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "voc.num_words",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "embedding_dim": {
+                    "value": "hidden_size",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Adam_154": {
+                "variable": {
+                    "value": "encoder_optimizer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "encoder.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "learning_rate",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Adam_155": {
+                "variable": {
+                    "value": "decoder_optimizer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "decoder.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "learning_rate * decoder_learning_ratio",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_54": {
+                "seed": {
+                    "value": "SEED",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "load_116": {
+                "variable": {
+                    "value": "checkpoint",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "loadFilename",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "None",
+                            "NoneType"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "training/encoderDecoder_models.py": {
+        "torch": {
+            "GRU_44": {
+                "variable": {
+                    "value": "self.gru",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "hidden_size",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dropout": {
+                    "value": "0 if n_layers == 1 else dropout",
+                    "type": "IfExp",
+                    "possible_values": []
+                },
+                "bidirectional": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "pack_padded_sequence_51": {
+                "variable": {
+                    "value": "packed",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "embedded",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.embedding(input_seq)",
+                            "Call"
+                        ],
+                        [
+                            "self.embedding(input_step)",
+                            "Call"
+                        ],
+                        [
+                            "self.embedding_dropout(embedded)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "lengths": {
+                    "value": "input_lengths",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "pad_packed_sequence_55": {
+                "variable": {
+                    "value": "(outputs, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "sequence": {
+                    "value": "outputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "outputs[:, :, :self.hidden_size] + outputs[:, :, self.hidden_size:]",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "Dropout_121": {
+                "variable": {
+                    "value": "self.embedding_dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "dropout",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "0",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.1",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "GRU_122": {
+                "variable": {
+                    "value": "self.gru",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "hidden_size",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dropout": {
+                    "value": "0 if n_layers == 1 else dropout",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "Linear_123": {
+                "variable": {
+                    "value": "self.concat",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "hidden_size * 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "hidden_size",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Linear_124": {
+                "variable": {
+                    "value": "self.out",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "hidden_size",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "output_size",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "cat_142": {
+                "variable": {
+                    "value": "concat_input",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(rnn_output, context)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "tanh_143": {
+                "variable": {
+                    "value": "concat_output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.concat(concat_input)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "softmax_146": {
+                "variable": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.out(concat_output)",
+                            "Call"
+                        ],
+                        [
+                            "F.softmax(output, dim=1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Linear_75": {
+                "variable": {
+                    "value": "self.attn",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "self.hidden_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "hidden_size",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "sum_81": {
+                "input": {
+                    "value": "hidden * encoder_output",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "sum_85": {
+                "input": {
+                    "value": "hidden * energy",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "sum_89": {
+                "input": {
+                    "value": "self.v * energy",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "softmax_104": {
+                "input": {
+                    "value": "attn_energies",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.general_score(hidden, encoder_outputs)",
+                            "Call"
+                        ],
+                        [
+                            "attn_energies.t()",
+                            "Call"
+                        ],
+                        [
+                            "self.concat_score(hidden, encoder_outputs)",
+                            "Call"
+                        ],
+                        [
+                            "self.dot_score(hidden, encoder_outputs)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "unsqueeze_104": {
+                "input": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Linear_77": {
+                "variable": {
+                    "value": "self.attn",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "self.hidden_size * 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "hidden_size",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Parameter_78": {
+                "variable": {
+                    "value": "self.v",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.FloatTensor(hidden_size)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "cat_88": {
+                "tensors": {
+                    "value": "(hidden.expand(encoder_output.size(0), -1, -1), encoder_output)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "training/encoderDecoder_prep_data.py": {
+        "torch": {
+            "tensor_157": {
+                "variable": {
+                    "value": "lengths",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "[len(indexes) for indexes in indexes_batch]",
+                    "type": "ListComp",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "training/encoderDecoder_training.py": {
+        "torch": {
+            "clip_grad_norm__111": {
+                "variable": {
+                    "value": "_",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "parameters": {
+                    "value": "encoder.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "max_norm": {
+                    "value": "clip",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "clip_grad_norm__112": {
+                "variable": {
+                    "value": "_",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "parameters": {
+                    "value": "decoder.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "max_norm": {
+                    "value": "clip",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "log_38": {
+                "input": {
+                    "value": "torch.gather(inp, 1, target.view(-1, 1)).squeeze(1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "gather_38": {
+                "input": {
+                    "value": "inp",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "index": {
+                    "value": "target.view(-1, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "squeeze_38": {
+                "input": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "save_161": {
+                "obj": {
+                    "value": "{'iteration': iteration, 'en': encoder.state_dict(), 'de': decoder.state_dict(), 'en_opt': encoder_optimizer.state_dict(), 'de_opt': decoder_optimizer.state_dict(), 'loss': loss, 'voc_dict': voc.__dict__, 'embedding': embedding.state_dict()}",
+                    "type": "Dict",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "os.path.join(directory, '{}_{}.tar'.format(iteration, 'checkpoint'))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "training/encoderDecoder_voc.py": {
+        "torch": {}
+    },
+    "training/transformer_main.py": {
+        "torch": {
+            "is_available_63": {
+                "variable": {
+                    "value": "USE_CUDA",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "device_64": {
+                "variable": {
+                    "value": "device",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda if USE_CUDA else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "Embedding_144": {
+                "variable": {
+                    "value": "embedding",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "ntokens",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "voc.num_words",
+                            "Attribute"
+                        ]
+                    ]
+                },
+                "embedding_dim": {
+                    "value": "emsize",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Adam_160": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "transformer.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "learning_rate",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_67": {
+                "seed": {
+                    "value": "SEED",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "load_133": {
+                "variable": {
+                    "value": "checkpoint",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "loadFilename",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "None",
+                            "NoneType"
+                        ]
+                    ]
+                },
+                "map_location": {
+                    "value": "torch.device('cpu')",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "device_133": {
+                "type": {
+                    "value": "cpu",
+                    "type": "str",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "training/transformer_models.py": {
+        "torch": {
+            "TransformerEncoderLayer_39": {
+                "variable": {
+                    "value": "encoder_layers",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "d_model": {
+                    "value": "ninp",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "nhead": {
+                    "value": "nhead",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dim_feedforward": {
+                    "value": "nhid",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dropout": {
+                    "value": "dropout",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "0.5",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.1",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "TransformerEncoder_40": {
+                "variable": {
+                    "value": "self.transformer_encoder",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "encoder_layer": {
+                    "value": "encoder_layers",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "TransformerEncoderLayer(ninp, nhead, nhid, dropout)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "num_layers": {
+                    "value": "nlayers",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Linear_43": {
+                "variable": {
+                    "value": "self.decoder",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "ninp",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "ntoken",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Dropout_98": {
+                "variable": {
+                    "value": "self.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "dropout",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "0.5",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.1",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "zeros_100": {
+                "variable": {
+                    "value": "pe",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "max_len",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "5000",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "d_model",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "arange_101": {
+                "variable": {
+                    "value": "position",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "start": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "end": {
+                    "value": "max_len",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "5000",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "torch.float",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "unsqueeze_101": {
+                "variable": {
+                    "value": "position",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "exp_102": {
+                "variable": {
+                    "value": "div_term",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.arange(0, d_model, 2).float() * (-math.log(10000.0) / d_model)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sin_103": {
+                "variable": {
+                    "value": "pe[:, 0::2]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "position * div_term",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "cos_104": {
+                "variable": {
+                    "value": "pe[:, 1::2]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "position * div_term",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "log_softmax_71": {
+                "input": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.transformer_encoder(src, self.src_mask)",
+                            "Call"
+                        ],
+                        [
+                            "self.decoder(output)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "arange_102": {
+                "start": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "end": {
+                    "value": "d_model",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "step": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "triu_48": {
+                "input": {
+                    "value": "torch.ones(sz, sz)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "ones_48": {
+                "*size": {
+                    "value": "sz",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "sz",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "training/transformer_prep_data.py": {
+        "torch": {
+            "tensor_147": {
+                "variable": {
+                    "value": "lengths",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "[len(indexes) for indexes in indexes_batch]",
+                    "type": "ListComp",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "training/transformer_training.py": {
+        "torch": {
+            "NLLLoss_30": {
+                "variable": {
+                    "value": "criterion",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "ignore_index": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "clip_grad_norm__61": {
+                "variable": {
+                    "value": "_",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "parameters": {
+                    "value": "transformer.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "max_norm": {
+                    "value": "clip",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "save_110": {
+                "obj": {
+                    "value": "{'iteration': iteration, 'tra': transformer.state_dict(), 'opt': optimizer.state_dict(), 'loss': loss, 'voc_dict': voc.__dict__, 'embedding': embedding.state_dict()}",
+                    "type": "Dict",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "os.path.join(directory, '{}_{}.tar'.format(iteration, 'checkpoint'))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "training/transformer_voc.py": {
+        "torch": {}
+    }
+}

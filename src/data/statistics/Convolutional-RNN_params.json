@@ -1,0 +1,352 @@
+{
+    "CRNN.py": {
+        "tensorflow": {
+            "extract_image_patches_44": {
+                "variable": {
+                    "value": "patches",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "images": {
+                    "value": "tensor",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.expand_dims(tensor, 3)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "ksizes": {
+                    "value": "[1, kernel_size, n_in_features, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "[1, stride, n_in_features, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "rates": {
+                    "value": "[1, 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "padding",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "reshape_56": {
+                "variable": {
+                    "value": "patches",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "patches",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.extract_image_patches(images=tensor, ksizes=[1, kernel_size, n_in_features, 1], strides=[1, stride, n_in_features, 1], rates=[1, 1, 1, 1], padding=padding)",
+                            "Call"
+                        ],
+                        [
+                            "patches[:, :, 0, :]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.reshape(patches, [batch_size * time_steps_after_stride, kernel_size, n_in_features])",
+                            "Call"
+                        ],
+                        [
+                            "tf.unstack(tf.transpose(patches, [1, 0, 2]))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[batch_size * time_steps_after_stride, kernel_size, n_in_features]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "unstack_60": {
+                "variable": {
+                    "value": "patches",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "tf.transpose(patches, [1, 0, 2])",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reshape_103": {
+                "variable": {
+                    "value": "outputs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "outputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "outputs[-1]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.concat([outputs[-1][:, :half], outputs[0][:, half:]], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(outputs, [batch_size, time_steps_after_stride, out_channels])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[batch_size, time_steps_after_stride, out_channels]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_36": {
+                "name_or_scope": {
+                    "value": "scope_name",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.truncated_normal_initializer(stddev=w_std)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_39": {
+                "variable": {
+                    "value": "tensor",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "tensor",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.expand_dims(tensor, 3)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "static_rnn_85": {
+                "variable": {
+                    "value": "(outputs, state)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "cell": {
+                    "value": "rnn_cell",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "rnn_cell_func(out_channels)",
+                            "Call"
+                        ],
+                        [
+                            "tf.contrib.rnn.MultiRNNCell([rnn_cell] * rnn_n_layers)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "inputs": {
+                    "value": "patches",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.extract_image_patches(images=tensor, ksizes=[1, kernel_size, n_in_features, 1], strides=[1, stride, n_in_features, 1], rates=[1, 1, 1, 1], padding=padding)",
+                            "Call"
+                        ],
+                        [
+                            "patches[:, :, 0, :]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.reshape(patches, [batch_size * time_steps_after_stride, kernel_size, n_in_features])",
+                            "Call"
+                        ],
+                        [
+                            "tf.unstack(tf.transpose(patches, [1, 0, 2]))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "static_bidirectional_rnn_87": {
+                "variable": {
+                    "value": "(outputs, output_state_fw, output_state_bw)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "cell_fw": {
+                    "value": "rnn_cell_f",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "rnn_cell_func(out_channels)",
+                            "Call"
+                        ],
+                        [
+                            "tf.contrib.rnn.MultiRNNCell([rnn_cell_f] * rnn_n_layers)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "cell_bw": {
+                    "value": "rnn_cell_b",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "rnn_cell_func(out_channels)",
+                            "Call"
+                        ],
+                        [
+                            "tf.contrib.rnn.MultiRNNCell([rnn_cell_b] * rnn_n_layers)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "inputs": {
+                    "value": "patches",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.extract_image_patches(images=tensor, ksizes=[1, kernel_size, n_in_features, 1], strides=[1, stride, n_in_features, 1], rates=[1, 1, 1, 1], padding=padding)",
+                            "Call"
+                        ],
+                        [
+                            "patches[:, :, 0, :]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.reshape(patches, [batch_size * time_steps_after_stride, kernel_size, n_in_features])",
+                            "Call"
+                        ],
+                        [
+                            "tf.unstack(tf.transpose(patches, [1, 0, 2]))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "concat_96": {
+                "variable": {
+                    "value": "outputs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[outputs[-1][:, :half], outputs[0][:, half:]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "transpose_60": {
+                "a": {
+                    "value": "patches",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.extract_image_patches(images=tensor, ksizes=[1, kernel_size, n_in_features, 1], strides=[1, stride, n_in_features, 1], rates=[1, 1, 1, 1], padding=padding)",
+                            "Call"
+                        ],
+                        [
+                            "patches[:, :, 0, :]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.reshape(patches, [batch_size * time_steps_after_stride, kernel_size, n_in_features])",
+                            "Call"
+                        ],
+                        [
+                            "tf.unstack(tf.transpose(patches, [1, 0, 2]))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "perm": {
+                    "value": "[1, 0, 2]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "MultiRNNCell_78": {
+                "variable": {
+                    "value": "rnn_cell",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "cells": {
+                    "value": "[rnn_cell] * rnn_n_layers",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "MultiRNNCell_80": {
+                "variable": {
+                    "value": "rnn_cell_f",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "cells": {
+                    "value": "[rnn_cell_f] * rnn_n_layers",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "MultiRNNCell_81": {
+                "variable": {
+                    "value": "rnn_cell_b",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "cells": {
+                    "value": "[rnn_cell_b] * rnn_n_layers",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "truncated_normal_initializer_36": {
+                "stddev": {
+                    "value": "w_std",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

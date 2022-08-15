@@ -1,0 +1,1030 @@
+{
+    "dataset.py": {
+        "torch": {}
+    },
+    "module.py": {
+        "torch": {
+            "softmax_196": {
+                "variable": {
+                    "value": "p_attn",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "scores",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.bmm(query, key.transpose(1, 2)) / math.sqrt(per_head)",
+                            "BinOp"
+                        ],
+                        [
+                            "scores + relative_mul(query, relative_q)",
+                            "BinOp"
+                        ],
+                        [
+                            "scores.masked_fill(mask == 0, -1000000000.0)",
+                            "Call"
+                        ],
+                        [
+                            "torch.matmul(query, key.transpose(-2, -1)) / math.sqrt(d_k)",
+                            "BinOp"
+                        ],
+                        [
+                            "scores.masked_fill(mask == 0, -1000000000.0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "bmm_201": {
+                "variable": {
+                    "value": "context",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "p_attn",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "F.softmax(scores, dim=-1)",
+                            "Call"
+                        ],
+                        [
+                            "dropout(p_attn)",
+                            "Call"
+                        ],
+                        [
+                            "F.softmax(scores, dim=-1)",
+                            "Call"
+                        ],
+                        [
+                            "dropout(p_attn)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "mat2": {
+                    "value": "value",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "value.contiguous().view(batch_size * num_heads, length, per_head)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "softmax_220": {
+                "variable": {
+                    "value": "p_attn",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "scores",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.bmm(query, key.transpose(1, 2)) / math.sqrt(per_head)",
+                            "BinOp"
+                        ],
+                        [
+                            "scores + relative_mul(query, relative_q)",
+                            "BinOp"
+                        ],
+                        [
+                            "scores.masked_fill(mask == 0, -1000000000.0)",
+                            "Call"
+                        ],
+                        [
+                            "torch.matmul(query, key.transpose(-2, -1)) / math.sqrt(d_k)",
+                            "BinOp"
+                        ],
+                        [
+                            "scores.masked_fill(mask == 0, -1000000000.0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "Embedding_46": {
+                "variable": {
+                    "value": "self.parent_emb",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "2 * k + 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "embedding_dim": {
+                    "value": "d_model * 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "padding_idx": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Embedding_47": {
+                "variable": {
+                    "value": "self.brother_emb",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "2 * k + 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "embedding_dim": {
+                    "value": "d_model * 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "padding_idx": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Dropout_49": {
+                "variable": {
+                    "value": "self.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "dropout",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "None",
+                            "Method Argument"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.1",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.0",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.1",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.1",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "Linear_80": {
+                "variable": {
+                    "value": "self.proj",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "d_model",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "512",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "vocab",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "ModuleList_88": {
+                "modules": {
+                    "value": "[copy.deepcopy(module) for _ in range(N)]",
+                    "type": "ListComp",
+                    "possible_values": []
+                }
+            },
+            "LayerNorm_95": {
+                "variable": {
+                    "value": "self.norm",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "normalized_shape": {
+                    "value": "layer.size",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "LayerNorm_113": {
+                "variable": {
+                    "value": "self.norm",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "normalized_shape": {
+                    "value": "size",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Dropout_114": {
+                "variable": {
+                    "value": "self.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "dropout",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "None",
+                            "Method Argument"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.1",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.0",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.1",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.1",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "LayerNorm_139": {
+                "variable": {
+                    "value": "self.norm",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "normalized_shape": {
+                    "value": "layer.size",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "bmm_178": {
+                "input": {
+                    "value": "q",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "q.view(-1, dim_per_head).unsqueeze(1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "mat2": {
+                    "value": "relative_k",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "relative.transpose(2, 3).view(-1, dim_per_head, node_len)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "squeeze_178": {
+                "input": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "bmm_206": {
+                "variable": {
+                    "value": "context_v",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "att_v",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "p_attn.view(-1, node_len).unsqueeze(1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "mat2": {
+                    "value": "relative_v",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "relative_v.view(-1, node_len, dim_per_head)",
+                            "Call"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "squeeze_206": {
+                "variable": {
+                    "value": "context_v",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Dropout_236": {
+                "variable": {
+                    "value": "self.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "dropout",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "None",
+                            "Method Argument"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.1",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.0",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.1",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.1",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "Linear_271": {
+                "variable": {
+                    "value": "self.w_1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "d_model",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "512",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "d_ff",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "2048",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "Linear_272": {
+                "variable": {
+                    "value": "self.w_2",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "d_ff",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "2048",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "d_model",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "512",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "Dropout_273": {
+                "variable": {
+                    "value": "self.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "dropout",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "None",
+                            "Method Argument"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.1",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.0",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.1",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.1",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "Embedding_291": {
+                "variable": {
+                    "value": "self.lut",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "vocab",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "embedding_dim": {
+                    "value": "d_model",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "512",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "Dropout_303": {
+                "variable": {
+                    "value": "self.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "dropout",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "None",
+                            "Method Argument"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.1",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.0",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.1",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.1",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "zeros_306": {
+                "variable": {
+                    "value": "pe",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "max_len",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "5000",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "d_model",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "512",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "arange_307": {
+                "variable": {
+                    "value": "position",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "start": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "end": {
+                    "value": "max_len",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "5000",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "unsqueeze_307": {
+                "variable": {
+                    "value": "position",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "exp_308": {
+                "variable": {
+                    "value": "div_term",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.arange(0.0, d_model, 2) * -(math.log(10000.0) / d_model)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sin_310": {
+                "variable": {
+                    "value": "pe[:, 0::2]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "position * div_term",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "cos_311": {
+                "variable": {
+                    "value": "pe[:, 1::2]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "position * div_term",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "log_softmax_83": {
+                "input": {
+                    "value": "self.proj(x)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "from_numpy_170": {
+                "ndarray": {
+                    "value": "subsequent_mask",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "np.triu(np.ones(attn_shape), k=1).astype('uint8')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "bmm_189": {
+                "input": {
+                    "value": "query",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "query.contiguous().view(batch_size * num_heads, length, per_head)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "mat2": {
+                    "value": "key.transpose(1, 2)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "matmul_216": {
+                "input": {
+                    "value": "query",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "query.contiguous().view(batch_size * num_heads, length, per_head)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "key.transpose(-2, -1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "matmul_223": {
+                "input": {
+                    "value": "p_attn",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "F.softmax(scores, dim=-1)",
+                            "Call"
+                        ],
+                        [
+                            "dropout(p_attn)",
+                            "Call"
+                        ],
+                        [
+                            "F.softmax(scores, dim=-1)",
+                            "Call"
+                        ],
+                        [
+                            "dropout(p_attn)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "value",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "value.contiguous().view(batch_size * num_heads, length, per_head)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Sequential_334": {
+                "*args": {
+                    "value": "Embeddings(d_model, nl_vocab)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Linear_234": {
+                "in_features": {
+                    "value": "d_model",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "512",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "d_model",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "512",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "erf_285": {
+                "input": {
+                    "value": "x / math.sqrt(2.0)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "arange_308": {
+                "start": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "end": {
+                    "value": "d_model",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "512",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "step": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "solver.py": {
+        "torch": {
+            "DataLoader_49": {
+                "variable": {
+                    "value": "train_loader",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "train_data_set",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "TreeDataSet(self.args.train_data_set, self.args.code_max_len, skip=self.args.skip_num)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "self.args.batch_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_50": {
+                "variable": {
+                    "value": "test_loader",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "test_data_set",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "TreeDataSet(self.args.test_data_set, self.args.code_max_len, skip=7860)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_92": {
+                "variable": {
+                    "value": "data_set_loader",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "data_set",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "TreeDataSet(self.args.test_data_set, self.args.code_max_len, skip=7860)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "train.py": {
+        "torch": {
+            "ones_86": {
+                "variable": {
+                    "value": "ys",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "KLDivLoss_31": {
+                "variable": {
+                    "value": "self.criterion",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "size_average": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "nonzero_44": {
+                "variable": {
+                    "value": "mask",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "target.data == self.padding_idx",
+                    "type": "Compare",
+                    "possible_values": []
+                }
+            },
+            "max_92": {
+                "variable": {
+                    "value": "(_, next_word)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "prob",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tree_transformer_model.generator(out[:, -1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_94": {
+                "variable": {
+                    "value": "ys",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[ys, torch.ones(1, 1).type_as(batch.code.data).fill_(next_word)]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "is_available_109": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "ones_95": {
+                "*size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "utils.py": {
+        "torch": {
+            "from_numpy_8": {
+                "variable": {
+                    "value": "data",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "ndarray": {
+                    "value": "data",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "np.loadtxt(file_path, dtype=np.long, skiprows=skip)",
+                            "Call"
+                        ],
+                        [
+                            "torch.from_numpy(data)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    }
+}

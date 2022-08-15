@@ -1,0 +1,625 @@
+{
+    "architecture.py": {
+        "tensorflow": {
+            "set_random_seed_6": {
+                "seed": {
+                    "value": "10",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "multiply_23": {
+                "variable": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "input[:, :, :tf.shape(input)[2] // 2]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "tf.sigmoid(input[:, :, tf.shape(input)[2] // 2:])",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "AdamOptimizer_116": {
+                "variable": {
+                    "value": "train_op",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "learning_rate": {
+                    "value": "self.learning_rate",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_117": {
+                "variable": {
+                    "value": "loss_val",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "loss",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.sparse_softmax_cross_entropy_with_logits(labels=labels, logits=logits)",
+                            "Call"
+                        ],
+                        [
+                            "self.init_loss()",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Saver_120": {
+                "variable": {
+                    "value": "saver",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "var_list": {
+                    "value": "tf.trainable_variables()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Session_135": {
+                "variable": {
+                    "value": "sess",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "conv1d_30": {
+                "variable": {
+                    "value": "conv",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "input",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "output",
+                            "variable"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "self.hidden_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "same",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "conv1d_43": {
+                "variable": {
+                    "value": "conv",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "input",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "output",
+                            "variable"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "self.hidden_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "same",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "matmul_51": {
+                "variable": {
+                    "value": "attention",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "d",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "fully_connected(conv, num_outputs=self.embeded_dimesion, activation_fn=None) + self.decoder_embedded",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "self.encoder_output",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "transpose_b": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "softmax_52": {
+                "variable": {
+                    "value": "attention",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "attention",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.matmul(d, self.encoder_output, transpose_b=True)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.softmax(attention)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "matmul_53": {
+                "variable": {
+                    "value": "conditional",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "attention",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.matmul(d, self.encoder_output, transpose_b=True)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.softmax(attention)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "self.encoder_output + self.encoder_embedded",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "placeholder_67": {
+                "variable": {
+                    "value": "self.encoder_input",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "encoder_input",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "(None, None)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.int32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "get_variable_71": {
+                "variable": {
+                    "value": "encoder_embeddings",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "encoder_embeddings",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "xavier_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[self.vocubulary_size, self.embeded_dimesion]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "embedding_lookup_75": {
+                "variable": {
+                    "value": "self.encoder_embedded",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "encoder_embeddings",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable(name='encoder_embeddings', initializer=xavier_initializer(), shape=[self.vocubulary_size, self.embeded_dimesion])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "ids": {
+                    "value": "self.encoder_input",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "placeholder_81": {
+                "variable": {
+                    "value": "self.decoder_input",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "decoder_input",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "(None, None)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.int32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "get_variable_84": {
+                "variable": {
+                    "value": "decoder_embeddings",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "encoder_embeddings",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "xavier_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[self.vocubulary_size, self.embeded_dimesion]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "embedding_lookup_87": {
+                "variable": {
+                    "value": "self.decoder_embedded",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "decoder_embeddings",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable(name='encoder_embeddings', initializer=xavier_initializer(), shape=[self.vocubulary_size, self.embeded_dimesion])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "ids": {
+                    "value": "self.decoder_input",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "softmax_94": {
+                "variable": {
+                    "value": "self.pred",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "self.logits",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "reshape_99": {
+                "variable": {
+                    "value": "logits",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "self.logits",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[tf.shape(self.logits)[0] * tf.shape(self.logits)[1], self.vocubulary_size]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "reshape_103": {
+                "variable": {
+                    "value": "labels",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "labels",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.decoder_input[:, 1:]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.reshape(labels, [-1])",
+                            "Call"
+                        ],
+                        [
+                            "tf.boolean_mask(labels, loss_mask)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "boolean_mask_105": {
+                "variable": {
+                    "value": "logits",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "logits",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(self.logits, [tf.shape(self.logits)[0] * tf.shape(self.logits)[1], self.vocubulary_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.boolean_mask(logits, loss_mask)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "mask": {
+                    "value": "loss_mask",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "labels > 0",
+                            "Compare"
+                        ]
+                    ]
+                }
+            },
+            "boolean_mask_106": {
+                "variable": {
+                    "value": "labels",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "labels",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.decoder_input[:, 1:]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.reshape(labels, [-1])",
+                            "Call"
+                        ],
+                        [
+                            "tf.boolean_mask(labels, loss_mask)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "mask": {
+                    "value": "loss_mask",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "labels > 0",
+                            "Compare"
+                        ]
+                    ]
+                }
+            },
+            "sparse_softmax_cross_entropy_with_logits_107": {
+                "variable": {
+                    "value": "loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "labels": {
+                    "value": "labels",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.decoder_input[:, 1:]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.reshape(labels, [-1])",
+                            "Call"
+                        ],
+                        [
+                            "tf.boolean_mask(labels, loss_mask)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "logits": {
+                    "value": "logits",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(self.logits, [tf.shape(self.logits)[0] * tf.shape(self.logits)[1], self.vocubulary_size])",
+                            "Call"
+                        ],
+                        [
+                            "tf.boolean_mask(logits, loss_mask)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "scalar_119": {
+                "name": {
+                    "value": "softmax_loss",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "loss_val",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reduce_mean(loss)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "sigmoid_24": {
+                "x": {
+                    "value": "input[:, :, tf.shape(input)[2] // 2:]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_66": {
+                "name_or_scope": {
+                    "value": "encoder",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_80": {
+                "name_or_scope": {
+                    "value": "decoder",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_98": {
+                "name_or_scope": {
+                    "value": "cross_entropy_sequence_loss",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "trainable_variables_120": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Session_121": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "global_variables_initializer_136": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "global_variables_initializer_122": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "shape_99": {
+                "input": {
+                    "value": "self.logits",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "shape_23": {
+                "input": {
+                    "value": "input",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "output",
+                            "variable"
+                        ]
+                    ]
+                }
+            },
+            "shape_24": {
+                "input": {
+                    "value": "input",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "output",
+                            "variable"
+                        ]
+                    ]
+                }
+            }
+        }
+    }
+}

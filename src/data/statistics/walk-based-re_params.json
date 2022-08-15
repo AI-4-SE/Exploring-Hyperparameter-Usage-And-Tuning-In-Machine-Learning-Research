@@ -1,0 +1,3813 @@
+{
+    "src/converter.py": {
+        "torch": {
+            "as_tensor_11": {
+                "data": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "as_tensor_10": {
+                "data": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/dataset.py": {
+        "torch": {}
+    },
+    "src/hyperparam_tuning.py": {
+        "torch": {}
+    },
+    "src/nnet/init_net.py": {
+        "torch": {
+            "set_printoptions_15": {
+                "profile": {
+                    "value": "full",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "device_30": {
+                "variable": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda:{}.format(params[gpu]) if params[gpu] != -1 else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "Linear_71": {
+                "variable": {
+                    "value": "self.reduce",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "2 * self.e_dim + self.w_dim",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "params['out_dim']",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Linear_73": {
+                "variable": {
+                    "value": "self.reduce",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "2 * self.e_dim",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "params['out_dim']",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/nnet/layers.py": {
+        "torch": {
+            "set_printoptions_14": {
+                "profile": {
+                    "value": "full",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Parameter_23": {
+                "variable": {
+                    "value": "self.q",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "nn.init.normal_(torch.empty(embed_size, 1))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "requires_grad": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Tanh_24": {
+                "variable": {
+                    "value": "self.tanh",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "matmul_29": {
+                "variable": {
+                    "value": "a_scores",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.tanh(xs)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "self.q.unsqueeze(0)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "where_32": {
+                "variable": {
+                    "value": "a_scores",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "mask.unsqueeze(2)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "a_scores",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.matmul(self.tanh(xs), self.q.unsqueeze(0))",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(mask.unsqueeze(2), a_scores, torch.as_tensor([float('-inf')]).to(self.device))",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(torch.isinf(a_scores).all(dim=1, keepdim=True), torch.full_like(a_scores, 1.0), a_scores)",
+                            "Call"
+                        ],
+                        [
+                            "F.softmax(a_scores, dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(torch.eq(a_scores, 1 / a_scores.shape[1]).all(dim=1, keepdim=True), torch.zeros_like(a_scores), a_scores)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "torch.as_tensor([float('-inf')]).to(self.device)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "where_35": {
+                "variable": {
+                    "value": "a_scores",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "torch.isinf(a_scores).all(dim=1, keepdim=True)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "torch.full_like(a_scores, 1.0)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "a_scores",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.matmul(self.tanh(xs), self.q.unsqueeze(0))",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(mask.unsqueeze(2), a_scores, torch.as_tensor([float('-inf')]).to(self.device))",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(torch.isinf(a_scores).all(dim=1, keepdim=True), torch.full_like(a_scores, 1.0), a_scores)",
+                            "Call"
+                        ],
+                        [
+                            "F.softmax(a_scores, dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(torch.eq(a_scores, 1 / a_scores.shape[1]).all(dim=1, keepdim=True), torch.zeros_like(a_scores), a_scores)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "softmax_37": {
+                "variable": {
+                    "value": "a_scores",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "a_scores",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.matmul(self.tanh(xs), self.q.unsqueeze(0))",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(mask.unsqueeze(2), a_scores, torch.as_tensor([float('-inf')]).to(self.device))",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(torch.isinf(a_scores).all(dim=1, keepdim=True), torch.full_like(a_scores, 1.0), a_scores)",
+                            "Call"
+                        ],
+                        [
+                            "F.softmax(a_scores, dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(torch.eq(a_scores, 1 / a_scores.shape[1]).all(dim=1, keepdim=True), torch.zeros_like(a_scores), a_scores)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "where_40": {
+                "variable": {
+                    "value": "a_scores",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "torch.eq(a_scores, 1 / a_scores.shape[1]).all(dim=1, keepdim=True)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "torch.zeros_like(a_scores)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "a_scores",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.matmul(self.tanh(xs), self.q.unsqueeze(0))",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(mask.unsqueeze(2), a_scores, torch.as_tensor([float('-inf')]).to(self.device))",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(torch.isinf(a_scores).all(dim=1, keepdim=True), torch.full_like(a_scores, 1.0), a_scores)",
+                            "Call"
+                        ],
+                        [
+                            "F.softmax(a_scores, dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(torch.eq(a_scores, 1 / a_scores.shape[1]).all(dim=1, keepdim=True), torch.zeros_like(a_scores), a_scores)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "matmul_43": {
+                "variable": {
+                    "value": "y_expect",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "a_scores.transpose(1, 2)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "xs",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "squeeze_44": {
+                "variable": {
+                    "value": "y_expect",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "y_expect",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.matmul(a_scores.transpose(1, 2), xs)",
+                            "Call"
+                        ],
+                        [
+                            "torch.squeeze(y_expect, dim=1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Parameter_58": {
+                "variable": {
+                    "value": "self.W",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "nn.init.normal_(torch.empty(embed_size, embed_size))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "requires_grad": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Sigmoid_59": {
+                "variable": {
+                    "value": "self.sigmoid",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "matmul_67": {
+                "variable": {
+                    "value": "bilin",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "old_pairs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "self.W",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "where_72": {
+                "variable": {
+                    "value": "a",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "mask.unsqueeze(1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "a",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "bilin[part1]",
+                            "Subscript"
+                        ],
+                        [
+                            "torch.where(mask.unsqueeze(1), a, torch.zeros_like(a))",
+                            "Call"
+                        ],
+                        [
+                            "a.view(-1, items, a.shape[1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "torch.zeros_like(a)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "where_73": {
+                "variable": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "mask.unsqueeze(1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "old_pairs[part2]",
+                            "Subscript"
+                        ],
+                        [
+                            "torch.where(mask.unsqueeze(1), b, torch.zeros_like(b))",
+                            "Call"
+                        ],
+                        [
+                            "b.view(-1, items, b.shape[1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "torch.zeros_like(b)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "where_88": {
+                "variable": {
+                    "value": "mat",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "torch.isinf(new_pairs).all(dim=1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "torch.ones_like(old_pairs)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "torch.full_like(old_pairs, self.beta)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "sum_92": {
+                "variable": {
+                    "value": "new_pairs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.sigmoid(new_pairs)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "broadcast_tensors_98": {
+                "variable": {
+                    "value": "(cond, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "*tensors": {
+                    "value": "cond.unsqueeze(-1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "nonzero_100": {
+                "variable": {
+                    "value": "idx",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "cond",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "unbind_100": {
+                "variable": {
+                    "value": "idx",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "as_tensor_32": {
+                "data": {
+                    "value": "[float('-inf')]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "isinf_35": {
+                "input": {
+                    "value": "a_scores",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.matmul(self.tanh(xs), self.q.unsqueeze(0))",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(mask.unsqueeze(2), a_scores, torch.as_tensor([float('-inf')]).to(self.device))",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(torch.isinf(a_scores).all(dim=1, keepdim=True), torch.full_like(a_scores, 1.0), a_scores)",
+                            "Call"
+                        ],
+                        [
+                            "F.softmax(a_scores, dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(torch.eq(a_scores, 1 / a_scores.shape[1]).all(dim=1, keepdim=True), torch.zeros_like(a_scores), a_scores)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "all_35": {
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keepdim": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "full_like_36": {
+                "input": {
+                    "value": "a_scores",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.matmul(self.tanh(xs), self.q.unsqueeze(0))",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(mask.unsqueeze(2), a_scores, torch.as_tensor([float('-inf')]).to(self.device))",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(torch.isinf(a_scores).all(dim=1, keepdim=True), torch.full_like(a_scores, 1.0), a_scores)",
+                            "Call"
+                        ],
+                        [
+                            "F.softmax(a_scores, dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(torch.eq(a_scores, 1 / a_scores.shape[1]).all(dim=1, keepdim=True), torch.zeros_like(a_scores), a_scores)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "fill_value": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "eq_40": {
+                "input": {
+                    "value": "a_scores",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.matmul(self.tanh(xs), self.q.unsqueeze(0))",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(mask.unsqueeze(2), a_scores, torch.as_tensor([float('-inf')]).to(self.device))",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(torch.isinf(a_scores).all(dim=1, keepdim=True), torch.full_like(a_scores, 1.0), a_scores)",
+                            "Call"
+                        ],
+                        [
+                            "F.softmax(a_scores, dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(torch.eq(a_scores, 1 / a_scores.shape[1]).all(dim=1, keepdim=True), torch.zeros_like(a_scores), a_scores)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "1 / a_scores.shape[1]",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "all_40": {
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keepdim": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "zeros_like_41": {
+                "input": {
+                    "value": "a_scores",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.matmul(self.tanh(xs), self.q.unsqueeze(0))",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(mask.unsqueeze(2), a_scores, torch.as_tensor([float('-inf')]).to(self.device))",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(torch.isinf(a_scores).all(dim=1, keepdim=True), torch.full_like(a_scores, 1.0), a_scores)",
+                            "Call"
+                        ],
+                        [
+                            "F.softmax(a_scores, dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(torch.eq(a_scores, 1 / a_scores.shape[1]).all(dim=1, keepdim=True), torch.zeros_like(a_scores), a_scores)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "squeeze_45": {
+                "input": {
+                    "value": "a_scores",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.matmul(self.tanh(xs), self.q.unsqueeze(0))",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(mask.unsqueeze(2), a_scores, torch.as_tensor([float('-inf')]).to(self.device))",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(torch.isinf(a_scores).all(dim=1, keepdim=True), torch.full_like(a_scores, 1.0), a_scores)",
+                            "Call"
+                        ],
+                        [
+                            "F.softmax(a_scores, dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(torch.eq(a_scores, 1 / a_scores.shape[1]).all(dim=1, keepdim=True), torch.zeros_like(a_scores), a_scores)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ge_70": {
+                "input": {
+                    "value": "part2",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "map_pair[idx[0], idx[3], idx[2]]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "zeros_like_72": {
+                "input": {
+                    "value": "a",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "bilin[part1]",
+                            "Subscript"
+                        ],
+                        [
+                            "torch.where(mask.unsqueeze(1), a, torch.zeros_like(a))",
+                            "Call"
+                        ],
+                        [
+                            "a.view(-1, items, a.shape[1])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "zeros_like_73": {
+                "input": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "old_pairs[part2]",
+                            "Subscript"
+                        ],
+                        [
+                            "torch.where(mask.unsqueeze(1), b, torch.zeros_like(b))",
+                            "Call"
+                        ],
+                        [
+                            "b.view(-1, items, b.shape[1])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "eq_86": {
+                "input": {
+                    "value": "new_pairs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "a * b",
+                            "BinOp"
+                        ],
+                        [
+                            "torch.sum(self.sigmoid(new_pairs), dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "mat * old_pairs + (1 - mat) * new_pairs",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "torch.zeros_like(new_pairs)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "all_86": {
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "isinf_88": {
+                "input": {
+                    "value": "new_pairs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "a * b",
+                            "BinOp"
+                        ],
+                        [
+                            "torch.sum(self.sigmoid(new_pairs), dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "mat * old_pairs + (1 - mat) * new_pairs",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "all_88": {
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ones_like_89": {
+                "input": {
+                    "value": "old_pairs",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "full_like_90": {
+                "input": {
+                    "value": "old_pairs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "fill_value": {
+                    "value": "self.beta",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "zeros_98": {
+                "*size": {
+                    "value": "(1, 1, 1, cond.shape[1])",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "empty_23": {
+                "*size": {
+                    "value": "embed_size",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "empty_58": {
+                "*size": {
+                    "value": "embed_size",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "embed_size",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "arange_84": {
+                "start": {
+                    "value": "items",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "map_pair.shape[1]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "arange_85": {
+                "start": {
+                    "value": "items",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "map_pair.shape[1]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "zeros_like_86": {
+                "input": {
+                    "value": "new_pairs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "a * b",
+                            "BinOp"
+                        ],
+                        [
+                            "torch.sum(self.sigmoid(new_pairs), dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "mat * old_pairs + (1 - mat) * new_pairs",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "src/nnet/modules.py": {
+        "torch": {
+            "Embedding_32": {
+                "variable": {
+                    "value": "self.embedding",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "num_embeddings",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "embedding_dim": {
+                    "value": "embedding_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "padding_idx": {
+                    "value": "ignore",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "None",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "Dropout_40": {
+                "variable": {
+                    "value": "self.drop",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "dropout",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "LSTM_90": {
+                "variable": {
+                    "value": "self.enc",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input_size": {
+                    "value": "input_size",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "hidden_size": {
+                    "value": "rnn_size",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "num_layers": {
+                    "value": "num_layers",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "bidirectional": {
+                    "value": "bidirectional",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dropout": {
+                    "value": "dropout",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Dropout_98": {
+                "variable": {
+                    "value": "self.drop",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "dropout",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "linspace_118": {
+                "variable": {
+                    "value": "reverse_idx",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "start": {
+                    "value": "lengths.size(0) - 1",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "end": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "steps": {
+                    "value": "lengths.size(0)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "pad_sequence_135": {
+                "variable": {
+                    "value": "embeds",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "sequences": {
+                    "value": "embeds",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.embedding(xs)",
+                            "Call"
+                        ],
+                        [
+                            "self.drop(embeds)",
+                            "Call"
+                        ],
+                        [
+                            "nn.utils.rnn.pad_sequence(embeds, batch_first=True, padding_value=0)",
+                            "Call"
+                        ],
+                        [
+                            "embeds[sorted_idx][reverse_idx]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "padding_value": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "pack_padded_sequence_137": {
+                "variable": {
+                    "value": "packed",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "embeds",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.embedding(xs)",
+                            "Call"
+                        ],
+                        [
+                            "self.drop(embeds)",
+                            "Call"
+                        ],
+                        [
+                            "nn.utils.rnn.pad_sequence(embeds, batch_first=True, padding_value=0)",
+                            "Call"
+                        ],
+                        [
+                            "embeds[sorted_idx][reverse_idx]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "lengths": {
+                    "value": "list(lengths[sorted_idx][reverse_idx].data)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "pad_packed_sequence_143": {
+                "variable": {
+                    "value": "(outputs, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "sequence": {
+                    "value": "out_packed",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Dropout_164": {
+                "variable": {
+                    "value": "self.drop",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "dropout",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Linear_165": {
+                "variable": {
+                    "value": "self.lin",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "in_size",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "out_size",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Parameter_52": {
+                "variable": {
+                    "value": "self.embedding.weight.data[mapping[word], :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.from_numpy(pretrained[word])",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Parameter_54": {
+                "variable": {
+                    "value": "self.embedding.weight.data[mapping[word], :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.from_numpy(pretrained[word.lower()])",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "from_numpy_52": {
+                "ndarray": {
+                    "value": "pretrained[word]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "from_numpy_54": {
+                "ndarray": {
+                    "value": "pretrained[word.lower()]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/nnet/network.py": {
+        "torch": {
+            "set_printoptions_15": {
+                "profile": {
+                    "value": "full",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "broadcast_tensors_61": {
+                "variable": {
+                    "value": "(start, end, w_ids)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "*tensors": {
+                    "value": "info[:, :, 2].unsqueeze(-1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "div_66": {
+                "variable": {
+                    "value": "entities",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.matmul(index_t, enc_seq)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "torch.clamp(torch.sum(index_t, dim=2), 1.0, 100.0).unsqueeze(-1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "where_82": {
+                "variable": {
+                    "value": "args_mask",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "torch.lt(torch.arange(fshape[1]).unsqueeze(0).to(self.device), e_section.unsqueeze(1))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "torch.ones(fshape).to(self.device)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "torch.zeros(fshape).to(self.device)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "matmul_86": {
+                "variable": {
+                    "value": "cond",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "args_mask.unsqueeze(-1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "args_mask.unsqueeze(1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "nonzero_87": {
+                "variable": {
+                    "value": "(bat, rows, cols)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "cond",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.matmul(args_mask.unsqueeze(-1), args_mask.unsqueeze(1)).type('torch.ByteTensor').to(self.device)",
+                            "Call"
+                        ],
+                        [
+                            "torch.ne(even_lb, lab2ign) & torch.ne(odd_lb, lab2ign) & torch.ne(even_lb, inv_odd_lb)",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "unbind_87": {
+                "variable": {
+                    "value": "(bat, rows, cols)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_90": {
+                "variable": {
+                    "value": "temp",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[torch.as_tensor([i]).to(self.device).repeat(i) for i in e_section]",
+                    "type": "ListComp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "split_92": {
+                "variable": {
+                    "value": "map_pair",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "torch.arange(bat.shape[0]).to(self.device)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "split_size_or_sections": {
+                    "value": "temp.tolist()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "pad_sequence_93": {
+                "variable": {
+                    "value": "map_pair",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "sequences": {
+                    "value": "map_pair",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.split(torch.arange(bat.shape[0]).to(self.device), temp.tolist())",
+                            "Call"
+                        ],
+                        [
+                            "pad_sequence(map_pair, batch_first=True, padding_value=-1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.split(map_pair, e_section.tolist())",
+                            "Call"
+                        ],
+                        [
+                            "pad_sequence(map_pair, batch_first=True, padding_value=-1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "padding_value": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "split_94": {
+                "variable": {
+                    "value": "map_pair",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "map_pair",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.split(torch.arange(bat.shape[0]).to(self.device), temp.tolist())",
+                            "Call"
+                        ],
+                        [
+                            "pad_sequence(map_pair, batch_first=True, padding_value=-1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.split(map_pair, e_section.tolist())",
+                            "Call"
+                        ],
+                        [
+                            "pad_sequence(map_pair, batch_first=True, padding_value=-1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "split_size_or_sections": {
+                    "value": "e_section.tolist()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "pad_sequence_95": {
+                "variable": {
+                    "value": "map_pair",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "sequences": {
+                    "value": "map_pair",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.split(torch.arange(bat.shape[0]).to(self.device), temp.tolist())",
+                            "Call"
+                        ],
+                        [
+                            "pad_sequence(map_pair, batch_first=True, padding_value=-1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.split(map_pair, e_section.tolist())",
+                            "Call"
+                        ],
+                        [
+                            "pad_sequence(map_pair, batch_first=True, padding_value=-1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "padding_value": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "cat_109": {
+                "variable": {
+                    "value": "pair_a",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(args[bat, rows], te_embed[bat, rows], pe_embed[bat, rows, cols])",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_110": {
+                "variable": {
+                    "value": "pair_b",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(args[bat, cols], te_embed[bat, cols], pe_embed[bat, cols, rows])",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_112": {
+                "variable": {
+                    "value": "pairs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(pair_a, pair_b)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "broadcast_tensors_121": {
+                "variable": {
+                    "value": "(start, end, w_ids, w_sec)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "*tensors": {
+                    "value": "info[:, :, 2].unsqueeze(-1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "lt_127": {
+                "variable": {
+                    "value": "w_pad",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "w_ids",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "w_sec",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "all_128": {
+                "variable": {
+                    "value": "tmp_",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "toks",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.lt(w_ids, start) | torch.ge(w_ids, end)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "broadcast_tensors_137": {
+                "variable": {
+                    "value": "(e_ids, o_ids, e_sec)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "*tensors": {
+                    "value": "info[:, :, 0].unsqueeze(-1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "cat_156": {
+                "variable": {
+                    "value": "context_ents",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(args[bat], te_embed[bat], pe_embed[bat, rows], pe_embed[bat, cols])",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "broadcast_tensors_157": {
+                "variable": {
+                    "value": "(tt_embed, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "*tensors": {
+                    "value": "tt_embed",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "cat_158": {
+                "variable": {
+                    "value": "context_toks",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(enc_out[bat], tt_embed, pt_embed[bat, rows], pt_embed[bat, cols])",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "where_160": {
+                "variable": {
+                    "value": "context_ents",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "ce_mask.unsqueeze(2)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "context_ents",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.cat((args[bat], te_embed[bat], pe_embed[bat, rows], pe_embed[bat, cols]), dim=2)",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(ce_mask.unsqueeze(2), context_ents, torch.zeros_like(context_ents))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "torch.zeros_like(context_ents)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "where_161": {
+                "variable": {
+                    "value": "context_toks",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "ct_mask.unsqueeze(2)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "context_toks",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.cat((enc_out[bat], tt_embed, pt_embed[bat, rows], pt_embed[bat, cols]), dim=2)",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(ct_mask.unsqueeze(2), context_toks, torch.zeros_like(context_toks))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "torch.zeros_like(context_toks)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "cat_163": {
+                "variable": {
+                    "value": "context4pairs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(context_ents, context_toks)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "nonzero_172": {
+                "variable": {
+                    "value": "l2r",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.ne(l2r_, -1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "unbind_172": {
+                "variable": {
+                    "value": "l2r",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "as_tensor_264": {
+                "variable": {
+                    "value": "label_num",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "[self.sizes['rel_size']]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "as_tensor_265": {
+                "variable": {
+                    "value": "ignore_label",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "[self.lab2ign]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "eq_267": {
+                "variable": {
+                    "value": "mask_t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "ignore_label",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.as_tensor([self.lab2ign]).long().to(self.device)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "eq_268": {
+                "variable": {
+                    "value": "mask_p",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "y",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "ignore_label",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.as_tensor([self.lab2ign]).long().to(self.device)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "where_270": {
+                "variable": {
+                    "value": "true",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "mask_t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.eq(t, ignore_label).view(-1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "x": {
+                    "value": "label_num",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.as_tensor([self.sizes['rel_size']]).long().to(self.device)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "t.view(-1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "where_271": {
+                "variable": {
+                    "value": "pred",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "mask_p",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.eq(y, ignore_label).view(-1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "x": {
+                    "value": "label_num",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.as_tensor([self.sizes['rel_size']]).long().to(self.device)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "y.view(-1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "where_273": {
+                "variable": {
+                    "value": "tp_mask",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "torch.eq(pred, true)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "true",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.where(mask_t, label_num, t.view(-1))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "label_num",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.as_tensor([self.sizes['rel_size']]).long().to(self.device)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "where_274": {
+                "variable": {
+                    "value": "fp_mask",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "torch.ne(pred, true)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "pred",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.where(mask_p, label_num, y.view(-1))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "label_num",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.as_tensor([self.sizes['rel_size']]).long().to(self.device)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "where_275": {
+                "variable": {
+                    "value": "fn_mask",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "torch.ne(pred, true)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "true",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.where(mask_t, label_num, t.view(-1))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "label_num",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.as_tensor([self.sizes['rel_size']]).long().to(self.device)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "sum_280": {
+                "variable": {
+                    "value": "tn",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "mask_t & mask_p",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "as_tensor_301": {
+                "variable": {
+                    "value": "lab2ign",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "[self.lab2ign]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "max_304": {
+                "variable": {
+                    "value": "(even_probs, even_lb)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "even_pred",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "max_305": {
+                "variable": {
+                    "value": "(odd_probs, odd_lb)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "odd_pred",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "full_308": {
+                "variable": {
+                    "value": "minus",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "size": {
+                    "value": "even_probs.shape",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "fill_value": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "where_311": {
+                "variable": {
+                    "value": "x1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "torch.eq(even_lb, inv_odd_lb)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "even_lb",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "minus",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.full(even_probs.shape, -1).long().to(self.device)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "where_312": {
+                "variable": {
+                    "value": "x1_p",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "torch.eq(even_lb, inv_odd_lb)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "even_probs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "minus.float()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "where_316": {
+                "variable": {
+                    "value": "xa",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "cond",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.matmul(args_mask.unsqueeze(-1), args_mask.unsqueeze(1)).type('torch.ByteTensor').to(self.device)",
+                            "Call"
+                        ],
+                        [
+                            "torch.ne(even_lb, lab2ign) & torch.ne(odd_lb, lab2ign) & torch.ne(even_lb, inv_odd_lb)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "x": {
+                    "value": "even_probs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "minus.float()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "where_317": {
+                "variable": {
+                    "value": "xb",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "cond",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.matmul(args_mask.unsqueeze(-1), args_mask.unsqueeze(1)).type('torch.ByteTensor').to(self.device)",
+                            "Call"
+                        ],
+                        [
+                            "torch.ne(even_lb, lab2ign) & torch.ne(odd_lb, lab2ign) & torch.ne(even_lb, inv_odd_lb)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "x": {
+                    "value": "odd_probs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "minus.float()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "where_319": {
+                "variable": {
+                    "value": "x2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "torch.ge(xa, xb) & torch.ne(xa, minus.float()) & torch.ne(xb, minus.float())",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "even_lb",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "minus",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.full(even_probs.shape, -1).long().to(self.device)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "where_320": {
+                "variable": {
+                    "value": "x3",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "torch.lt(xa, xb) & torch.ne(xa, minus.float()) & torch.ne(xb, minus.float())",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "inv_odd_lb",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "labmap[odd_lb]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "minus",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.full(even_probs.shape, -1).long().to(self.device)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "where_321": {
+                "variable": {
+                    "value": "x2_p",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "torch.ge(xa, xb) & torch.ne(xa, minus.float()) & torch.ne(xb, minus.float())",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "even_probs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "minus.float()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "where_322": {
+                "variable": {
+                    "value": "x3_p",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "torch.lt(xa, xb) & torch.ne(xa, minus.float()) & torch.ne(xb, minus.float())",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "odd_probs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "minus.float()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "where_325": {
+                "variable": {
+                    "value": "x4",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "torch.eq(even_lb, lab2ign) & torch.ne(odd_lb, lab2ign)",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "inv_odd_lb",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "labmap[odd_lb]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "minus",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.full(even_probs.shape, -1).long().to(self.device)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "where_326": {
+                "variable": {
+                    "value": "x4_p",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "torch.eq(even_lb, lab2ign) & torch.ne(odd_lb, lab2ign)",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "odd_probs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "minus.float()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "where_327": {
+                "variable": {
+                    "value": "x5",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "torch.ne(even_lb, lab2ign) & torch.eq(odd_lb, lab2ign)",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "even_lb",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "minus",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.full(even_probs.shape, -1).long().to(self.device)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "where_328": {
+                "variable": {
+                    "value": "x5_p",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "condition": {
+                    "value": "torch.ne(even_lb, lab2ign) & torch.eq(odd_lb, lab2ign)",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "even_probs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "minus.float()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "stack_330": {
+                "variable": {
+                    "value": "fin",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[x1, x2, x3, x4, x5]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "stack_331": {
+                "variable": {
+                    "value": "fin_p",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[x1_p, x2_p, x3_p, x4_p, x5_p]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cross_entropy_184": {
+                "variable": {
+                    "value": "loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "l2r_pairs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "pairs[map_pair[l2r[0], l2r[1], l2r[2]]]",
+                            "Subscript"
+                        ],
+                        [
+                            "self.classifier(l2r_pairs)",
+                            "Call"
+                        ],
+                        [
+                            "self.classifier(l2r_pairs)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "target": {
+                    "value": "l2r_truth",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "gtruth_[l2r[0], l2r[1], l2r[2]]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "softmax_185": {
+                "variable": {
+                    "value": "(probs, preds)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "l2r_pairs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "pairs[map_pair[l2r[0], l2r[1], l2r[2]]]",
+                            "Subscript"
+                        ],
+                        [
+                            "self.classifier(l2r_pairs)",
+                            "Call"
+                        ],
+                        [
+                            "self.classifier(l2r_pairs)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "max_185": {
+                "variable": {
+                    "value": "(probs, preds)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_239": {
+                "variable": {
+                    "value": "pairs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(pairs, context)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "tensor_291": {
+                "data": {
+                    "value": "labmap",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "labmap + [self.maps['rel2idx'][x_[2] + ':' + x_[1] + ':' + x_[0]]]",
+                            "BinOp"
+                        ],
+                        [
+                            "self.reverse_labels()",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "tensor_42": {
+                "data": {
+                    "value": "[self.o_type]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "unsqueeze_42": {
+                "input": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "split_54": {
+                "tensor": {
+                    "value": "w_embeds",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "split_size_or_sections": {
+                    "value": "word_sec.tolist()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "matmul_66": {
+                "input": {
+                    "value": "index_t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "(torch.ge(w_ids, start) & torch.lt(w_ids, end)).type('torch.FloatTensor').to(self.device)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "enc_seq",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "clamp_67": {
+                "input": {
+                    "value": "torch.sum(index_t, dim=2)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "min": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "max": {
+                    "value": "100.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "unsqueeze_67": {
+                "input": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "max_80": {
+                "input": {
+                    "value": "e_section",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "lt_82": {
+                "input": {
+                    "value": "torch.arange(fshape[1]).unsqueeze(0).to(self.device)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "e_section.unsqueeze(1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "ones_83": {
+                "*size": {
+                    "value": "fshape",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "(e_section.shape[0], torch.max(e_section).item())",
+                            "Tuple"
+                        ]
+                    ]
+                }
+            },
+            "zeros_84": {
+                "*size": {
+                    "value": "fshape",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "(e_section.shape[0], torch.max(e_section).item())",
+                            "Tuple"
+                        ]
+                    ]
+                }
+            },
+            "arange_92": {
+                "start": {
+                    "value": "bat.shape[0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "lt_126": {
+                "input": {
+                    "value": "w_ids",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "start",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "ge_126": {
+                "input": {
+                    "value": "w_ids",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "end",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "ne_141": {
+                "input": {
+                    "value": "e_ids[bat, rows]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "o_ids[bat, rows]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "lt_141": {
+                "input": {
+                    "value": "o_ids[bat, rows]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "e_sec[bat, rows]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "ne_142": {
+                "input": {
+                    "value": "e_ids[bat, cols]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "o_ids[bat, cols]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "lt_142": {
+                "input": {
+                    "value": "o_ids[bat, cols]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "e_sec[bat, cols]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "zeros_157": {
+                "*size": {
+                    "value": "(bat.shape[0], enc_out.shape[1], 1)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "zeros_like_160": {
+                "input": {
+                    "value": "context_ents",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.cat((args[bat], te_embed[bat], pe_embed[bat, rows], pe_embed[bat, cols]), dim=2)",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(ce_mask.unsqueeze(2), context_ents, torch.zeros_like(context_ents))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "zeros_like_161": {
+                "input": {
+                    "value": "context_toks",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.cat((enc_out[bat], tt_embed, pt_embed[bat, rows], pt_embed[bat, cols]), dim=2)",
+                            "Call"
+                        ],
+                        [
+                            "torch.where(ct_mask.unsqueeze(2), context_toks, torch.zeros_like(context_toks))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "cat_164": {
+                "tensors": {
+                    "value": "(ce_mask, ct_mask)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cross_entropy_189": {
+                "variable": {
+                    "value": "loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "r2l_pairs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "pairs[map_pair[l2r[0], l2r[2], l2r[1]]]",
+                            "Subscript"
+                        ],
+                        [
+                            "self.classifier(r2l_pairs)",
+                            "Call"
+                        ],
+                        [
+                            "self.classifier(r2l_pairs)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "target": {
+                    "value": "r2l_truth",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "gtruth_[l2r[0], l2r[2], l2r[1]]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "softmax_191": {
+                "variable": {
+                    "value": "(probs, b)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "r2l_pairs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "pairs[map_pair[l2r[0], l2r[2], l2r[1]]]",
+                            "Subscript"
+                        ],
+                        [
+                            "self.classifier(r2l_pairs)",
+                            "Call"
+                        ],
+                        [
+                            "self.classifier(r2l_pairs)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "max_191": {
+                "variable": {
+                    "value": "(probs, b)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "eq_273": {
+                "input": {
+                    "value": "pred",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.where(mask_p, label_num, y.view(-1))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "true",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.where(mask_t, label_num, t.view(-1))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "ne_274": {
+                "input": {
+                    "value": "pred",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.where(mask_p, label_num, y.view(-1))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "true",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.where(mask_t, label_num, t.view(-1))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "ne_275": {
+                "input": {
+                    "value": "pred",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.where(mask_p, label_num, y.view(-1))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "true",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.where(mask_t, label_num, t.view(-1))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "bincount_277": {
+                "input": {
+                    "value": "tp_mask",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.where(torch.eq(pred, true), true, label_num)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "minlength": {
+                    "value": "self.sizes['rel_size'] + 1",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "bincount_278": {
+                "input": {
+                    "value": "fp_mask",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.where(torch.ne(pred, true), pred, label_num)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "minlength": {
+                    "value": "self.sizes['rel_size'] + 1",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "bincount_279": {
+                "input": {
+                    "value": "fn_mask",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.where(torch.ne(pred, true), true, label_num)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "minlength": {
+                    "value": "self.sizes['rel_size'] + 1",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "eq_311": {
+                "input": {
+                    "value": "even_lb",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "inv_odd_lb",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "labmap[odd_lb]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "eq_312": {
+                "input": {
+                    "value": "even_lb",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "inv_odd_lb",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "labmap[odd_lb]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "ne_315": {
+                "input": {
+                    "value": "odd_lb",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "lab2ign",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.as_tensor([self.lab2ign]).long().to(self.device)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "max_335": {
+                "input": {
+                    "value": "fin",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.stack([x1, x2, x3, x4, x5], dim=0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "max_336": {
+                "input": {
+                    "value": "fin_p",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.stack([x1_p, x2_p, x3_p, x4_p, x5_p], dim=0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "arange_82": {
+                "start": {
+                    "value": "fshape[1]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "unsqueeze_82": {
+                "input": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "as_tensor_90": {
+                "data": {
+                    "value": "[i]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "zeros_like_255": {
+                "input": {
+                    "value": "scores",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "ne_319": {
+                "input": {
+                    "value": "xa",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.where(cond, even_probs, minus.float())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "minus.float()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "ne_320": {
+                "input": {
+                    "value": "xa",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.where(cond, even_probs, minus.float())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "minus.float()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "ne_321": {
+                "input": {
+                    "value": "xa",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.where(cond, even_probs, minus.float())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "minus.float()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "ne_322": {
+                "input": {
+                    "value": "xa",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.where(cond, even_probs, minus.float())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "minus.float()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "eq_325": {
+                "input": {
+                    "value": "even_lb",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "lab2ign",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.as_tensor([self.lab2ign]).long().to(self.device)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "ne_325": {
+                "input": {
+                    "value": "odd_lb",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "lab2ign",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.as_tensor([self.lab2ign]).long().to(self.device)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "eq_326": {
+                "input": {
+                    "value": "even_lb",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "lab2ign",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.as_tensor([self.lab2ign]).long().to(self.device)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "ne_326": {
+                "input": {
+                    "value": "odd_lb",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "lab2ign",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.as_tensor([self.lab2ign]).long().to(self.device)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "ne_327": {
+                "input": {
+                    "value": "even_lb",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "lab2ign",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.as_tensor([self.lab2ign]).long().to(self.device)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "eq_327": {
+                "input": {
+                    "value": "odd_lb",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "lab2ign",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.as_tensor([self.lab2ign]).long().to(self.device)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "ne_328": {
+                "input": {
+                    "value": "even_lb",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "lab2ign",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.as_tensor([self.lab2ign]).long().to(self.device)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "eq_328": {
+                "input": {
+                    "value": "odd_lb",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "lab2ign",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.as_tensor([self.lab2ign]).long().to(self.device)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "ne_172": {
+                "input": {
+                    "value": "l2r_",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "ge_319": {
+                "input": {
+                    "value": "xa",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.where(cond, even_probs, minus.float())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "xb",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.where(cond, odd_probs, minus.float())",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "lt_320": {
+                "input": {
+                    "value": "xa",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.where(cond, even_probs, minus.float())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "xb",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.where(cond, odd_probs, minus.float())",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "ge_321": {
+                "input": {
+                    "value": "xa",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.where(cond, even_probs, minus.float())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "xb",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.where(cond, odd_probs, minus.float())",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "lt_322": {
+                "input": {
+                    "value": "xa",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.where(cond, even_probs, minus.float())",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "xb",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.where(cond, odd_probs, minus.float())",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "sum_333": {
+                "input": {
+                    "value": "torch.clamp(fin, -1.0, 0.0)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "sum_334": {
+                "input": {
+                    "value": "torch.clamp(fin_p, -1.0, 0.0)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "arange_63": {
+                "start": {
+                    "value": "enc_seq.shape[1]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "sum_67": {
+                "input": {
+                    "value": "index_t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "(torch.ge(w_ids, start) & torch.lt(w_ids, end)).type('torch.FloatTensor').to(self.device)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "arange_123": {
+                "start": {
+                    "value": "torch.max(word_section).item()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "arange_138": {
+                "start": {
+                    "value": "info.shape[1]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "cross_entropy_197": {
+                "input": {
+                    "value": "r2l_pairs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "pairs[map_pair[l2r[0], l2r[2], l2r[1]]]",
+                            "Subscript"
+                        ],
+                        [
+                            "self.classifier(r2l_pairs)",
+                            "Call"
+                        ],
+                        [
+                            "self.classifier(r2l_pairs)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "target": {
+                    "value": "r2l_truth",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "gtruth_[l2r[0], l2r[2], l2r[1]]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "softmax_198": {
+                "input": {
+                    "value": "l2r_pairs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "pairs[map_pair[l2r[0], l2r[1], l2r[2]]]",
+                            "Subscript"
+                        ],
+                        [
+                            "self.classifier(l2r_pairs)",
+                            "Call"
+                        ],
+                        [
+                            "self.classifier(l2r_pairs)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "softmax_199": {
+                "input": {
+                    "value": "r2l_pairs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "pairs[map_pair[l2r[0], l2r[2], l2r[1]]]",
+                            "Subscript"
+                        ],
+                        [
+                            "self.classifier(r2l_pairs)",
+                            "Call"
+                        ],
+                        [
+                            "self.classifier(r2l_pairs)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "clamp_333": {
+                "input": {
+                    "value": "fin",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.stack([x1, x2, x3, x4, x5], dim=0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "min": {
+                    "value": "-1.0",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "max": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "clamp_334": {
+                "input": {
+                    "value": "fin_p",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.stack([x1_p, x2_p, x3_p, x4_p, x5_p], dim=0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "min": {
+                    "value": "-1.0",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "max": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "ge_65": {
+                "input": {
+                    "value": "w_ids",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "start",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "lt_65": {
+                "input": {
+                    "value": "w_ids",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "end",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "max_123": {
+                "input": {
+                    "value": "word_section",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/nnet/trainer.py": {
+        "torch": {
+            "device_28": {
+                "variable": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda:{}.format(params[gpu]) if params[gpu] != -1 else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "Adam_88": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "groups",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[dict(params=params2reg), dict(params=params0reg, weight_decay=0.0)]",
+                            "List"
+                        ]
+                    ]
+                },
+                "lr": {
+                    "value": "self.params['lr']",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "weight_decay": {
+                    "value": "self.params['reg']",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "amsgrad": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "set_device_72": {
+                "device": {
+                    "value": "self.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "from_numpy_160": {
+                "variable": {
+                    "value": "p_value.data",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "ndarray": {
+                    "value": "p_new",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "copy.deepcopy(self.averaged_params[p_name][-1])",
+                            "Call"
+                        ],
+                        [
+                            "np.mean(self.averaged_params[p_name][:epoch], axis=0)",
+                            "Call"
+                        ],
+                        [
+                            "np.mean(self.averaged_params[p_name], axis=0)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "from_numpy_162": {
+                "variable": {
+                    "value": "p_value.data",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "ndarray": {
+                    "value": "p_new",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "copy.deepcopy(self.averaged_params[p_name][-1])",
+                            "Call"
+                        ],
+                        [
+                            "np.mean(self.averaged_params[p_name][:epoch], axis=0)",
+                            "Call"
+                        ],
+                        [
+                            "np.mean(self.averaged_params[p_name], axis=0)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "clip_grad_norm__223": {
+                "parameters": {
+                    "value": "self.model.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "max_norm": {
+                    "value": "self.params['gc']",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "detect_anomaly_209": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "no_grad_258": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/utils.py": {
+        "torch": {
+            "save_183": {
+                "obj": {
+                    "value": "model_0.state_dict()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "os.path.join(model_folder, 're.model')",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "load_189": {
+                "f": {
+                    "value": "os.path.join(model_folder, 're.model')",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "map_location": {
+                    "value": "m.model.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/walk_re.py": {
+        "torch": {
+            "set_printoptions_18": {
+                "profile": {
+                    "value": "full",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_22": {
+                "seed": {
+                    "value": "seed",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_23": {
+                "seed": {
+                    "value": "seed",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_all_24": {
+                "seed": {
+                    "value": "seed",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/walk_re_wrapper.py": {
+        "torch": {
+            "set_printoptions_19": {
+                "profile": {
+                    "value": "full",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_23": {
+                "seed": {
+                    "value": "seed",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_24": {
+                "seed": {
+                    "value": "seed",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_all_25": {
+                "seed": {
+                    "value": "seed",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

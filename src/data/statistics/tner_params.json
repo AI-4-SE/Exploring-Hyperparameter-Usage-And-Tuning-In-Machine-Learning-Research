@@ -1,0 +1,312 @@
+{
+    "tner/ner_model.py": {
+        "torch": {
+            "CrossEntropyLoss_24": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "softmax_126": {
+                "variable": {
+                    "value": "prob",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "output['logits']",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "max_127": {
+                "variable": {
+                    "value": "(prob, ind)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "prob",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.softmax(output['logits'], dim=-1)",
+                            "Call"
+                        ],
+                        [
+                            "prob.cpu().detach().float().tolist()",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "DataParallel_85": {
+                "variable": {
+                    "value": "self.model",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "module": {
+                    "value": "self.model",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_188": {
+                "dataset": {
+                    "value": "Dataset(out)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "batch_size": {
+                    "value": "batch_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "batch_size if batch_size is not None else len(out)",
+                            "IfExp"
+                        ]
+                    ]
+                },
+                "shuffle": {
+                    "value": "shuffle",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "num_workers": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "drop_last": {
+                    "value": "drop_last",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "device_count_83": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "DataParallel_87": {
+                "variable": {
+                    "value": "self.crf_layer",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "module": {
+                    "value": "self.crf_layer",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "device_count_82": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "device_count_91": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "tner/ner_tokenizer.py": {
+        "torch": {
+            "CrossEntropyLoss_16": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "tner/ner_trainer.py": {
+        "torch": {
+            "manual_seed_144": {
+                "seed": {
+                    "value": "self.config['random_seed']",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "AdamW_251": {
+                "variable": {
+                    "value": "self.optimizer",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "optimizer_grouped_parameters",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[{'params': [p for (n, p) in self.model.model.named_parameters() if not any((nd in n for nd in no_decay))], 'weight_decay': self.config['weight_decay']}, {'params': [p for (n, p) in self.model.model.named_parameters() if any((nd in n for nd in no_decay))], 'weight_decay': 0.0}]",
+                            "List"
+                        ]
+                    ]
+                },
+                "lr": {
+                    "value": "self.config['lr']",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "AdamW_253": {
+                "variable": {
+                    "value": "self.optimizer",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "self.model.model.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "self.config['lr']",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "load_266": {
+                "variable": {
+                    "value": "stats",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "path",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "pj(self.checkpoint_dir, 'optimizers', f'optimizer.{self.current_epoch}.pt')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "map_location": {
+                    "value": "torch.device(device)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "save_170": {
+                "obj": {
+                    "value": "{'optimizer_state_dict': self.optimizer.state_dict(), 'scheduler_state_dict': self.scheduler.state_dict()}",
+                    "type": "Dict",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "save_dir_opt",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "pj(self.checkpoint_dir, 'optimizers', f'optimizer.{current_epoch + 1}.pt')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "save_175": {
+                "obj": {
+                    "value": "{'optimizer_state_dict': self.optimizer.state_dict()}",
+                    "type": "Dict",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "save_dir_opt",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "pj(self.checkpoint_dir, 'optimizers', f'optimizer.{current_epoch + 1}.pt')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "clip_grad_norm__213": {
+                "parameters": {
+                    "value": "self.model.model.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "max_norm": {
+                    "value": "self.config['max_grad_norm']",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "device_266": {
+                "type": {
+                    "value": "device",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "'cpu' if optimizer_on_cpu == 1 else self.model.device",
+                            "IfExp"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "tner/util.py": {
+        "torch": {
+            "tensor_272": {
+                "data": {
+                    "value": "data",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "np.array(list(zip(pred_list, label_list)), dtype=object)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "torch.long",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "tensor_271": {
+                "data": {
+                    "value": "data",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "np.array(list(zip(pred_list, label_list)), dtype=object)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "torch.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}
