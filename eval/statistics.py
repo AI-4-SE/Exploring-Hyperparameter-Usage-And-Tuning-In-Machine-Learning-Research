@@ -5,6 +5,7 @@ import csv
 from numpy import full
 import pandas as pd
 import random
+import numpy as np
 
 from collections import Counter
 
@@ -131,15 +132,77 @@ def test():
     print("Len Url repo names: ", len(url_repo_names))
     print("Len Repos: ", len(repos)) 
 
+    url_repo_names = [x.lower() for x in url_repo_names]
+    repos = [x.lower() for x in repos]
+
+    test = []
+
     for name in url_repo_names:
-        if name not in repos:
-            print(name)
+        if name in repos:
+            test.append(name)
+
+    
+    print(len(test))
+
+
+
+def get_external_config_files():
+
+    names = []
+    count_config_files = []
+    config_files = []
+
+
+    for repo in glob.glob("results/**"):
+        tmp = set()
+        found_line = False
+        for log_file in glob.glob(f"{repo}/*.log"):
+            name = log_file.split("/")[-1].split(".")[0]
+            names.append(name)
+
+            with open(log_file, "r", encoding="utf-8") as src:
+                for line in src:
+                    if "No Config files found." in line:
+                        count_config_files.append(0)
+                        config_files.append([])
+                        found_line = True
+                    if "Config files:" in line:
+                        files = line.split("Config files:")[-1]
+                        files = files.split(", ")
+                        for file in files:
+                            if any(x in files for x in [".github", "/paper/", ".pre-commit"]):
+                                continue
+                            if file.endswith((".yaml", ".yml", ".json")):
+                                if "/config" in file:
+                                    tmp.add(file.strip())
+                        count_config_files.append(len(tmp))
+                        config_files.append(tmp)
+                        found_line = True
+                if not found_line:
+                    print(name)
+
+    df = pd.DataFrame()
+    df["Name"] = names
+    df["Count"] = count_config_files
+    df["Files"] = config_files
+
+    df.to_csv("config_files_count.csv")
+
+
+def get_stats():
+    df = pd.read_csv("config_files_count.csv")
+
+    print(df['Count'].value_counts())
+    print(len(df[df["Count"] == 0]))
+    print(len(df[df["Count"] > 0]))
 
 
 
 if __name__ == "__main__":
     #copy_random_statistics_files(statistics_dir)
+    #copy_statistic_files(statistics_dir)
 
     #files = glob.glob(f"{statistics_dir}/*")
     #print(len(files))
-    test()
+    #get_external_config_files()
+    get_stats()
