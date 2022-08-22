@@ -26,7 +26,7 @@ def copy_statistic_files(target):
                 print(target+name)
                 shutil.copyfile(csv_file, target + name)
 
-def copy_random_statistics_files(target, n = 1000):
+def copy_random_statistics_files(target, n = 2000):
     files = []
     for repo in glob.glob("results/*"):
         for csv_file in glob.glob(f"{repo}/statistics/*"):
@@ -42,50 +42,6 @@ def copy_random_statistics_files(target, n = 1000):
     #for f in random_files:
     #    name = f.split("/")[-1]
     #    shutil.copyfile(f, target + name)
-
-def find_module(name):
-    with open(sklearn_data, "r") as source:
-        data = json.load(source)
-        try:
-            module = next(filter(lambda x: name in x["name"], data))
-            return module
-        except StopIteration:
-            return None
-
-
-def count_classes():
-    for name in glob.glob(f"{statistics_unprocessed}/*"):
-        df = pd.read_csv(name)
-        repo_modules = set()
-
-
-        for elem in df["node"]:
-            parts = elem.split("::::")
-            artifact = parts[1]
-            module_name = parts[2]
-            option_values = "::::".join(parts[3:])
-
-            if artifact.endswith(".py"):
-                module = find_module(module_name)
-                if module:
-                    repo_modules.add(module["name"])
-                    #print(elem)
-                    #print("artifact: ", artifact)    
-                    #print("module: ", module_name)
-                    #print("option_values: ", option_values)
-
-        for x in repo_modules:
-            all_modules.append(x)
-
-    print(Counter(all_modules))
-        
-
-
-
-def main():
-    # count_classes()
-    # clean_statistics()
-    copy_statistic_files(notebooks_dir)
 
 
 def get_failed_repos():
@@ -145,7 +101,6 @@ def test():
     print(len(test))
 
 
-
 def get_external_config_files():
 
     names = []
@@ -161,12 +116,13 @@ def get_external_config_files():
             names.append(name)
 
             with open(log_file, "r", encoding="utf-8") as src:
-                for line in src:
+                lines = src.readlines()
+                for line in lines[-3:]:
                     if "No Config files found." in line:
                         count_config_files.append(0)
                         config_files.append([])
                         found_line = True
-                    if "Config files:" in line:
+                    elif "Config files:" in line:
                         files = line.split("Config files:")[-1]
                         files = files.split(", ")
                         for file in files:
@@ -175,10 +131,13 @@ def get_external_config_files():
                             if file.endswith((".yaml", ".yml", ".json")):
                                 if "/config" in file:
                                     tmp.add(file.strip())
+                    
                         count_config_files.append(len(tmp))
                         config_files.append(tmp)
-                        found_line = True
+                        found_line = True                        
                 if not found_line:
+                    count_config_files.append(0)
+                    config_files.append(tmp)
                     print(name)
 
     df = pd.DataFrame()
@@ -204,5 +163,6 @@ if __name__ == "__main__":
 
     #files = glob.glob(f"{statistics_dir}/*")
     #print(len(files))
-    #get_external_config_files()
+
+    get_external_config_files()
     get_stats()
