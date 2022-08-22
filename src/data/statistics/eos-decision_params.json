@@ -1,0 +1,2518 @@
+{
+    "scripts/dyck_km/generate_plots.py": {
+        "sklearn": {}
+    },
+    "scripts/scan/generate_plots.py": {
+        "sklearn": {},
+        "torch": {
+            "no_grad_255": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "softmax_260": {
+                "input": {
+                    "value": "model.target_vocab_proj(torch.from_numpy(hs[batch_i:batch_i + batch_size]))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "from_numpy_261": {
+                "ndarray": {
+                    "value": "hs[batch_i:batch_i + batch_size]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "scripts/translation/onmt_preprocess.py": {
+        "torch": {}
+    },
+    "scripts/translation/save_onmt_hidden_states.py": {
+        "torch": {
+            "load_44": {
+                "variable": {
+                    "value": "checkpoint",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "model_path",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "os.path.join(opt.save_model, args['onmt']['translate']['model'])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "map_location": {
+                    "value": "lambda storage, loc: storage",
+                    "type": "Lambda",
+                    "possible_values": []
+                }
+            },
+            "device_141": {
+                "variable": {
+                    "value": "yaml_args[device]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda:0 if torch.cuda.is_available() else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "is_available_141": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "no_grad_107": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/data.py": {
+        "torch": {
+            "tensor_61": {
+                "variable": {
+                    "value": "lengths",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "[len(x) for x in seqs]",
+                    "type": "ListComp",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.args['device']",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.long",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "pad_sequence_63": {
+                "variable": {
+                    "value": "seqs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "sequences": {
+                    "value": "seqs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[torch.tensor(obs.sentence[:-1], device=self.args['device'], dtype=torch.long) for obs in observations]",
+                            "ListComp"
+                        ],
+                        [
+                            "nn.utils.rnn.pad_sequence(seqs, batch_first=True, padding_value=0)",
+                            "Call"
+                        ],
+                        [
+                            "[torch.tensor(obs.source_idxs[:-1], device=self.args['device'], dtype=torch.long) for obs in observations]",
+                            "ListComp"
+                        ],
+                        [
+                            "nn.utils.rnn.pad_sequence(seqs, batch_first=True, padding_value=0)",
+                            "Call"
+                        ],
+                        [
+                            "[torch.tensor(obs.source_idxs, device=self.args['device'], dtype=torch.long) for obs in observations]",
+                            "ListComp"
+                        ],
+                        [
+                            "nn.utils.rnn.pad_sequence(seqs, batch_first=True, padding_value=source_pad_value)",
+                            "Call"
+                        ],
+                        [
+                            "seqs[source_len_sort]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "padding_value": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "pad_sequence_64": {
+                "variable": {
+                    "value": "targets",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "sequences": {
+                    "value": "targets",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[torch.tensor(obs.sentence[1:], device=self.args['device'], dtype=torch.long) for obs in observations]",
+                            "ListComp"
+                        ],
+                        [
+                            "nn.utils.rnn.pad_sequence(targets, batch_first=True, padding_value=0)",
+                            "Call"
+                        ],
+                        [
+                            "[torch.tensor(obs.source_idxs[1:], device=self.args['device'], dtype=torch.long) for obs in observations]",
+                            "ListComp"
+                        ],
+                        [
+                            "nn.utils.rnn.pad_sequence(targets, batch_first=True, padding_value=0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "padding_value": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "tensor_131": {
+                "variable": {
+                    "value": "lengths",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "[len(x) for x in seqs]",
+                    "type": "ListComp",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.args['device']",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.long",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "pad_sequence_134": {
+                "variable": {
+                    "value": "seqs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "sequences": {
+                    "value": "seqs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[torch.tensor(obs.sentence[:-1], device=self.args['device'], dtype=torch.long) for obs in observations]",
+                            "ListComp"
+                        ],
+                        [
+                            "nn.utils.rnn.pad_sequence(seqs, batch_first=True, padding_value=0)",
+                            "Call"
+                        ],
+                        [
+                            "[torch.tensor(obs.source_idxs[:-1], device=self.args['device'], dtype=torch.long) for obs in observations]",
+                            "ListComp"
+                        ],
+                        [
+                            "nn.utils.rnn.pad_sequence(seqs, batch_first=True, padding_value=0)",
+                            "Call"
+                        ],
+                        [
+                            "[torch.tensor(obs.source_idxs, device=self.args['device'], dtype=torch.long) for obs in observations]",
+                            "ListComp"
+                        ],
+                        [
+                            "nn.utils.rnn.pad_sequence(seqs, batch_first=True, padding_value=source_pad_value)",
+                            "Call"
+                        ],
+                        [
+                            "seqs[source_len_sort]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "padding_value": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "pad_sequence_135": {
+                "variable": {
+                    "value": "targets",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "sequences": {
+                    "value": "targets",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[torch.tensor(obs.sentence[1:], device=self.args['device'], dtype=torch.long) for obs in observations]",
+                            "ListComp"
+                        ],
+                        [
+                            "nn.utils.rnn.pad_sequence(targets, batch_first=True, padding_value=0)",
+                            "Call"
+                        ],
+                        [
+                            "[torch.tensor(obs.source_idxs[1:], device=self.args['device'], dtype=torch.long) for obs in observations]",
+                            "ListComp"
+                        ],
+                        [
+                            "nn.utils.rnn.pad_sequence(targets, batch_first=True, padding_value=0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "padding_value": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "pad_sequence_136": {
+                "variable": {
+                    "value": "can_end",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "sequences": {
+                    "value": "can_end",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "self.process_line(line)",
+                            "Call"
+                        ],
+                        [
+                            "[torch.tensor(obs.target_idxs[:-1], device=self.args['device'], dtype=torch.float) for obs in observations]",
+                            "ListComp"
+                        ],
+                        [
+                            "nn.utils.rnn.pad_sequence(can_end, batch_first=True, padding_value=0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "padding_value": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "pad_sequence_299": {
+                "variable": {
+                    "value": "seqs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "sequences": {
+                    "value": "seqs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[torch.tensor(obs.sentence[:-1], device=self.args['device'], dtype=torch.long) for obs in observations]",
+                            "ListComp"
+                        ],
+                        [
+                            "nn.utils.rnn.pad_sequence(seqs, batch_first=True, padding_value=0)",
+                            "Call"
+                        ],
+                        [
+                            "[torch.tensor(obs.source_idxs[:-1], device=self.args['device'], dtype=torch.long) for obs in observations]",
+                            "ListComp"
+                        ],
+                        [
+                            "nn.utils.rnn.pad_sequence(seqs, batch_first=True, padding_value=0)",
+                            "Call"
+                        ],
+                        [
+                            "[torch.tensor(obs.source_idxs, device=self.args['device'], dtype=torch.long) for obs in observations]",
+                            "ListComp"
+                        ],
+                        [
+                            "nn.utils.rnn.pad_sequence(seqs, batch_first=True, padding_value=source_pad_value)",
+                            "Call"
+                        ],
+                        [
+                            "seqs[source_len_sort]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "padding_value": {
+                    "value": "source_pad_value",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.source_vocab.word2idx['<pad>']",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "pad_sequence_300": {
+                "variable": {
+                    "value": "targets_in",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "sequences": {
+                    "value": "targets_in",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[torch.tensor(obs.target_idxs[:-1], device=self.args['device'], dtype=torch.long) for obs in observations]",
+                            "ListComp"
+                        ],
+                        [
+                            "nn.utils.rnn.pad_sequence(targets_in, batch_first=True, padding_value=target_pad_value)",
+                            "Call"
+                        ],
+                        [
+                            "targets_in[source_len_sort]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "padding_value": {
+                    "value": "target_pad_value",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.target_vocab.word2idx['<pad>']",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "pad_sequence_301": {
+                "variable": {
+                    "value": "targets_out",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "sequences": {
+                    "value": "targets_out",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[torch.tensor(obs.target_idxs[1:], device=self.args['device'], dtype=torch.long) for obs in observations]",
+                            "ListComp"
+                        ],
+                        [
+                            "nn.utils.rnn.pad_sequence(targets_out, batch_first=True, padding_value=target_pad_value)",
+                            "Call"
+                        ],
+                        [
+                            "targets_out[source_len_sort]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "padding_value": {
+                    "value": "target_pad_value",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.target_vocab.word2idx['<pad>']",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "DataLoader_74": {
+                "dataset": {
+                    "value": "self.train_data",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "batch_size": {
+                    "value": "self.batch_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "collate_fn": {
+                    "value": "self.custom_pad",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "shuffle",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "True",
+                            "Method Argument"
+                        ],
+                        [
+                            "False",
+                            "Method Argument"
+                        ],
+                        [
+                            "False",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "DataLoader_77": {
+                "dataset": {
+                    "value": "self.dev_data",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "batch_size": {
+                    "value": "self.batch_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "collate_fn": {
+                    "value": "self.custom_pad",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "shuffle",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "True",
+                            "Method Argument"
+                        ],
+                        [
+                            "False",
+                            "Method Argument"
+                        ],
+                        [
+                            "False",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "DataLoader_80": {
+                "dataset": {
+                    "value": "self.test_data",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "batch_size": {
+                    "value": "self.batch_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "collate_fn": {
+                    "value": "self.custom_pad",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "shuffle",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "True",
+                            "Method Argument"
+                        ],
+                        [
+                            "False",
+                            "Method Argument"
+                        ],
+                        [
+                            "False",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "tensor_60": {
+                "data": {
+                    "value": "obs.sentence[:-1]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.args['device']",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.long",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "tensor_62": {
+                "data": {
+                    "value": "obs.sentence[1:]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.args['device']",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.long",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "tensor_130": {
+                "data": {
+                    "value": "obs.source_idxs[:-1]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.args['device']",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.long",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "tensor_132": {
+                "data": {
+                    "value": "obs.source_idxs[1:]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.args['device']",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.long",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "tensor_133": {
+                "data": {
+                    "value": "obs.target_idxs[:-1]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.args['device']",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.float",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "tensor_284": {
+                "data": {
+                    "value": "obs.source_idxs",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.args['device']",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.long",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "tensor_286": {
+                "data": {
+                    "value": "obs.target_idxs[:-1]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.args['device']",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.long",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "tensor_287": {
+                "data": {
+                    "value": "obs.target_idxs[1:]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "self.args['device']",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.long",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "tensor_308": {
+                "data": {
+                    "value": "source_lengths",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[len(x) for x in seqs]",
+                            "ListComp"
+                        ],
+                        [
+                            "torch.tensor(source_lengths, device=self.args['device'], dtype=torch.long)[source_len_sort]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "device": {
+                    "value": "self.args['device']",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.long",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "tensor_309": {
+                "data": {
+                    "value": "target_lengths",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "torch.tensor(target_lengths, device=self.args['device'], dtype=torch.long)[source_len_sort]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "device": {
+                    "value": "self.args['device']",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.long",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/generate_mbounded_dyck.py": {
+        "torch": {
+            "zeros_64": {
+                "variable": {
+                    "value": "distrib_vec",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "len(self.vocab)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_283": {
+                "seed": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_288": {
+                "seed": {
+                    "value": "1000",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_294": {
+                "seed": {
+                    "value": "2000",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Categorical_109": {
+                "variable": {
+                    "value": "probs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "probs": {
+                    "value": "self.get_token_distribution_for_state(state_vec)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "sum_75": {
+                "input": {
+                    "value": "distrib_vec",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.zeros(len(self.vocab))",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "src/models.py": {
+        "torch": {
+            "load_48": {
+                "variable": {
+                    "value": "state_dict",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "model_path",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "'{}/model.params'.format(utils.get_lm_path_of_args(self.args))",
+                            "Call"
+                        ],
+                        [
+                            "'{}/model.params'.format(utils.get_lm_path_of_args(self.args))",
+                            "Call"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ],
+                        [
+                            "model_path",
+                            "Method Argument"
+                        ],
+                        [
+                            "model_path",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "map_location": {
+                    "value": "self.args['device']",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "zeros_68": {
+                "variable": {
+                    "value": "masks",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(len(input_lens), input_lens.max())",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "Embedding_90": {
+                "variable": {
+                    "value": "self.embed",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "vocab_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.args['data']['vocab_size']",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "embedding_dim": {
+                    "value": "embed_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.args['lm']['embed_dim']",
+                            "Subscript"
+                        ],
+                        [
+                            "self.args['lm']['embed_dim']",
+                            "Subscript"
+                        ],
+                        [
+                            "embed_dim",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "Linear_101": {
+                "variable": {
+                    "value": "self.vocab_proj",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "hidden_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.args['lm']['hidden_dim']",
+                            "Subscript"
+                        ],
+                        [
+                            "self.args['lm']['hidden_dim']",
+                            "Subscript"
+                        ],
+                        [
+                            "hidden_dim",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "vocab_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.args['data']['vocab_size']",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "Dropout_102": {
+                "variable": {
+                    "value": "self.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "dropout_rate",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.args['lm']['dropout']",
+                            "Subscript"
+                        ],
+                        [
+                            "self.args['lm']['dropout']",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "zeros_159": {
+                "variable": {
+                    "value": "masks",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(len(input_lens), input_lens.max())",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "load_176": {
+                "variable": {
+                    "value": "state_dict",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "model_path",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "'{}/model.params'.format(utils.get_lm_path_of_args(self.args))",
+                            "Call"
+                        ],
+                        [
+                            "'{}/model.params'.format(utils.get_lm_path_of_args(self.args))",
+                            "Call"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ],
+                        [
+                            "model_path",
+                            "Method Argument"
+                        ],
+                        [
+                            "model_path",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "map_location": {
+                    "value": "self.args['device']",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "tensor_215": {
+                "variable": {
+                    "value": "dec_input_t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "[sos_id] * batch_size",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "sources.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "unsqueeze_215": {
+                "variable": {
+                    "value": "dec_input_t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "empty_216": {
+                "variable": {
+                    "value": "samples",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(batch_size, max_length)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "sources.device",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.long",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Embedding_282": {
+                "variable": {
+                    "value": "self.source_embed",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "source_vocab_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.args['data']['input_vocab_size']",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "embedding_dim": {
+                    "value": "embed_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.args['lm']['embed_dim']",
+                            "Subscript"
+                        ],
+                        [
+                            "self.args['lm']['embed_dim']",
+                            "Subscript"
+                        ],
+                        [
+                            "embed_dim",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "Embedding_283": {
+                "variable": {
+                    "value": "self.target_embed",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "target_vocab_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.args['data']['target_vocab_size']",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "embedding_dim": {
+                    "value": "embed_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.args['lm']['embed_dim']",
+                            "Subscript"
+                        ],
+                        [
+                            "self.args['lm']['embed_dim']",
+                            "Subscript"
+                        ],
+                        [
+                            "embed_dim",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "Linear_290": {
+                "variable": {
+                    "value": "self.target_vocab_proj",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "hidden_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.args['lm']['hidden_dim']",
+                            "Subscript"
+                        ],
+                        [
+                            "self.args['lm']['hidden_dim']",
+                            "Subscript"
+                        ],
+                        [
+                            "hidden_dim",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "target_vocab_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.args['data']['target_vocab_size']",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "Dropout_291": {
+                "variable": {
+                    "value": "self.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "dropout_rate",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.args['lm']['dropout']",
+                            "Subscript"
+                        ],
+                        [
+                            "self.args['lm']['dropout']",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "pack_padded_sequence_385": {
+                "variable": {
+                    "value": "source_embeds",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "source_embeds",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.dropout(self.source_embed(sources))",
+                            "Call"
+                        ],
+                        [
+                            "nn.utils.rnn.pack_padded_sequence(source_embeds, source_lens, batch_first=True)",
+                            "Call"
+                        ],
+                        [
+                            "self.encoder[i](source_embeds)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "lengths": {
+                    "value": "source_lens",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "source_lens",
+                            "Method Argument"
+                        ],
+                        [
+                            "source_lens",
+                            "Method Argument"
+                        ],
+                        [
+                            "source_lens",
+                            "Method Argument"
+                        ],
+                        [
+                            "source_lens",
+                            "Method Argument"
+                        ],
+                        [
+                            "source_lens",
+                            "Method Argument"
+                        ],
+                        [
+                            "source_lens",
+                            "Method Argument"
+                        ],
+                        [
+                            "source_lens",
+                            "Method Argument"
+                        ],
+                        [
+                            "source_lens",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "bmm_496": {
+                "variable": {
+                    "value": "e_t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "enc_states_proj",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.attn_proj(enc_states)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "mat2": {
+                    "value": "dec_outputs.transpose(1, 2)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "softmax_502": {
+                "variable": {
+                    "value": "alpha_ts",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "e_t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.bmm(enc_states_proj, dec_outputs.transpose(1, 2))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "bmm_503": {
+                "variable": {
+                    "value": "a_ts",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "alpha_ts.transpose(1, 2)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "mat2": {
+                    "value": "enc_states",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "None",
+                            "Method Argument"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ],
+                        [
+                            "enc_states",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "cat_504": {
+                "variable": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(dec_outputs, a_ts)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "tanh_506": {
+                "variable": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.cat((dec_outputs, a_ts), dim=2)",
+                            "Call"
+                        ],
+                        [
+                            "self.combined_attention_proj(output)",
+                            "Call"
+                        ],
+                        [
+                            "torch.tanh(output)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "argmax_228": {
+                "variable": {
+                    "value": "max_idxs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "logits",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.decode(dec_input_t, dec_states, enc_hiddens, enc_mask)",
+                            "Call"
+                        ],
+                        [
+                            "self.decode(targets, dec_states, enc_hiddens, enc_mask, target_lens=target_lens)[0]",
+                            "Subscript"
+                        ],
+                        [
+                            "self.decode(targets, dec_states, target_lens=target_lens)[0]",
+                            "Subscript"
+                        ],
+                        [
+                            "self.target_vocab_proj(dec_outputs)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "Linear_271": {
+                "variable": {
+                    "value": "self.bidi_proj_cell",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "2 * hidden_dim",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "hidden_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.args['lm']['hidden_dim']",
+                            "Subscript"
+                        ],
+                        [
+                            "self.args['lm']['hidden_dim']",
+                            "Subscript"
+                        ],
+                        [
+                            "hidden_dim",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "Linear_272": {
+                "variable": {
+                    "value": "self.bidi_proj_hidden",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "2 * hidden_dim",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "hidden_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.args['lm']['hidden_dim']",
+                            "Subscript"
+                        ],
+                        [
+                            "self.args['lm']['hidden_dim']",
+                            "Subscript"
+                        ],
+                        [
+                            "hidden_dim",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "ModuleList_330": {
+                "modules": {
+                    "value": "rnns",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                }
+            },
+            "pad_packed_sequence_401": {
+                "variable": {
+                    "value": "(enc_hiddens, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "sequence": {
+                    "value": "enc_hiddens",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.encode(sources, source_lens)",
+                            "Call"
+                        ],
+                        [
+                            "self.encode(sources, source_lens)",
+                            "Call"
+                        ],
+                        [
+                            "source_embeds",
+                            "variable"
+                        ],
+                        [
+                            "nn.utils.rnn.pad_packed_sequence(enc_hiddens)",
+                            "Call"
+                        ],
+                        [
+                            "enc_hiddens.transpose(0, 1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "cat_467": {
+                "variable": {
+                    "value": "dec_outputs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "dec_outputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "self.dropout(targets)",
+                            "Call"
+                        ],
+                        [
+                            "torch.cat(dec_outputs, dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "self.dropout(self.decode_attn(dec_outputs, enc_states, enc_mask))",
+                            "Call"
+                        ],
+                        [
+                            "dec_outputs",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Linear_276": {
+                "variable": {
+                    "value": "self.attn_proj",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "2 * hidden_dim",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "hidden_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.args['lm']['hidden_dim']",
+                            "Subscript"
+                        ],
+                        [
+                            "self.args['lm']['hidden_dim']",
+                            "Subscript"
+                        ],
+                        [
+                            "hidden_dim",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "Linear_277": {
+                "variable": {
+                    "value": "self.combined_attention_proj",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "3 * hidden_dim",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "hidden_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.args['lm']['hidden_dim']",
+                            "Subscript"
+                        ],
+                        [
+                            "self.args['lm']['hidden_dim']",
+                            "Subscript"
+                        ],
+                        [
+                            "hidden_dim",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "Linear_279": {
+                "variable": {
+                    "value": "self.attn_proj",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "hidden_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.args['lm']['hidden_dim']",
+                            "Subscript"
+                        ],
+                        [
+                            "self.args['lm']['hidden_dim']",
+                            "Subscript"
+                        ],
+                        [
+                            "hidden_dim",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "out_features": {
+                    "value": "hidden_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.args['lm']['hidden_dim']",
+                            "Subscript"
+                        ],
+                        [
+                            "self.args['lm']['hidden_dim']",
+                            "Subscript"
+                        ],
+                        [
+                            "hidden_dim",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "Linear_280": {
+                "variable": {
+                    "value": "self.combined_attention_proj",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "2 * hidden_dim",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "hidden_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.args['lm']['hidden_dim']",
+                            "Subscript"
+                        ],
+                        [
+                            "self.args['lm']['hidden_dim']",
+                            "Subscript"
+                        ],
+                        [
+                            "hidden_dim",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "argmax_465": {
+                "variable": {
+                    "value": "top_i",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.target_vocab_proj(target_t)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "tensor_580": {
+                "variable": {
+                    "value": "value",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "[self.data.target_vocab.word2idx.get(token, unk_idx) for token in target_tkns] + extra_token",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "from_numpy_745": {
+                "ndarray": {
+                    "value": "cache[hs_slice]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "unsqueeze_745": {
+                "input": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_393": {
+                "tensors": {
+                    "value": "(dec_states[0][0], dec_states[0][1])",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_394": {
+                "tensors": {
+                    "value": "(dec_states[1][0], dec_states[1][1])",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/regimen.py": {
+        "torch": {
+            "Adam_80": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "lm.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "args['lm']['lr']",
+                    "type": "Subscript",
+                    "possible_values": [
+                        [
+                            "args",
+                            "Method Argument"
+                        ],
+                        [
+                            "args",
+                            "Method Argument"
+                        ],
+                        [
+                            "args",
+                            "Method Argument"
+                        ],
+                        [
+                            "args",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "ReduceLROnPlateau_81": {
+                "variable": {
+                    "value": "scheduler",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "optimizer": {
+                    "value": "optimizer",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.optim.Adam(lm.parameters(), lr=args['lm']['lr'])",
+                            "Call"
+                        ],
+                        [
+                            "optimizer",
+                            "Method Argument"
+                        ],
+                        [
+                            "optimizer",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "mode": {
+                    "value": "min",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "factor": {
+                    "value": "0.1",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "patience": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "CrossEntropyLoss_88": {
+                "variable": {
+                    "value": "criterion",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "ignore_index": {
+                    "value": "pad_idx",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "data.vocab.word2idx['<pad>']",
+                            "Subscript"
+                        ],
+                        [
+                            "data.target_vocab.word2idx['<pad>']",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "no_grad_92": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "no_grad_101": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "save_112": {
+                "obj": {
+                    "value": "lm.state_dict()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "params_file",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "'{}/model.params'.format(utils.get_lm_path_of_args(args))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "cross_entropy_193": {
+                "input": {
+                    "value": "logits[:length, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "target": {
+                    "value": "target[:length]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "reduction": {
+                    "value": "sum",
+                    "type": "str",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/reporter.py": {
+        "torch": {
+            "no_grad_457": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "no_grad_536": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "tensor_137": {
+                "variable": {
+                    "value": "self.closing_bracket_ids",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "closing_bracket_ids",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                }
+            },
+            "softmax_141": {
+                "variable": {
+                    "value": "logits_batch",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "logits_batch",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "lm(seqs_batch, lengths_batch)",
+                            "Call"
+                        ],
+                        [
+                            "lm(seqs_batch, lengths_batch)",
+                            "Call"
+                        ],
+                        [
+                            "lm(seqs_batch, lengths_batch)",
+                            "Call"
+                        ],
+                        [
+                            "lm(seqs_batch, targets_batch_in, input_length_batch, target_length_batch)",
+                            "Call"
+                        ],
+                        [
+                            "lm(seqs_batch, targets_batch_in, input_length_batch, target_length_batch)",
+                            "Call"
+                        ],
+                        [
+                            "F.softmax(logits_batch, dim=2)",
+                            "Call"
+                        ],
+                        [
+                            "F.softmax(logits_batch, dim=2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "tensor_195": {
+                "variable": {
+                    "value": "self.closing_bracket_ids",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "closing_bracket_ids",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                }
+            },
+            "softmax_199": {
+                "variable": {
+                    "value": "logits_batch",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "logits_batch",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "lm(seqs_batch, lengths_batch)",
+                            "Call"
+                        ],
+                        [
+                            "lm(seqs_batch, lengths_batch)",
+                            "Call"
+                        ],
+                        [
+                            "lm(seqs_batch, lengths_batch)",
+                            "Call"
+                        ],
+                        [
+                            "lm(seqs_batch, targets_batch_in, input_length_batch, target_length_batch)",
+                            "Call"
+                        ],
+                        [
+                            "lm(seqs_batch, targets_batch_in, input_length_batch, target_length_batch)",
+                            "Call"
+                        ],
+                        [
+                            "F.softmax(logits_batch, dim=2)",
+                            "Call"
+                        ],
+                        [
+                            "F.softmax(logits_batch, dim=2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "exp_383": {
+                "variable": {
+                    "value": "ppl",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.ce_loss.cpu() / self.total",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_591": {
+                "seed": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "pad_sequence_636": {
+                "variable": {
+                    "value": "outputs_batch_padded",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "sequences": {
+                    "value": "outputs_batch",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "lm.sample(seqs_batch, lengths_batch[0], sos_id=sos_id, eos_id=eos_id, max_length=max_seq_len)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "padding_value": {
+                    "value": "pad_id",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "data.target_vocab.word2idx['<pad>']",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "sum_203": {
+                "input": {
+                    "value": "torch.isclose(truncation_preds[:seq_len].flatten(), targets[:seq_len])",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "cross_entropy_377": {
+                "input": {
+                    "value": "logits[:length, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "target": {
+                    "value": "target[:length]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "reduction": {
+                    "value": "sum",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "sum_149": {
+                "variable": {
+                    "value": "total_close_prob_mass",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "dist[token_i, self.closing_bracket_ids]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "all_228": {
+                "input": {
+                    "value": "torch.eq(output, target[:target_length])",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "all_349": {
+                "input": {
+                    "value": "torch.eq(output[:target_length], target[:target_length])",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "eq_228": {
+                "input": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "zip(outputs_batch, targets_batch, target_lengths_batch, predicted_lengths_batch)",
+                            "Call"
+                        ],
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "zip(outputs_batch, targets_batch, target_lengths_batch)",
+                            "Call"
+                        ],
+                        [
+                            "zip(outputs_batch, targets_batch, target_lengths_batch, predicted_lengths_batch)",
+                            "Call"
+                        ],
+                        [
+                            "zip(outputs_batch, targets_batch, target_lengths_batch)",
+                            "Call"
+                        ],
+                        [
+                            "zip(outputs_batch, targets_batch, target_lengths_batch, observations_batch)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "target[:target_length]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "eq_349": {
+                "input": {
+                    "value": "output[:target_length]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "target[:target_length]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "isclose_203": {
+                "input": {
+                    "value": "truncation_preds[:seq_len].flatten()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "targets[:seq_len]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/run.py": {
+        "torch": {
+            "device_152": {
+                "variable": {
+                    "value": "args[device]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda:0 if torch.cuda.is_available() else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "manual_seed_155": {
+                "seed": {
+                    "value": "args['lm']['seed']",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "is_available_152": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "src/truncation_models.py": {
+        "torch": {
+            "Linear_70": {
+                "variable": {
+                    "value": "self.probe",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "args['lm']['hidden_dim']",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "binary_cross_entropy_with_logits_82": {
+                "variable": {
+                    "value": "loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "(logits + source_masks).flatten()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "target": {
+                    "value": "target_seq.flatten()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "load_58": {
+                "f": {
+                    "value": "model_path",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "'{}/truncation_model.params'.format(utils.get_trunc_model_path_of_args(self.args))",
+                            "Call"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "map_location": {
+                    "value": "self.args['device']",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "no_grad_75": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "sigmoid_85": {
+                "input": {
+                    "value": "logits",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.probe(hidden_states)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "src/truncation_regimen.py": {
+        "torch": {
+            "Adam_84": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "tm.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "args['truncation']['lr']",
+                    "type": "Subscript",
+                    "possible_values": [
+                        [
+                            "args",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "ReduceLROnPlateau_85": {
+                "variable": {
+                    "value": "scheduler",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "optimizer": {
+                    "value": "optimizer",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.optim.Adam(tm.parameters(), lr=args['truncation']['lr'])",
+                            "Call"
+                        ],
+                        [
+                            "optimizer",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "mode": {
+                    "value": "min",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "factor": {
+                    "value": "0.1",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "patience": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "no_grad_89": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "no_grad_97": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "save_106": {
+                "obj": {
+                    "value": "tm.state_dict()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "params_file",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "'{}/truncation_model.params'.format(utils.get_trunc_model_path_of_args(args))",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "src/utils.py": {
+        "torch": {
+            "device_49": {
+                "variable": {
+                    "value": "args[device]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda if torch.cuda.is_available() else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "rand_229": {
+                "variable": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(256, 1024, block_mem)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "rand_230": {
+                "variable": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(2, 2)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "zeros_253": {
+                "variable": {
+                    "value": "masks",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(len(input_lens), max_len)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "is_available_49": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

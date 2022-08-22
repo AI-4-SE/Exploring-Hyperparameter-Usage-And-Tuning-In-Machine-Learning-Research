@@ -1,0 +1,2072 @@
+{
+    "yacht_data/make_splits_and_pkl.py": {
+        "sklearn": {
+            "StandardScaler_48": {
+                "variable": {
+                    "value": "x_scaler",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "StandardScaler_49": {
+                "variable": {
+                    "value": "y_scaler",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "models/bnn.py": {
+        "tensorflow": {
+            "placeholder_10": {
+                "variable": {
+                    "value": "self.X",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "float",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, hyperParams['input_d']]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "placeholder_11": {
+                "variable": {
+                    "value": "self.Y",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "float",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, hyperParams['output_d']]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "concat_37": {
+                "variable": {
+                    "value": "all_ells",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "ell_terms",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "concat_60": {
+                "variable": {
+                    "value": "all_klds",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[tf.reshape(p, [1, -1]) for p in kld_terms]",
+                    "type": "ListComp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_62": {
+                "variable": {
+                    "value": "final_ell_term",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "all_ells",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.concat(ell_terms, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "reduction_indices": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keep_dims": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_63": {
+                "variable": {
+                    "value": "final_kld_term",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "all_klds",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.concat([tf.reshape(p, [1, -1]) for p in kld_terms], 1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reduce_mean_64": {
+                "variable": {
+                    "value": "final_elbo",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "final_ell_term - final_kld_term",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "concat_78": {
+                "variable": {
+                    "value": "all_lls",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "lls",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "concat_79": {
+                "variable": {
+                    "value": "all_rmses",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "rmses",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "reduce_max_80": {
+                "variable": {
+                    "value": "maxs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "all_lls",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.concat(lls, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "reduction_indices": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keep_dims": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_65": {
+                "input_tensor": {
+                    "value": "final_ell_term",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reduce_mean(all_ells, reduction_indices=1, keep_dims=True)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reduce_mean_82": {
+                "input_tensor": {
+                    "value": "tf.exp(all_lls - maxs)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "reduction_indices": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keep_dims": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "reshape_60": {
+                "tensor": {
+                    "value": "p",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[1, -1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "sqrt_76": {
+                "x": {
+                    "value": "tf.reduce_mean(tf.square(self.Y - y_hat_scaled_trans), reduction_indices=1, keep_dims=True)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "sqrt_56": {
+                "x": {
+                    "value": "sigma",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "zip(self.params['mu'], self.params['sigma'])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reduce_mean_76": {
+                "input_tensor": {
+                    "value": "tf.square(self.Y - y_hat_scaled_trans)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "reduction_indices": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keep_dims": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "log_82": {
+                "x": {
+                    "value": "tf.reduce_mean(tf.exp(all_lls - maxs), reduction_indices=1, keep_dims=True)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "sqrt_48": {
+                "x": {
+                    "value": "sigma",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "zip(self.params['mu'], self.params['sigma'])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "square_76": {
+                "x": {
+                    "value": "self.Y - y_hat_scaled_trans",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sqrt_51": {
+                "x": {
+                    "value": "sigma",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "zip(self.params['mu'], self.params['sigma'])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "sqrt_54": {
+                "x": {
+                    "value": "sigma",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "zip(self.params['mu'], self.params['sigma'])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "exp_82": {
+                "x": {
+                    "value": "all_lls - maxs",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "models/dropoutnn.py": {
+        "tensorflow": {
+            "placeholder_10": {
+                "variable": {
+                    "value": "self.X",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "float",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, hyperParams['input_d']]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "placeholder_11": {
+                "variable": {
+                    "value": "self.Y",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "float",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, hyperParams['output_d']]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "concat_27": {
+                "variable": {
+                    "value": "all_ells",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "ell_terms",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "top_k_30": {
+                "variable": {
+                    "value": "(all_ells, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "all_ells",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.concat(ell_terms, 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.top_k(all_ells, k=10, sorted=True)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "k": {
+                    "value": "10",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "sorted": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "stop_gradient_34": {
+                "variable": {
+                    "value": "normalized_weights",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "gamma_vals / tf.reduce_sum(gamma_vals, axis=1, keep_dims=True)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_37": {
+                "variable": {
+                    "value": "final_ell_term",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "normalized_weights * all_ells",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "reduction_indices": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keep_dims": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "concat_52": {
+                "variable": {
+                    "value": "all_lls",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "lls",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "concat_53": {
+                "variable": {
+                    "value": "all_rmses",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "rmses",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "reduce_max_54": {
+                "variable": {
+                    "value": "maxs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "all_lls",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.concat(lls, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "reduction_indices": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keep_dims": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_39": {
+                "input_tensor": {
+                    "value": "final_ell_term",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reduce_sum(normalized_weights * all_ells, reduction_indices=1, keep_dims=True)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reduce_mean_56": {
+                "input_tensor": {
+                    "value": "tf.exp(all_lls - maxs)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "reduction_indices": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keep_dims": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_33": {
+                "input": {
+                    "value": "tf.range(10, dtype=tf.float32)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_34": {
+                "input_tensor": {
+                    "value": "gamma_vals",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "10.0 / (tf.expand_dims(tf.range(10, dtype=tf.float32), 0) + 1.0)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keep_dims": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "sqrt_50": {
+                "x": {
+                    "value": "tf.reduce_mean(tf.square(self.Y - y_hat_scaled_trans), reduction_indices=1, keep_dims=True)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "range_33": {
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_50": {
+                "input_tensor": {
+                    "value": "tf.square(self.Y - y_hat_scaled_trans)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "reduction_indices": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keep_dims": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "log_56": {
+                "x": {
+                    "value": "tf.reduce_mean(tf.exp(all_lls - maxs), reduction_indices=1, keep_dims=True)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "square_50": {
+                "x": {
+                    "value": "self.Y - y_hat_scaled_trans",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "exp_56": {
+                "x": {
+                    "value": "all_lls - maxs",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "models/utils.py": {
+        "tensorflow": {
+            "reduce_sum_125": {
+                "variable": {
+                    "value": "moments",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "mu * mu + std * std",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "reduction_indices": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keep_dims": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_140": {
+                "variable": {
+                    "value": "moments",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "mu ** 2 + std ** 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_154": {
+                "variable": {
+                    "value": "moments",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "mu ** 2 + std ** 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "reduction_indices": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keep_dims": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "dropout_81": {
+                "variable": {
+                    "value": "X_dropped",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "X",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "X",
+                            "Method Argument"
+                        ],
+                        [
+                            "X",
+                            "Method Argument"
+                        ],
+                        [
+                            "X",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "keep_prob": {
+                    "value": "1 - 0.005",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_100": {
+                "input_tensor": {
+                    "value": "0.5 * noise_prec * tf.square(y - y_pred_linear) + 0.5 * tf.log(2.0 * np.pi * (1 / noise_prec))",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "reduction_indices": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keep_dims": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_104": {
+                "input_tensor": {
+                    "value": "tf.nn.sigmoid_cross_entropy_with_logits(y_pred_linear, y)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "reduction_indices": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keep_dims": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Assert_110": {
+                "condition": {
+                    "value": "tf.greater(tf.reduce_min(sigma_post), 0.0)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "[sigma_post]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "Assert_111": {
+                "condition": {
+                    "value": "tf.greater(tf.reduce_min(sigma_prior), 0.0)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "[sigma_prior]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "sqrt_128": {
+                "variable": {
+                    "value": "prior_opt_scale",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "(2.0 * prior_params['param2'] + moments) / (param_count + 2.0 * prior_params['param1'] + 2.0)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sqrt_143": {
+                "variable": {
+                    "value": "prior_opt_scale",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "(2.0 * prior_params['param2'] + moments) / (param_count + 2.0 * prior_params['param1'] + 2.0)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sqrt_157": {
+                "variable": {
+                    "value": "opt_lambda",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "(2.0 * prior_params['param2'] * old_tau + moments) / (old_tau * 2.0 * prior_params['param1'] + old_tau * param_count_cols + old_tau * 2)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sqrt_158": {
+                "variable": {
+                    "value": "opt_tau",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "(2.0 * prior_params['param2'] + tf.reduce_sum(1.0 / opt_lambda * moments)) / (param_count_cols * param_count_rows + 2 + 2 * prior_params['param1'])",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sqrt_162": {
+                "x": {
+                    "value": "moments_tau ** 2 + (2 * param_count_cols + 8) * prior_params['param1'] ** 2 * moments_tau + prior_params['param1'] ** 4 * param_count_cols ** 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_164": {
+                "variable": {
+                    "value": "moments_lamb",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "1.0 / opt_lambda * moments",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sqrt_166": {
+                "x": {
+                    "value": "moments_lamb ** 2 + (2 * param_count + 8) * prior_params['param1'] ** 2 * moments_lamb + prior_params['param1'] ** 4 * param_count ** 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "dropout_89": {
+                "variable": {
+                    "value": "h_dropped",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "h",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "h in enumerate(hidden_states)",
+                            "Call"
+                        ],
+                        [
+                            "h in enumerate(hidden_states)",
+                            "Call"
+                        ],
+                        [
+                            "h in enumerate(hidden_states)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "keep_prob": {
+                    "value": "1 - 0.005",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sigmoid_cross_entropy_with_logits_104": {
+                "labels": {
+                    "value": "y_pred_linear",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "y_pred_linear",
+                            "Method Argument"
+                        ],
+                        [
+                            "y_pred_linear",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "logits": {
+                    "value": "y",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "y",
+                            "Method Argument"
+                        ],
+                        [
+                            "y",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "greater_110": {
+                "x": {
+                    "value": "tf.reduce_min(sigma_post)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "greater_111": {
+                "x": {
+                    "value": "tf.reduce_min(sigma_prior)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "square_113": {
+                "x": {
+                    "value": "sigma_post",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "sigma_post",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "log_115": {
+                "x": {
+                    "value": "sigma_post + eps",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "square_117": {
+                "x": {
+                    "value": "sigma_prior",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "sigma_prior",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "sqrt_131": {
+                "x": {
+                    "value": "moments ** 2 + (2 * param_count + 8) * prior_params['param1'] ** 2 * moments + prior_params['param1'] ** 4 * param_count ** 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "ones_like_135": {
+                "input": {
+                    "value": "std",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "0.01",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.01",
+                            "Method Argument"
+                        ],
+                        [
+                            "std",
+                            "Method Argument"
+                        ],
+                        [
+                            "std",
+                            "Method Argument"
+                        ],
+                        [
+                            "std",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "sqrt_146": {
+                "x": {
+                    "value": "moments ** 2 + (2 * param_count + 8.0) * prior_params['param1'] ** 2 * moments + prior_params['param1'] ** 4 * param_count ** 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "ones_like_148": {
+                "input": {
+                    "value": "std",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "0.01",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.01",
+                            "Method Argument"
+                        ],
+                        [
+                            "std",
+                            "Method Argument"
+                        ],
+                        [
+                            "std",
+                            "Method Argument"
+                        ],
+                        [
+                            "std",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "ones_like_170": {
+                "input": {
+                    "value": "std",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "0.01",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.01",
+                            "Method Argument"
+                        ],
+                        [
+                            "std",
+                            "Method Argument"
+                        ],
+                        [
+                            "std",
+                            "Method Argument"
+                        ],
+                        [
+                            "std",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "Variable_8": {
+                "initial_value": {
+                    "value": "tf.random_uniform([n_in, n_out], minval=-0.05, maxval=0.05)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Variable_9": {
+                "initial_value": {
+                    "value": "tf.zeros([n_out]) + 0.1",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "Variable_16": {
+                "initial_value": {
+                    "value": "tf.random_uniform([n_in, n_out], minval=-0.05, maxval=0.05)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "softplus_17": {
+                "features": {
+                    "value": "tf.Variable(tf.random_uniform([n_in, n_out], minval=-10.0, maxval=-6.5))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Variable_18": {
+                "initial_value": {
+                    "value": "tf.zeros([n_out]) + 0.1",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "matmul_28": {
+                "a": {
+                    "value": "X",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "X",
+                            "Method Argument"
+                        ],
+                        [
+                            "X",
+                            "Method Argument"
+                        ],
+                        [
+                            "X",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "params['mu'][0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "relu_31": {
+                "features": {
+                    "value": "act",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "term1 + tf.matmul(X * S, tf.sqrt(params['sigma'][0])) * R",
+                            "BinOp"
+                        ],
+                        [
+                            "term1 + tf.matmul(h * S, tf.sqrt(sigma)) * R",
+                            "BinOp"
+                        ],
+                        [
+                            "term1 + tf.matmul(X * S, tf.sqrt(params['sigma'][0])) * R",
+                            "BinOp"
+                        ],
+                        [
+                            "term1 + tf.matmul(h * S, tf.sqrt(sigma)) * R",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(X_dropped, params['w'][0]) + params['b'][0]",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(h_dropped, w) + b",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "matmul_55": {
+                "a": {
+                    "value": "X",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "X",
+                            "Method Argument"
+                        ],
+                        [
+                            "X",
+                            "Method Argument"
+                        ],
+                        [
+                            "X",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "params['mu'][0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "relu_58": {
+                "features": {
+                    "value": "act",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "term1 + tf.matmul(X * S, tf.sqrt(params['sigma'][0])) * R",
+                            "BinOp"
+                        ],
+                        [
+                            "term1 + tf.matmul(h * S, tf.sqrt(sigma)) * R",
+                            "BinOp"
+                        ],
+                        [
+                            "term1 + tf.matmul(X * S, tf.sqrt(params['sigma'][0])) * R",
+                            "BinOp"
+                        ],
+                        [
+                            "term1 + tf.matmul(h * S, tf.sqrt(sigma)) * R",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(X_dropped, params['w'][0]) + params['b'][0]",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(h_dropped, w) + b",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "relu_69": {
+                "variable": {
+                    "value": "hidden_states[h_idx]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "features": {
+                    "value": "act",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "term1 + tf.matmul(X * S, tf.sqrt(params['sigma'][0])) * R",
+                            "BinOp"
+                        ],
+                        [
+                            "term1 + tf.matmul(h * S, tf.sqrt(sigma)) * R",
+                            "BinOp"
+                        ],
+                        [
+                            "term1 + tf.matmul(X * S, tf.sqrt(params['sigma'][0])) * R",
+                            "BinOp"
+                        ],
+                        [
+                            "term1 + tf.matmul(h * S, tf.sqrt(sigma)) * R",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(X_dropped, params['w'][0]) + params['b'][0]",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(h_dropped, w) + b",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "matmul_82": {
+                "a": {
+                    "value": "X_dropped",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.dropout(X, keep_prob=1 - 0.005)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "params['w'][0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "relu_83": {
+                "features": {
+                    "value": "act",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "term1 + tf.matmul(X * S, tf.sqrt(params['sigma'][0])) * R",
+                            "BinOp"
+                        ],
+                        [
+                            "term1 + tf.matmul(h * S, tf.sqrt(sigma)) * R",
+                            "BinOp"
+                        ],
+                        [
+                            "term1 + tf.matmul(X * S, tf.sqrt(params['sigma'][0])) * R",
+                            "BinOp"
+                        ],
+                        [
+                            "term1 + tf.matmul(h * S, tf.sqrt(sigma)) * R",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(X_dropped, params['w'][0]) + params['b'][0]",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(h_dropped, w) + b",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "relu_92": {
+                "variable": {
+                    "value": "hidden_states[h_idx]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "features": {
+                    "value": "act",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "term1 + tf.matmul(X * S, tf.sqrt(params['sigma'][0])) * R",
+                            "BinOp"
+                        ],
+                        [
+                            "term1 + tf.matmul(h * S, tf.sqrt(sigma)) * R",
+                            "BinOp"
+                        ],
+                        [
+                            "term1 + tf.matmul(X * S, tf.sqrt(params['sigma'][0])) * R",
+                            "BinOp"
+                        ],
+                        [
+                            "term1 + tf.matmul(h * S, tf.sqrt(sigma)) * R",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(X_dropped, params['w'][0]) + params['b'][0]",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(h_dropped, w) + b",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "reduce_min_110": {
+                "input_tensor": {
+                    "value": "sigma_post",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "sigma_post",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "reduce_min_111": {
+                "input_tensor": {
+                    "value": "sigma_prior",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "sigma_prior",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "Variable_17": {
+                "initial_value": {
+                    "value": "tf.random_uniform([n_in, n_out], minval=-10.0, maxval=-6.5)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "dropout_27": {
+                "x": {
+                    "value": "tf.ones_like(X)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "keep_prob": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "dropout_29": {
+                "x": {
+                    "value": "tf.ones_like(term1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "keep_prob": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "matmul_30": {
+                "a": {
+                    "value": "X * S",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "b": {
+                    "value": "tf.sqrt(params['sigma'][0])",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "matmul_38": {
+                "a": {
+                    "value": "h",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "h in enumerate(hidden_states)",
+                            "Call"
+                        ],
+                        [
+                            "h in enumerate(hidden_states)",
+                            "Call"
+                        ],
+                        [
+                            "h in enumerate(hidden_states)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "mu",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "zip(params['mu'][1:], params['sigma'][1:], params['b'][1:])",
+                            "Call"
+                        ],
+                        [
+                            "zip(params['mu'][1:], params['sigma'][1:], params['b'][1:])",
+                            "Call"
+                        ],
+                        [
+                            "mu",
+                            "Method Argument"
+                        ],
+                        [
+                            "mu",
+                            "Method Argument"
+                        ],
+                        [
+                            "mu",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "dropout_54": {
+                "x": {
+                    "value": "tf.ones_like(X)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "keep_prob": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "dropout_56": {
+                "x": {
+                    "value": "tf.ones_like(term1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "keep_prob": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "matmul_57": {
+                "a": {
+                    "value": "X * S",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "b": {
+                    "value": "tf.sqrt(params['sigma'][0])",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "matmul_65": {
+                "a": {
+                    "value": "h",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "h in enumerate(hidden_states)",
+                            "Call"
+                        ],
+                        [
+                            "h in enumerate(hidden_states)",
+                            "Call"
+                        ],
+                        [
+                            "h in enumerate(hidden_states)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "mu",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "zip(params['mu'][1:], params['sigma'][1:], params['b'][1:])",
+                            "Call"
+                        ],
+                        [
+                            "zip(params['mu'][1:], params['sigma'][1:], params['b'][1:])",
+                            "Call"
+                        ],
+                        [
+                            "mu",
+                            "Method Argument"
+                        ],
+                        [
+                            "mu",
+                            "Method Argument"
+                        ],
+                        [
+                            "mu",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "matmul_90": {
+                "a": {
+                    "value": "h_dropped",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.dropout(h, keep_prob=1 - 0.005)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "w",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "zip(params['w'][1:], params['b'][1:])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "square_100": {
+                "x": {
+                    "value": "y - y_pred_linear",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "log_100": {
+                "x": {
+                    "value": "2.0 * np.pi * (1 / noise_prec)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "zeros_9": {
+                "shape": {
+                    "value": "[n_out]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "zeros_18": {
+                "shape": {
+                    "value": "[n_out]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "ones_like_27": {
+                "input": {
+                    "value": "X",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "X",
+                            "Method Argument"
+                        ],
+                        [
+                            "X",
+                            "Method Argument"
+                        ],
+                        [
+                            "X",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "ones_like_29": {
+                "input": {
+                    "value": "term1",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.matmul(X, params['mu'][0]) + params['b'][0]",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(h, mu) + b",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(X, params['mu'][0]) + params['b'][0]",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(h, mu) + b",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "sqrt_30": {
+                "x": {
+                    "value": "params['sigma'][0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "dropout_37": {
+                "x": {
+                    "value": "tf.ones_like(h)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "keep_prob": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "dropout_39": {
+                "x": {
+                    "value": "tf.ones_like(term1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "keep_prob": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "matmul_40": {
+                "a": {
+                    "value": "h * S",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "b": {
+                    "value": "tf.sqrt(sigma)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "relu_42": {
+                "features": {
+                    "value": "act",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "term1 + tf.matmul(X * S, tf.sqrt(params['sigma'][0])) * R",
+                            "BinOp"
+                        ],
+                        [
+                            "term1 + tf.matmul(h * S, tf.sqrt(sigma)) * R",
+                            "BinOp"
+                        ],
+                        [
+                            "term1 + tf.matmul(X * S, tf.sqrt(params['sigma'][0])) * R",
+                            "BinOp"
+                        ],
+                        [
+                            "term1 + tf.matmul(h * S, tf.sqrt(sigma)) * R",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(X_dropped, params['w'][0]) + params['b'][0]",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(h_dropped, w) + b",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "ones_like_54": {
+                "input": {
+                    "value": "X",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "X",
+                            "Method Argument"
+                        ],
+                        [
+                            "X",
+                            "Method Argument"
+                        ],
+                        [
+                            "X",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "ones_like_56": {
+                "input": {
+                    "value": "term1",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.matmul(X, params['mu'][0]) + params['b'][0]",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(h, mu) + b",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(X, params['mu'][0]) + params['b'][0]",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(h, mu) + b",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "sqrt_57": {
+                "x": {
+                    "value": "params['sigma'][0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "dropout_64": {
+                "x": {
+                    "value": "tf.ones_like(h)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "keep_prob": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "dropout_66": {
+                "x": {
+                    "value": "tf.ones_like(term1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "keep_prob": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "matmul_67": {
+                "a": {
+                    "value": "h * S",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "b": {
+                    "value": "tf.sqrt(sigma)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_158": {
+                "input_tensor": {
+                    "value": "1.0 / opt_lambda * moments",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "ones_like_37": {
+                "input": {
+                    "value": "h",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "h in enumerate(hidden_states)",
+                            "Call"
+                        ],
+                        [
+                            "h in enumerate(hidden_states)",
+                            "Call"
+                        ],
+                        [
+                            "h in enumerate(hidden_states)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "ones_like_39": {
+                "input": {
+                    "value": "term1",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.matmul(X, params['mu'][0]) + params['b'][0]",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(h, mu) + b",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(X, params['mu'][0]) + params['b'][0]",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(h, mu) + b",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "sqrt_40": {
+                "x": {
+                    "value": "sigma",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "zip(params['mu'][1:], params['sigma'][1:], params['b'][1:])",
+                            "Call"
+                        ],
+                        [
+                            "zip(params['mu'][1:], params['sigma'][1:], params['b'][1:])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "ones_like_64": {
+                "input": {
+                    "value": "h",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "h in enumerate(hidden_states)",
+                            "Call"
+                        ],
+                        [
+                            "h in enumerate(hidden_states)",
+                            "Call"
+                        ],
+                        [
+                            "h in enumerate(hidden_states)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "ones_like_66": {
+                "input": {
+                    "value": "term1",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.matmul(X, params['mu'][0]) + params['b'][0]",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(h, mu) + b",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(X, params['mu'][0]) + params['b'][0]",
+                            "BinOp"
+                        ],
+                        [
+                            "tf.matmul(h, mu) + b",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "sqrt_67": {
+                "x": {
+                    "value": "sigma",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "zip(params['mu'][1:], params['sigma'][1:], params['b'][1:])",
+                            "Call"
+                        ],
+                        [
+                            "zip(params['mu'][1:], params['sigma'][1:], params['b'][1:])",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "train_bnn.py": {
+        "tensorflow": {
+            "AdamOptimizer_68": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "learning_rate": {
+                    "value": "hyperParams['adamLr']",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "Session_72": {
+                "config": {
+                    "value": "hyperParams['tf_config']",
+                    "type": "Subscript",
+                    "possible_values": [
+                        [
+                            "hyperParams",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "ConfigProto_164": {
+                "gpu_options": {
+                    "value": "tf.GPUOptions(per_process_gpu_memory_fraction=0.5)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "log_device_placement": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "initialize_all_variables_75": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "GPUOptions_164": {
+                "per_process_gpu_memory_fraction": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "train_dropout_net.py": {
+        "tensorflow": {
+            "AdamOptimizer_62": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "learning_rate": {
+                    "value": "hyperParams['adamLr']",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "Session_66": {
+                "config": {
+                    "value": "hyperParams['tf_config']",
+                    "type": "Subscript",
+                    "possible_values": [
+                        [
+                            "hyperParams",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "ConfigProto_148": {
+                "gpu_options": {
+                    "value": "tf.GPUOptions(per_process_gpu_memory_fraction=0.5)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "log_device_placement": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "initialize_all_variables_69": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "GPUOptions_148": {
+                "per_process_gpu_memory_fraction": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

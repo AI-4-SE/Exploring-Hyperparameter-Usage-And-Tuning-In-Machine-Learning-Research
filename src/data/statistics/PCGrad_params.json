@@ -1,0 +1,246 @@
+{
+    "PCGrad_tf.py": {
+        "tensorflow": {
+            "stack_35": {
+                "variable": {
+                    "value": "loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "loss",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.stack(loss)",
+                            "Call"
+                        ],
+                        [
+                            "loss",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "vectorized_map_39": {
+                "variable": {
+                    "value": "grads_task",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "fn": {
+                    "value": "lambda x: tf.concat([tf.reshape(grad, [-1]) for grad in tf.gradients(x, var_list) if grad is not None], axis=0)",
+                    "type": "Lambda",
+                    "possible_values": []
+                },
+                "elems": {
+                    "value": "loss",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.stack(loss)",
+                            "Call"
+                        ],
+                        [
+                            "loss",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "vectorized_map_51": {
+                "variable": {
+                    "value": "proj_grads_flatten",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "fn": {
+                    "value": "proj_grad",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "proj_grad",
+                            "Call"
+                        ],
+                        [
+                            "proj_grads_flatten[j][start_idx:start_idx + flatten_dim]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.reshape(proj_grad, grad_shape)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "elems": {
+                    "value": "grads_task",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.vectorized_map(lambda x: tf.concat([tf.reshape(grad, [-1]) for grad in tf.gradients(x, var_list) if grad is not None], axis=0), loss)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "shuffle_36": {
+                "value": {
+                    "value": "loss",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.stack(loss)",
+                            "Call"
+                        ],
+                        [
+                            "loss",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "reduce_sum_46": {
+                "variable": {
+                    "value": "inner_product",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "grad_task * grads_task[k]",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "reshape_61": {
+                "variable": {
+                    "value": "proj_grad",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "proj_grad",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "proj_grad",
+                            "Call"
+                        ],
+                        [
+                            "proj_grads_flatten[j][start_idx:start_idx + flatten_dim]",
+                            "Subscript"
+                        ],
+                        [
+                            "tf.reshape(proj_grad, grad_shape)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "grad_shape",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "var.get_shape()",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "concat_39": {
+                "values": {
+                    "value": "[tf.reshape(grad, [-1]) for grad in tf.gradients(x, var_list) if grad is not None]",
+                    "type": "ListComp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_47": {
+                "input_tensor": {
+                    "value": "grads_task[k] * grads_task[k]",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "reshape_39": {
+                "tensor": {
+                    "value": "grad",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "grad",
+                            "Method Argument"
+                        ],
+                        [
+                            "grad",
+                            "Method Argument"
+                        ],
+                        [
+                            "grad",
+                            "Method Argument"
+                        ],
+                        [
+                            "grad",
+                            "Method Argument"
+                        ],
+                        [
+                            "grad",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "minimum_48": {
+                "x": {
+                    "value": "proj_direction",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "inner_product / tf.reduce_sum(grads_task[k] * grads_task[k])",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "gradients_40": {
+                "ys": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "x",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "xs": {
+                    "value": "var_list",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "None",
+                            "Method Argument"
+                        ],
+                        [
+                            "var_list",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            }
+        }
+    }
+}

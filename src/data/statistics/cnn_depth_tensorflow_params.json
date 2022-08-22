@@ -1,0 +1,1740 @@
+{
+    "dataset.py": {
+        "tensorflow": {
+            "string_input_producer_16": {
+                "variable": {
+                    "value": "filename_queue",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "string_tensor": {
+                    "value": "[csv_file_path]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "shuffle": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "TextLineReader_17": {
+                "variable": {
+                    "value": "reader",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "decode_csv_19": {
+                "variable": {
+                    "value": "(filename, depth_filename)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "records": {
+                    "value": "serialized_example",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "reader.read(filename_queue)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "record_defaults": {
+                    "value": "[['path'], ['annotation']]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "read_file_21": {
+                "variable": {
+                    "value": "jpg",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "filename": {
+                    "value": "filename",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.decode_csv(serialized_example, [['path'], ['annotation']])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "decode_jpeg_22": {
+                "variable": {
+                    "value": "image",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "contents": {
+                    "value": "jpg",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.read_file(filename)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "channels": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cast_23": {
+                "variable": {
+                    "value": "image",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "image",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.image.decode_jpeg(jpg, channels=3)",
+                            "Call"
+                        ],
+                        [
+                            "tf.cast(image, tf.float32)",
+                            "Call"
+                        ],
+                        [
+                            "tf.image.resize_images(image, (IMAGE_HEIGHT, IMAGE_WIDTH))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "read_file_25": {
+                "variable": {
+                    "value": "depth_png",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "filename": {
+                    "value": "depth_filename",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.decode_csv(serialized_example, [['path'], ['annotation']])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "decode_png_26": {
+                "variable": {
+                    "value": "depth",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "contents": {
+                    "value": "depth_png",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.read_file(depth_filename)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "channels": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cast_27": {
+                "variable": {
+                    "value": "depth",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "depth",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "depth.transpose(2, 0, 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.image.decode_png(depth_png, channels=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.cast(depth, tf.float32)",
+                            "Call"
+                        ],
+                        [
+                            "tf.div(depth, [255.0])",
+                            "Call"
+                        ],
+                        [
+                            "tf.image.resize_images(depth, (TARGET_HEIGHT, TARGET_WIDTH))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "div_28": {
+                "variable": {
+                    "value": "depth",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "depth",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "depth.transpose(2, 0, 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.image.decode_png(depth_png, channels=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.cast(depth, tf.float32)",
+                            "Call"
+                        ],
+                        [
+                            "tf.div(depth, [255.0])",
+                            "Call"
+                        ],
+                        [
+                            "tf.image.resize_images(depth, (TARGET_HEIGHT, TARGET_WIDTH))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "[255.0]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "sign_33": {
+                "variable": {
+                    "value": "invalid_depth",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "depth",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "depth.transpose(2, 0, 1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.image.decode_png(depth_png, channels=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.cast(depth, tf.float32)",
+                            "Call"
+                        ],
+                        [
+                            "tf.div(depth, [255.0])",
+                            "Call"
+                        ],
+                        [
+                            "tf.image.resize_images(depth, (TARGET_HEIGHT, TARGET_WIDTH))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "batch_35": {
+                "variable": {
+                    "value": "(images, depths, invalid_depths)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[image, depth, invalid_depth]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "batch_size": {
+                    "value": "self.batch_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_threads": {
+                    "value": "4",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "capacity": {
+                    "value": "50 + 3 * self.batch_size",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "Exists_46": {
+                "filename": {
+                    "value": "output_dir",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "output_dir",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "MakeDirs_47": {
+                "dirname": {
+                    "value": "output_dir",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "output_dir",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "model.py": {
+        "tensorflow": {
+            "max_pool_11": {
+                "variable": {
+                    "value": "coarse1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "coarse1_conv",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "conv2d('coarse1', images, [11, 11, 3, 96], [96], [1, 4, 4, 1], padding='VALID', reuse=reuse, trainable=trainable)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "ksize": {
+                    "value": "[1, 3, 3, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "[1, 2, 2, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "VALID",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "pool1",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "max_pool_13": {
+                "variable": {
+                    "value": "coarse2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "coarse2_conv",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "conv2d('coarse2', coarse1, [5, 5, 96, 256], [256], [1, 1, 1, 1], padding='VALID', reuse=reuse, trainable=trainable)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "ksize": {
+                    "value": "[1, 3, 3, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "[1, 2, 2, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "SAME",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "pool1",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "reshape_19": {
+                "variable": {
+                    "value": "coarse7_output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "coarse7",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "fc('coarse7', coarse6, [4096, 4070], [4070], reuse=reuse, trainable=trainable)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, 55, 74, 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "max_pool_25": {
+                "variable": {
+                    "value": "fine1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "fine1_conv",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "conv2d('fine1', images, [9, 9, 3, 63], [63], [1, 2, 2, 1], padding='VALID', reuse=reuse, trainable=trainable)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "ksize": {
+                    "value": "[1, 3, 3, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "[1, 2, 2, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "SAME",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "fine_pool1",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "dropout_26": {
+                "variable": {
+                    "value": "fine1_dropout",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "fine1",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.max_pool(fine1_conv, ksize=[1, 3, 3, 1], strides=[1, 2, 2, 1], padding='SAME', name='fine_pool1')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "keep_conv",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "keep_conv",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "concat_27": {
+                "variable": {
+                    "value": "fine2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[fine1_dropout, coarse7_output]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "dropout_29": {
+                "variable": {
+                    "value": "fine3_dropout",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "fine3",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "conv2d('fine3', fine2, [5, 5, 64, 64], [64], [1, 1, 1, 1], padding='SAME', reuse=reuse, trainable=trainable)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "rate": {
+                    "value": "keep_conv",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "keep_conv",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "reshape_35": {
+                "variable": {
+                    "value": "logits_flat",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "logits",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "logits",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, 55 * 74]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "reshape_36": {
+                "variable": {
+                    "value": "depths_flat",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "depths",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "depths",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, 55 * 74]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "reshape_37": {
+                "variable": {
+                    "value": "invalid_depths_flat",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "invalid_depths",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "invalid_depths",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, 55 * 74]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "multiply_39": {
+                "variable": {
+                    "value": "predict",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "logits_flat",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(logits, [-1, 55 * 74])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "invalid_depths_flat",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(invalid_depths, [-1, 55 * 74])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "multiply_40": {
+                "variable": {
+                    "value": "target",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "depths_flat",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(depths, [-1, 55 * 74])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "invalid_depths_flat",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(invalid_depths, [-1, 55 * 74])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "subtract_41": {
+                "variable": {
+                    "value": "d",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "predict",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.multiply(logits_flat, invalid_depths_flat)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "target",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.multiply(depths_flat, invalid_depths_flat)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "square_42": {
+                "variable": {
+                    "value": "square_d",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "d",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.subtract(predict, target)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reduce_sum_43": {
+                "variable": {
+                    "value": "sum_square_d",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "square_d",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.square(d)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_44": {
+                "variable": {
+                    "value": "sum_d",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "d",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.subtract(predict, target)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "square_45": {
+                "variable": {
+                    "value": "sqare_sum_d",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "sum_d",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reduce_sum(d, 1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reduce_mean_46": {
+                "variable": {
+                    "value": "cost",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "sum_square_d / 55.0 * 74.0 - 0.5 * sqare_sum_d / math.pow(55 * 74, 2)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "ExponentialMovingAverage_52": {
+                "variable": {
+                    "value": "loss_averages",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "decay": {
+                    "value": "0.9",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "avg",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "get_collection_53": {
+                "variable": {
+                    "value": "losses",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "key": {
+                    "value": "losses",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "add_to_collection_47": {
+                "name": {
+                    "value": "losses",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "cost",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reduce_mean(sum_square_d / 55.0 * 74.0 - 0.5 * sqare_sum_d / math.pow(55 * 74, 2))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "add_n_48": {
+                "inputs": {
+                    "value": "tf.get_collection('losses')",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "total_loss",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "get_collection_48": {
+                "key": {
+                    "value": "losses",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "scalar_56": {
+                "name": {
+                    "value": "l.op.name + ' (raw)'",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "l",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "losses + [total_loss]",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "scalar_57": {
+                "name": {
+                    "value": "l.op.name",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "loss_averages.average(l)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "model_part.py": {
+        "tensorflow": {
+            "get_variable_16": {
+                "variable": {
+                    "value": "var",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "name",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "name",
+                            "Method Argument"
+                        ],
+                        [
+                            "name",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "shape",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "shape",
+                            "Method Argument"
+                        ],
+                        [
+                            "shape",
+                            "Method Argument"
+                        ],
+                        [
+                            "shape",
+                            "Method Argument"
+                        ],
+                        [
+                            "shape",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "initializer": {
+                    "value": "initializer",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "initializer",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "multiply_10": {
+                "variable": {
+                    "value": "weight_decay",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.nn.l2_loss(var)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "wd",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "wd",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.0",
+                            "Method Argument"
+                        ],
+                        [
+                            "0.04",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "name": {
+                    "value": "weight_loss",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "conv2d_31": {
+                "variable": {
+                    "value": "conv",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "inputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "inputs",
+                            "Method Argument"
+                        ],
+                        [
+                            "inputs",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "kernel",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "_variable_with_weight_decay('weights', shape=shape, stddev=0.01, wd=wd, trainable=trainable)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "strides": {
+                    "value": "stride",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "stride",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "padding": {
+                    "value": "padding",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "'VALID'",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "bias_add_33": {
+                "variable": {
+                    "value": "bias",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "conv",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.conv2d(inputs, kernel, stride, padding=padding)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "bias": {
+                    "value": "biases",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "_variable_on_gpu('biases', bias_shape, tf.constant_initializer(0.1))",
+                            "Call"
+                        ],
+                        [
+                            "_variable_on_gpu('biases', bias_shape, tf.constant_initializer(0.1))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "relu_34": {
+                "variable": {
+                    "value": "conv_",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "features": {
+                    "value": "bias",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.bias_add(conv, biases)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "name": {
+                    "value": "scope.name",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "reshape_42": {
+                "variable": {
+                    "value": "flat",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "inputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "inputs",
+                            "Method Argument"
+                        ],
+                        [
+                            "inputs",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, shape[0]]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "relu_layer_51": {
+                "variable": {
+                    "value": "fc",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "flat",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(inputs, [-1, shape[0]])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "weights": {
+                    "value": "weights",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "_variable_with_weight_decay('weights', shape, stddev=0.01, wd=wd, trainable=trainable)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "biases": {
+                    "value": "biases",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "_variable_on_gpu('biases', bias_shape, tf.constant_initializer(0.1))",
+                            "Call"
+                        ],
+                        [
+                            "_variable_on_gpu('biases', bias_shape, tf.constant_initializer(0.1))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "name": {
+                    "value": "scope.name",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "truncated_normal_initializer_8": {
+                "stddev": {
+                    "value": "stddev",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "stddev",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "add_to_collection_11": {
+                "name": {
+                    "value": "losses",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "weight_decay",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.multiply(tf.nn.l2_loss(var), wd, name='weight_loss')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "variable_scope_21": {
+                "name_or_scope": {
+                    "value": "scope_name",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "scope_name",
+                            "Method Argument"
+                        ],
+                        [
+                            "scope_name",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "variable_scope_39": {
+                "name_or_scope": {
+                    "value": "scope_name",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "scope_name",
+                            "Method Argument"
+                        ],
+                        [
+                            "scope_name",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "l2_loss_10": {
+                "t": {
+                    "value": "var",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "_variable_on_gpu(name, shape, tf.truncated_normal_initializer(stddev=stddev))",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable(name, shape, initializer=initializer)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "constant_initializer_32": {
+                "value": {
+                    "value": "0.1",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "constant_initializer_50": {
+                "value": {
+                    "value": "0.1",
+                    "type": "float",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "task.py": {
+        "tensorflow": {
+            "Variable_24": {
+                "variable": {
+                    "value": "global_step",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "trainable": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "placeholder_27": {
+                "variable": {
+                    "value": "keep_conv",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "placeholder_28": {
+                "variable": {
+                    "value": "keep_hidden",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "global_variables_initializer_38": {
+                "variable": {
+                    "value": "init_op",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Session_41": {
+                "variable": {
+                    "value": "sess",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "config": {
+                    "value": "tf.ConfigProto(log_device_placement=LOG_DEVICE_PLACEMENT)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Saver_70": {
+                "variable": {
+                    "value": "saver_coarse",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "var_list": {
+                    "value": "coarse_params",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "{}",
+                            "Dict"
+                        ]
+                    ]
+                }
+            },
+            "Coordinator_92": {
+                "variable": {
+                    "value": "coord",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "start_queue_runners_93": {
+                "variable": {
+                    "value": "threads",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "sess": {
+                    "value": "sess",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.Session(config=tf.ConfigProto(log_device_placement=LOG_DEVICE_PLACEMENT))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "coord": {
+                    "value": "coord",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.train.Coordinator()",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "run_129": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Graph_23": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Saver_72": {
+                "variable": {
+                    "value": "saver_refine",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "var_list": {
+                    "value": "refine_params",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "{}",
+                            "Dict"
+                        ]
+                    ]
+                }
+            },
+            "get_checkpoint_state_75": {
+                "variable": {
+                    "value": "coarse_ckpt",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "checkpoint_dir": {
+                    "value": "COARSE_DIR",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "'coarse'",
+                            "str"
+                        ]
+                    ]
+                }
+            },
+            "Exists_121": {
+                "filename": {
+                    "value": "COARSE_DIR",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "'coarse'",
+                            "str"
+                        ]
+                    ]
+                }
+            },
+            "MakeDirs_122": {
+                "dirname": {
+                    "value": "COARSE_DIR",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "'coarse'",
+                            "str"
+                        ]
+                    ]
+                }
+            },
+            "Exists_123": {
+                "filename": {
+                    "value": "REFINE_DIR",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "'refine'",
+                            "str"
+                        ]
+                    ]
+                }
+            },
+            "MakeDirs_124": {
+                "dirname": {
+                    "value": "REFINE_DIR",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "'refine'",
+                            "str"
+                        ]
+                    ]
+                }
+            },
+            "global_variables_48": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "trainable_variables_59": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "get_checkpoint_state_83": {
+                "variable": {
+                    "value": "refine_ckpt",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "checkpoint_dir": {
+                    "value": "REFINE_DIR",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "'refine'",
+                            "str"
+                        ]
+                    ]
+                }
+            },
+            "ConfigProto_41": {
+                "log_device_placement": {
+                    "value": "LOG_DEVICE_PLACEMENT",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "True",
+                            "bool"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "train_operation.py": {
+        "tensorflow": {
+            "ExponentialMovingAverage_13": {
+                "variable": {
+                    "value": "loss_averages",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "decay": {
+                    "value": "0.9",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "avg",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "get_collection_14": {
+                "variable": {
+                    "value": "losses",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "key": {
+                    "value": "losses",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "exponential_decay_25": {
+                "variable": {
+                    "value": "lr",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "learning_rate": {
+                    "value": "INITIAL_LEARNING_RATE",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "0.0001",
+                            "float"
+                        ]
+                    ]
+                },
+                "global_step": {
+                    "value": "global_step",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "global_step",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "decay_steps": {
+                    "value": "decay_steps",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "int(num_batches_per_epoch * NUM_EPOCHS_PER_DECAY)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "decay_rate": {
+                    "value": "LEARNING_RATE_DECAY_FACTOR",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "0.9",
+                            "float"
+                        ]
+                    ]
+                },
+                "staircase": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "ExponentialMovingAverage_43": {
+                "variable": {
+                    "value": "variable_averages",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "decay": {
+                    "value": "MOVING_AVERAGE_DECAY",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "0.999999",
+                            "float"
+                        ]
+                    ]
+                },
+                "num_updates": {
+                    "value": "global_step",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "global_step",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "scalar_31": {
+                "name": {
+                    "value": "learning_rate",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "lr",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.train.exponential_decay(INITIAL_LEARNING_RATE, global_step, decay_steps, LEARNING_RATE_DECAY_FACTOR, staircase=True)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "AdamOptimizer_34": {
+                "variable": {
+                    "value": "opt",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "learning_rate": {
+                    "value": "lr",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.train.exponential_decay(INITIAL_LEARNING_RATE, global_step, decay_steps, LEARNING_RATE_DECAY_FACTOR, staircase=True)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "trainable_variables_37": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "no_op_47": {
+                "variable": {
+                    "value": "train_op",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "train",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "scalar_17": {
+                "name": {
+                    "value": "l.op.name + ' (raw)'",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "l",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "losses + [total_loss]",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "scalar_18": {
+                "name": {
+                    "value": "l.op.name",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "loss_averages.average(l)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "control_dependencies_33": {
+                "control_inputs": {
+                    "value": "[loss_averages_op]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "histogram_39": {
+                "name": {
+                    "value": "var.op.name",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "var",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.trainable_variables()",
+                            "Call"
+                        ],
+                        [
+                            "grads",
+                            "variable"
+                        ]
+                    ]
+                }
+            },
+            "trainable_variables_45": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "control_dependencies_46": {
+                "control_inputs": {
+                    "value": "[apply_gradient_op, variables_averages_op]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "histogram_42": {
+                "name": {
+                    "value": "var.op.name + '/gradients'",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "grad",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "grads",
+                            "variable"
+                        ]
+                    ]
+                }
+            }
+        }
+    }
+}
