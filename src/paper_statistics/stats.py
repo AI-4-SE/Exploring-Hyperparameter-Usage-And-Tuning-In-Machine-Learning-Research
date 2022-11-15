@@ -62,10 +62,11 @@ def main():
             counter += 1
             
 
-    print("Counter: ", counter)
-    df_no = df[df["model parameters"] == "no"]
-    df_no = df_no[df_no["hyperparameter"] == "no"]
-    df_no.to_csv("test.csv")
+    #print("Counter: ", counter)
+    #df_no = df[df["model parameters"] == "no"]
+    #df_no = df_no[df_no["hyperparameter"] == "no"]
+    #df_no.to_csv("test.csv")
+
 
 if __name__ == "__main__":
     main()
