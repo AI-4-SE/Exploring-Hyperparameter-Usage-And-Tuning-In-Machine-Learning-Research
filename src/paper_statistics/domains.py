@@ -127,3 +127,14 @@ electric_engineering = {
     "eess.SY": "Systems and Control",
     "eess.SP": "Signal Processing",
 }
+
+
+dicts = {computer_science, finance, statistics, electric_engineering, bio, physics, math, economics}
+
+
+def get_all_dicts():
+    all_dicts = {}
+    for d in dicts:
+        for k, v in d.items():
+            all[k].add(v)
+    return all_dicts
