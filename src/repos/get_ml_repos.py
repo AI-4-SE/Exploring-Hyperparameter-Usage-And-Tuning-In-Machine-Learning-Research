@@ -5,9 +5,7 @@ import tarfile
 import csv
 import json
 import pandas as pd
-import git
 import ast
-from git import Repo
 import bz2
 import requests
 
@@ -225,6 +223,26 @@ def get_metadata():
         json.dump(metadata, dest, indent=4, sort_keys=True)
 
 
+def check_methods():
+
+    with open("final_metadata.json", "r", encoding="utf-8") as src:
+        data = json.load(src)
+
+    print(len(data))
+    counter = 0
+
+    for item in data:
+        papers = item["papers"]
+        for paper in papers: 
+            methods = paper["methods"]
+            if methods:
+                counter += 1
+
+                #print(paper["paper_title"])
+
+    print(counter)
+
+
 if __name__ == "__main__":
     #create_sample_set(5000)
     #find_ml_repos("\\src\\repos\\ml_samples_5000.txt")
@@ -246,9 +264,10 @@ if __name__ == "__main__":
     #get_urls(pytorch_path, pytorch_url)
     #check_python_version(pytorch_url, pytorch_url_final)
 
-    with open("final_metadata_set.json", "r", encoding="utf-8") as src:
-        data = json.load(src)
-        print(len(data))
+    #with open("final_metadata_set.json", "r", encoding="utf-8") as src:
+    #    data = json.load(src)
+    #    print(len(data))
 
 
     #get_metadata()
+    check_methods()
