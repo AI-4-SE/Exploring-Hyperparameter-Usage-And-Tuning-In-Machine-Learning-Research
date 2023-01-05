@@ -93,7 +93,7 @@ def get_category_data():
     #print(type(top_categories_with_tasks))
     #print(top_categories_with_tasks)
 
-    with open("categories.json", "w", encoding="utf-8") as dest:
+    with open("categories_all.json", "w", encoding="utf-8") as dest:
         json.dump(top_categories_with_tasks, dest, sort_keys=True, indent=4)
     
 
