@@ -2,11 +2,17 @@ import json
 
 from sklearn.utils import all_estimators
 
-def print_estimators():
-    estimators = all_estimators(type_filter="transformer")
+def print_data():
+    estimators = all_estimators(type_filter=["regressor", "cluster", "classifier"])
     estimator_names = [x[0] for x in estimators]
-    print(estimator_names)
-    print(len(estimator_names))
+
+    optimizer = ["GridSearchCV", "HalvingGridSearchCV", "RandomizedSearchCV", "HalvingRandomizedSearchCV"]
+    
+    data = estimator_names + optimizer
+
+    for x in data:
+        print(x)
+    print(len(data))
 
 
 def main():
@@ -35,5 +41,5 @@ def main():
 
 
 if __name__ == "__main__":
-    #print_estimators()
+    print_data()
     main()
