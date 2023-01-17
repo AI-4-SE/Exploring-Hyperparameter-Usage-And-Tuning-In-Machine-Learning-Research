@@ -14,16 +14,16 @@ def get_tf_optimizer():
     # tensorflow.keras.optimizers.legacy
 
     for item in data:
-        if "tensorflow.keras.optimizer" in item["full_name"]:
-            parts = item["full_name"].split(".")
-            if len(parts) == 4 and parts[-1][0].isupper(): 
-                optimizer.append(item)
+        #if "tensorflow.keras.optimizer" in item["full_name"]:
+        #    parts = item["full_name"].split(".")
+        #    if len(parts) == 4 and parts[-1][0].isupper(): 
+        #        optimizer.append(item)
             
-        if "tensorflow.keras.dtensor.experimental.optimizers" in item["full_name"]:
-            optimizer.append(item)
+        #if "tensorflow.keras.dtensor.experimental.optimizers" in item["full_name"]:
+        #    optimizer.append(item)
 
-        if "tensorflow.keras.optimizers.legacy" in item["full_name"]:
-            optimizer.append(item)
+        #if "tensorflow.keras.optimizers.legacy" in item["full_name"]:
+        #    optimizer.append(item)
 
         if "tensorflow.keras.optimizers.experimental" in item["full_name"]:
             optimizer.append(item)
@@ -54,5 +54,5 @@ def get_pytorch_optimizer():
 
 if __name__ == "__main__":
     #print_estimators()
-    #get_tf_optimizer()
-    get_pytorch_optimizer()
+    get_tf_optimizer()
+    #get_pytorch_optimizer()
