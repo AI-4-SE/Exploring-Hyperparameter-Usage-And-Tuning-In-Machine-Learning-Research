@@ -1,6 +1,7 @@
-import json
 from typing import List
+from aquarel import load_theme
 import matplotlib.pyplot as plt
+import json
 
 hyperparameter_importance = "../data/dblp/hyperparameter_importance.json"
 hyperparameter_tuning = "../data/dblp/hyperparameter_tuning.json"
@@ -42,15 +43,20 @@ def create_histogram():
 
     labels = ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022"]
     
+    #with load_theme("boxy_light"):
     fig, ax = plt.subplots()
 
     ax.bar(labels, data)
 
     ax.set_xlabel('Year')
     ax.set_ylabel('Number of Papers')
+    ax.grid(axis='x')
+
+    plt.grid()
 
     #plt.tight_layout(pad=0)
-    plt.savefig("paper_per_year.svg",bbox_inches='tight',  pad_inches=0)
+    #plt.show()
+    plt.savefig("papers_per_year.svg",bbox_inches='tight',  pad_inches=0)
 
 def main():
     print("Matches 2015: ", get_hits_by_year("2015"))
