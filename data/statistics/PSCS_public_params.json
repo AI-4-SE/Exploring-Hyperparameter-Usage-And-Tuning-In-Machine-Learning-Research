@@ -1,0 +1,1080 @@
+{
+    "dataset/dataset.py": {
+        "torch": {
+            "tensor_117": {
+                "data": {
+                    "value": "nl",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.nl_tokenized[code_id]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "tensor_118": {
+                "data": {
+                    "value": "paths",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "pd.read_csv(file_path('paths', True), sep=',')",
+                            "Call"
+                        ],
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                }
+            },
+            "tensor_119": {
+                "data": {
+                    "value": "start_tokens",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                }
+            },
+            "tensor_120": {
+                "data": {
+                    "value": "end_tokens",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "main.py": {
+        "torch": {
+            "device_33": {
+                "variable": {
+                    "value": "device",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "type": {
+                    "value": "cuda:0 if cuda_condition else cpu",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_49": {
+                "variable": {
+                    "value": "train_data_loader",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "corpus_train",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "SiamessDataset(args, '{}/processed/siamess_nl_train.txt'.format(args.data_dir), nl_vocab, args.nl_seq_len, path_vocab, args.path_len, '{}/path_data/train'.format(args.data_dir), args.k, is_train=True)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "args.batch_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Adam_59": {
+                "variable": {
+                    "value": "optim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "model.parameters()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "args.lr",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "betas": {
+                    "value": "[args.adam_beta1, args.adam_beta2]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "weight_decay": {
+                    "value": "args.adam_weight_decay",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "LambdaLR_62": {
+                "variable": {
+                    "value": "scheduler",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "optimizer": {
+                    "value": "optim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Adam(model.parameters(), lr=args.lr, betas=[args.adam_beta1, args.adam_beta2], weight_decay=args.adam_weight_decay)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "lr_lambda": {
+                    "value": "lambda epoch: args.decay_ratio ** epoch",
+                    "type": "Lambda",
+                    "possible_values": []
+                }
+            },
+            "DataLoader_207": {
+                "variable": {
+                    "value": "data_loader",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "valid_set",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "valid_set",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "poolsize",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "poolsize",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "shuffle": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "drop_last": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "num_workers": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "DataParallel_69": {
+                "variable": {
+                    "value": "model",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "module": {
+                    "value": "model",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "PSCSNetwork(args, len(nl_vocab), len(path_vocab), device)",
+                            "Call"
+                        ],
+                        [
+                            "nn.DataParallel(model)",
+                            "Call"
+                        ],
+                        [
+                            "model.to(device)",
+                            "Call"
+                        ],
+                        [
+                            "model",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "save_146": {
+                "obj": {
+                    "value": "model.cpu()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "output_path",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "model_save_dir + '/main.model.ep%d' % epoch",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "device_count_67": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "empty_cache_214": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "no_grad_215": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "cosine_similarity_226": {
+                "x1": {
+                    "value": "code_vec",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "model.module.forward(data['nl'], data['paths'], data['start_tokens'], data['end_tokens'])",
+                            "Call"
+                        ],
+                        [
+                            "model.forward(data['nl'], data['paths'], data['start_tokens'], data['end_tokens'])",
+                            "Call"
+                        ],
+                        [
+                            "model.forward(data['nl'], data['paths'], data['start_tokens'], data['end_tokens'])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "x2": {
+                    "value": "nl_vec_rep",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "nl_emb[i].view(1, -1).expand(poolsize, -1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "model/loss.py": {
+        "torch": {
+            "cosine_similarity_13": {
+                "x1": {
+                    "value": "nl_vec_neg",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "nl_vec_neg",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "x2": {
+                    "value": "code_vec_pos",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "code_vec_pos",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "cosine_similarity_12": {
+                "x1": {
+                    "value": "nl_vec_pos",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "nl_vec_pos",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "x2": {
+                    "value": "code_vec_pos",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "code_vec_pos",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "model/model.py": {
+        "torch": {
+            "Embedding_13": {
+                "variable": {
+                    "value": "self.nl_emb",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "nl_vocab_len",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "nl_vocab_len",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "embedding_dim": {
+                    "value": "config.emb_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "padding_idx": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "max_norm": {
+                    "value": "config.max_norm",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Embedding_15": {
+                "variable": {
+                    "value": "self.path_emb",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "path_vocab_len",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "path_vocab_len",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "embedding_dim": {
+                    "value": "config.emb_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "padding_idx": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "max_norm": {
+                    "value": "config.max_norm",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Linear_17": {
+                "variable": {
+                    "value": "self.linear",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "config.emb_size * 4",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "config.emb_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "LSTM_18": {
+                "variable": {
+                    "value": "self.path_lstm",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "config.emb_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_layers": {
+                    "value": "config.num_layers",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dropout": {
+                    "value": "config.rnn_dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "bidirectional": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Parameter_22": {
+                "variable": {
+                    "value": "self.W_a",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.rand((config.emb_size * 4, config.emb_size * 4), dtype=torch.float, device=device, requires_grad=True)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Parameter_26": {
+                "variable": {
+                    "value": "self.W_b",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.rand((config.emb_size, config.emb_size), dtype=torch.float, device=device, requires_grad=True)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Dropout_29": {
+                "variable": {
+                    "value": "self.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "config.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "cat_67": {
+                "variable": {
+                    "value": "code_emb",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "(start_token_emb, end_token_emb, path_vec)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_85": {
+                "variable": {
+                    "value": "e_out",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "encoder_output_bag",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "encoder_output_bag",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "einsum_90": {
+                "variable": {
+                    "value": "ha",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "equation": {
+                    "value": "ij,jk->ik",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "*operands": {
+                    "value": "e_out",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.cat(encoder_output_bag, dim=0)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "split_93": {
+                "variable": {
+                    "value": "ha",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "ha",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "einsum('ij,jk->ik', e_out, w)",
+                            "Call"
+                        ],
+                        [
+                            "torch.split(ha, lengths_k, dim=0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "split_size_or_sections": {
+                    "value": "lengths_k",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "lengths_k",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "unbind_98": {
+                "variable": {
+                    "value": "hd",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "hd",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "hidden.transpose(0, 1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.unbind(hd, dim=0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_112": {
+                "variable": {
+                    "value": "ct",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "ct",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[torch.einsum('i,ij->j', a, e).unsqueeze(0) for (a, e) in zip(at, encoder_output_bag)]",
+                            "ListComp"
+                        ],
+                        [
+                            "torch.cat(ct, dim=0).unsqueeze(0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "unsqueeze_112": {
+                "variable": {
+                    "value": "ct",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "split_117": {
+                "variable": {
+                    "value": "nl_emb",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "nl_emb.view(-1, self.config.emb_size)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "split_size_or_sections": {
+                    "value": "self.config.nl_seq_len",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_120": {
+                "variable": {
+                    "value": "hidden_0",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "hidden_0",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[ne.mean(0).unsqueeze(dim=0) for ne in nl_emb]",
+                            "ListComp"
+                        ],
+                        [
+                            "torch.cat(hidden_0, dim=0).unsqueeze(dim=0)",
+                            "Call"
+                        ],
+                        [
+                            "[cv.mean(0).unsqueeze(dim=0) for cv in code_vec]",
+                            "ListComp"
+                        ],
+                        [
+                            "torch.cat(hidden_0, dim=0).unsqueeze(dim=0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "unsqueeze_120": {
+                "variable": {
+                    "value": "hidden_0",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "split_127": {
+                "variable": {
+                    "value": "code_vec",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "code_emb.contiguous().view(-1, 4 * self.config.emb_size)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "split_size_or_sections": {
+                    "value": "self.config.k",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_131": {
+                "variable": {
+                    "value": "hidden_0",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "hidden_0",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[ne.mean(0).unsqueeze(dim=0) for ne in nl_emb]",
+                            "ListComp"
+                        ],
+                        [
+                            "torch.cat(hidden_0, dim=0).unsqueeze(dim=0)",
+                            "Call"
+                        ],
+                        [
+                            "[cv.mean(0).unsqueeze(dim=0) for cv in code_vec]",
+                            "ListComp"
+                        ],
+                        [
+                            "torch.cat(hidden_0, dim=0).unsqueeze(dim=0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "unsqueeze_131": {
+                "variable": {
+                    "value": "hidden_0",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "rand_23": {
+                "*size": {
+                    "value": "(config.emb_size * 4, config.emb_size * 4)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.float",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "device",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "device",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "requires_grad": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "rand_26": {
+                "*size": {
+                    "value": "(config.emb_size, config.emb_size)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.float",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "device": {
+                    "value": "device",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "device",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "requires_grad": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "softmax_101": {
+                "input": {
+                    "value": "torch.einsum('ij,kj->i', _ha, _hd)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "einsum_107": {
+                "equation": {
+                    "value": "i,ij->j",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "*operands": {
+                    "value": "a",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "unsqueeze_107": {
+                "input": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "einsum_101": {
+                "equation": {
+                    "value": "ij,kj->i",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "*operands": {
+                    "value": "_ha",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "scripts/dataset/dataset.py": {
+        "torch": {
+            "tensor_117": {
+                "data": {
+                    "value": "nl",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.nl_tokenized[code_id]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "tensor_118": {
+                "data": {
+                    "value": "paths",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "pd.read_csv(file_path('paths', True), sep=',')",
+                            "Call"
+                        ],
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                }
+            },
+            "tensor_119": {
+                "data": {
+                    "value": "start_tokens",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                }
+            },
+            "tensor_120": {
+                "data": {
+                    "value": "end_tokens",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "test.py": {
+        "torch": {
+            "load_30": {
+                "variable": {
+                    "value": "model",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "model_save_dir",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "'{}/main_model/main.model.ep{}'.format(args.save_dir, str(args.test_epoch))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "DataLoader_102": {
+                "variable": {
+                    "value": "data_loader",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "valid_set",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "valid_set",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "poolsize",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "poolsize",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "shuffle": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "drop_last": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "num_workers": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_126": {
+                "variable": {
+                    "value": "all_nl_emb",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "all_nl_emb",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "torch.cat(all_nl_emb)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "cat_127": {
+                "variable": {
+                    "value": "all_code_vec",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "all_code_vec",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "torch.cat(all_code_vec)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "empty_cache_113": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "no_grad_114": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "cosine_similarity_131": {
+                "x1": {
+                    "value": "all_code_vec",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "torch.cat(all_code_vec)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "x2": {
+                    "value": "nl_vec_rep",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "all_nl_emb[i].view(1, -1).expand(data_num, -1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    }
+}

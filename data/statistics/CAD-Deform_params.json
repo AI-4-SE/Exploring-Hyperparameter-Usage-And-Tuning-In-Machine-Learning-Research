@@ -1,0 +1,4229 @@
+{
+    "scripts/align_shapes.py": {
+        "sklearn": {
+            "AgglomerativeClustering_149": {
+                "variable": {
+                    "value": "sc",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "n_clusters": {
+                    "value": "n",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "13",
+                            "int"
+                        ]
+                    ]
+                },
+                "affinity": {
+                    "value": "precomputed",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "linkage": {
+                    "value": "average",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "AgglomerativeClustering_151": {
+                "variable": {
+                    "value": "sc",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "n_clusters": {
+                    "value": "None",
+                    "type": "NoneType",
+                    "possible_values": []
+                },
+                "distance_threshold": {
+                    "value": "options.clustering_distance_threshold",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "affinity": {
+                    "value": "precomputed",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "linkage": {
+                    "value": "average",
+                    "type": "str",
+                    "possible_values": []
+                }
+            }
+        },
+        "torch": {
+            "tensor_94": {
+                "variable": {
+                    "value": "kps",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "keypoints",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "np.array([p['p_scan'] for p in input_json])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reshape_96": {
+                "variable": {
+                    "value": "heatmap_values",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "n_keypoints",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "len(kps)",
+                            "Call"
+                        ],
+                        [
+                            "len(init_T)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "tensor_104": {
+                "variable": {
+                    "value": "idx_shape",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "idx_shape",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "np.array(np.meshgrid(range(32), range(32), range(32))).T",
+                            "Attribute"
+                        ],
+                        [
+                            "np.swapaxes(idx_shape, 1, 2)",
+                            "Call"
+                        ],
+                        [
+                            "idx_shape @ heatmaps[0].grid2world[:3, :3] + heatmaps[0].grid2world[:3, -1]",
+                            "BinOp"
+                        ],
+                        [
+                            "np.hstack((idx_shape.reshape(-1, 3), np.ones((32 ** 3, 1))))",
+                            "Call"
+                        ],
+                        [
+                            "torch.tensor(idx_shape)",
+                            "Call"
+                        ],
+                        [
+                            "idx_shape.reshape(1, -1, 4).repeat(n_keypoints, 1, 1)",
+                            "Call"
+                        ],
+                        [
+                            "idx_shape[:, idx_sdf]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "empty_168": {
+                "variable": {
+                    "value": "result_T",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "len(sc.labels_)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "9",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "tensor_282": {
+                "variable": {
+                    "value": "Ts",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "[make_M_from_tqs(x[:3], x[3:7], x[7:]) for x in T]",
+                    "type": "ListComp",
+                    "possible_values": []
+                }
+            },
+            "einsum_283": {
+                "variable": {
+                    "value": "shapes",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "equation": {
+                    "value": "nij,nkj->nik",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "*operands": {
+                    "value": "shape_vis",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "shape_vis.reshape(1, -1, 4).repeat(len(T), 1, 1)",
+                            "Call"
+                        ],
+                        [
+                            "shape_vis",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "tensor_184": {
+                "variable": {
+                    "value": "T",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "init_T",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[list(r) + list(k[:3]) + list(s) for (r, k, s) in zip(rot, keypts, scs)]",
+                            "ListComp"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "torch.double",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "requires_grad": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "Adam_187": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "[T]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "lr",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "options.learning_rate",
+                            "Attribute"
+                        ]
+                    ]
+                }
+            },
+            "tensor_395": {
+                "variable": {
+                    "value": "obj",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "vox2obj(vox)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "einsum_202": {
+                "variable": {
+                    "value": "idx_shape_translated",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "equation": {
+                    "value": "nij,nkj->nik",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "*operands": {
+                    "value": "idx_shape[list(num)]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "mean_217": {
+                "variable": {
+                    "value": "inner_mean",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "(left - right) ** 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "exp_218": {
+                "variable": {
+                    "value": "kernel",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "-theta * inner_mean",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "mean_220": {
+                "variable": {
+                    "value": "inner_mean",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.abs(left - right)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "exp_221": {
+                "variable": {
+                    "value": "kernel",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "-theta * inner_mean",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "abs_220": {
+                "input": {
+                    "value": "left - right",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "scripts/deformation_inference_o2o.py": {
+        "torch": {
+            "set_num_threads_128": {
+                "int": {
+                    "value": "4",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_119": {
+                "tensors": {
+                    "value": "starting_vertices_transforms",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[torch.Tensor(np.repeat(np.eye(4)[None, :, :], len(part.vertices), axis=0)) for part in parts]",
+                            "ListComp"
+                        ],
+                        [
+                            "[torch.cat(starting_vertices_transforms, dim=0)]",
+                            "List"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_122": {
+                "tensors": {
+                    "value": "initial_vertices_transforms",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[torch.Tensor(np.repeat(np.eye(4)[None, :, :], len(parts[0].vertices), axis=0)) for part in parts]",
+                            "ListComp"
+                        ],
+                        [
+                            "[torch.cat(initial_vertices_transforms, dim=0)]",
+                            "List"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "scripts/deformation_inference_p2p.py": {
+        "torch": {
+            "set_num_threads_105": {
+                "int": {
+                    "value": "4",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_96": {
+                "tensors": {
+                    "value": "starting_vertices_transforms",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[torch.Tensor(np.repeat(np.eye(4)[None, :, :], len(part.vertices), axis=0)) for part in parts]",
+                            "ListComp"
+                        ],
+                        [
+                            "[torch.cat(starting_vertices_transforms, dim=0)]",
+                            "List"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_99": {
+                "tensors": {
+                    "value": "initial_vertices_transforms",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[torch.Tensor(np.repeat(np.eye(4)[None, :, :], len(parts[0].vertices), axis=0)) for part in parts]",
+                            "ListComp"
+                        ],
+                        [
+                            "[torch.cat(initial_vertices_transforms, dim=0)]",
+                            "List"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "shapefit/deform/src/deformation/deformation.py": {
+        "torch": {
+            "zeros_like_93": {
+                "variable": {
+                    "value": "torch_tmp_vertices",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.torch_vertices_4d",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "zeros_113": {
+                "variable": {
+                    "value": "tmp_adjacent_edges",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(len(self.faces_to_edges_map) * 3, 2)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.int",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "cat_263": {
+                "variable": {
+                    "value": "vertices_concat",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[vertices[:, 0], vertices[:, 1], vertices[:, 2]]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "Tensor_290": {
+                "variable": {
+                    "value": "lin_grad",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Tensor_291": {
+                "variable": {
+                    "value": "lin_grad_safe",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "cat_293": {
+                "variable": {
+                    "value": "lin_grad",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[lin_grad[:self.n_vertices], lin_grad[self.n_vertices:2 * self.n_vertices], lin_grad[2 * self.n_vertices:]]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "cat_296": {
+                "variable": {
+                    "value": "lin_grad_safe",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[lin_grad_safe[:self.n_vertices], lin_grad_safe[self.n_vertices:2 * self.n_vertices], lin_grad_safe[2 * self.n_vertices:]]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "cat_300": {
+                "variable": {
+                    "value": "vertices_concat",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[vertices[:self.n_vertices, 0], vertices[:self.n_vertices, 1], vertices[:self.n_vertices, 2]]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "clone_300": {
+                "variable": {
+                    "value": "vertices_concat",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "cat_303": {
+                "variable": {
+                    "value": "vertices_concat_target",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[vertices_target[:self.n_vertices, 0], vertices_target[:self.n_vertices, 1], vertices_target[:self.n_vertices, 2]]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "clone_303": {
+                "variable": {
+                    "value": "vertices_concat_target",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "mv_95": {
+                "variable": {
+                    "value": "torch_tmp_vertices[j]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "transform",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "transform in enumerate(self.target_vertices_transforms)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "vec": {
+                    "value": "self.torch_vertices_4d[j]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "LBFGS_358": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "[vertices_concat]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "lr": {
+                    "value": "lr",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "1.0",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "max_iter": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "history_size": {
+                    "value": "1000",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "sqrt_496": {
+                "variable": {
+                    "value": "p_deviation",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.sum((vertices_concat_init - vertices_concat_detached) ** 2)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "sqrt_498": {
+                "variable": {
+                    "value": "p_deviation_target",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.sum((vertices_concat_target - vertices_concat_detached) ** 2)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Tensor_157": {
+                "variable": {
+                    "value": "a",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "cat_407": {
+                "variable": {
+                    "value": "v_coords",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[vertices_concat[:self.n_vertices][..., None], vertices_concat[self.n_vertices:2 * self.n_vertices][..., None], vertices_concat[2 * self.n_vertices:][..., None]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Tensor_449": {
+                "variable": {
+                    "value": "lin_grad",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "Tensor_450": {
+                "variable": {
+                    "value": "lin_grad_safe",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "cat_452": {
+                "variable": {
+                    "value": "lin_grad",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[lin_grad[:self.n_vertices], lin_grad[self.n_vertices:2 * self.n_vertices], lin_grad[2 * self.n_vertices:]]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "cat_455": {
+                "variable": {
+                    "value": "lin_grad_safe",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[lin_grad_safe[:self.n_vertices], lin_grad_safe[self.n_vertices:2 * self.n_vertices], lin_grad_safe[2 * self.n_vertices:]]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "sparse_coo_tensor_331": {
+                "variable": {
+                    "value": "precond",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "indices": {
+                    "value": "i",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "i in range(len(self.voxel_centers_p2p))",
+                            "Call"
+                        ],
+                        [
+                            "torch.LongTensor(indices)",
+                            "Call"
+                        ],
+                        [
+                            "torch.LongTensor(indices)",
+                            "Call"
+                        ],
+                        [
+                            "i in range(num_parts)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "values": {
+                    "value": "v",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.DoubleTensor(values)",
+                            "Call"
+                        ],
+                        [
+                            "torch.DoubleTensor(values)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "size": {
+                    "value": "torch.Size(shape)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "sum_491": {
+                "input": {
+                    "value": "lin_grad.cpu() ** 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sum_492": {
+                "input": {
+                    "value": "lin_grad_safe.cpu() ** 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sum_496": {
+                "input": {
+                    "value": "(vertices_concat_init - vertices_concat_detached) ** 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sum_498": {
+                "input": {
+                    "value": "(vertices_concat_target - vertices_concat_detached) ** 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sum_429": {
+                "input": {
+                    "value": "vertices_concat.grad.cpu().detach() ** 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sum_482": {
+                "input": {
+                    "value": "affine_components ** 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sqrt_165": {
+                "variable": {
+                    "value": "distances",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.sum((a[:, None, :] - x[None, ...]) ** 2, dim=2)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "sum_168": {
+                "variable": {
+                    "value": "count_close_vertices",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "close_points_count",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "(distances < 0.02).double()",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "sum_170": {
+                "variable": {
+                    "value": "kernel_value",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "filter_count_close_points * close_points[..., None] * (a[:, None, :] - x[None, ...]) ** 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "sum_172": {
+                "variable": {
+                    "value": "kernel_value",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "(a - x) ** 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "sum_165": {
+                "input": {
+                    "value": "(a[:, None, :] - x[None, ...]) ** 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "sum_413": {
+                "input": {
+                    "value": "self.segmentation_soft_indicators_nn(v_coords[self.surface_samples_nn]) ** 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sum_419": {
+                "input": {
+                    "value": "kernel_value ** 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "shapefit/deform/src/deformation/optimization.py": {
+        "torch": {
+            "cat_270": {
+                "tensors": {
+                    "value": "views",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "mul_421": {
+                "variable": {
+                    "value": "d",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "q",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "flat_grad.neg()",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "H_diag",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "state.get('H_diag')",
+                            "Call"
+                        ],
+                        [
+                            "1",
+                            "int"
+                        ],
+                        [
+                            "ys / y.dot(y)",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "cat_467": {
+                "variable": {
+                    "value": "q1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[q[:precond_size, None], q[precond_size:2 * precond_size, None], q[2 * precond_size:, None]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "mm_470": {
+                "variable": {
+                    "value": "a",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "precond",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "group['precond']",
+                            "Subscript"
+                        ],
+                        [
+                            "state['precond']",
+                            "Subscript"
+                        ],
+                        [
+                            "precond",
+                            "variable"
+                        ],
+                        [
+                            "precond",
+                            "variable"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "mat2": {
+                    "value": "q1",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.cat([q[:precond_size, None], q[precond_size:2 * precond_size, None], q[2 * precond_size:, None]], dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.cat([q[:precond_size, None], q[precond_size:2 * precond_size, None], q[2 * precond_size:, None]], dim=1).cpu()",
+                            "Call"
+                        ],
+                        [
+                            "torch.cat([q[:precond_size, None], q[precond_size:2 * precond_size, None], q[2 * precond_size:, None]], dim=1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "cat_471": {
+                "variable": {
+                    "value": "d",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[a[:, 0], a[:, 1], a[:, 2]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_428": {
+                "variable": {
+                    "value": "q1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[q[:precond_size, None], q[precond_size:2 * precond_size, None], q[2 * precond_size:, None]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "mm_432": {
+                "variable": {
+                    "value": "a",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "precond",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "group['precond']",
+                            "Subscript"
+                        ],
+                        [
+                            "state['precond']",
+                            "Subscript"
+                        ],
+                        [
+                            "precond",
+                            "variable"
+                        ],
+                        [
+                            "precond",
+                            "variable"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "mat2": {
+                    "value": "q1",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.cat([q[:precond_size, None], q[precond_size:2 * precond_size, None], q[2 * precond_size:, None]], dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.cat([q[:precond_size, None], q[precond_size:2 * precond_size, None], q[2 * precond_size:, None]], dim=1).cpu()",
+                            "Call"
+                        ],
+                        [
+                            "torch.cat([q[:precond_size, None], q[precond_size:2 * precond_size, None], q[2 * precond_size:, None]], dim=1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "cat_435": {
+                "variable": {
+                    "value": "d",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[a[:, 0], a[:, 1], a[:, 2]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_452": {
+                "variable": {
+                    "value": "q1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[q[:precond_size, None], q[precond_size:2 * precond_size, None], q[2 * precond_size:, None]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "mm_456": {
+                "variable": {
+                    "value": "a",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "precond",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "group['precond']",
+                            "Subscript"
+                        ],
+                        [
+                            "state['precond']",
+                            "Subscript"
+                        ],
+                        [
+                            "precond",
+                            "variable"
+                        ],
+                        [
+                            "precond",
+                            "variable"
+                        ],
+                        [
+                            "None",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "mat2": {
+                    "value": "q1",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.cat([q[:precond_size, None], q[precond_size:2 * precond_size, None], q[2 * precond_size:, None]], dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.cat([q[:precond_size, None], q[precond_size:2 * precond_size, None], q[2 * precond_size:, None]], dim=1).cpu()",
+                            "Call"
+                        ],
+                        [
+                            "torch.cat([q[:precond_size, None], q[precond_size:2 * precond_size, None], q[2 * precond_size:, None]], dim=1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "cat_459": {
+                "variable": {
+                    "value": "d",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[a[:, 0], a[:, 1], a[:, 2]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "shapefit/deform/src/deformation/transformation.py": {
+        "torch": {
+            "matmul_36": {
+                "variable": {
+                    "value": "edges_transforms",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "bitriangles_explicit_orig.inverse()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "bitriangles_explicit_pred",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "target_vertices[bitriangles_map.view(-1).long(), :].view(len(unique_edges), 4, 4).double()",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Tensor_55": {
+                "variable": {
+                    "value": "D",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "zeros_59": {
+                "variable": {
+                    "value": "D_1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(3, 12)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "zeros_60": {
+                "variable": {
+                    "value": "D_2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(3, 12)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "zeros_61": {
+                "variable": {
+                    "value": "D_3",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(3, 12)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "zeros_62": {
+                "variable": {
+                    "value": "D_4",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(3, 12)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "stack_79": {
+                "variable": {
+                    "value": "v_0",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[bitriangles_explicit_undeformed[:, 0, :] - bitriangles_explicit_undeformed[:, 3, :], bitriangles_explicit_undeformed[:, 1, :] - bitriangles_explicit_undeformed[:, 3, :], bitriangles_explicit_undeformed[:, 2, :] - bitriangles_explicit_undeformed[:, 3, :]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "stack_121": {
+                "variable": {
+                    "value": "dual_w",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[torch.cross(v_0[:, 1, :], v_0[:, 2, :]) / vol_120, torch.cross(v_0[:, 2, :], v_0[:, 0, :]) / vol_201, torch.cross(v_0[:, 0, :], v_0[:, 1, :]) / vol_012]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "transpose_124": {
+                "variable": {
+                    "value": "dual_w",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "dual_w",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.stack([torch.cross(v_0[:, 1, :], v_0[:, 2, :]) / vol_120, torch.cross(v_0[:, 2, :], v_0[:, 0, :]) / vol_201, torch.cross(v_0[:, 0, :], v_0[:, 1, :]) / vol_012], dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.transpose(dual_w, 1, 2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim0": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dim1": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "stack_127": {
+                "variable": {
+                    "value": "v_sqr",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[bitriangles_explicit_undeformed[:, 0, :] - bitriangles_explicit_undeformed[:, 1, :], bitriangles_explicit_undeformed[:, 0, :] - bitriangles_explicit_undeformed[:, 2, :], bitriangles_explicit_undeformed[:, 0, :] - bitriangles_explicit_undeformed[:, 3, :]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "sqrt_131": {
+                "variable": {
+                    "value": "sqr",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.sum(sqr ** 2, dim=1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "bmm_138": {
+                "variable": {
+                    "value": "WD",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "dual_w",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.stack([torch.cross(v_0[:, 1, :], v_0[:, 2, :]) / vol_120, torch.cross(v_0[:, 2, :], v_0[:, 0, :]) / vol_201, torch.cross(v_0[:, 0, :], v_0[:, 1, :]) / vol_012], dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.transpose(dual_w, 1, 2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "mat2": {
+                    "value": "D.repeat(n_edges, 1, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "bmm_140": {
+                "variable": {
+                    "value": "G",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "WD.transpose(1, 2)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "mat2": {
+                    "value": "WD",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.bmm(dual_w, D.repeat(n_edges, 1, 1))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "flatten_145": {
+                "variable": {
+                    "value": "G_flattened",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "G",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.bmm(WD.transpose(1, 2), WD)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "start_dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "end_dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "flatten_147": {
+                "variable": {
+                    "value": "G_flattened_normed",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "G_normed",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "sqr[:, None, None] * G",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "start_dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "end_dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "zeros_150": {
+                "variable": {
+                    "value": "C_cat",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "n_edges",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "len(parts_edges_indices)",
+                            "Call"
+                        ],
+                        [
+                            "len(parts_bitriangles_map)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "48",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "transpose_155": {
+                "variable": {
+                    "value": "R",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "parts_bitriangles_map.repeat(1, 4).view(n_edges, 4, 4)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim0": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dim1": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "flatten_155": {
+                "variable": {
+                    "value": "R",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "start_dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "zeros_156": {
+                "variable": {
+                    "value": "R_cat",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "n_edges",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "len(parts_edges_indices)",
+                            "Call"
+                        ],
+                        [
+                            "len(parts_bitriangles_map)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "48",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "flatten_171": {
+                "variable": {
+                    "value": "WD_flattened",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "WD",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.bmm(dual_w, D.repeat(n_edges, 1, 1))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "start_dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "end_dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "zeros_174": {
+                "variable": {
+                    "value": "C_cat",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "n_edges",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "len(parts_edges_indices)",
+                            "Call"
+                        ],
+                        [
+                            "len(parts_bitriangles_map)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "36",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "flatten_179": {
+                "variable": {
+                    "value": "R",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "zeros_182": {
+                "variable": {
+                    "value": "R_cat",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "n_edges",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "len(parts_edges_indices)",
+                            "Call"
+                        ],
+                        [
+                            "len(parts_bitriangles_map)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "36",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "bmm_210": {
+                "variable": {
+                    "value": "DTD",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.transpose(D_e, 1, 2)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "mat2": {
+                    "value": "D_e",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "D_4_repeat - sD1 - sD2 - sD3 - sD4",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "flatten_213": {
+                "variable": {
+                    "value": "DTD_flattened",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "DTD",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.bmm(torch.transpose(D_e, 1, 2), D_e)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "start_dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "end_dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "transpose_215": {
+                "variable": {
+                    "value": "C",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "parts_bitriangles_map.repeat(12, 1, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim0": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dim1": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "zeros_216": {
+                "variable": {
+                    "value": "C_cat",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "n_edges",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "len(parts_edges_indices)",
+                            "Call"
+                        ],
+                        [
+                            "len(parts_bitriangles_map)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "12",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "12",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "flatten_221": {
+                "variable": {
+                    "value": "C_flattened",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "C_cat",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.zeros(n_edges, 48)",
+                            "Call"
+                        ],
+                        [
+                            "torch.zeros(n_edges, 36)",
+                            "Call"
+                        ],
+                        [
+                            "torch.zeros(n_edges, 12, 12)",
+                            "Call"
+                        ],
+                        [
+                            "torch.zeros(n_edges, 3, 12)",
+                            "Call"
+                        ],
+                        [
+                            "torch.flatten(C_cat, 1, 2)",
+                            "Call"
+                        ],
+                        [
+                            "torch.zeros((n_edges, 12, 12), dtype=torch.int)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "start_dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "end_dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "transpose_223": {
+                "variable": {
+                    "value": "R",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "C_cat",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.zeros(n_edges, 48)",
+                            "Call"
+                        ],
+                        [
+                            "torch.zeros(n_edges, 36)",
+                            "Call"
+                        ],
+                        [
+                            "torch.zeros(n_edges, 12, 12)",
+                            "Call"
+                        ],
+                        [
+                            "torch.zeros(n_edges, 3, 12)",
+                            "Call"
+                        ],
+                        [
+                            "torch.flatten(C_cat, 1, 2)",
+                            "Call"
+                        ],
+                        [
+                            "torch.zeros((n_edges, 12, 12), dtype=torch.int)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim0": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dim1": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "flatten_225": {
+                "variable": {
+                    "value": "R_flattened",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "R",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.transpose(parts_bitriangles_map.repeat(1, 4).view(n_edges, 4, 4), 1, 2).flatten(1, 2)",
+                            "Call"
+                        ],
+                        [
+                            "torch.arange(3)[None, ...].repeat(4, 1).T.flatten().repeat(3)",
+                            "Call"
+                        ],
+                        [
+                            "torch.transpose(C_cat, 1, 2)",
+                            "Call"
+                        ],
+                        [
+                            "torch.arange(3)[None, ...].repeat(12, 1).T.flatten()",
+                            "Call"
+                        ],
+                        [
+                            "edges_indices.repeat(1, 12, 12) * 12 + torch.arange(12)[:, None].repeat(1, 12)",
+                            "BinOp"
+                        ],
+                        [
+                            "np.hstack([3 * faces_array, 3 * faces_array + 1, 3 * faces_array + 2])",
+                            "Call"
+                        ],
+                        [
+                            "np.hstack([edges_array, edges_array + n_edges, edges_array + 2 * n_edges, edges_array + 3 * n_edges, edges_array + 4 * n_edges, edges_array + 5 * n_edges, edges_array + 6 * n_edges, edges_array + 7 * n_edges, edges_array + 8 * n_edges, edges_array + 9 * n_edges, edges_array + 10 * n_edges, edges_array + 11 * n_edges])",
+                            "Call"
+                        ],
+                        [
+                            "parts_bitriangles_map",
+                            "variable"
+                        ],
+                        [
+                            "parts_bitriangles_map",
+                            "variable"
+                        ],
+                        [
+                            "np.arange(len(sharp_edges_ids) - 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "start_dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "end_dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "flatten_232": {
+                "variable": {
+                    "value": "D_e_flattened",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "D_e",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "D_4_repeat - sD1 - sD2 - sD3 - sD4",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "start_dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "end_dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "transpose_234": {
+                "variable": {
+                    "value": "C",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "parts_bitriangles_map.repeat(3, 1, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim0": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dim1": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "zeros_235": {
+                "variable": {
+                    "value": "C_cat",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "n_edges",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "len(parts_edges_indices)",
+                            "Call"
+                        ],
+                        [
+                            "len(parts_bitriangles_map)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "12",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "flatten_240": {
+                "variable": {
+                    "value": "C_cat",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "C_cat",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.zeros(n_edges, 48)",
+                            "Call"
+                        ],
+                        [
+                            "torch.zeros(n_edges, 36)",
+                            "Call"
+                        ],
+                        [
+                            "torch.zeros(n_edges, 12, 12)",
+                            "Call"
+                        ],
+                        [
+                            "torch.zeros(n_edges, 3, 12)",
+                            "Call"
+                        ],
+                        [
+                            "torch.flatten(C_cat, 1, 2)",
+                            "Call"
+                        ],
+                        [
+                            "torch.zeros((n_edges, 12, 12), dtype=torch.int)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "start_dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "end_dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "flatten_242": {
+                "variable": {
+                    "value": "R",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "zeros_243": {
+                "variable": {
+                    "value": "R_cat",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "n_edges",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "len(parts_edges_indices)",
+                            "Call"
+                        ],
+                        [
+                            "len(parts_bitriangles_map)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "36",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "zeros_264": {
+                "variable": {
+                    "value": "M",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "n_edges",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "len(parts_edges_indices)",
+                            "Call"
+                        ],
+                        [
+                            "len(parts_bitriangles_map)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "12",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "12",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "flatten_271": {
+                "variable": {
+                    "value": "M_flattened",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "M",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.zeros(n_edges, 12, 12).double()",
+                            "Call"
+                        ]
+                    ]
+                },
+                "start_dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "end_dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "transpose_274": {
+                "variable": {
+                    "value": "C",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "parts_bitriangles_map.repeat(12, 1, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dim0": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dim1": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "zeros_275": {
+                "variable": {
+                    "value": "C_cat",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(n_edges, 12, 12)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.int",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "flatten_279": {
+                "variable": {
+                    "value": "C_flattened",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "C_cat",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.zeros(n_edges, 48)",
+                            "Call"
+                        ],
+                        [
+                            "torch.zeros(n_edges, 36)",
+                            "Call"
+                        ],
+                        [
+                            "torch.zeros(n_edges, 12, 12)",
+                            "Call"
+                        ],
+                        [
+                            "torch.zeros(n_edges, 3, 12)",
+                            "Call"
+                        ],
+                        [
+                            "torch.flatten(C_cat, 1, 2)",
+                            "Call"
+                        ],
+                        [
+                            "torch.zeros((n_edges, 12, 12), dtype=torch.int)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "start_dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "end_dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "flatten_286": {
+                "variable": {
+                    "value": "R_flattened",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "R",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.transpose(parts_bitriangles_map.repeat(1, 4).view(n_edges, 4, 4), 1, 2).flatten(1, 2)",
+                            "Call"
+                        ],
+                        [
+                            "torch.arange(3)[None, ...].repeat(4, 1).T.flatten().repeat(3)",
+                            "Call"
+                        ],
+                        [
+                            "torch.transpose(C_cat, 1, 2)",
+                            "Call"
+                        ],
+                        [
+                            "torch.arange(3)[None, ...].repeat(12, 1).T.flatten()",
+                            "Call"
+                        ],
+                        [
+                            "edges_indices.repeat(1, 12, 12) * 12 + torch.arange(12)[:, None].repeat(1, 12)",
+                            "BinOp"
+                        ],
+                        [
+                            "np.hstack([3 * faces_array, 3 * faces_array + 1, 3 * faces_array + 2])",
+                            "Call"
+                        ],
+                        [
+                            "np.hstack([edges_array, edges_array + n_edges, edges_array + 2 * n_edges, edges_array + 3 * n_edges, edges_array + 4 * n_edges, edges_array + 5 * n_edges, edges_array + 6 * n_edges, edges_array + 7 * n_edges, edges_array + 8 * n_edges, edges_array + 9 * n_edges, edges_array + 10 * n_edges, edges_array + 11 * n_edges])",
+                            "Call"
+                        ],
+                        [
+                            "parts_bitriangles_map",
+                            "variable"
+                        ],
+                        [
+                            "parts_bitriangles_map",
+                            "variable"
+                        ],
+                        [
+                            "np.arange(len(sharp_edges_ids) - 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "start_dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "end_dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "matmul_387": {
+                "variable": {
+                    "value": "dTD",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "translation_components",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "deformations[:, :3, 3][:, None, :]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "D_e",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "D_4_repeat - sD1 - sD2 - sD3 - sD4",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "zeros_392": {
+                "variable": {
+                    "value": "R_cat",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "n_edges",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "len(parts_edges_indices)",
+                            "Call"
+                        ],
+                        [
+                            "len(parts_bitriangles_map)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "12",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "bmm_409": {
+                "variable": {
+                    "value": "c1TWD",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "affine_components[:, 0, :][:, None, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "mat2": {
+                    "value": "WD",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.bmm(dual_w, D.repeat(n_edges, 1, 1))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "bmm_410": {
+                "variable": {
+                    "value": "c2TWD",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "affine_components[:, 1, :][:, None, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "mat2": {
+                    "value": "WD",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.bmm(dual_w, D.repeat(n_edges, 1, 1))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "bmm_411": {
+                "variable": {
+                    "value": "c3TWD",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "affine_components[:, 2, :][:, None, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "mat2": {
+                    "value": "WD",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.bmm(dual_w, D.repeat(n_edges, 1, 1))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "zeros_417": {
+                "variable": {
+                    "value": "cTWD",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "n_edges",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "len(parts_edges_indices)",
+                            "Call"
+                        ],
+                        [
+                            "len(parts_bitriangles_map)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "12",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "zeros_422": {
+                "variable": {
+                    "value": "cTWD_normed",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "n_edges",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "len(parts_edges_indices)",
+                            "Call"
+                        ],
+                        [
+                            "len(parts_bitriangles_map)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "12",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "zeros_428": {
+                "variable": {
+                    "value": "R_cat",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "n_edges",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "len(parts_edges_indices)",
+                            "Call"
+                        ],
+                        [
+                            "len(parts_bitriangles_map)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "12",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "stack_109": {
+                "variable": {
+                    "value": "v_0",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[bitriangles_explicit_undeformed[:, 0, :] - bitriangles_explicit_undeformed[:, 3, :], bitriangles_explicit_undeformed[:, 1, :] - bitriangles_explicit_undeformed[:, 3, :], bitriangles_explicit_undeformed[:, 2, :] - bitriangles_explicit_undeformed[:, 3, :]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "max_468": {
+                "variable": {
+                    "value": "max_value",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "transform",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "edges_deformations",
+                            "variable"
+                        ]
+                    ]
+                }
+            },
+            "sum_84": {
+                "input": {
+                    "value": "torch.cross(v_0[:, 1, :], v_0[:, 2, :]) * v_0[:, 0, :]",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "sum_85": {
+                "input": {
+                    "value": "torch.cross(v_0[:, 2, :], v_0[:, 0, :]) * v_0[:, 1, :]",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "sum_86": {
+                "input": {
+                    "value": "torch.cross(v_0[:, 0, :], v_0[:, 1, :]) * v_0[:, 2, :]",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_97": {
+                "variable": {
+                    "value": "undeformed_vertices",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[undeformed_vertices[:, :3].double(), fifth_vertex[None, :]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_102": {
+                "variable": {
+                    "value": "parts_bitriangles_map",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[parts_bitriangles_map, new_bitriangle_1[None, :], new_bitriangle_2[None, :]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "abs_130": {
+                "input": {
+                    "value": "torch.cross(v_sqr[:, 0, :], v_sqr[:, 2, :])",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "sum_131": {
+                "input": {
+                    "value": "sqr ** 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "bmm_201": {
+                "input": {
+                    "value": "torch.transpose(WD, 1, 2)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "mat2": {
+                    "value": "bitriangles_explicit_undeformed[:, 3][:, :, None]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "transpose_210": {
+                "input": {
+                    "value": "D_e",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "D_4_repeat - sD1 - sD2 - sD3 - sD4",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "dim0": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dim1": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "arange_282": {
+                "start": {
+                    "value": "n_edges",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "len(parts_edges_indices)",
+                            "Call"
+                        ],
+                        [
+                            "len(parts_bitriangles_map)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "sum_447": {
+                "input": {
+                    "value": "affine_components ** 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sum_452": {
+                "input": {
+                    "value": "translation_components ** 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sum_116": {
+                "input": {
+                    "value": "torch.cross(v_0[:, 1, :], v_0[:, 2, :]) * v_0[:, 0, :]",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "sum_117": {
+                "input": {
+                    "value": "torch.cross(v_0[:, 2, :], v_0[:, 0, :]) * v_0[:, 1, :]",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "sum_118": {
+                "input": {
+                    "value": "torch.cross(v_0[:, 0, :], v_0[:, 1, :]) * v_0[:, 2, :]",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cross_130": {
+                "input": {
+                    "value": "v_sqr[:, 0, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "v_sqr[:, 2, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "transpose_201": {
+                "input": {
+                    "value": "WD",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.bmm(dual_w, D.repeat(n_edges, 1, 1))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim0": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dim1": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "sum_451": {
+                "input": {
+                    "value": "affine_components ** 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sum_460": {
+                "input": {
+                    "value": "translation_components ** 2",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "cross_84": {
+                "input": {
+                    "value": "v_0[:, 1, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "v_0[:, 2, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "cross_85": {
+                "input": {
+                    "value": "v_0[:, 2, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "v_0[:, 0, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "cross_86": {
+                "input": {
+                    "value": "v_0[:, 0, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "v_0[:, 1, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "abs_88": {
+                "input": {
+                    "value": "vol_120",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.sum(torch.cross(v_0[:, 1, :], v_0[:, 2, :]) * v_0[:, 0, :], dim=1)[:, None]",
+                            "Subscript"
+                        ],
+                        [
+                            "torch.sum(torch.cross(v_0[:, 1, :], v_0[:, 2, :]) * v_0[:, 0, :], dim=1)[:, None]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "cross_94": {
+                "input": {
+                    "value": "bitriangles_explicit_undeformed[bitriangle_idx, 0, :] - bitriangles_explicit_undeformed[bitriangle_idx, 1, :]",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "bitriangles_explicit_undeformed[bitriangle_idx, 0, :] - bitriangles_explicit_undeformed[bitriangle_idx, 2, :]",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "cross_121": {
+                "input": {
+                    "value": "v_0[:, 1, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "v_0[:, 2, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "cross_122": {
+                "input": {
+                    "value": "v_0[:, 2, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "v_0[:, 0, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "cross_123": {
+                "input": {
+                    "value": "v_0[:, 0, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "v_0[:, 1, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "cross_116": {
+                "input": {
+                    "value": "v_0[:, 1, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "v_0[:, 2, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "cross_117": {
+                "input": {
+                    "value": "v_0[:, 2, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "v_0[:, 0, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "cross_118": {
+                "input": {
+                    "value": "v_0[:, 0, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "v_0[:, 1, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "arange_284": {
+                "start": {
+                    "value": "12",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "arange_242": {
+                "start": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "sqrt_290": {
+                "input": {
+                    "value": "sqr[:, None]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "arange_179": {
+                "start": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "shapefit/deform/src/deformation/utils.py": {
+        "torch": {
+            "cat_285": {
+                "variable": {
+                    "value": "concatenated_transforms",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "transforms",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "transforms",
+                            "Method Argument"
+                        ],
+                        [
+                            "transforms",
+                            "Method Argument"
+                        ],
+                        [
+                            "transforms",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "zeros_294": {
+                "variable": {
+                    "value": "new_transforms",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(len(unique_vertices), 4, 4)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "nonzero_317": {
+                "variable": {
+                    "value": "indices",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "np.linspace(0, length, num=int(np.sqrt(num_points)))",
+                            "Call"
+                        ],
+                        [
+                            "np.meshgrid(x, y)",
+                            "Call"
+                        ],
+                        [
+                            "np.linspace(-1, 1, num=int(np.sqrt(num_points)))",
+                            "Call"
+                        ],
+                        [
+                            "np.meshgrid(x, y)",
+                            "Call"
+                        ],
+                        [
+                            "np.linspace(-1, 1, num=int(np.sqrt(num_points)))",
+                            "Call"
+                        ],
+                        [
+                            "np.meshgrid(x, y)",
+                            "Call"
+                        ],
+                        [
+                            "x",
+                            "Method Argument"
+                        ],
+                        [
+                            "x",
+                            "Method Argument"
+                        ],
+                        [
+                            "x",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "empty_like_371": {
+                "variable": {
+                    "value": "original_vertices",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "undeformed_vertices",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "undeformed_vertices",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "empty_like_372": {
+                "variable": {
+                    "value": "original_bitriangles_map",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "bitriangles_map",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "bitriangles_map",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "empty_like_373": {
+                "variable": {
+                    "value": "original_target_vertices",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "target_vertices",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "target_vertices",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "stack_384": {
+                "variable": {
+                    "value": "v_0",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[bitriangles_explicit_undeformed[:, 0, :] - bitriangles_explicit_undeformed[:, 1, :], bitriangles_explicit_undeformed[:, 3, :] - bitriangles_explicit_undeformed[:, 1, :], bitriangles_explicit_undeformed[:, 2, :] - bitriangles_explicit_undeformed[:, 1, :]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "stack_436": {
+                "variable": {
+                    "value": "v_0",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[bitriangles_explicit_undeformed[:, 0, :] - bitriangles_explicit_undeformed[:, 1, :], bitriangles_explicit_undeformed[:, 3, :] - bitriangles_explicit_undeformed[:, 1, :], bitriangles_explicit_undeformed[:, 2, :] - bitriangles_explicit_undeformed[:, 1, :]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cross_399": {
+                "variable": {
+                    "value": "cross",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "v_0[zero_volumes, 0]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "v_0[zero_volumes, 2]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "cross_404": {
+                "variable": {
+                    "value": "cross_target",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "bitriangles_explicit_target[zero_volumes, 0, :] - bitriangles_explicit_target[zero_volumes, 1, :]",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "bitriangles_explicit_target[zero_volumes, 2, :] - bitriangles_explicit_target[zero_volumes, 1, :]",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "cat_410": {
+                "variable": {
+                    "value": "original_vertices",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[original_vertices[:, :3].double(), fifth_vertices]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_411": {
+                "variable": {
+                    "value": "original_vertices",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[original_vertices, torch.ones(len(original_vertices))[..., None].double()]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_413": {
+                "variable": {
+                    "value": "original_target_vertices",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[original_target_vertices[:, :3].double(), fifth_vertices_target]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_414": {
+                "variable": {
+                    "value": "original_target_vertices",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[original_target_vertices, torch.ones(len(original_target_vertices))[..., None].double()]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "empty_like_418": {
+                "variable": {
+                    "value": "new_bitriangles_1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "old_bitriangles",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "bitriangles_map[zero_volumes]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "empty_like_420": {
+                "variable": {
+                    "value": "new_bitriangles_2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "old_bitriangles",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "bitriangles_map[zero_volumes]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "split_314": {
+                "tensor": {
+                    "value": ".",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "sum_388": {
+                "input": {
+                    "value": "torch.cross(v_0[:, 1, :], v_0[:, 2, :]) * v_0[:, 0, :]",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "sum_439": {
+                "input": {
+                    "value": "torch.cross(v_0[:, 1, :], v_0[:, 2, :]) * v_0[:, 0, :]",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "arange_408": {
+                "start": {
+                    "value": "len(zero_volumes)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "cross_388": {
+                "input": {
+                    "value": "v_0[:, 1, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "v_0[:, 2, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "abs_390": {
+                "input": {
+                    "value": "vol_120",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.sum(torch.cross(v_0[:, 1, :], v_0[:, 2, :]) * v_0[:, 0, :], dim=1)[:, None]",
+                            "Subscript"
+                        ],
+                        [
+                            "torch.sum(torch.cross(v_0[:, 1, :], v_0[:, 2, :]) * v_0[:, 0, :], dim=1)[:, None]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "cross_439": {
+                "input": {
+                    "value": "v_0[:, 1, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "v_0[:, 2, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "abs_440": {
+                "input": {
+                    "value": "vol_120",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.sum(torch.cross(v_0[:, 1, :], v_0[:, 2, :]) * v_0[:, 0, :], dim=1)[:, None]",
+                            "Subscript"
+                        ],
+                        [
+                            "torch.sum(torch.cross(v_0[:, 1, :], v_0[:, 2, :]) * v_0[:, 0, :], dim=1)[:, None]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "ones_411": {
+                "*size": {
+                    "value": "len(original_vertices)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "ones_414": {
+                "*size": {
+                    "value": "len(original_target_vertices)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "shapefit/utils/utils.py": {
+        "torch": {
+            "eye_101": {
+                "variable": {
+                    "value": "T_m",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "n": {
+                    "value": "4",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.double",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "reshape_101": {
+                "variable": {
+                    "value": "T_m",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "4",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "eye_106": {
+                "variable": {
+                    "value": "S_m",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "n": {
+                    "value": "4",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.double",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "reshape_106": {
+                "variable": {
+                    "value": "S_m",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "4",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "diag_embed_107": {
+                "variable": {
+                    "value": "S_m[:, :3, :3]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "rts[:, 6:]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "unsqueeze_213": {
+                "variable": {
+                    "value": "_angle_axis",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "angle_axis",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.zeros_like(quaternion)[..., :3]",
+                            "Subscript"
+                        ],
+                        [
+                            "angle_axis",
+                            "Method Argument"
+                        ],
+                        [
+                            "angle_axis",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "matmul_214": {
+                "variable": {
+                    "value": "theta2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "_angle_axis",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.unsqueeze(angle_axis, dim=1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "_angle_axis.transpose(1, 2)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "squeeze_215": {
+                "variable": {
+                    "value": "theta2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "theta2",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.matmul(_angle_axis, _angle_axis.transpose(1, 2))",
+                            "Call"
+                        ],
+                        [
+                            "torch.squeeze(theta2, dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "theta2",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "eye_229": {
+                "variable": {
+                    "value": "rotation_matrix",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "n": {
+                    "value": "4",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "transpose_294": {
+                "variable": {
+                    "value": "rmat_t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "rotation_matrix",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.eye(4).to(angle_axis.device).type_as(angle_axis)",
+                            "Call"
+                        ],
+                        [
+                            "rotation_matrix.view(1, 4, 4).repeat(batch_size, 1, 1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.cat([r00, r01, r02, r10, r11, r12, r20, r21, r22], dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.cat([k_one, -rz, ry, rz, k_one, -rx, -ry, rx, k_one], dim=1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim0": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dim1": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "stack_302": {
+                "variable": {
+                    "value": "q0",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[rmat_t[:, 1, 2] - rmat_t[:, 2, 1], t0, rmat_t[:, 0, 1] + rmat_t[:, 1, 0], rmat_t[:, 2, 0] + rmat_t[:, 0, 2]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "stack_309": {
+                "variable": {
+                    "value": "q1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[rmat_t[:, 2, 0] - rmat_t[:, 0, 2], rmat_t[:, 0, 1] + rmat_t[:, 1, 0], t1, rmat_t[:, 1, 2] + rmat_t[:, 2, 1]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "stack_316": {
+                "variable": {
+                    "value": "q2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[rmat_t[:, 0, 1] - rmat_t[:, 1, 0], rmat_t[:, 2, 0] + rmat_t[:, 0, 2], rmat_t[:, 1, 2] + rmat_t[:, 2, 1], t2]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "stack_323": {
+                "variable": {
+                    "value": "q3",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[t3, rmat_t[:, 1, 2] - rmat_t[:, 2, 1], rmat_t[:, 2, 0] - rmat_t[:, 0, 2], rmat_t[:, 0, 1] - rmat_t[:, 1, 0]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "sqrt_185": {
+                "variable": {
+                    "value": "theta",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "theta2",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.matmul(_angle_axis, _angle_axis.transpose(1, 2))",
+                            "Call"
+                        ],
+                        [
+                            "torch.squeeze(theta2, dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "theta2",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "chunk_187": {
+                "variable": {
+                    "value": "(wx, wy, wz)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "wxyz",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "angle_axis / (theta + eps)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "chunks": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cos_188": {
+                "variable": {
+                    "value": "cos_theta",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "theta",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.sqrt(theta2)",
+                            "Call"
+                        ],
+                        [
+                            "torch.sqrt(theta_squared)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "sin_189": {
+                "variable": {
+                    "value": "sin_theta",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "theta",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.sqrt(theta2)",
+                            "Call"
+                        ],
+                        [
+                            "torch.sqrt(theta_squared)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "cat_200": {
+                "variable": {
+                    "value": "rotation_matrix",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[r00, r01, r02, r10, r11, r12, r20, r21, r22]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "chunk_205": {
+                "variable": {
+                    "value": "(rx, ry, rz)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "angle_axis",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.zeros_like(quaternion)[..., :3]",
+                            "Subscript"
+                        ],
+                        [
+                            "angle_axis",
+                            "Method Argument"
+                        ],
+                        [
+                            "angle_axis",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "chunks": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ones_like_206": {
+                "variable": {
+                    "value": "k_one",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "rx",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.chunk(angle_axis, 3, dim=1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "cat_207": {
+                "variable": {
+                    "value": "rotation_matrix",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[k_one, -rz, ry, rz, k_one, -rx, -ry, rx, k_one]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "sqrt_339": {
+                "input": {
+                    "value": "t0_rep * mask_c0 + t1_rep * mask_c1 + t2_rep * mask_c2 + t3_rep * mask_c3",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sqrt_378": {
+                "input": {
+                    "value": "sin_squared_theta",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "q1 * q1 + q2 * q2 + q3 * q3",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "where_386": {
+                "condition": {
+                    "value": "sin_squared_theta > 0.0",
+                    "type": "Compare",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "k_pos",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "two_theta / sin_theta",
+                            "BinOp"
+                        ],
+                        [
+                            "torch.sin(half_theta) / theta",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "k_neg",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "2.0 * torch.ones_like(sin_theta)",
+                            "BinOp"
+                        ],
+                        [
+                            "0.5 * ones",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "sqrt_432": {
+                "input": {
+                    "value": "theta_squared",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "a0 * a0 + a1 * a1 + a2 * a2",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "ones_like_436": {
+                "input": {
+                    "value": "half_theta",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "theta * 0.5",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "where_440": {
+                "condition": {
+                    "value": "mask",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "(theta2 > eps).view(-1, 1, 1).to(theta2.device)",
+                            "Call"
+                        ],
+                        [
+                            "theta_squared > 0.0",
+                            "Compare"
+                        ]
+                    ]
+                },
+                "x": {
+                    "value": "k_pos",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "two_theta / sin_theta",
+                            "BinOp"
+                        ],
+                        [
+                            "torch.sin(half_theta) / theta",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "k_neg",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "2.0 * torch.ones_like(sin_theta)",
+                            "BinOp"
+                        ],
+                        [
+                            "0.5 * ones",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "where_441": {
+                "condition": {
+                    "value": "mask",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "(theta2 > eps).view(-1, 1, 1).to(theta2.device)",
+                            "Call"
+                        ],
+                        [
+                            "theta_squared > 0.0",
+                            "Compare"
+                        ]
+                    ]
+                },
+                "x": {
+                    "value": "torch.cos(half_theta)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "ones",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.ones_like(half_theta)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "zeros_like_443": {
+                "input": {
+                    "value": "angle_axis",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.zeros_like(quaternion)[..., :3]",
+                            "Subscript"
+                        ],
+                        [
+                            "angle_axis",
+                            "Method Argument"
+                        ],
+                        [
+                            "angle_axis",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "cat_447": {
+                "tensors": {
+                    "value": "[w, quaternion]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "is_tensor_281": {
+                "obj": {
+                    "value": "rotation_matrix",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.eye(4).to(angle_axis.device).type_as(angle_axis)",
+                            "Call"
+                        ],
+                        [
+                            "rotation_matrix.view(1, 4, 4).repeat(batch_size, 1, 1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.cat([r00, r01, r02, r10, r11, r12, r20, r21, r22], dim=1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.cat([k_one, -rz, ry, rz, k_one, -rx, -ry, rx, k_one], dim=1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "is_tensor_364": {
+                "obj": {
+                    "value": "quaternion",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "rotation_matrix_to_quaternion(rotation_matrix)",
+                            "Call"
+                        ],
+                        [
+                            "torch.zeros_like(angle_axis)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "where_380": {
+                "condition": {
+                    "value": "cos_theta < 0.0",
+                    "type": "Compare",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "torch.atan2(-sin_theta, -cos_theta)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "torch.atan2(sin_theta, cos_theta)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "ones_like_385": {
+                "input": {
+                    "value": "sin_theta",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.sin(theta)",
+                            "Call"
+                        ],
+                        [
+                            "torch.sqrt(sin_squared_theta)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "zeros_like_388": {
+                "input": {
+                    "value": "quaternion",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "rotation_matrix_to_quaternion(rotation_matrix)",
+                            "Call"
+                        ],
+                        [
+                            "torch.zeros_like(angle_axis)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "is_tensor_418": {
+                "obj": {
+                    "value": "angle_axis",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.zeros_like(quaternion)[..., :3]",
+                            "Subscript"
+                        ],
+                        [
+                            "angle_axis",
+                            "Method Argument"
+                        ],
+                        [
+                            "angle_axis",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "sin_439": {
+                "input": {
+                    "value": "half_theta",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "theta * 0.5",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "cos_441": {
+                "input": {
+                    "value": "half_theta",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "theta * 0.5",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "tensor_330": {
+                "data": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "tensor_331": {
+                "data": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "tensor_332": {
+                "data": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "atan2_381": {
+                "input": {
+                    "value": "-sin_theta",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "other": {
+                    "value": "-cos_theta",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "atan2_382": {
+                "input": {
+                    "value": "sin_theta",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.sin(theta)",
+                            "Call"
+                        ],
+                        [
+                            "torch.sqrt(sin_squared_theta)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "other": {
+                    "value": "cos_theta",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.cos(theta)",
+                            "Call"
+                        ],
+                        [
+                            "quaternion[..., 0]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "tensor_308": {
+                "data": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "tensor_315": {
+                "data": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "tensor_322": {
+                "data": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

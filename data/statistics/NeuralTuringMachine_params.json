@@ -1,0 +1,1384 @@
+{
+    "ntm.py": {
+        "tensorflow": {
+            "MultiRNNCell_33": {
+                "variable": {
+                    "value": "self.controller",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "cells": {
+                    "value": "[single_cell(self.controller_units) for _ in range(self.controller_layers)]",
+                    "type": "ListComp",
+                    "possible_values": []
+                }
+            },
+            "concat_47": {
+                "variable": {
+                    "value": "controller_input",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[x] + prev_read_vector_list",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "split_59": {
+                "variable": {
+                    "value": "head_parameter_list",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "parameters[:, :num_parameters_per_head * num_heads]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "num_or_size_splits": {
+                    "value": "num_heads",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.read_head_num + self.write_head_num",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "split_60": {
+                "variable": {
+                    "value": "erase_add_list",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "parameters[:, num_parameters_per_head * num_heads:]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "num_or_size_splits": {
+                    "value": "2 * self.write_head_num",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_115": {
+                "variable": {
+                    "value": "k",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "k",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.tanh(head_parameter[:, 0:self.memory_vector_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(k, axis=2)",
+                            "Call"
+                        ],
+                        [
+                            "k",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "matmul_116": {
+                "variable": {
+                    "value": "inner_product",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "prev_M",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "prev_state.M",
+                            "Attribute"
+                        ],
+                        [
+                            "prev_M",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "k",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.tanh(head_parameter[:, 0:self.memory_vector_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(k, axis=2)",
+                            "Call"
+                        ],
+                        [
+                            "k",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "sqrt_117": {
+                "variable": {
+                    "value": "k_norm",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.reduce_sum(tf.square(k), axis=1, keep_dims=True)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "sqrt_118": {
+                "variable": {
+                    "value": "M_norm",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.reduce_sum(tf.square(prev_M), axis=2, keep_dims=True)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "squeeze_120": {
+                "variable": {
+                    "value": "K",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "inner_product / (norm_product + 1e-08)",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "exp_124": {
+                "variable": {
+                    "value": "K_amplified",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.expand_dims(beta, axis=1) * K",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_132": {
+                "variable": {
+                    "value": "g",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "g",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.sigmoid(head_parameter[:, self.memory_vector_dim + 1])",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(g, axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "g",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "concat_135": {
+                "variable": {
+                    "value": "s",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[s[:, :self.shift_range + 1], tf.zeros([s.get_shape()[0], self.memory_size - (self.shift_range * 2 + 1)]), s[:, -self.shift_range:]]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "concat_138": {
+                "variable": {
+                    "value": "t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[tf.reverse(s, axis=[1]), tf.reverse(s, axis=[1])]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "stack_139": {
+                "variable": {
+                    "value": "s_matrix",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[t[:, self.memory_size - i - 1:self.memory_size * 2 - i - 1] for i in range(self.memory_size)]",
+                    "type": "ListComp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_143": {
+                "variable": {
+                    "value": "w_",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "tf.expand_dims(w_g, axis=1) * s_matrix",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "pow_144": {
+                "variable": {
+                    "value": "w_sharpen",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "w_",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reduce_sum(tf.expand_dims(w_g, axis=1) * s_matrix, axis=2)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "tf.expand_dims(gamma, axis=1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "clip_by_value_58": {
+                "variable": {
+                    "value": "parameters",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "t": {
+                    "value": "parameters",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.contrib.layers.fully_connected(controller_output, total_parameter_num, activation_fn=None, weights_initializer=self.o2p_initializer)",
+                            "Call"
+                        ],
+                        [
+                            "tf.clip_by_value(parameters, -self.clip_value, self.clip_value)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "clip_value_min": {
+                    "value": "-self.clip_value",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "clip_value_max": {
+                    "value": "self.clip_value",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "tanh_66": {
+                "variable": {
+                    "value": "k",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "head_parameter[:, 0:self.memory_vector_dim]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "softplus_67": {
+                "variable": {
+                    "value": "beta",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "features": {
+                    "value": "head_parameter[:, self.memory_vector_dim]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "sigmoid_68": {
+                "variable": {
+                    "value": "g",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "head_parameter[:, self.memory_vector_dim + 1]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "softmax_69": {
+                "variable": {
+                    "value": "s",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "head_parameter[:, self.memory_vector_dim + 2:self.memory_vector_dim + 2 + (self.shift_range * 2 + 1)]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_82": {
+                "variable": {
+                    "value": "read_vector",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "tf.expand_dims(read_w_list[i], dim=2) * prev_M",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_90": {
+                "variable": {
+                    "value": "w",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "write_w_list[i]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_91": {
+                "variable": {
+                    "value": "erase_vector",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "tf.sigmoid(erase_add_list[i * 2])",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_92": {
+                "variable": {
+                    "value": "add_vector",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "tf.tanh(erase_add_list[i * 2 + 1])",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "clip_by_value_103": {
+                "variable": {
+                    "value": "NTM_output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "t": {
+                    "value": "NTM_output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.contrib.layers.fully_connected(tf.concat([controller_output] + read_vector_list, axis=1), output_dim, activation_fn=None, weights_initializer=self.o2o_initializer)",
+                            "Call"
+                        ],
+                        [
+                            "tf.clip_by_value(NTM_output, -self.clip_value, self.clip_value)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "clip_value_min": {
+                    "value": "-self.clip_value",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "clip_value_max": {
+                    "value": "self.clip_value",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "BasicLSTMCell_31": {
+                "num_units": {
+                    "value": "num_units",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "num_units",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "forget_bias": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_48": {
+                "name_or_scope": {
+                    "value": "controller",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "reuse": {
+                    "value": "self.reuse",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_54": {
+                "name_or_scope": {
+                    "value": "o2p",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "reuse": {
+                    "value": "self.step > 0 or self.reuse",
+                    "type": "BoolOp",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_99": {
+                "name_or_scope": {
+                    "value": "o2o",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "reuse": {
+                    "value": "self.step > 0 or self.reuse",
+                    "type": "BoolOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_117": {
+                "input_tensor": {
+                    "value": "tf.square(k)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keep_dims": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_118": {
+                "input_tensor": {
+                    "value": "tf.square(prev_M)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keep_dims": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_125": {
+                "input_tensor": {
+                    "value": "K_amplified",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.exp(tf.expand_dims(beta, axis=1) * K)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keep_dims": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_144": {
+                "input": {
+                    "value": "gamma",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.softplus(head_parameter[:, -1]) + 1",
+                            "BinOp"
+                        ],
+                        [
+                            "gamma",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_145": {
+                "input_tensor": {
+                    "value": "w_sharpen",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.pow(w_, tf.expand_dims(gamma, axis=1))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keep_dims": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_150": {
+                "name_or_scope": {
+                    "value": "init",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "reuse": {
+                    "value": "self.reuse",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "softplus_72": {
+                "features": {
+                    "value": "head_parameter[:, -1]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_73": {
+                "name_or_scope": {
+                    "value": "'addressing_head_%d' % i",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "sigmoid_91": {
+                "x": {
+                    "value": "erase_add_list[i * 2]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "tanh_92": {
+                "x": {
+                    "value": "erase_add_list[i * 2 + 1]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "matmul_93": {
+                "a": {
+                    "value": "w",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.addressing(k, beta, g, s, gamma, prev_M, prev_w_list[i])",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(write_w_list[i], axis=2)",
+                            "Call"
+                        ],
+                        [
+                            "w_sharpen / tf.reduce_sum(w_sharpen, axis=1, keep_dims=True)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "erase_vector",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.expand_dims(tf.sigmoid(erase_add_list[i * 2]), axis=1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "concat_101": {
+                "values": {
+                    "value": "[controller_output] + read_vector_list",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "square_117": {
+                "x": {
+                    "value": "k",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.tanh(head_parameter[:, 0:self.memory_vector_dim])",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(k, axis=2)",
+                            "Call"
+                        ],
+                        [
+                            "k",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "square_118": {
+                "x": {
+                    "value": "prev_M",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "prev_state.M",
+                            "Attribute"
+                        ],
+                        [
+                            "prev_M",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "expand_dims_124": {
+                "input": {
+                    "value": "beta",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.softplus(head_parameter[:, self.memory_vector_dim])",
+                            "Call"
+                        ],
+                        [
+                            "beta",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "zeros_136": {
+                "shape": {
+                    "value": "[s.get_shape()[0], self.memory_size - (self.shift_range * 2 + 1)]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "reverse_138": {
+                "tensor": {
+                    "value": "s",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.softmax(head_parameter[:, self.memory_vector_dim + 2:self.memory_vector_dim + 2 + (self.shift_range * 2 + 1)])",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([s[:, :self.shift_range + 1], tf.zeros([s.get_shape()[0], self.memory_size - (self.shift_range * 2 + 1)]), s[:, -self.shift_range:]], axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "s",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "[1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_143": {
+                "input": {
+                    "value": "w_g",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "g * w_c + (1 - g) * prev_w",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "TensorShape_188": {
+                "dims": {
+                    "value": "[self.memory_size * self.memory_vector_dim]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_82": {
+                "input": {
+                    "value": "read_w_list[i]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "tanh_151": {
+                "x": {
+                    "value": "learned_init(self.memory_vector_dim)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "softmax_154": {
+                "logits": {
+                    "value": "learned_init(self.memory_size)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "tanh_160": {
+                "x": {
+                    "value": "tf.reshape(learned_init(self.memory_size * self.memory_vector_dim), [self.memory_size, self.memory_vector_dim])",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "ones_93": {
+                "shape": {
+                    "value": "M.get_shape()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reshape_161": {
+                "tensor": {
+                    "value": "learned_init(self.memory_size * self.memory_vector_dim)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[self.memory_size, self.memory_vector_dim]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "tanh_167": {
+                "x": {
+                    "value": "tf.get_variable('init_M', [self.memory_size, self.memory_vector_dim], initializer=tf.random_normal_initializer(mean=0.0, stddev=0.5))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_167": {
+                "name": {
+                    "value": "init_M",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[self.memory_size, self.memory_vector_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.random_normal_initializer(mean=0.0, stddev=0.5)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_172": {
+                "name": {
+                    "value": "init_M",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[self.memory_size, self.memory_vector_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.constant_initializer(1e-06)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "random_normal_initializer_168": {
+                "mean": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "stddev": {
+                    "value": "0.5",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "constant_initializer_173": {
+                "value": {
+                    "value": "1e-06",
+                    "type": "float",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "run_tasks.py": {
+        "tensorflow": {
+            "Session_167": {
+                "variable": {
+                    "value": "sess",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "placeholder_134": {
+                "variable": {
+                    "value": "max_seq_len_placeholder",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.int32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "placeholder_135": {
+                "variable": {
+                    "value": "inputs_placeholder",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "(args.batch_size, None, args.num_bits_per_vector + 1)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "placeholder_136": {
+                "variable": {
+                    "value": "outputs_placeholder",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "(args.batch_size, None, args.num_bits_per_vector)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "global_variables_initializer_138": {
+                "variable": {
+                    "value": "initializer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "dynamic_rnn_101": {
+                "variable": {
+                    "value": "(output_sequence, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "cell": {
+                    "value": "cell",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.contrib.rnn.OutputProjectionWrapper(tf.contrib.rnn.MultiRNNCell([single_cell(args.num_units) for _ in range(args.num_layers)]), args.num_bits_per_vector, activation=None)",
+                            "Call"
+                        ],
+                        [
+                            "NTMCell(args.num_layers, args.num_units, args.num_memory_locations, args.memory_size, args.num_read_heads, args.num_write_heads, addressing_mode='content_and_location', shift_range=args.conv_shift_range, reuse=False, output_dim=args.num_bits_per_vector, clip_value=args.clip_value, init_mode=args.init_mode)",
+                            "Call"
+                        ],
+                        [
+                            "NTMCell(controller, args.num_memory_locations, args.memory_size, args.num_read_heads, args.num_write_heads, shift_range=args.conv_shift_range, output_dim=args.num_bits_per_vector, clip_value=args.clip_value)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "inputs": {
+                    "value": "self.inputs",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "time_major": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "initial_state": {
+                    "value": "initial_state if args.mann == 'none' else None",
+                    "type": "IfExp",
+                    "possible_values": []
+                }
+            },
+            "trainable_variables_129": {
+                "variable": {
+                    "value": "trainable_variables",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "clip_by_global_norm_130": {
+                "variable": {
+                    "value": "(grads, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "t_list": {
+                    "value": "tf.gradients(self.loss, trainable_variables)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "clip_norm": {
+                    "value": "args.max_grad_norm",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_133": {
+                "name_or_scope": {
+                    "value": "root",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "sigmoid_114": {
+                "variable": {
+                    "value": "self.outputs",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "self.output_logits",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "sigmoid_cross_entropy_with_logits_121": {
+                "variable": {
+                    "value": "cross_entropy",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "labels": {
+                    "value": "outputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "sess.run([model.loss, model.train_op, model.outputs], feed_dict={inputs_placeholder: inputs, outputs_placeholder: labels, max_seq_len_placeholder: seq_len})",
+                            "Call"
+                        ],
+                        [
+                            "sess.run([model.loss, model.outputs], feed_dict={inputs_placeholder: inputs, outputs_placeholder: labels, max_seq_len_placeholder: seq_len})",
+                            "Call"
+                        ],
+                        [
+                            "outputs",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "logits": {
+                    "value": "self.output_logits",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "RMSPropOptimizer_125": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "learning_rate": {
+                    "value": "args.learning_rate",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "momentum": {
+                    "value": "0.9",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "decay": {
+                    "value": "0.9",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "AdamOptimizer_127": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "learning_rate": {
+                    "value": "args.learning_rate",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "gradients_130": {
+                "ys": {
+                    "value": "self.loss",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "xs": {
+                    "value": "trainable_variables",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.trainable_variables()",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "BasicLSTMCell_71": {
+                "num_units": {
+                    "value": "num_units",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "num_units",
+                            "Method Argument"
+                        ],
+                        [
+                            "num_units",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "forget_bias": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "MultiRNNCell_74": {
+                "cells": {
+                    "value": "[single_cell(args.num_units) for _ in range(args.num_layers)]",
+                    "type": "ListComp",
+                    "possible_values": []
+                }
+            },
+            "MultiRNNCell_93": {
+                "variable": {
+                    "value": "controller",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "cells": {
+                    "value": "[single_cell(args.num_units) for _ in range(args.num_layers)]",
+                    "type": "ListComp",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_122": {
+                "input_tensor": {
+                    "value": "cross_entropy",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.sigmoid_cross_entropy_with_logits(labels=outputs, logits=self.output_logits)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "LSTMStateTuple_78": {
+                "c": {
+                    "value": "expand(tf.tanh(learned_init(args.num_units)), dim=0, N=args.batch_size)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "h": {
+                    "value": "expand(tf.tanh(learned_init(args.num_units)), dim=0, N=args.batch_size)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "BasicLSTMCell_91": {
+                "num_units": {
+                    "value": "num_units",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "num_units",
+                            "Method Argument"
+                        ],
+                        [
+                            "num_units",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "forget_bias": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "tanh_79": {
+                "x": {
+                    "value": "learned_init(args.num_units)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "tanh_80": {
+                "x": {
+                    "value": "learned_init(args.num_units)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "utils.py": {
+        "tensorflow": {
+            "concat_5": {
+                "values": {
+                    "value": "[tf.expand_dims(x, dim) for _ in range(N)]",
+                    "type": "ListComp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dim",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "squeeze_8": {
+                "input": {
+                    "value": "tf.contrib.layers.fully_connected(tf.ones([1, 1]), units, activation_fn=None, biases_initializer=None)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "truncated_normal_initializer_13": {
+                "stddev": {
+                    "value": "stddev",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "1.0 / np.sqrt(input_size)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "dtype",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.float32",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "expand_dims_5": {
+                "input": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "x",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dim",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "ones_8": {
+                "shape": {
+                    "value": "[1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

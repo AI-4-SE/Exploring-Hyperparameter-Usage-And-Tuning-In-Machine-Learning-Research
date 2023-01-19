@@ -1,0 +1,1098 @@
+{
+    "ar_ppo/ar_pposgd_simple.py": {
+        "tensorflow": {
+            "placeholder_121": {
+                "variable": {
+                    "value": "atarg",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "placeholder_122": {
+                "variable": {
+                    "value": "ret",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "placeholder_124": {
+                "variable": {
+                    "value": "lrmult",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "lrmult",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "placeholder_128": {
+                "variable": {
+                    "value": "ac",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, ar.p + 1, ac_space.shape[-1]]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "placeholder_129": {
+                "variable": {
+                    "value": "update_mask",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, ar.p, 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "placeholder_130": {
+                "variable": {
+                    "value": "past_x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, ar.p, ac_space.shape[-1]]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_132": {
+                "variable": {
+                    "value": "meanent",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "ent",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "pi.pd.entropy()",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "exp_135": {
+                "variable": {
+                    "value": "ratio",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.clip_by_value(pi.pd.logp(ac, past_x, update_mask) - oldpi.pd.logp(ac, past_x, update_mask), -np.inf, 5)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_139": {
+                "variable": {
+                    "value": "vf_loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "tf.square(pi.vpred - ret)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "clip_by_value_135": {
+                "t": {
+                    "value": "pi.pd.logp(ac, past_x, update_mask) - oldpi.pd.logp(ac, past_x, update_mask)",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "clip_value_min": {
+                    "value": "-np.inf",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "clip_value_max": {
+                    "value": "5",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "clip_by_value_137": {
+                "t": {
+                    "value": "ratio",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.exp(tf.clip_by_value(pi.pd.logp(ac, past_x, update_mask) - oldpi.pd.logp(ac, past_x, update_mask), -np.inf, 5))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "clip_value_min": {
+                    "value": "1.0 - clip_param",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "clip_value_max": {
+                    "value": "1.0 + clip_param",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_138": {
+                "input_tensor": {
+                    "value": "tf.minimum(surr1, surr2)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "square_139": {
+                "x": {
+                    "value": "pi.vpred - ret",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "minimum_138": {
+                "x": {
+                    "value": "surr1",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "ratio * atarg",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "surr2",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.clip_by_value(ratio, 1.0 - clip_param, 1.0 + clip_param) * atarg",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "assign_147": {
+                "ref": {
+                    "value": "oldv",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "newv",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "ar_trpo/ar_trpo_mpi.py": {
+        "tensorflow": {
+            "placeholder_131": {
+                "variable": {
+                    "value": "atarg",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "placeholder_132": {
+                "variable": {
+                    "value": "ret",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "placeholder_135": {
+                "variable": {
+                    "value": "ac",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, ar.p + 1, ac_space.shape[-1]]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "placeholder_136": {
+                "variable": {
+                    "value": "update_mask",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, ar.p, 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "placeholder_137": {
+                "variable": {
+                    "value": "past_x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, ar.p, ac_space.shape[-1]]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_141": {
+                "variable": {
+                    "value": "meankl",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "kloldnew",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "oldpi.pd.kl(pi.pd, ac, past_x, update_mask)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reduce_mean_142": {
+                "variable": {
+                    "value": "meanent",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "ent",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "pi.pd.entropy()",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reduce_mean_145": {
+                "variable": {
+                    "value": "vferr",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "tf.square(pi.vpred - ret)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "exp_147": {
+                "variable": {
+                    "value": "ratio",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.clip_by_value(pi.pd.logp(ac, past_x, update_mask) - oldpi.pd.logp(ac, past_x, update_mask), -np.inf, 5)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_148": {
+                "variable": {
+                    "value": "surrgain",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "ratio * atarg",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "gradients_163": {
+                "variable": {
+                    "value": "klgrads",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "ys": {
+                    "value": "dist",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "meankl",
+                            "variable"
+                        ]
+                    ]
+                },
+                "xs": {
+                    "value": "var_list",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[v for v in all_var_list if v.name.split('/')[1].startswith('pol')]",
+                            "ListComp"
+                        ]
+                    ]
+                }
+            },
+            "placeholder_164": {
+                "variable": {
+                    "value": "flat_tangent",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "flat_tan",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "add_n_172": {
+                "variable": {
+                    "value": "gvp",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "inputs": {
+                    "value": "[tf.reduce_sum(g * tangent) for (g, tangent) in zipsame(klgrads, tangents)]",
+                    "type": "ListComp",
+                    "possible_values": []
+                }
+            },
+            "square_145": {
+                "x": {
+                    "value": "pi.vpred - ret",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "clip_by_value_147": {
+                "t": {
+                    "value": "pi.pd.logp(ac, past_x, update_mask) - oldpi.pd.logp(ac, past_x, update_mask)",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "clip_value_min": {
+                    "value": "-np.inf",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "clip_value_max": {
+                    "value": "5",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "reshape_170": {
+                "tensor": {
+                    "value": "flat_tangent[start:start + sz]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "shape",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "shapes",
+                            "variable"
+                        ]
+                    ]
+                }
+            },
+            "reduce_sum_172": {
+                "input_tensor": {
+                    "value": "g * tangent",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "assign_175": {
+                "ref": {
+                    "value": "oldv",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "newv",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "common/ar_mlp_policy.py": {
+        "tensorflow": {
+            "reshape_44": {
+                "variable": {
+                    "value": "obz",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "obz",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.clip_by_value((ob - self.ob_rms.mean) / self.ob_rms.std, -5.0, 5.0)",
+                            "Call"
+                        ],
+                        [
+                            "ob",
+                            "variable"
+                        ],
+                        [
+                            "tf.reshape(obz, [-1, obz.shape[-1]])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, obz.shape[-1]]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "get_collection_66": {
+                "key": {
+                    "value": "tf.GraphKeys.GLOBAL_VARIABLES",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "scope": {
+                    "value": "self.scope",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "get_collection_68": {
+                "key": {
+                    "value": "tf.GraphKeys.TRAINABLE_VARIABLES",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "scope": {
+                    "value": "self.scope",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_11": {
+                "name_or_scope": {
+                    "value": "name",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "name",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "variable_scope_33": {
+                "name_or_scope": {
+                    "value": "vf",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "clip_by_value_35": {
+                "variable": {
+                    "value": "obz",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "t": {
+                    "value": "(ob - self.ob_rms.mean) / self.ob_rms.std",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "clip_value_min": {
+                    "value": "-5.0",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "clip_value_max": {
+                    "value": "5.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "tanh_40": {
+                "variable": {
+                    "value": "last_out",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "dense(last_out, hid_size, name='fc%i' % (i + 1), weight_init=U.normc_initializer(1.0))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_43": {
+                "name_or_scope": {
+                    "value": "pol",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "tanh_47": {
+                "variable": {
+                    "value": "last_out",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "dense(last_out, hid_size, name='fc%i' % (i + 1), weight_init=U.normc_initializer(1.0))",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "reshape_50": {
+                "variable": {
+                    "value": "mean",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "mean",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dense(last_out, pdtype.param_shape()[0] // 2, name='final', weight_init=U.normc_initializer(0.01))",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(mean, [-1, mean.shape[-1] * (p + 1)])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, mean.shape[-1] * (p + 1)]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "get_variable_51": {
+                "variable": {
+                    "value": "logstd",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "logstd",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[1, pdtype.param_shape()[0] // 2]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.zeros_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "concat_52": {
+                "variable": {
+                    "value": "pdparam",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[mean, mean[:, :ac_space.shape[-1]] * 0.0 + logstd]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "get_variable_scope_13": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "variable_scope_30": {
+                "name_or_scope": {
+                    "value": "obfilter",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "zeros_initializer_51": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "common/distributions.py": {
+        "tensorflow": {
+            "reshape_16": {
+                "variable": {
+                    "value": "self.mean",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "flat[..., :-ac_dim]",
+                    "type": "Subscript",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[-1] + flat.shape.as_list()[1:-1] + [p + 1, ac_dim]",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "exp_18": {
+                "variable": {
+                    "value": "self.std",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "self.logstd",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_22": {
+                "variable": {
+                    "value": "h",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "self.phi[::-1] * past_x_next",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-2",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_32": {
+                "variable": {
+                    "value": "h",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "self.phi[::-1] * past_x_next",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-2",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_36": {
+                "variable": {
+                    "value": "other_h",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "other.phi[::-1] * past_x_next_other",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-2",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_48": {
+                "variable": {
+                    "value": "h",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "self.phi[::-1] * past_x_next",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "concat_52": {
+                "variable": {
+                    "value": "past_x_next",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[past_x_next[:, 1:, :], tf.expand_dims(X, axis=1)]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_37": {
+                "input_tensor": {
+                    "value": "other.logstd + np.log(other.sigma_z) - self.logstd - np.log(self.sigma_z) + (tf.square(self.std * self.sigma_z) + tf.square(self.mean[:, -1, :] + self.std * h - other.mean[:, -1, :] - other.std * other_h)) / (2.0 * tf.square(other.std * other.sigma_z)) - 0.5",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_43": {
+                "input_tensor": {
+                    "value": "self.logstd + np.log(self.sigma_z) + 0.5 * np.log(2.0 * np.pi * np.e)",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_20": {
+                "input": {
+                    "value": "self.std",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_25": {
+                "input_tensor": {
+                    "value": "self.logstd + np.log(self.sigma_z)",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_30": {
+                "input": {
+                    "value": "self.std",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_34": {
+                "input": {
+                    "value": "other.std",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "shape_49": {
+                "input": {
+                    "value": "self.mean[:, -1, :]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_52": {
+                "input": {
+                    "value": "X",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "h + self.sigma_z * eps",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_23": {
+                "input_tensor": {
+                    "value": "tf.square((acs[:, -1, :] - self.mean[..., -1, :] - self.std * h) / self.std / self.sigma_z)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "to_float_24": {
+                "x": {
+                    "value": "tf.shape(acs)[-1]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "square_23": {
+                "x": {
+                    "value": "(acs[:, -1, :] - self.mean[..., -1, :] - self.std * h) / self.std / self.sigma_z",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "shape_24": {
+                "input": {
+                    "value": "acs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "acs",
+                            "Method Argument"
+                        ],
+                        [
+                            "acs",
+                            "Method Argument"
+                        ],
+                        [
+                            "acs",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "square_38": {
+                "x": {
+                    "value": "self.mean[:, -1, :] + self.std * h - other.mean[:, -1, :] - other.std * other_h",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "square_40": {
+                "x": {
+                    "value": "other.std * other.sigma_z",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "common/utils.py": {
+        "tensorflow": {
+            "get_variable_23": {
+                "variable": {
+                    "value": "w",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "name + '/w'",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[x.get_shape()[1], size]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "weight_init",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "None",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "matmul_24": {
+                "variable": {
+                    "value": "ret",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "x",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "w",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable(name + '/w', [x.get_shape()[1], size], initializer=weight_init)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "get_variable_26": {
+                "variable": {
+                    "value": "b",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "name + '/b'",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[size]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.zeros_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "zeros_initializer_26": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

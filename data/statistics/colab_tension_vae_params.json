@@ -1,0 +1,752 @@
+{
+    "build_model.py": {
+        "tensorflow": {
+            "Input_17": {
+                "variable": {
+                    "value": "encoder_input",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "(time_step, input_dim)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "encoder_input",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Model_48": {
+                "variable": {
+                    "value": "encoder",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "encoder_input",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Input(shape=(time_step, input_dim), name='encoder_input')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "**kwargs": {
+                    "value": "z",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Lambda(sampling, output_shape=(z_dim,), name='z')([z_mean, z_log_var])",
+                            "Call"
+                        ],
+                        [
+                            "vae.layers[1].predict(piano_roll)",
+                            "Call"
+                        ],
+                        [
+                            "np.random.normal(size=(1, z_dim))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "name": {
+                    "value": "encoder",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Input_52": {
+                "variable": {
+                    "value": "decoder_latent_input",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "z_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "z_sampling",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "sum_64": {
+                "variable": {
+                    "value": "kl_loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "kl_loss",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "1 + z_log_var - K.square(z_mean) - K.exp(z_log_var)",
+                            "BinOp"
+                        ],
+                        [
+                            "K.sum(kl_loss, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reduce_mean(kl_loss)",
+                            "Call"
+                        ],
+                        [
+                            "0.5 * kl_loss",
+                            "BinOp"
+                        ],
+                        [
+                            "beta(kl_loss)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_mean_65": {
+                "variable": {
+                    "value": "kl_loss",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "kl_loss",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "1 + z_log_var - K.square(z_mean) - K.exp(z_log_var)",
+                            "BinOp"
+                        ],
+                        [
+                            "K.sum(kl_loss, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reduce_mean(kl_loss)",
+                            "Call"
+                        ],
+                        [
+                            "0.5 * kl_loss",
+                            "BinOp"
+                        ],
+                        [
+                            "beta(kl_loss)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Model_110": {
+                "variable": {
+                    "value": "decoder",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "decoder_latent_input",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Input(shape=z_dim, name='z_sampling')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "**kwargs": {
+                    "value": "decoder_output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[melody_pitch_output, melody_rhythm_output, bass_pitch_output, bass_rhythm_output, tensile_output, diameter_output]",
+                            "List"
+                        ]
+                    ]
+                },
+                "name": {
+                    "value": "decoder",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Model_114": {
+                "variable": {
+                    "value": "vae",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "model_input",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "encoder_input",
+                            "variable"
+                        ]
+                    ]
+                },
+                "**kwargs": {
+                    "value": "decoder(encoder(model_input))",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "encoder_decoder",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Adam_120": {
+                "variable": {
+                    "value": "optimizer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Bidirectional_19": {
+                "layer": {
+                    "value": "GRU(rnn_dim, return_sequences=True)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "rnn1",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Bidirectional_20": {
+                "layer": {
+                    "value": "GRU(rnn_dim)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "rnn2",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Dense_24": {
+                "units": {
+                    "value": "z_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "z_mean",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Dense_25": {
+                "units": {
+                    "value": "z_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "z_log_var",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Lambda_35": {
+                "function": {
+                    "value": "sampling",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "sampling",
+                            "Call"
+                        ]
+                    ]
+                },
+                "output_shape": {
+                    "value": "(z_dim,)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "z",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Variable_41": {
+                "variable": {
+                    "value": "self.beta",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "initial_value": {
+                    "value": "0.0",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "trainable": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "RepeatVector_54": {
+                "n": {
+                    "value": "time_step",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "repeated_z_tension",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "GRU_58": {
+                "units": {
+                    "value": "rnn_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "decoder_rnn1",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "return_sequences": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "GRU_60": {
+                "units": {
+                    "value": "rnn_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "decoder_rnn2",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "return_sequences": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "exp_63": {
+                "x": {
+                    "value": "z_log_var",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Dense(z_dim, name='z_log_var')(rnn2)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "TimeDistributed_70": {
+                "layer": {
+                    "value": "Dense(tension_middle_dim, activation='elu')",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "tensile_strain_dense1",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "TimeDistributed_73": {
+                "layer": {
+                    "value": "Dense(tension_output_dim, activation='elu')",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "tensile_strain_dense2",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "TimeDistributed_76": {
+                "layer": {
+                    "value": "Dense(tension_middle_dim, activation='elu')",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "diameter_strain_dense1",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "TimeDistributed_79": {
+                "layer": {
+                    "value": "Dense(tension_output_dim, activation='elu')",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "diameter_strain_dense2",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "TimeDistributed_82": {
+                "layer": {
+                    "value": "Dense(start_middle_dim, activation='elu')",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "melody_start_dense1",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "TimeDistributed_84": {
+                "layer": {
+                    "value": "Dense(melody_note_start_dim, activation='sigmoid')",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "melody_start_dense2",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "TimeDistributed_88": {
+                "layer": {
+                    "value": "Dense(melody_bass_dense_1_dim, activation='elu')",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "melody_pitch_dense1",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "TimeDistributed_91": {
+                "layer": {
+                    "value": "Dense(melody_output_dim, activation='softmax')",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "melody_pitch_dense2",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "TimeDistributed_94": {
+                "layer": {
+                    "value": "Dense(start_middle_dim, activation='elu')",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "bass_start_dense1",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "TimeDistributed_97": {
+                "layer": {
+                    "value": "Dense(bass_note_start_dim, activation='sigmoid')",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "bass_start_dense2",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "TimeDistributed_101": {
+                "layer": {
+                    "value": "Dense(melody_bass_dense_1_dim, activation='elu')",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "bass_pitch_dense1",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "TimeDistributed_103": {
+                "layer": {
+                    "value": "Dense(bass_output_dim, activation='softmax')",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "bass_pitch_dense2",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "GRU_19": {
+                "units": {
+                    "value": "rnn_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "return_sequences": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "GRU_20": {
+                "units": {
+                    "value": "rnn_dim",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "shape_29": {
+                "input": {
+                    "value": "z_mean",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Dense(z_dim, name='z_mean')(rnn2)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "square_63": {
+                "x": {
+                    "value": "z_mean",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Dense(z_dim, name='z_mean')(rnn2)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Dense_70": {
+                "units": {
+                    "value": "tension_middle_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "elu",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Dense_73": {
+                "units": {
+                    "value": "tension_output_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "elu",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Dense_76": {
+                "units": {
+                    "value": "tension_middle_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "elu",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Dense_79": {
+                "units": {
+                    "value": "tension_output_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "elu",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Dense_82": {
+                "units": {
+                    "value": "start_middle_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "elu",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Dense_84": {
+                "units": {
+                    "value": "melody_note_start_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "sigmoid",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Dense_88": {
+                "units": {
+                    "value": "melody_bass_dense_1_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "elu",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Dense_91": {
+                "units": {
+                    "value": "melody_output_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "softmax",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Dense_94": {
+                "units": {
+                    "value": "start_middle_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "elu",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Dense_97": {
+                "units": {
+                    "value": "bass_note_start_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "sigmoid",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Dense_101": {
+                "units": {
+                    "value": "melody_bass_dense_1_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "elu",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "Dense_103": {
+                "units": {
+                    "value": "bass_output_dim",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "activation": {
+                    "value": "softmax",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "exp_33": {
+                "x": {
+                    "value": "0.5 * z_log_var",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "CategoricalAccuracy_129": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "BinaryAccuracy_130": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "CategoricalAccuracy_131": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "BinaryAccuracy_132": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "MeanSquaredError_133": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "MeanSquaredError_134": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}
