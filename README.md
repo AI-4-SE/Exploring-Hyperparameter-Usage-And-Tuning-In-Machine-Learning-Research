@@ -14,7 +14,7 @@ Note that we developed plugins for the each ML library, which apply static code-
 You can start the analysis by running `run.sh`.
 It takes an optional parameter which is a Git tree-ish (e.g. `main`) that can be used to get a certain version of CfgNet.
 
-**For this analysis, it is required to use the `ml` branch of the CfgNet, because only this branch contains the ML library plugins and extractes the API calls.**
+**For this analysis, it is required to use the `ml` branch of the CfgNet and to pass the `--enable-ml-plugins (-m)` argument, because only this branch contains the ML library plugins and extractes the API calls.**
 
 The result files will be in `results/`.
 You can find the modified repositories in `out/`.
