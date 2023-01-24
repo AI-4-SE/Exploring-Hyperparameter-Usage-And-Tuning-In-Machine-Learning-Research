@@ -1,0 +1,1151 @@
+{
+    "conv_tasnet.py": {
+        "torch": {
+            "rand_84": {
+                "variable": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "32000",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Conv1d_31": {
+                "variable": {
+                    "value": "self.encoder",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_channels": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "self.enc_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "self.win",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "self.stride",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "ConvTranspose1d_40": {
+                "variable": {
+                    "value": "self.decoder",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_channels": {
+                    "value": "self.enc_dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_channels": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "kernel_size": {
+                    "value": "self.win",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "stride": {
+                    "value": "self.stride",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "cat_59": {
+                "variable": {
+                    "value": "input",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[pad_aux, input, pad_aux]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "sigmoid_73": {
+                "variable": {
+                    "value": "masks",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "self.TCN(enc_output)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "cat_56": {
+                "variable": {
+                    "value": "input",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[input, pad]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "zeros_58": {
+                "*size": {
+                    "value": "batch_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "input.size(0)",
+                            "Call"
+                        ],
+                        [
+                            "output.size(0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "self.stride",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "zeros_55": {
+                "*size": {
+                    "value": "batch_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "input.size(0)",
+                            "Call"
+                        ],
+                        [
+                            "output.size(0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "rest",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.win - (self.stride + nsample % self.win) % self.win",
+                            "BinOp"
+                        ],
+                        [
+                            "self.pad_signal(input)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "utility/models.py": {
+        "torch": {
+            "cumsum_30": {
+                "variable": {
+                    "value": "cum_sum",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "step_sum",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "input.sum(1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cumsum_31": {
+                "variable": {
+                    "value": "cum_pow_sum",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "step_pow_sum",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "input.pow(2).sum(1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "from_numpy_34": {
+                "variable": {
+                    "value": "entry_cnt",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "ndarray": {
+                    "value": "entry_cnt",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "np.arange(channel, channel * (time_step + 1), channel)",
+                            "Call"
+                        ],
+                        [
+                            "torch.from_numpy(entry_cnt).type(input.type())",
+                            "Call"
+                        ],
+                        [
+                            "entry_cnt.view(1, -1).expand_as(cum_sum)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Linear_116": {
+                "variable": {
+                    "value": "self.FC",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "self.input_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "self.hidden_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "bias": {
+                    "value": "bias",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "True",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "Conv1d_145": {
+                "variable": {
+                    "value": "self.conv1d",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_channels": {
+                    "value": "input_channel",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "input_channel",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "out_channels": {
+                    "value": "hidden_channel",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "hidden_channel",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Conv1d_150": {
+                "variable": {
+                    "value": "self.dconv1d",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_channels": {
+                    "value": "hidden_channel",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "hidden_channel",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "out_channels": {
+                    "value": "hidden_channel",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "hidden_channel",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "kernel_size": {
+                    "value": "kernel",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "kernel",
+                            "Method Argument"
+                        ],
+                        [
+                            "3",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "dilation": {
+                    "value": "dilation",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "1",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "groups": {
+                    "value": "hidden_channel",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "hidden_channel",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "padding": {
+                    "value": "self.padding",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Conv1d_153": {
+                "variable": {
+                    "value": "self.res_out",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_channels": {
+                    "value": "hidden_channel",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "hidden_channel",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "out_channels": {
+                    "value": "input_channel",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "input_channel",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "PReLU_154": {
+                "variable": {
+                    "value": "self.nonlinearity1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "PReLU_155": {
+                "variable": {
+                    "value": "self.nonlinearity2",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Conv1d_193": {
+                "variable": {
+                    "value": "self.BN",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_channels": {
+                    "value": "input_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "input_dim",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "out_channels": {
+                    "value": "BN_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "BN_dim",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ModuleList_199": {
+                "variable": {
+                    "value": "self.TCN",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "modules": {
+                    "value": "[]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "Sequential_218": {
+                "variable": {
+                    "value": "self.output",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "*args": {
+                    "value": "nn.PReLU()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Parameter_14": {
+                "variable": {
+                    "value": "self.gain",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.ones(1, dimension, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Parameter_15": {
+                "variable": {
+                    "value": "self.bias",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "torch.zeros(1, dimension, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "GroupNorm_160": {
+                "variable": {
+                    "value": "self.reg1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_groups": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "num_channels": {
+                    "value": "hidden_channel",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "hidden_channel",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "eps": {
+                    "value": "1e-08",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "GroupNorm_161": {
+                "variable": {
+                    "value": "self.reg2",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_groups": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "num_channels": {
+                    "value": "hidden_channel",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "hidden_channel",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "eps": {
+                    "value": "1e-08",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "Conv1d_164": {
+                "variable": {
+                    "value": "self.skip_out",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_channels": {
+                    "value": "hidden_channel",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "hidden_channel",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "out_channels": {
+                    "value": "input_channel",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "input_channel",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "GroupNorm_189": {
+                "variable": {
+                    "value": "self.LN",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_groups": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "num_channels": {
+                    "value": "input_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "input_dim",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "eps": {
+                    "value": "1e-08",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "PReLU_218": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Conv1d_219": {
+                "in_channels": {
+                    "value": "BN_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "BN_dim",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "out_channels": {
+                    "value": "output_dim",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "output_dim",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "kernel_size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ones_14": {
+                "*size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "dimension",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dimension",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "zeros_15": {
+                "*size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "dimension",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dimension",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "ones_17": {
+                "*size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "dimension",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dimension",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "zeros_18": {
+                "*size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "dimension",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "dimension",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "utility/sdr.py": {
+        "torch": {
+            "pow_53": {
+                "variable": {
+                    "value": "true_power",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "est_true",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "scale * origin",
+                            "BinOp"
+                        ],
+                        [
+                            "scale * origin",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "exponent": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "sum_53": {
+                "variable": {
+                    "value": "true_power",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "pow_54": {
+                "variable": {
+                    "value": "res_power",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "est_res",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "estimation - est_true",
+                            "BinOp"
+                        ],
+                        [
+                            "estimation - est_true",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "exponent": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "sum_54": {
+                "variable": {
+                    "value": "res_power",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "zeros_136": {
+                "variable": {
+                    "value": "SDR",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "(batch_size, nsource, nsource)",
+                    "type": "Tuple",
+                    "possible_values": []
+                }
+            },
+            "cat_150": {
+                "variable": {
+                    "value": "SDR_perm",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "SDR_perm",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "torch.cat(SDR_perm, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "max_151": {
+                "variable": {
+                    "value": "(SDR_max, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "SDR_perm",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "torch.cat(SDR_perm, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "sum_148": {
+                "variable": {
+                    "value": "sdr",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.cat(sdr, 1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "pow_46": {
+                "input": {
+                    "value": "origin",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "origin * mask",
+                            "BinOp"
+                        ],
+                        [
+                            "origin * mask",
+                            "BinOp"
+                        ],
+                        [
+                            "origin - np.mean(origin, 2, keepdims=True)",
+                            "BinOp"
+                        ],
+                        [
+                            "origin - torch.mean(origin, 2, keepdim=True).expand_as(estimation)",
+                            "BinOp"
+                        ],
+                        [
+                            "origin",
+                            "Method Argument"
+                        ],
+                        [
+                            "origin",
+                            "Method Argument"
+                        ],
+                        [
+                            "origin",
+                            "Method Argument"
+                        ],
+                        [
+                            "origin",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "exponent": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "sum_46": {
+                "input": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keepdim": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "sum_48": {
+                "input": {
+                    "value": "origin * estimation",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keepdim": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "mean_129": {
+                "input": {
+                    "value": "estimation",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "estimation * mask",
+                            "BinOp"
+                        ],
+                        [
+                            "estimation * mask",
+                            "BinOp"
+                        ],
+                        [
+                            "estimation - np.mean(estimation, 2, keepdims=True)",
+                            "BinOp"
+                        ],
+                        [
+                            "estimation - torch.mean(estimation, 2, keepdim=True).expand_as(estimation)",
+                            "BinOp"
+                        ],
+                        [
+                            "estimation",
+                            "Method Argument"
+                        ],
+                        [
+                            "estimation",
+                            "Method Argument"
+                        ],
+                        [
+                            "estimation",
+                            "Method Argument"
+                        ],
+                        [
+                            "estimation",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keepdim": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "mean_130": {
+                "input": {
+                    "value": "origin",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "origin * mask",
+                            "BinOp"
+                        ],
+                        [
+                            "origin * mask",
+                            "BinOp"
+                        ],
+                        [
+                            "origin - np.mean(origin, 2, keepdims=True)",
+                            "BinOp"
+                        ],
+                        [
+                            "origin - torch.mean(origin, 2, keepdim=True).expand_as(estimation)",
+                            "BinOp"
+                        ],
+                        [
+                            "origin",
+                            "Method Argument"
+                        ],
+                        [
+                            "origin",
+                            "Method Argument"
+                        ],
+                        [
+                            "origin",
+                            "Method Argument"
+                        ],
+                        [
+                            "origin",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "keepdim": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                }
+            },
+            "log10_56": {
+                "input": {
+                    "value": "res_power",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "np.sum(est_res ** 2, 1)",
+                            "Call"
+                        ],
+                        [
+                            "torch.pow(est_res, 2).sum(1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "cat_148": {
+                "tensors": {
+                    "value": "sdr",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "0.0",
+                            "float"
+                        ],
+                        [
+                            "sdr + SDR[i][idx][permute[idx]]",
+                            "BinOp"
+                        ],
+                        [
+                            "[]",
+                            "List"
+                        ],
+                        [
+                            "torch.sum(torch.cat(sdr, 1), 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dim": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}
