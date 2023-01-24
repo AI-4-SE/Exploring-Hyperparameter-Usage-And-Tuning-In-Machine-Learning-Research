@@ -24,11 +24,12 @@ You can find the modified repositories in `out/`.
 
 The [data/](data/) directory contains all the data used in this paper, while the [src/](src/) directory contains all scripts used to process the data.
 
-- [data/dblp](data/dblp/) : contains the data crawled from the DBLP digital bibliography
-- [data/library_data](data/library_data/): contain the API data of the ML libraries
-- [data/paper_analysis](data/paper_analysis/): contains the metadata for each paper and the data used for measuring the annotator agreement
-- [data/statistics](data/statistics/): contains the data extracted from the code repositories
+- [data/dblp/](data/dblp/) : contains the data crawled from the DBLP digital bibliography
+- [data/library_data/](data/library_data/): contain the API data of the ML libraries
+- [data/paper_analysis/](data/paper_analysis/): contains the metadata for each paper and the data used for measuring the annotator agreement
+- [data/statistics/](data/statistics/): contains the data extracted from the code repositories
 
-- [src/cross_validation](src/cross-validation/): contains the script to calculate the inter-annotator agreement
-- [src/dblp_results](src/dblp_results/): contains the script the calculate the number of papers dealing with hyperparameter importance and tuning
+- [src/cross_validation/](src/cross-validation/): contains the script to calculate the inter-annotator agreement
+- [src/dblp_results/](src/dblp_results/): contains the script the calculate the number of papers dealing with hyperparameter importance and tuning
+- [src/library_stats/](src/library_stats//): contains the script the calculate the total number of API calls and parameter for each library
 - [src/](src): contains the script to process the data extracted from the code repostories and respective research papers
