@@ -4,7 +4,7 @@ def get_tf_optimizer():
     
     optimizer = []
 
-    with open("modules/tensorflow_default_values.json", "r", encoding="utf-8") as src:
+    with open("../data/library_data/tensorflow_data.json", "r", encoding="utf-8") as src:
         data = json.load(src)
 
     # tensorflow.keras.optimizer
@@ -28,7 +28,11 @@ def get_tf_optimizer():
         if "tensorflow.keras.optimizers.experimental" in item["full_name"]:
             optimizer.append(item)
 
-    with open("modules/tensorflow_optimizer.json", "w", encoding="utf-8") as dest:
+        if "tensorflow.compat.v1.train." in item["full_name"]:
+            if item["name"].endswith("Optimizer"):
+                optimizer.append(item)
+
+    with open("../data/library_data/tensorflow_optimizer.json", "w", encoding="utf-8") as dest:
         json.dump(optimizer, dest, sort_keys=True, indent=4)
         
 
@@ -36,7 +40,7 @@ def get_pytorch_optimizer():
     
     optimizer = []
 
-    with open("modules/torch_default_values.json", "r", encoding="utf-8") as src:
+    with open("../data/library_data/torch_data.json", "r", encoding="utf-8") as src:
         data = json.load(src)
 
     # torch.optim
@@ -48,7 +52,7 @@ def get_pytorch_optimizer():
                 optimizer.append(item)
 
 
-    with open("modules/torch_optimizer.json", "w", encoding="utf-8") as dest:
+    with open("../data/library_data/torch_optimizer.json", "w", encoding="utf-8") as dest:
         json.dump(optimizer, dest, sort_keys=True, indent=4)
         
 
