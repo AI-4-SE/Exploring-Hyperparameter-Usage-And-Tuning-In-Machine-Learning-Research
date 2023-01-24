@@ -17,7 +17,7 @@ import plotly.graph_objects as go
 from collections import Counter
 
 
-file_path = "../data/paper_analysis/metadata-with-categories-cleaned.csv"
+file_path = "../data/paper_analysis/metadata.csv"
 
 
 def hyperparameter_tuning():
