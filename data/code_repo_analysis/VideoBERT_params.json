@@ -1,0 +1,1352 @@
+{
+    "VideoBERT/data/label_data.py": {
+        "sklearn": {
+            "MiniBatchKMeans_21": {
+                "variable": {
+                    "value": "kmeans",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "VideoBERT/I3D/batch_extract.py": {
+        "tensorflow": {
+            "gpu_device_name_8": {
+                "variable": {
+                    "value": "device_name",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "VideoBERT/I3D/extract_features.py": {
+        "tensorflow": {
+            "enable_eager_execution_15": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "executing_eagerly_16": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "device_28": {
+                "device_name": {
+                    "value": "device_name",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "device_name",
+                            "Method Argument"
+                        ],
+                        [
+                            "device_name",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "constant_29": {
+                "value": {
+                    "value": "clips_batch",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "normalized_batch.reshape((N, clip_frame_count, im_size, im_size, 3))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            }
+        },
+        "torch": {
+            "from_numpy_61": {
+                "variable": {
+                    "value": "frame",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "ndarray": {
+                    "value": "frame",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "cap.read()",
+                            "Call"
+                        ],
+                        [
+                            "cv2.resize(frame, (im_size, im_size))",
+                            "Call"
+                        ],
+                        [
+                            "cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)",
+                            "Call"
+                        ],
+                        [
+                            "torch.from_numpy(frame).permute(2, 0, 1).unsqueeze(0)",
+                            "Call"
+                        ],
+                        [
+                            "frame / 255",
+                            "BinOp"
+                        ],
+                        [
+                            "frame in enumerate(np.repeat([last_frame], nframes_clip_extend, axis=0))",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "permute_61": {
+                "variable": {
+                    "value": "frame",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dims": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "unsqueeze_61": {
+                "variable": {
+                    "value": "frame",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "VideoBERT/data/VideoBertDataset.py": {
+        "torch": {
+            "zeros_like_45": {
+                "variable": {
+                    "value": "text_tok_type_ids",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "text_ids",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.LongTensor(sentence)",
+                            "Call"
+                        ],
+                        [
+                            "self.create_text_example(item)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "ones_like_57": {
+                "variable": {
+                    "value": "vid_tok_type_ids",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "vid_ids",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.data[i]['vid_tokens']",
+                            "Subscript"
+                        ],
+                        [
+                            "[vid_id + len(self.tokenizer.vocab) for vid_id in vid_ids]",
+                            "ListComp"
+                        ],
+                        [
+                            "torch.LongTensor(vid_ids)",
+                            "Call"
+                        ],
+                        [
+                            "self.create_video_example(item)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "hstack_69": {
+                "variable": {
+                    "value": "joint_ids",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[text_ids[:-1], torch.LongTensor([self.tokenizer.vocab.stoi[self.tokenizer.sep_token]]), vid_ids[1:]]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "hstack_73": {
+                "variable": {
+                    "value": "joint_tok_type_ids",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[text_tok_type_ids, vid_tok_type_ids[1:]]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "tensor_193": {
+                "data": {
+                    "value": "np.hstack([np.array(self.tokenizer.cls_token_id), np.array(text_sentence), np.array(data_globals.vis_lin_glue_token_id), np.array(video_sentence), np.array(self.tokenizer.sep_token_id)])",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.int64",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "tensor_199": {
+                "data": {
+                    "value": "np.hstack([text_token_type_ids, video_token_type_ids])",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.int64",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "tensor_248": {
+                "data": {
+                    "value": "np.hstack([np.array(self.tokenizer.cls_token_id), np.array(text_sentence), np.array(data_globals.vis_lin_glue_token_id), np.array(video_sentence), np.array(self.tokenizer.sep_token_id)])",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.int64",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "tensor_254": {
+                "data": {
+                    "value": "np.hstack([text_token_type_ids, video_token_type_ids])",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.int64",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "tensor_311": {
+                "data": {
+                    "value": "np.hstack([np.array(self.tokenizer.cls_token_id), np.array(first_sentence), np.array(self.tokenizer.sep_token_id), np.array(second_sentence), np.array(self.tokenizer.sep_token_id)])",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.int64",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "tensor_319": {
+                "data": {
+                    "value": "np.hstack([first_token_type_ids, second_token_type_ids])",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.int64",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "VideoBERT/data/centroid_to_img.py": {
+        "torch": {}
+    },
+    "VideoBERT/data/globals.py": {
+        "torch": {
+            "arange_19": {
+                "variable": {
+                    "value": "frozen_indices",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "start": {
+                    "value": "bert_vocab_size",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "len(tokenizer)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "torch.int64",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "VideoBERT/evaluation/eval.py": {
+        "torch": {
+            "RandomSampler_91": {
+                "variable": {
+                    "value": "eval_sampler",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data_source": {
+                    "value": "eval_dataset",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "VideoBertDataset(tokenizer, build_tokenizer=False, data_path=args.eval_data_path)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "DataLoader_92": {
+                "variable": {
+                    "value": "eval_dataloader",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "eval_dataset",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "VideoBertDataset(tokenizer, build_tokenizer=False, data_path=args.eval_data_path)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "sampler": {
+                    "value": "eval_sampler",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "RandomSampler(eval_dataset)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "args.per_gpu_train_batch_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "collate_fn": {
+                    "value": "collate",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "collate",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "pad_sequence_68": {
+                "variable": {
+                    "value": "padded_text_ids",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "sequences": {
+                    "value": "text_examples",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[None] * len(examples)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "padding_value": {
+                    "value": "pad_id",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "eval_dataset.tokenizer.vocab.stoi[eval_dataset.tokenizer.pad_token]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "pad_sequence_69": {
+                "variable": {
+                    "value": "padded_text_type_ids",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "sequences": {
+                    "value": "text_type_ids",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[None] * len(examples)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "padding_value": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "pad_sequence_72": {
+                "variable": {
+                    "value": "padded_video_ids",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "sequences": {
+                    "value": "video_examples",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[None] * len(examples)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "padding_value": {
+                    "value": "pad_id",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "eval_dataset.tokenizer.vocab.stoi[eval_dataset.tokenizer.pad_token]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "pad_sequence_73": {
+                "variable": {
+                    "value": "padded_video_type_ids",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "sequences": {
+                    "value": "video_type_ids",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[None] * len(examples)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "padding_value": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "pad_sequence_76": {
+                "variable": {
+                    "value": "padded_joint_ids",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "sequences": {
+                    "value": "joint_examples",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[None] * len(examples)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "padding_value": {
+                    "value": "pad_id",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "eval_dataset.tokenizer.vocab.stoi[eval_dataset.tokenizer.pad_token]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "pad_sequence_77": {
+                "variable": {
+                    "value": "padded_joint_type_ids",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "sequences": {
+                    "value": "joint_type_ids",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[None] * len(examples)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "padding_value": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "VideoBERT/train/custom_vid_transformer.py": {
+        "torch": {
+            "Embedding_13": {
+                "variable": {
+                    "value": "self.tok_embed",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "self.config.vocab_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "embedding_dim": {
+                    "value": "self.config.hidden_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Embedding_14": {
+                "variable": {
+                    "value": "self.pos_encoding",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "300",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "embedding_dim": {
+                    "value": "self.config.hidden_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Embedding_15": {
+                "variable": {
+                    "value": "self.tok_type_embed",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_embeddings": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "embedding_dim": {
+                    "value": "self.config.hidden_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Dropout_17": {
+                "variable": {
+                    "value": "self.dropout",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "p": {
+                    "value": "0.1",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "sqrt_18": {
+                "variable": {
+                    "value": "self.scale",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "torch.FloatTensor([self.config.hidden_size])",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "Linear_22": {
+                "variable": {
+                    "value": "self.fc_out",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "in_features": {
+                    "value": "self.config.hidden_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "out_features": {
+                    "value": "self.config.vocab_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "Transformer_25": {
+                "variable": {
+                    "value": "self.transformer",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "d_model": {
+                    "value": "self.config.hidden_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "nhead": {
+                    "value": "self.config.num_attention_heads",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_encoder_layers": {
+                    "value": "num_layers",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.config.num_hidden_layers // 2",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "num_decoder_layers": {
+                    "value": "num_layers",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.config.num_hidden_layers // 2",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "activation": {
+                    "value": "self.config.hidden_act",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dropout": {
+                    "value": "0.1",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "CrossEntropyLoss_63": {
+                "variable": {
+                    "value": "loss_fct",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "CrossEntropyLoss_80": {
+                "variable": {
+                    "value": "loss_fct",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "CrossEntropyLoss_97": {
+                "variable": {
+                    "value": "loss_fct",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "save_153": {
+                "obj": {
+                    "value": "self.state_dict()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "output_dir + '/pytorch_model.bin'",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "arange_115": {
+                "start": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "end": {
+                    "value": "seq.shape[1]",
+                    "type": "Subscript",
+                    "possible_values": []
+                }
+            },
+            "unsqueeze_115": {
+                "input": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "load_148": {
+                "f": {
+                    "value": "args.model_name_or_path + '/pytorch_model.bin'",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "triu_110": {
+                "input": {
+                    "value": "torch.ones(sz, sz)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "ones_110": {
+                "*size": {
+                    "value": "sz",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "sz",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "out": {
+                    "value": "sz",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "sz",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "VideoBERT/train/model_utils.py": {
+        "torch": {
+            "tensor_26": {
+                "variable": {
+                    "value": "centroids",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data": {
+                    "value": "np.load(centers_file)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "empty_31": {
+                "variable": {
+                    "value": "glue_embedding",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "config.hidden_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "cat_35": {
+                "variable": {
+                    "value": "word_embeddings",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[word_embeddings, centroids, glue_embedding]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cat_38": {
+                "variable": {
+                    "value": "cls_decoder_weight",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[cls_decoder_weight, centroids, glue_embedding]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "empty_41": {
+                "variable": {
+                    "value": "extra_cls_decoder_bias",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "n_extra_embeddings",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "centroids.shape[0] + 1",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "torch.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "cat_43": {
+                "variable": {
+                    "value": "cls_decoder_bias",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[cls_decoder_bias, extra_cls_decoder_bias]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "empty_46": {
+                "variable": {
+                    "value": "extra_cls_predictions_bias",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "n_extra_embeddings",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "centroids.shape[0] + 1",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "torch.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "cat_48": {
+                "variable": {
+                    "value": "cls_predictions_bias",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensors": {
+                    "value": "[cls_predictions_bias, extra_cls_predictions_bias]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dim": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "empty_50": {
+                "variable": {
+                    "value": "vis_lin_align_weight",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "out": {
+                    "value": "config.hidden_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "empty_53": {
+                "variable": {
+                    "value": "cls_vis_lin_align_bias",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*size": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "torch.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "isnan_73": {
+                "variable": {
+                    "value": "bool_tensor",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "tensor",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tensor",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "load_14": {
+                "variable": {
+                    "value": "state",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "f": {
+                    "value": "state_path",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "data_globals.root_path + '/bert-large.pt'",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "save_19": {
+                "obj": {
+                    "value": "state",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "torch.load(state_path)",
+                            "Call"
+                        ],
+                        [
+                            "model.state_dict()",
+                            "Call"
+                        ]
+                    ]
+                },
+                "f": {
+                    "value": "state_path",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "data_globals.root_path + '/bert-large.pt'",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "VideoBERT/train/train.py": {
+        "torch": {
+            "SummaryWriter_90": {
+                "variable": {
+                    "value": "tb_writer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "RandomSampler_140": {
+                "variable": {
+                    "value": "train_sampler",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "data_source": {
+                    "value": "train_dataset",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "VideoBertDataset(tokenizer, build_tokenizer=new_tokenizer, data_path=args.train_data_path)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "DataLoader_141": {
+                "variable": {
+                    "value": "train_dataloader",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dataset": {
+                    "value": "train_dataset",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "VideoBertDataset(tokenizer, build_tokenizer=new_tokenizer, data_path=args.train_data_path)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "sampler": {
+                    "value": "train_sampler",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "RandomSampler(train_dataset)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "batch_size": {
+                    "value": "args.train_batch_size",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "collate_fn": {
+                    "value": "collate",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "collate",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "pad_sequence_117": {
+                "variable": {
+                    "value": "padded_text_ids",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "sequences": {
+                    "value": "text_examples",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[None] * len(examples)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "padding_value": {
+                    "value": "pad_id",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "train_dataset.tokenizer.vocab.stoi[train_dataset.tokenizer.pad_token]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "pad_sequence_118": {
+                "variable": {
+                    "value": "padded_text_type_ids",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "sequences": {
+                    "value": "text_type_ids",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[None] * len(examples)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "padding_value": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "pad_sequence_121": {
+                "variable": {
+                    "value": "padded_video_ids",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "sequences": {
+                    "value": "video_examples",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[None] * len(examples)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "padding_value": {
+                    "value": "pad_id",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "train_dataset.tokenizer.vocab.stoi[train_dataset.tokenizer.pad_token]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "pad_sequence_122": {
+                "variable": {
+                    "value": "padded_video_type_ids",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "sequences": {
+                    "value": "video_type_ids",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[None] * len(examples)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "padding_value": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "pad_sequence_125": {
+                "variable": {
+                    "value": "padded_joint_ids",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "sequences": {
+                    "value": "joint_examples",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[None] * len(examples)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "padding_value": {
+                    "value": "pad_id",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "train_dataset.tokenizer.vocab.stoi[train_dataset.tokenizer.pad_token]",
+                            "Subscript"
+                        ]
+                    ]
+                }
+            },
+            "pad_sequence_126": {
+                "variable": {
+                    "value": "padded_joint_type_ids",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "sequences": {
+                    "value": "joint_type_ids",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[None] * len(examples)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "batch_first": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "padding_value": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "VideoBERT/train/train_lang.py": {
+        "torch": {
+            "SummaryWriter_95": {
+                "variable": {
+                    "value": "tb_writer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "SummaryWriter_142": {
+                "variable": {
+                    "value": "tb_writer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,2201 @@
+{
+    "ar_capsulenet.py": {
+        "sklearn": {
+            "shuffle_275": {
+                "variable": {
+                    "value": "(afftest_images, afftest_labels)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "*arrays_0": {
+                    "value": "afftest_images",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*arrays_1": {
+                    "value": "afftest_labels",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "train_test_split_215": {
+                "variable": {
+                    "value": "(x_train_, x_val_, y_train_, y_val_)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "*arrays_0": {
+                    "value": "x_train",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "*arrays_1": {
+                    "value": "y_train",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "test_size": {
+                    "value": "valid_ratio",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "0.1 * int(args.validratio)",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "random_state": {
+                    "value": "42",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        },
+        "tensorflow": {}
+    },
+    "ar_capsulelayers.py": {
+        "tensorflow": {
+            "conv2d_79": {
+                "variable": {
+                    "value": "conv1s",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "inputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Dropout(rate=0.5)(inputs)",
+                            "Call"
+                        ],
+                        [
+                            "Dropout(rate=0.5)(inputs)",
+                            "Call"
+                        ],
+                        [
+                            "inputs",
+                            "Method Argument"
+                        ],
+                        [
+                            "inputs",
+                            "Method Argument"
+                        ],
+                        [
+                            "inputs",
+                            "Method Argument"
+                        ],
+                        [
+                            "inputs",
+                            "Method Argument"
+                        ],
+                        [
+                            "inputs",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "self.convW_1",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "[1, self.stride, self.stride, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "SAME",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "bias_add_80": {
+                "variable": {
+                    "value": "conv1s",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "conv1s",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.conv2d(inputs, self.convW_1, strides=[1, self.stride, self.stride, 1], padding='SAME')",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.bias_add(conv1s, self.bias_1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(conv1s)",
+                            "Call"
+                        ],
+                        [
+                            "tf.split(conv1s, self.n_channels, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "[tf.nn.conv2d(tf.squeeze(input_cap, axis=-1), ConvTrans_w, strides=[1, self.stride, self.stride, 1], padding='SAME') for (input_cap, ConvTrans_w) in zip(input_caps, ConvTrans_ws)]",
+                            "ListComp"
+                        ],
+                        [
+                            "[tf.reshape(tf.nn.bias_add(conv1, ConvTrans_b), [-1, int(self.height / self.stride), int(self.width / self.stride), self.dim_capsule, self.n_channels, 1]) for (conv1, ConvTrans_b) in zip(conv1s, ConvTrans_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(conv1s, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(conv1s, [0, 1, 2, 3, 5, 4])",
+                            "Call"
+                        ],
+                        [
+                            "[tf.nn.conv2d(tf.squeeze(input_cap, axis=-1), ConvTrans_w, strides=[1, 1, 1, 1], padding='VALID') for (input_cap, ConvTrans_w) in zip(input_caps, ConvTrans_ws)]",
+                            "ListComp"
+                        ],
+                        [
+                            "[tf.reshape(tf.nn.bias_add(conv1, ConvTrans_b), [-1, 1, 1, self.dim_capsule, self.n_channels, 1]) for (conv1, ConvTrans_b) in zip(conv1s, ConvTrans_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(conv1s, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(conv1s, [0, 1, 2, 3, 5, 4])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "bias": {
+                    "value": "self.bias_1",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "relu_81": {
+                "variable": {
+                    "value": "conv1s",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "features": {
+                    "value": "conv1s",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.conv2d(inputs, self.convW_1, strides=[1, self.stride, self.stride, 1], padding='SAME')",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.bias_add(conv1s, self.bias_1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(conv1s)",
+                            "Call"
+                        ],
+                        [
+                            "tf.split(conv1s, self.n_channels, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "[tf.nn.conv2d(tf.squeeze(input_cap, axis=-1), ConvTrans_w, strides=[1, self.stride, self.stride, 1], padding='SAME') for (input_cap, ConvTrans_w) in zip(input_caps, ConvTrans_ws)]",
+                            "ListComp"
+                        ],
+                        [
+                            "[tf.reshape(tf.nn.bias_add(conv1, ConvTrans_b), [-1, int(self.height / self.stride), int(self.width / self.stride), self.dim_capsule, self.n_channels, 1]) for (conv1, ConvTrans_b) in zip(conv1s, ConvTrans_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(conv1s, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(conv1s, [0, 1, 2, 3, 5, 4])",
+                            "Call"
+                        ],
+                        [
+                            "[tf.nn.conv2d(tf.squeeze(input_cap, axis=-1), ConvTrans_w, strides=[1, 1, 1, 1], padding='VALID') for (input_cap, ConvTrans_w) in zip(input_caps, ConvTrans_ws)]",
+                            "ListComp"
+                        ],
+                        [
+                            "[tf.reshape(tf.nn.bias_add(conv1, ConvTrans_b), [-1, 1, 1, self.dim_capsule, self.n_channels, 1]) for (conv1, ConvTrans_b) in zip(conv1s, ConvTrans_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(conv1s, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(conv1s, [0, 1, 2, 3, 5, 4])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "split_82": {
+                "variable": {
+                    "value": "conv1s",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "conv1s",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.conv2d(inputs, self.convW_1, strides=[1, self.stride, self.stride, 1], padding='SAME')",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.bias_add(conv1s, self.bias_1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(conv1s)",
+                            "Call"
+                        ],
+                        [
+                            "tf.split(conv1s, self.n_channels, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "[tf.nn.conv2d(tf.squeeze(input_cap, axis=-1), ConvTrans_w, strides=[1, self.stride, self.stride, 1], padding='SAME') for (input_cap, ConvTrans_w) in zip(input_caps, ConvTrans_ws)]",
+                            "ListComp"
+                        ],
+                        [
+                            "[tf.reshape(tf.nn.bias_add(conv1, ConvTrans_b), [-1, int(self.height / self.stride), int(self.width / self.stride), self.dim_capsule, self.n_channels, 1]) for (conv1, ConvTrans_b) in zip(conv1s, ConvTrans_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(conv1s, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(conv1s, [0, 1, 2, 3, 5, 4])",
+                            "Call"
+                        ],
+                        [
+                            "[tf.nn.conv2d(tf.squeeze(input_cap, axis=-1), ConvTrans_w, strides=[1, 1, 1, 1], padding='VALID') for (input_cap, ConvTrans_w) in zip(input_caps, ConvTrans_ws)]",
+                            "ListComp"
+                        ],
+                        [
+                            "[tf.reshape(tf.nn.bias_add(conv1, ConvTrans_b), [-1, 1, 1, self.dim_capsule, self.n_channels, 1]) for (conv1, ConvTrans_b) in zip(conv1s, ConvTrans_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(conv1s, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(conv1s, [0, 1, 2, 3, 5, 4])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "num_or_size_splits": {
+                    "value": "self.n_channels",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "split_84": {
+                "variable": {
+                    "value": "CapsAct_ws",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "self.CapsAct_W",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_or_size_splits": {
+                    "value": "self.n_channels",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "split_85": {
+                "variable": {
+                    "value": "CapsAct_bs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "self.CapsAct_B",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_or_size_splits": {
+                    "value": "self.n_channels",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "concat_94": {
+                "variable": {
+                    "value": "outputs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "outputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[func(conv1, CapsAct_w, CapsAct_b) for (conv1, CapsAct_w, CapsAct_b) in zip(conv1s, CapsAct_ws, CapsAct_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(outputs, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "[func(Att_input, Att_w, CapsAct_w, CapsAct_b) for (Att_input, Att_w, CapsAct_w, CapsAct_b) in zip(Att_inputs, Att_ws, CapsAct_ws, CapsAct_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(outputs, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "[func(Att_input, Att_w, CapsAct_w, CapsAct_b) for (Att_input, Att_w, CapsAct_w, CapsAct_b) in zip(Att_inputs, Att_ws, CapsAct_ws, CapsAct_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(outputs, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(outputs, [-1, self.dim_capsule, self.n_channels])",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(outputs, [0, 2, 1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "split_143": {
+                "variable": {
+                    "value": "input_caps",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "inputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Dropout(rate=0.5)(inputs)",
+                            "Call"
+                        ],
+                        [
+                            "Dropout(rate=0.5)(inputs)",
+                            "Call"
+                        ],
+                        [
+                            "inputs",
+                            "Method Argument"
+                        ],
+                        [
+                            "inputs",
+                            "Method Argument"
+                        ],
+                        [
+                            "inputs",
+                            "Method Argument"
+                        ],
+                        [
+                            "inputs",
+                            "Method Argument"
+                        ],
+                        [
+                            "inputs",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "num_or_size_splits": {
+                    "value": "self.input_ch",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "split_144": {
+                "variable": {
+                    "value": "ConvTrans_ws",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "self.ConvTrans_W",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_or_size_splits": {
+                    "value": "self.input_ch",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "split_145": {
+                "variable": {
+                    "value": "ConvTrans_bs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "self.ConvTrans_B",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_or_size_splits": {
+                    "value": "self.input_ch",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "concat_152": {
+                "variable": {
+                    "value": "conv1s",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "conv1s",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.conv2d(inputs, self.convW_1, strides=[1, self.stride, self.stride, 1], padding='SAME')",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.bias_add(conv1s, self.bias_1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(conv1s)",
+                            "Call"
+                        ],
+                        [
+                            "tf.split(conv1s, self.n_channels, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "[tf.nn.conv2d(tf.squeeze(input_cap, axis=-1), ConvTrans_w, strides=[1, self.stride, self.stride, 1], padding='SAME') for (input_cap, ConvTrans_w) in zip(input_caps, ConvTrans_ws)]",
+                            "ListComp"
+                        ],
+                        [
+                            "[tf.reshape(tf.nn.bias_add(conv1, ConvTrans_b), [-1, int(self.height / self.stride), int(self.width / self.stride), self.dim_capsule, self.n_channels, 1]) for (conv1, ConvTrans_b) in zip(conv1s, ConvTrans_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(conv1s, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(conv1s, [0, 1, 2, 3, 5, 4])",
+                            "Call"
+                        ],
+                        [
+                            "[tf.nn.conv2d(tf.squeeze(input_cap, axis=-1), ConvTrans_w, strides=[1, 1, 1, 1], padding='VALID') for (input_cap, ConvTrans_w) in zip(input_caps, ConvTrans_ws)]",
+                            "ListComp"
+                        ],
+                        [
+                            "[tf.reshape(tf.nn.bias_add(conv1, ConvTrans_b), [-1, 1, 1, self.dim_capsule, self.n_channels, 1]) for (conv1, ConvTrans_b) in zip(conv1s, ConvTrans_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(conv1s, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(conv1s, [0, 1, 2, 3, 5, 4])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "transpose_153": {
+                "variable": {
+                    "value": "conv1s",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "conv1s",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.conv2d(inputs, self.convW_1, strides=[1, self.stride, self.stride, 1], padding='SAME')",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.bias_add(conv1s, self.bias_1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(conv1s)",
+                            "Call"
+                        ],
+                        [
+                            "tf.split(conv1s, self.n_channels, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "[tf.nn.conv2d(tf.squeeze(input_cap, axis=-1), ConvTrans_w, strides=[1, self.stride, self.stride, 1], padding='SAME') for (input_cap, ConvTrans_w) in zip(input_caps, ConvTrans_ws)]",
+                            "ListComp"
+                        ],
+                        [
+                            "[tf.reshape(tf.nn.bias_add(conv1, ConvTrans_b), [-1, int(self.height / self.stride), int(self.width / self.stride), self.dim_capsule, self.n_channels, 1]) for (conv1, ConvTrans_b) in zip(conv1s, ConvTrans_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(conv1s, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(conv1s, [0, 1, 2, 3, 5, 4])",
+                            "Call"
+                        ],
+                        [
+                            "[tf.nn.conv2d(tf.squeeze(input_cap, axis=-1), ConvTrans_w, strides=[1, 1, 1, 1], padding='VALID') for (input_cap, ConvTrans_w) in zip(input_caps, ConvTrans_ws)]",
+                            "ListComp"
+                        ],
+                        [
+                            "[tf.reshape(tf.nn.bias_add(conv1, ConvTrans_b), [-1, 1, 1, self.dim_capsule, self.n_channels, 1]) for (conv1, ConvTrans_b) in zip(conv1s, ConvTrans_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(conv1s, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(conv1s, [0, 1, 2, 3, 5, 4])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "perm": {
+                    "value": "[0, 1, 2, 3, 5, 4]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "split_156": {
+                "variable": {
+                    "value": "Att_inputs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "conv1s",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.conv2d(inputs, self.convW_1, strides=[1, self.stride, self.stride, 1], padding='SAME')",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.bias_add(conv1s, self.bias_1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(conv1s)",
+                            "Call"
+                        ],
+                        [
+                            "tf.split(conv1s, self.n_channels, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "[tf.nn.conv2d(tf.squeeze(input_cap, axis=-1), ConvTrans_w, strides=[1, self.stride, self.stride, 1], padding='SAME') for (input_cap, ConvTrans_w) in zip(input_caps, ConvTrans_ws)]",
+                            "ListComp"
+                        ],
+                        [
+                            "[tf.reshape(tf.nn.bias_add(conv1, ConvTrans_b), [-1, int(self.height / self.stride), int(self.width / self.stride), self.dim_capsule, self.n_channels, 1]) for (conv1, ConvTrans_b) in zip(conv1s, ConvTrans_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(conv1s, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(conv1s, [0, 1, 2, 3, 5, 4])",
+                            "Call"
+                        ],
+                        [
+                            "[tf.nn.conv2d(tf.squeeze(input_cap, axis=-1), ConvTrans_w, strides=[1, 1, 1, 1], padding='VALID') for (input_cap, ConvTrans_w) in zip(input_caps, ConvTrans_ws)]",
+                            "ListComp"
+                        ],
+                        [
+                            "[tf.reshape(tf.nn.bias_add(conv1, ConvTrans_b), [-1, 1, 1, self.dim_capsule, self.n_channels, 1]) for (conv1, ConvTrans_b) in zip(conv1s, ConvTrans_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(conv1s, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(conv1s, [0, 1, 2, 3, 5, 4])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "num_or_size_splits": {
+                    "value": "self.n_channels",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "split_157": {
+                "variable": {
+                    "value": "Att_ws",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "self.Att_W",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_or_size_splits": {
+                    "value": "self.n_channels",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "split_158": {
+                "variable": {
+                    "value": "CapsAct_ws",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "self.CapsAct_W",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_or_size_splits": {
+                    "value": "self.n_channels",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "split_159": {
+                "variable": {
+                    "value": "CapsAct_bs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "self.CapsAct_B",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_or_size_splits": {
+                    "value": "self.n_channels",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "concat_178": {
+                "variable": {
+                    "value": "outputs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "outputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[func(conv1, CapsAct_w, CapsAct_b) for (conv1, CapsAct_w, CapsAct_b) in zip(conv1s, CapsAct_ws, CapsAct_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(outputs, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "[func(Att_input, Att_w, CapsAct_w, CapsAct_b) for (Att_input, Att_w, CapsAct_w, CapsAct_b) in zip(Att_inputs, Att_ws, CapsAct_ws, CapsAct_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(outputs, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "[func(Att_input, Att_w, CapsAct_w, CapsAct_b) for (Att_input, Att_w, CapsAct_w, CapsAct_b) in zip(Att_inputs, Att_ws, CapsAct_ws, CapsAct_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(outputs, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(outputs, [-1, self.dim_capsule, self.n_channels])",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(outputs, [0, 2, 1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "split_222": {
+                "variable": {
+                    "value": "input_caps",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "inputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Dropout(rate=0.5)(inputs)",
+                            "Call"
+                        ],
+                        [
+                            "Dropout(rate=0.5)(inputs)",
+                            "Call"
+                        ],
+                        [
+                            "inputs",
+                            "Method Argument"
+                        ],
+                        [
+                            "inputs",
+                            "Method Argument"
+                        ],
+                        [
+                            "inputs",
+                            "Method Argument"
+                        ],
+                        [
+                            "inputs",
+                            "Method Argument"
+                        ],
+                        [
+                            "inputs",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "num_or_size_splits": {
+                    "value": "self.input_ch",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "split_223": {
+                "variable": {
+                    "value": "ConvTrans_ws",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "self.ConvTrans_W",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_or_size_splits": {
+                    "value": "self.input_ch",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "split_224": {
+                "variable": {
+                    "value": "ConvTrans_bs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "self.ConvTrans_B",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_or_size_splits": {
+                    "value": "self.input_ch",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "concat_231": {
+                "variable": {
+                    "value": "conv1s",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "conv1s",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.conv2d(inputs, self.convW_1, strides=[1, self.stride, self.stride, 1], padding='SAME')",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.bias_add(conv1s, self.bias_1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(conv1s)",
+                            "Call"
+                        ],
+                        [
+                            "tf.split(conv1s, self.n_channels, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "[tf.nn.conv2d(tf.squeeze(input_cap, axis=-1), ConvTrans_w, strides=[1, self.stride, self.stride, 1], padding='SAME') for (input_cap, ConvTrans_w) in zip(input_caps, ConvTrans_ws)]",
+                            "ListComp"
+                        ],
+                        [
+                            "[tf.reshape(tf.nn.bias_add(conv1, ConvTrans_b), [-1, int(self.height / self.stride), int(self.width / self.stride), self.dim_capsule, self.n_channels, 1]) for (conv1, ConvTrans_b) in zip(conv1s, ConvTrans_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(conv1s, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(conv1s, [0, 1, 2, 3, 5, 4])",
+                            "Call"
+                        ],
+                        [
+                            "[tf.nn.conv2d(tf.squeeze(input_cap, axis=-1), ConvTrans_w, strides=[1, 1, 1, 1], padding='VALID') for (input_cap, ConvTrans_w) in zip(input_caps, ConvTrans_ws)]",
+                            "ListComp"
+                        ],
+                        [
+                            "[tf.reshape(tf.nn.bias_add(conv1, ConvTrans_b), [-1, 1, 1, self.dim_capsule, self.n_channels, 1]) for (conv1, ConvTrans_b) in zip(conv1s, ConvTrans_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(conv1s, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(conv1s, [0, 1, 2, 3, 5, 4])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "transpose_232": {
+                "variable": {
+                    "value": "conv1s",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "conv1s",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.conv2d(inputs, self.convW_1, strides=[1, self.stride, self.stride, 1], padding='SAME')",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.bias_add(conv1s, self.bias_1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(conv1s)",
+                            "Call"
+                        ],
+                        [
+                            "tf.split(conv1s, self.n_channels, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "[tf.nn.conv2d(tf.squeeze(input_cap, axis=-1), ConvTrans_w, strides=[1, self.stride, self.stride, 1], padding='SAME') for (input_cap, ConvTrans_w) in zip(input_caps, ConvTrans_ws)]",
+                            "ListComp"
+                        ],
+                        [
+                            "[tf.reshape(tf.nn.bias_add(conv1, ConvTrans_b), [-1, int(self.height / self.stride), int(self.width / self.stride), self.dim_capsule, self.n_channels, 1]) for (conv1, ConvTrans_b) in zip(conv1s, ConvTrans_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(conv1s, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(conv1s, [0, 1, 2, 3, 5, 4])",
+                            "Call"
+                        ],
+                        [
+                            "[tf.nn.conv2d(tf.squeeze(input_cap, axis=-1), ConvTrans_w, strides=[1, 1, 1, 1], padding='VALID') for (input_cap, ConvTrans_w) in zip(input_caps, ConvTrans_ws)]",
+                            "ListComp"
+                        ],
+                        [
+                            "[tf.reshape(tf.nn.bias_add(conv1, ConvTrans_b), [-1, 1, 1, self.dim_capsule, self.n_channels, 1]) for (conv1, ConvTrans_b) in zip(conv1s, ConvTrans_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(conv1s, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(conv1s, [0, 1, 2, 3, 5, 4])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "perm": {
+                    "value": "[0, 1, 2, 3, 5, 4]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "split_235": {
+                "variable": {
+                    "value": "Att_inputs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "conv1s",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.conv2d(inputs, self.convW_1, strides=[1, self.stride, self.stride, 1], padding='SAME')",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.bias_add(conv1s, self.bias_1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.relu(conv1s)",
+                            "Call"
+                        ],
+                        [
+                            "tf.split(conv1s, self.n_channels, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "[tf.nn.conv2d(tf.squeeze(input_cap, axis=-1), ConvTrans_w, strides=[1, self.stride, self.stride, 1], padding='SAME') for (input_cap, ConvTrans_w) in zip(input_caps, ConvTrans_ws)]",
+                            "ListComp"
+                        ],
+                        [
+                            "[tf.reshape(tf.nn.bias_add(conv1, ConvTrans_b), [-1, int(self.height / self.stride), int(self.width / self.stride), self.dim_capsule, self.n_channels, 1]) for (conv1, ConvTrans_b) in zip(conv1s, ConvTrans_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(conv1s, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(conv1s, [0, 1, 2, 3, 5, 4])",
+                            "Call"
+                        ],
+                        [
+                            "[tf.nn.conv2d(tf.squeeze(input_cap, axis=-1), ConvTrans_w, strides=[1, 1, 1, 1], padding='VALID') for (input_cap, ConvTrans_w) in zip(input_caps, ConvTrans_ws)]",
+                            "ListComp"
+                        ],
+                        [
+                            "[tf.reshape(tf.nn.bias_add(conv1, ConvTrans_b), [-1, 1, 1, self.dim_capsule, self.n_channels, 1]) for (conv1, ConvTrans_b) in zip(conv1s, ConvTrans_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(conv1s, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(conv1s, [0, 1, 2, 3, 5, 4])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "num_or_size_splits": {
+                    "value": "self.n_channels",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "split_236": {
+                "variable": {
+                    "value": "Att_ws",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "self.Att_W",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_or_size_splits": {
+                    "value": "self.n_channels",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "split_237": {
+                "variable": {
+                    "value": "CapsAct_ws",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "self.CapsAct_W",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_or_size_splits": {
+                    "value": "self.n_channels",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "split_238": {
+                "variable": {
+                    "value": "CapsAct_bs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "self.CapsAct_B",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "num_or_size_splits": {
+                    "value": "self.n_channels",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "concat_257": {
+                "variable": {
+                    "value": "outputs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "outputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[func(conv1, CapsAct_w, CapsAct_b) for (conv1, CapsAct_w, CapsAct_b) in zip(conv1s, CapsAct_ws, CapsAct_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(outputs, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "[func(Att_input, Att_w, CapsAct_w, CapsAct_b) for (Att_input, Att_w, CapsAct_w, CapsAct_b) in zip(Att_inputs, Att_ws, CapsAct_ws, CapsAct_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(outputs, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "[func(Att_input, Att_w, CapsAct_w, CapsAct_b) for (Att_input, Att_w, CapsAct_w, CapsAct_b) in zip(Att_inputs, Att_ws, CapsAct_ws, CapsAct_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(outputs, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(outputs, [-1, self.dim_capsule, self.n_channels])",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(outputs, [0, 2, 1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "reshape_258": {
+                "variable": {
+                    "value": "outputs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "outputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[func(conv1, CapsAct_w, CapsAct_b) for (conv1, CapsAct_w, CapsAct_b) in zip(conv1s, CapsAct_ws, CapsAct_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(outputs, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "[func(Att_input, Att_w, CapsAct_w, CapsAct_b) for (Att_input, Att_w, CapsAct_w, CapsAct_b) in zip(Att_inputs, Att_ws, CapsAct_ws, CapsAct_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(outputs, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "[func(Att_input, Att_w, CapsAct_w, CapsAct_b) for (Att_input, Att_w, CapsAct_w, CapsAct_b) in zip(Att_inputs, Att_ws, CapsAct_ws, CapsAct_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(outputs, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(outputs, [-1, self.dim_capsule, self.n_channels])",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(outputs, [0, 2, 1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, self.dim_capsule, self.n_channels]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "transpose_259": {
+                "variable": {
+                    "value": "outputs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "outputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[func(conv1, CapsAct_w, CapsAct_b) for (conv1, CapsAct_w, CapsAct_b) in zip(conv1s, CapsAct_ws, CapsAct_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(outputs, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "[func(Att_input, Att_w, CapsAct_w, CapsAct_b) for (Att_input, Att_w, CapsAct_w, CapsAct_b) in zip(Att_inputs, Att_ws, CapsAct_ws, CapsAct_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(outputs, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "[func(Att_input, Att_w, CapsAct_w, CapsAct_b) for (Att_input, Att_w, CapsAct_w, CapsAct_b) in zip(Att_inputs, Att_ws, CapsAct_ws, CapsAct_bs)]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.concat(outputs, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.reshape(outputs, [-1, self.dim_capsule, self.n_channels])",
+                            "Call"
+                        ],
+                        [
+                            "tf.transpose(outputs, [0, 2, 1])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "perm": {
+                    "value": "[0, 2, 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "constant_292": {
+                "variable": {
+                    "value": "normalizing_tensor",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "np.sqrt(self.dim_capsule)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "conv2d_88": {
+                "variable": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "conv1",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "conv1",
+                            "Method Argument"
+                        ],
+                        [
+                            "conv1",
+                            "Method Argument"
+                        ],
+                        [
+                            "conv1",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "CapsAct_w",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "CapsAct_w",
+                            "Method Argument"
+                        ],
+                        [
+                            "CapsAct_w",
+                            "Method Argument"
+                        ],
+                        [
+                            "CapsAct_w",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "strides": {
+                    "value": "[1, 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "SAME",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "bias_add_89": {
+                "variable": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.conv2d(conv1, CapsAct_w, strides=[1, 1, 1, 1], padding='SAME')",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.bias_add(output, CapsAct_b)",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(output, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "K.sqrt(K.sum(K.square(inputs), -1)) / normalizing_tensor",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "bias": {
+                    "value": "CapsAct_b",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "CapsAct_b",
+                            "Method Argument"
+                        ],
+                        [
+                            "CapsAct_b",
+                            "Method Argument"
+                        ],
+                        [
+                            "CapsAct_b",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "expand_dims_90": {
+                "variable": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "output",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.conv2d(conv1, CapsAct_w, strides=[1, 1, 1, 1], padding='SAME')",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.bias_add(output, CapsAct_b)",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(output, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "K.sqrt(K.sum(K.square(inputs), -1)) / normalizing_tensor",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "squeeze_162": {
+                "variable": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "conv1",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "conv1",
+                            "Method Argument"
+                        ],
+                        [
+                            "conv1",
+                            "Method Argument"
+                        ],
+                        [
+                            "conv1",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "conv3d_166": {
+                "variable": {
+                    "value": "attentions",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Conv2D(filters, kernel_size=kernel_size, strides=strides, padding=padding, activation=None, kernel_regularizer=kernel_regularizer)(input_tensor)",
+                            "Call"
+                        ],
+                        [
+                            "BatchNormalization(axis=-1)(x)",
+                            "Call"
+                        ],
+                        [
+                            "Activation(activation)(x)",
+                            "Call"
+                        ],
+                        [
+                            "K.sqrt(K.sum(K.square(inputs), -1))",
+                            "Call"
+                        ],
+                        [
+                            "tf.squeeze(conv1, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.squeeze(conv1, axis=-1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "Att_w",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Att_w",
+                            "Method Argument"
+                        ],
+                        [
+                            "Att_w",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "strides": {
+                    "value": "[1, 1, 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "VALID",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "softmax_167": {
+                "variable": {
+                    "value": "attentions",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "attentions",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.conv3d(x, Att_w, strides=[1, 1, 1, 1, 1], padding='VALID')",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.softmax(attentions, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.conv3d(x, Att_w, strides=[1, 1, 1, 1, 1], padding='VALID')",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.softmax(attentions, axis=-1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_169": {
+                "variable": {
+                    "value": "final_attentions",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "final_attentions",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Multiply()([x, attentions])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reduce_sum(final_attentions, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "Multiply()([x, attentions])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reduce_sum(final_attentions, axis=-1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "conv2d_171": {
+                "variable": {
+                    "value": "conv3",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "final_attentions",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Multiply()([x, attentions])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reduce_sum(final_attentions, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "Multiply()([x, attentions])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reduce_sum(final_attentions, axis=-1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "CapsAct_w",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "CapsAct_w",
+                            "Method Argument"
+                        ],
+                        [
+                            "CapsAct_w",
+                            "Method Argument"
+                        ],
+                        [
+                            "CapsAct_w",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "strides": {
+                    "value": "[1, 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "SAME",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "bias_add_172": {
+                "variable": {
+                    "value": "conv3",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "conv3",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.conv2d(final_attentions, CapsAct_w, strides=[1, 1, 1, 1], padding='SAME')",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.bias_add(conv3, CapsAct_b)",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(conv3, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.conv2d(final_attentions, CapsAct_w, strides=[1, 1, 1, 1], padding='SAME')",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.bias_add(conv3, CapsAct_b)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "bias": {
+                    "value": "CapsAct_b",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "CapsAct_b",
+                            "Method Argument"
+                        ],
+                        [
+                            "CapsAct_b",
+                            "Method Argument"
+                        ],
+                        [
+                            "CapsAct_b",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "expand_dims_173": {
+                "variable": {
+                    "value": "conv3",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "conv3",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.conv2d(final_attentions, CapsAct_w, strides=[1, 1, 1, 1], padding='SAME')",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.bias_add(conv3, CapsAct_b)",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(conv3, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.conv2d(final_attentions, CapsAct_w, strides=[1, 1, 1, 1], padding='SAME')",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.bias_add(conv3, CapsAct_b)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "squeeze_242": {
+                "variable": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "conv1",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "conv1",
+                            "Method Argument"
+                        ],
+                        [
+                            "conv1",
+                            "Method Argument"
+                        ],
+                        [
+                            "conv1",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "conv3d_246": {
+                "variable": {
+                    "value": "attentions",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "x",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Conv2D(filters, kernel_size=kernel_size, strides=strides, padding=padding, activation=None, kernel_regularizer=kernel_regularizer)(input_tensor)",
+                            "Call"
+                        ],
+                        [
+                            "BatchNormalization(axis=-1)(x)",
+                            "Call"
+                        ],
+                        [
+                            "Activation(activation)(x)",
+                            "Call"
+                        ],
+                        [
+                            "K.sqrt(K.sum(K.square(inputs), -1))",
+                            "Call"
+                        ],
+                        [
+                            "tf.squeeze(conv1, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.squeeze(conv1, axis=-1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "Att_w",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Att_w",
+                            "Method Argument"
+                        ],
+                        [
+                            "Att_w",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "strides": {
+                    "value": "[1, 1, 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "VALID",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "softmax_247": {
+                "variable": {
+                    "value": "attentions",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "attentions",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.conv3d(x, Att_w, strides=[1, 1, 1, 1, 1], padding='VALID')",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.softmax(attentions, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.conv3d(x, Att_w, strides=[1, 1, 1, 1, 1], padding='VALID')",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.softmax(attentions, axis=-1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_249": {
+                "variable": {
+                    "value": "final_attentions",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "final_attentions",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Multiply()([x, attentions])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reduce_sum(final_attentions, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "Multiply()([x, attentions])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reduce_sum(final_attentions, axis=-1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "conv2d_251": {
+                "variable": {
+                    "value": "conv3",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "final_attentions",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "Multiply()([x, attentions])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reduce_sum(final_attentions, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "Multiply()([x, attentions])",
+                            "Call"
+                        ],
+                        [
+                            "tf.reduce_sum(final_attentions, axis=-1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "CapsAct_w",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "CapsAct_w",
+                            "Method Argument"
+                        ],
+                        [
+                            "CapsAct_w",
+                            "Method Argument"
+                        ],
+                        [
+                            "CapsAct_w",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "strides": {
+                    "value": "[1, 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "SAME",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "bias_add_252": {
+                "variable": {
+                    "value": "conv3",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "conv3",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.conv2d(final_attentions, CapsAct_w, strides=[1, 1, 1, 1], padding='SAME')",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.bias_add(conv3, CapsAct_b)",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(conv3, axis=-1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.conv2d(final_attentions, CapsAct_w, strides=[1, 1, 1, 1], padding='SAME')",
+                            "Call"
+                        ],
+                        [
+                            "tf.nn.bias_add(conv3, CapsAct_b)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "bias": {
+                    "value": "CapsAct_b",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "CapsAct_b",
+                            "Method Argument"
+                        ],
+                        [
+                            "CapsAct_b",
+                            "Method Argument"
+                        ],
+                        [
+                            "CapsAct_b",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "conv2d_148": {
+                "input": {
+                    "value": "tf.squeeze(input_cap, axis=-1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "filters": {
+                    "value": "ConvTrans_w",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "[1, self.stride, self.stride, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "SAME",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "reshape_150": {
+                "tensor": {
+                    "value": "tf.nn.bias_add(conv1, ConvTrans_b)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[-1, int(self.height / self.stride), int(self.width / self.stride), self.dim_capsule, self.n_channels, 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "conv2d_227": {
+                "input": {
+                    "value": "tf.squeeze(input_cap, axis=-1)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "filters": {
+                    "value": "ConvTrans_w",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "[1, 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "VALID",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "reshape_229": {
+                "tensor": {
+                    "value": "tf.nn.bias_add(conv1, ConvTrans_b)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[-1, 1, 1, self.dim_capsule, self.n_channels, 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "squeeze_148": {
+                "input": {
+                    "value": "input_cap",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "bias_add_150": {
+                "value": {
+                    "value": "conv1",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "conv1",
+                            "Method Argument"
+                        ],
+                        [
+                            "conv1",
+                            "Method Argument"
+                        ],
+                        [
+                            "conv1",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "bias": {
+                    "value": "ConvTrans_b",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "squeeze_227": {
+                "input": {
+                    "value": "input_cap",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "bias_add_229": {
+                "value": {
+                    "value": "conv1",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "conv1",
+                            "Method Argument"
+                        ],
+                        [
+                            "conv1",
+                            "Method Argument"
+                        ],
+                        [
+                            "conv1",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "bias": {
+                    "value": "ConvTrans_b",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}

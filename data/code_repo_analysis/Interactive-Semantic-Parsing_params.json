@@ -1,0 +1,2650 @@
+{
+    "code/Hierarchical-SP/agent.py": {
+        "tensorflow": {
+            "placeholder_97": {
+                "variable": {
+                    "value": "self._picked_actions",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, 2]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.int32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "placeholder_100": {
+                "variable": {
+                    "value": "self._td_targets",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "log_103": {
+                "variable": {
+                    "value": "log_pi",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.clip_by_value(self._pi_values, 1e-20, 1.0)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "placeholder_123": {
+                "variable": {
+                    "value": "self.pi_learning_rate_input",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "RMSPropOptimizer_124": {
+                "variable": {
+                    "value": "self.optimizer",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "learning_rate": {
+                    "value": "self.pi_learning_rate_input",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "placeholder_136": {
+                "variable": {
+                    "value": "self.v_learning_rate_input",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "RMSPropOptimizer_137": {
+                "variable": {
+                    "value": "self.optimizer",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "learning_rate": {
+                    "value": "self.v_learning_rate_input",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "placeholder_116": {
+                "variable": {
+                    "value": "self._returns",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "l2_loss_120": {
+                "variable": {
+                    "value": "self.value_loss",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "t": {
+                    "value": "self._returns - self._v_values",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "get_variable_scope_20": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "get_variable_68": {
+                "variable": {
+                    "value": "w_pi",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "weight",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[self._state_vector_dim, self._num_actions]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.contrib.layers.xavier_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_88": {
+                "name_or_scope": {
+                    "value": "network",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "clip_by_value_103": {
+                "t": {
+                    "value": "self._pi_values",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "clip_value_min": {
+                    "value": "1e-20",
+                    "type": "float",
+                    "possible_values": []
+                },
+                "clip_value_max": {
+                    "value": "1.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_106": {
+                "input_tensor": {
+                    "value": "self._pi_values * log_pi",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "reduction_indices": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_110": {
+                "input_tensor": {
+                    "value": "tf.gather_nd(log_pi, self._picked_actions) * self._td_targets + entropy * self._entropy_beta",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "trainable_variables_126": {
+                "scope": {
+                    "value": "tf.get_variable_scope().name",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "clip_by_global_norm_129": {
+                "t_list": {
+                    "value": "grads",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[gv[0] for gv in grads_and_vars]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.clip_by_global_norm(grads, 5.0)[0]",
+                            "Subscript"
+                        ],
+                        [
+                            "[gv[0] for gv in grads_and_vars]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.clip_by_global_norm(grads, 5.0)[0]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "clip_norm": {
+                    "value": "5.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "trainable_variables_139": {
+                "scope": {
+                    "value": "tf.get_variable_scope().name",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "clip_by_global_norm_142": {
+                "t_list": {
+                    "value": "grads",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "[gv[0] for gv in grads_and_vars]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.clip_by_global_norm(grads, 5.0)[0]",
+                            "Subscript"
+                        ],
+                        [
+                            "[gv[0] for gv in grads_and_vars]",
+                            "ListComp"
+                        ],
+                        [
+                            "tf.clip_by_global_norm(grads, 5.0)[0]",
+                            "Subscript"
+                        ]
+                    ]
+                },
+                "clip_norm": {
+                    "value": "5.0",
+                    "type": "float",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_63": {
+                "name_or_scope": {
+                    "value": "state_vector",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_67": {
+                "name_or_scope": {
+                    "value": "pi_network",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "softmax_71": {
+                "variable": {
+                    "value": "pi_values",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "tf.matmul(state_vector, w_pi)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_73": {
+                "variable": {
+                    "value": "b_pi",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "bias",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[self._num_actions]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.zeros_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "softmax_74": {
+                "variable": {
+                    "value": "pi_values",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "tf.matmul(state_vector, w_pi) + b_pi",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "get_variable_79": {
+                "variable": {
+                    "value": "w_v",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "weight",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[self._state_vector_dim, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.contrib.layers.xavier_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_81": {
+                "variable": {
+                    "value": "b_v",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "bias",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.zeros_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_91": {
+                "name_or_scope": {
+                    "value": "target_network",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "trainable_variables_153": {
+                "scope": {
+                    "value": "tf.get_variable_scope().name",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_78": {
+                "name_or_scope": {
+                    "value": "v_network",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "squeeze_84": {
+                "input": {
+                    "value": "v_values",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.matmul(state_vector, w_v) + b_v",
+                            "BinOp"
+                        ],
+                        [
+                            "self.sess.run([self._state_vector, self._pi_values, self._v_values], {key: value for (key, value) in zip(self._state, state)})",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "trainable_variables_159": {
+                "scope": {
+                    "value": "tf.get_variable_scope().name",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "get_variable_scope_70": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "matmul_71": {
+                "a": {
+                    "value": "state_vector",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self._state_vector_network(state)",
+                            "Call"
+                        ],
+                        [
+                            "self.sess.run([self._state_vector, self._pi_values, self._v_values], {key: value for (key, value) in zip(self._state, state)})",
+                            "Call"
+                        ],
+                        [
+                            "self.sess.run([self._state_vector, self._pi_values], {key: value for (key, value) in zip(self._state, state)})",
+                            "Call"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "w_pi",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('weight', shape=[self._state_vector_dim, self._num_actions], initializer=tf.contrib.layers.xavier_initializer())",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "matmul_82": {
+                "a": {
+                    "value": "state_vector",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self._state_vector_network(state)",
+                            "Call"
+                        ],
+                        [
+                            "self.sess.run([self._state_vector, self._pi_values, self._v_values], {key: value for (key, value) in zip(self._state, state)})",
+                            "Call"
+                        ],
+                        [
+                            "self.sess.run([self._state_vector, self._pi_values], {key: value for (key, value) in zip(self._state, state)})",
+                            "Call"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "w_v",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('weight', shape=[self._state_vector_dim, 1], initializer=tf.contrib.layers.xavier_initializer())",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "gather_nd_111": {
+                "params": {
+                    "value": "log_pi",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.log(tf.clip_by_value(self._pi_values, 1e-20, 1.0))",
+                            "Call"
+                        ]
+                    ]
+                },
+                "indices": {
+                    "value": "self._picked_actions",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "get_variable_scope_126": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "get_variable_scope_139": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "zeros_initializer_73": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "matmul_74": {
+                "a": {
+                    "value": "state_vector",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self._state_vector_network(state)",
+                            "Call"
+                        ],
+                        [
+                            "self.sess.run([self._state_vector, self._pi_values, self._v_values], {key: value for (key, value) in zip(self._state, state)})",
+                            "Call"
+                        ],
+                        [
+                            "self.sess.run([self._state_vector, self._pi_values], {key: value for (key, value) in zip(self._state, state)})",
+                            "Call"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "w_pi",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('weight', shape=[self._state_vector_dim, self._num_actions], initializer=tf.contrib.layers.xavier_initializer())",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "zeros_initializer_81": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "get_variable_scope_153": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "get_variable_scope_154": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "get_variable_scope_159": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "get_variable_scope_160": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            }
+        }
+    },
+    "code/Hierarchical-SP/hierarchical_agent.py": {
+        "tensorflow": {
+            "Saver_22": {
+                "variable": {
+                    "value": "self.saver",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "var_list": {
+                    "value": "tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope=tf.get_variable_scope().name)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "placeholder_26": {
+                "variable": {
+                    "value": "instruction",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, self.config.instruction_length]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.int32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "placeholder_27": {
+                "variable": {
+                    "value": "instruction_actual_length",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.int32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "placeholder_28": {
+                "variable": {
+                    "value": "user_answer",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, self.config.user_answer_length]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.int32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "placeholder_29": {
+                "variable": {
+                    "value": "user_answer_actual_length",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.int32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "placeholder_30": {
+                "variable": {
+                    "value": "others_z1",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, self._state_vector_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "placeholder_31": {
+                "variable": {
+                    "value": "others_z2",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, self._state_vector_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "placeholder_32": {
+                "variable": {
+                    "value": "others_z3",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[None, self._state_vector_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "concat_156": {
+                "variable": {
+                    "value": "concatenation",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "z_summary",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "others_z[0:self._subtask_index] + [o] + others_z[self._subtask_index:]",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "Saver_173": {
+                "variable": {
+                    "value": "self.saver",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "var_list": {
+                    "value": "tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope=tf.get_variable_scope().name)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "concat_183": {
+                "variable": {
+                    "value": "concatenation",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[tf.expand_dims(item, -1) if len(item.get_shape()) == 1 else item for item in state]",
+                    "type": "ListComp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "get_collection_225": {
+                "variable": {
+                    "value": "var_collections",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "key": {
+                    "value": "tf.GraphKeys.TRAINABLE_VARIABLES",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "scope": {
+                    "value": "self.config.scope + '/shared_embedding'",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "Saver_236": {
+                "variable": {
+                    "value": "self.pretrain_saver",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "var_list": {
+                    "value": "var_collections",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope=self.config.scope + '/shared_embedding')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "trainable_variables_238": {
+                "variable": {
+                    "value": "self.params",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "scope": {
+                    "value": "_safe_scope",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "self.config.scope + ('/' if not self.config.scope.endswith('/') else '')",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "Saver_239": {
+                "variable": {
+                    "value": "self.saver",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "var_list": {
+                    "value": "self.params",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "max_to_keep": {
+                    "value": "10",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "minimum_50": {
+                "variable": {
+                    "value": "instruction",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "self.config.vocab_size - 1",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "instruction",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.placeholder(shape=[None, self.config.instruction_length], dtype=tf.int32)",
+                            "Call"
+                        ],
+                        [
+                            "tf.minimum(self.config.vocab_size - 1, instruction)",
+                            "Call"
+                        ],
+                        [
+                            "instruction",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "embedding_lookup_51": {
+                "variable": {
+                    "value": "embedded_inputs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "params": {
+                    "value": "self._embedding",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "ids": {
+                    "value": "instruction",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.placeholder(shape=[None, self.config.instruction_length], dtype=tf.int32)",
+                            "Call"
+                        ],
+                        [
+                            "tf.minimum(self.config.vocab_size - 1, instruction)",
+                            "Call"
+                        ],
+                        [
+                            "instruction",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "bidirectional_dynamic_rnn_57": {
+                "variable": {
+                    "value": "(bdlstm_outputs, _)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "cell_fw": {
+                    "value": "bdlstm_cell",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.rnn_cell.BasicLSTMCell(self.config.dim)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "cell_bw": {
+                    "value": "bdlstm_cell",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.rnn_cell.BasicLSTMCell(self.config.dim)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "inputs": {
+                    "value": "embedded_inputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.embedding_lookup(self._embedding, instruction)",
+                            "Call"
+                        ],
+                        [
+                            "tf.stack([tf.nn.embedding_lookup(self._embedding, word) for word in tf.unstack(user_ans, self.config.user_answer_length, axis=1)], axis=0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "sequence_length": {
+                    "value": "instruction_actual_length",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.placeholder(shape=[None], dtype=tf.int32)",
+                            "Call"
+                        ],
+                        [
+                            "instruction_actual_length",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "time_major": {
+                    "value": "False",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "concat_60": {
+                "variable": {
+                    "value": "bdlstm_outputs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "list(bdlstm_outputs)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "get_variable_67": {
+                "variable": {
+                    "value": "PREP",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "PREP",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[1, vec_size]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "get_variable_68": {
+                "variable": {
+                    "value": "TA",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "TA",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[memory_size, vec_size]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "get_variable_72": {
+                "variable": {
+                    "value": "B",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "B",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[vec_size, memory_size]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "reshape_73": {
+                "variable": {
+                    "value": "m_t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "m",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "bdlstm_outputs + TA",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, vec_size]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "matmul_74": {
+                "variable": {
+                    "value": "d_t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "m_t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(m, [-1, vec_size])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "B",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('B', [vec_size, memory_size])",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "softmax_75": {
+                "variable": {
+                    "value": "d_softmax",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "d_t",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.matmul(m_t, B)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "reshape_76": {
+                "variable": {
+                    "value": "d",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "d_softmax",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.softmax(d_t)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, memory_size, memory_size]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_77": {
+                "variable": {
+                    "value": "dotted_prep",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "bdlstm_outputs * PREP",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "softmax_78": {
+                "variable": {
+                    "value": "probs_prep",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "logits": {
+                    "value": "dotted_prep",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reduce_sum(bdlstm_outputs * PREP, 2)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "expand_dims_79": {
+                "variable": {
+                    "value": "probs_prep_temp",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "probs_prep",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.softmax(dotted_prep)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "matmul_82": {
+                "variable": {
+                    "value": "probs_temp",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "d",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.reshape(d_softmax, [-1, memory_size, memory_size])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "probs_prep_temp",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.expand_dims(probs_prep, -1)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "squeeze_83": {
+                "variable": {
+                    "value": "probs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "probs_temp",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.matmul(d, probs_prep_temp)",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(output_probs, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "[2]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "l2_normalize_84": {
+                "variable": {
+                    "value": "output_probs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "probs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.squeeze(probs_temp, axis=[2])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_87": {
+                "variable": {
+                    "value": "probs_temp",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "output_probs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.l2_normalize(probs, 1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "transpose_88": {
+                "variable": {
+                    "value": "c_temp",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "a": {
+                    "value": "m",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "bdlstm_outputs + TA",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "perm": {
+                    "value": "[0, 2, 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_89": {
+                "variable": {
+                    "value": "oi",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "c_temp * probs_temp",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "cast_103": {
+                "variable": {
+                    "value": "bool_empty",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.equal(user_answer_actual_length, 0)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "minimum_106": {
+                "variable": {
+                    "value": "user_ans",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "self.config.vocab_size - 1",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "user_ans",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.minimum(self.config.vocab_size - 1, user_ans)",
+                            "Call"
+                        ],
+                        [
+                            "user_ans",
+                            "Method Argument"
+                        ]
+                    ]
+                }
+            },
+            "stack_107": {
+                "variable": {
+                    "value": "embedded_inputs",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[tf.nn.embedding_lookup(self._embedding, word) for word in tf.unstack(user_ans, self.config.user_answer_length, axis=1)]",
+                    "type": "ListComp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "bidirectional_dynamic_rnn_115": {
+                "variable": {
+                    "value": "(outputs, last_states)",
+                    "type": "Tuple",
+                    "possible_values": []
+                },
+                "cell_fw": {
+                    "value": "rnn_cell",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.rnn_cell.BasicLSTMCell(self.config.dim)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "cell_bw": {
+                    "value": "rnn_cell",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.rnn_cell.BasicLSTMCell(self.config.dim)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "inputs": {
+                    "value": "embedded_inputs",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.embedding_lookup(self._embedding, instruction)",
+                            "Call"
+                        ],
+                        [
+                            "tf.stack([tf.nn.embedding_lookup(self._embedding, word) for word in tf.unstack(user_ans, self.config.user_answer_length, axis=1)], axis=0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "sequence_length": {
+                    "value": "user_answer_actual_length",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.placeholder(shape=[None], dtype=tf.int32)",
+                            "Call"
+                        ],
+                        [
+                            "user_answer_actual_length",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "time_major": {
+                    "value": "True",
+                    "type": "bool",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "get_variable_161": {
+                "variable": {
+                    "value": "w_z",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "weight",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[vec_size * 4, vec_size]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.contrib.layers.xavier_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_163": {
+                "variable": {
+                    "value": "b_z",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "bias",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[vec_size]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.zeros_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "tanh_164": {
+                "variable": {
+                    "value": "z_i",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.matmul(concatenation, w_z) + b_z",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "get_variable_187": {
+                "variable": {
+                    "value": "w_c",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "weight",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[4 * self._state_vector_dim + 4, self._state_vector_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.contrib.layers.xavier_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_variable_189": {
+                "variable": {
+                    "value": "b_c",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "bias",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[self._state_vector_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.zeros_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "tanh_190": {
+                "variable": {
+                    "value": "c",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.matmul(concatenation, w_c) + b_c",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "get_variable_17": {
+                "name": {
+                    "value": "embedding",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[config.vocab_size, config.dim]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "get_collection_22": {
+                "key": {
+                    "value": "tf.GraphKeys.TRAINABLE_VARIABLES",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "scope": {
+                    "value": "tf.get_variable_scope().name",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "BasicLSTMCell_55": {
+                "variable": {
+                    "value": "bdlstm_cell",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "num_units": {
+                    "value": "self.config.dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "BasicLSTMCell_113": {
+                "variable": {
+                    "value": "rnn_cell",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "num_units": {
+                    "value": "self.config.dim",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "unstack_121": {
+                "variable": {
+                    "value": "h_ts",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "value": {
+                    "value": "tf.concat(list(outputs), 2)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "num": {
+                    "value": "self.config.user_answer_length",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "get_variable_124": {
+                "variable": {
+                    "value": "v",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "v",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[vec_size, 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "exp_125": {
+                "variable": {
+                    "value": "unscaled_weights",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "tf.concat([tf.matmul(h_t, v) for h_t in h_ts], 1)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "sequence_mask_126": {
+                "variable": {
+                    "value": "mask",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "lengths": {
+                    "value": "user_answer_actual_length",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.placeholder(shape=[None], dtype=tf.int32)",
+                            "Call"
+                        ],
+                        [
+                            "user_answer_actual_length",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "maxlen": {
+                    "value": "self.config.user_answer_length",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "reshape_129": {
+                "variable": {
+                    "value": "sum_up",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "tensor": {
+                    "value": "tf.reduce_sum(unscaled_weights, 1) + bool_empty * config_const.MINIMUM_EPSILON",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[-1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "stack_134": {
+                "variable": {
+                    "value": "trans_h_ts",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "h_ts",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.unstack(tf.concat(list(outputs), 2), self.config.user_answer_length, axis=0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_135": {
+                "variable": {
+                    "value": "od",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input_tensor": {
+                    "value": "tf.expand_dims(attention_weights, -1) * trans_h_ts",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "get_variable_137": {
+                "variable": {
+                    "value": "v",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "v",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[vec_size, 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "concat_140": {
+                "variable": {
+                    "value": "od",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "values": {
+                    "value": "[last_forward_states, last_backward_states]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_144": {
+                "name_or_scope": {
+                    "value": "latent_attention_model",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_146": {
+                "name_or_scope": {
+                    "value": "answer_understanding",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "reshape_151": {
+                "tensor": {
+                    "value": "scale",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "bool_empty * -self.config.weight_user_answer + 1",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "shape": {
+                    "value": "[-1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_159": {
+                "name_or_scope": {
+                    "value": "MLP",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "get_collection_173": {
+                "key": {
+                    "value": "tf.GraphKeys.TRAINABLE_VARIABLES",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "scope": {
+                    "value": "tf.get_variable_scope().name",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_186": {
+                "name_or_scope": {
+                    "value": "MLP",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_199": {
+                "name_or_scope": {
+                    "value": "self.config.scope",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_54": {
+                "name_or_scope": {
+                    "value": "BDLSTM_cell",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.contrib.layers.xavier_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "equal_103": {
+                "x": {
+                    "value": "user_answer_actual_length",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.placeholder(shape=[None], dtype=tf.int32)",
+                            "Call"
+                        ],
+                        [
+                            "user_answer_actual_length",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "y": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_112": {
+                "name_or_scope": {
+                    "value": "rnn_cell",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "initializer": {
+                    "value": "tf.contrib.layers.xavier_initializer()",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "placeholder_179": {
+                "shape": {
+                    "value": "[None, self._state_vector_dim]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "placeholder_180": {
+                "shape": {
+                    "value": "[None]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_201": {
+                "name_or_scope": {
+                    "value": "high_level_agent",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "get_variable_208": {
+                "variable": {
+                    "value": "embedding",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "name": {
+                    "value": "shared_embedding",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[config_const.OVERALL_VOCAB_SIZE, self.config.trigger_channel_config.dim]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_210": {
+                "name_or_scope": {
+                    "value": "trigger_channel_agent",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_213": {
+                "name_or_scope": {
+                    "value": "trigger_function_agent",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_216": {
+                "name_or_scope": {
+                    "value": "action_channel_agent",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "variable_scope_219": {
+                "name_or_scope": {
+                    "value": "action_function_agent",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "get_collection_231": {
+                "key": {
+                    "value": "tf.GraphKeys.TRAINABLE_VARIABLES",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "scope": {
+                    "value": "self.config.scope + '/' + _scope + '/network/state_vector'",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "get_collection_234": {
+                "key": {
+                    "value": "tf.GraphKeys.TRAINABLE_VARIABLES",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "scope": {
+                    "value": "self.config.scope + '/' + _scope + '/network/pi_network'",
+                    "type": "BinOp",
+                    "possible_values": []
+                }
+            },
+            "embedding_lookup_107": {
+                "params": {
+                    "value": "self._embedding",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "ids": {
+                    "value": "word",
+                    "type": "variable",
+                    "possible_values": []
+                }
+            },
+            "concat_121": {
+                "values": {
+                    "value": "list(outputs)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "concat_125": {
+                "values": {
+                    "value": "[tf.matmul(h_t, v) for h_t in h_ts]",
+                    "type": "ListComp",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "zeros_initializer_163": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "matmul_164": {
+                "a": {
+                    "value": "concatenation",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.concat(z_summary, axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([tf.expand_dims(item, -1) if len(item.get_shape()) == 1 else item for item in state], axis=1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "w_z",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('weight', shape=[vec_size * 4, vec_size], initializer=tf.contrib.layers.xavier_initializer())",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "expand_dims_183": {
+                "input": {
+                    "value": "item",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "zeros_initializer_189": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "matmul_190": {
+                "a": {
+                    "value": "concatenation",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.concat(z_summary, axis=1)",
+                            "Call"
+                        ],
+                        [
+                            "tf.concat([tf.expand_dims(item, -1) if len(item.get_shape()) == 1 else item for item in state], axis=1)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "b": {
+                    "value": "w_c",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('weight', shape=[4 * self._state_vector_dim + 4, self._state_vector_dim], initializer=tf.contrib.layers.xavier_initializer())",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "get_variable_scope_23": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "unstack_108": {
+                "value": {
+                    "value": "user_ans",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.minimum(self.config.vocab_size - 1, user_ans)",
+                            "Call"
+                        ],
+                        [
+                            "user_ans",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "num": {
+                    "value": "self.config.user_answer_length",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_130": {
+                "input_tensor": {
+                    "value": "unscaled_weights",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.exp(tf.concat([tf.matmul(h_t, v) for h_t in h_ts], 1))",
+                            "Call"
+                        ],
+                        [
+                            "unscaled_weights * mask",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_135": {
+                "input": {
+                    "value": "attention_weights",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "unscaled_weights / sum_up",
+                            "BinOp"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                }
+            },
+            "get_variable_scope_174": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "matmul_125": {
+                "a": {
+                    "value": "h_t",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "b": {
+                    "value": "v",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.get_variable('v', shape=[vec_size, 1])",
+                            "Call"
+                        ],
+                        [
+                            "tf.get_variable('v', shape=[vec_size, 1])",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "code/Hierarchical-SP/run.py": {
+        "tensorflow": {
+            "DEFINE_string_26": {
+                "name": {
+                    "value": "agent_type",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "default": {
+                    "value": "hRL",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "help": {
+                    "value": "Support: hRL, BaselineAgent.",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "DEFINE_float_27": {
+                "name": {
+                    "value": "high_level_lr",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "default": {
+                    "value": "config.LEARNING_RATE",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "help": {
+                    "value": "Set learning rate for the high-level agent.",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "DEFINE_float_28": {
+                "name": {
+                    "value": "low_level_lr",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "default": {
+                    "value": "config.LEARNING_RATE",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "help": {
+                    "value": "Set learning rate for low-level agents.",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "DEFINE_float_29": {
+                "name": {
+                    "value": "discount",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "default": {
+                    "value": "config.DISCOUNT",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "help": {
+                    "value": "Set the discount for cumulative reward calculation.",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "DEFINE_float_30": {
+                "name": {
+                    "value": "weight_user_answer",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "default": {
+                    "value": "config.WEIGHT_USER_ANSWER",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "help": {
+                    "value": "Set the weight in 0~1 for user answers.",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "DEFINE_float_31": {
+                "name": {
+                    "value": "entropy_beta",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "default": {
+                    "value": "config.ENTROPY_BETA",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "help": {
+                    "value": "weights for entropy term in pi_loss.",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "DEFINE_string_37": {
+                "name": {
+                    "value": "scope",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "default": {
+                    "value": "hierarchical_agent",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "help": {
+                    "value": "Set scope for the agent.",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "DEFINE_float_41": {
+                "name": {
+                    "value": "penalty_global_run",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "default": {
+                    "value": "config.PENALTY_GLOBAL_RUN",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "help": {
+                    "value": "Set the penalty for every global run.",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "DEFINE_float_42": {
+                "name": {
+                    "value": "penalty_local_ask_user",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "default": {
+                    "value": "config.PENALTY_LOCAL_ASK_USER",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "help": {
+                    "value": "Set the penalty for asking users in local MDP.",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "DEFINE_integer_45": {
+                "name": {
+                    "value": "instruction_length",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "default": {
+                    "value": "25",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "help": {
+                    "value": "Set the max instruction length.",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "DEFINE_integer_46": {
+                "name": {
+                    "value": "trigger_channel_user_answer_length",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "default": {
+                    "value": "10",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "help": {
+                    "value": "Set the max user answer length for trigger channel.",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "DEFINE_integer_48": {
+                "name": {
+                    "value": "trigger_function_user_answer_length",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "default": {
+                    "value": "100",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "help": {
+                    "value": "Set the max user answer length for trigger function.",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "DEFINE_integer_50": {
+                "name": {
+                    "value": "action_channel_user_answer_length",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "default": {
+                    "value": "10",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "help": {
+                    "value": "Set the max user answer length for action channel.",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "DEFINE_integer_52": {
+                "name": {
+                    "value": "action_function_user_answer_length",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "default": {
+                    "value": "100",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "help": {
+                    "value": "Set the max user answer length for action function.",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "DEFINE_integer_54": {
+                "name": {
+                    "value": "dim",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "default": {
+                    "value": "config.DIM",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "help": {
+                    "value": "Set vector dimension for word vectors. The corresponding dimension of z vectors will be 2*dim.",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "DEFINE_integer_61": {
+                "name": {
+                    "value": "random_seed",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "default": {
+                    "value": "1",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "help": {
+                    "value": "Set an integer as the random seed.",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "DEFINE_integer_62": {
+                "name": {
+                    "value": "max_iteration",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "default": {
+                    "value": "-1",
+                    "type": "UnaryOp",
+                    "possible_values": []
+                },
+                "help": {
+                    "value": "Set number of instances for training.",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "DEFINE_integer_63": {
+                "name": {
+                    "value": "batch_size",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "default": {
+                    "value": "config.BATCH_SIZE",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "help": {
+                    "value": "Set the mini batch size.",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "DEFINE_integer_64": {
+                "name": {
+                    "value": "iters_per_validation",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "default": {
+                    "value": "config.ITERS_PER_VALIDATION",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "help": {
+                    "value": "Set the steps for each validation.",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "DEFINE_integer_65": {
+                "name": {
+                    "value": "training_stage",
+                    "type": "str",
+                    "possible_values": []
+                },
+                "default": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                },
+                "help": {
+                    "value": "Set to 0: start or continue regular joint training.Set to 1: start or continue low_level agent pretraining.   High_level agent will randomly(or in order) pick a subtask and will not be updated.Set to 2: need load trained params without high-level agent stats.",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "get_checkpoint_state_146": {
+                "variable": {
+                    "value": "ckpt",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "checkpoint_dir": {
+                    "value": "checkpoint_overall_path",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "os.path.join(checkpoint_dir, 'ckpt_%s' % attr)",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "get_checkpoint_state_133": {
+                "variable": {
+                    "value": "ckpt_pretrain",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "checkpoint_dir": {
+                    "value": "baseline_agent_path",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "'baseline_agent'",
+                            "str"
+                        ]
+                    ]
+                }
+            },
+            "set_random_seed_184": {
+                "seed": {
+                    "value": "FLAGS.random_seed",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "variables_initializer_128": {
+                "var_list": {
+                    "value": "tf.global_variables(scope=config_setting.scope)",
+                    "type": "Call",
+                    "possible_values": []
+                }
+            },
+            "get_checkpoint_state_168": {
+                "variable": {
+                    "value": "ckpt_pretrain",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "checkpoint_dir": {
+                    "value": "pretrain_path",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "os.path.join('Log', FLAGS.agent_type, 'pretrain_agent', 'hierarchical_agent')",
+                            "Call"
+                        ]
+                    ]
+                }
+            },
+            "Session_200": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "Session_760": {
+                "params": {
+                    "value": "default",
+                    "type": null,
+                    "possible_values": []
+                }
+            },
+            "global_variables_128": {
+                "scope": {
+                    "value": "config_setting.scope",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "set_random_seed_767": {
+                "seed": {
+                    "value": "random_seed",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "random_seed in range(1, 3)",
+                            "Call"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "code/Hierarchical-SP/user_simulator_gen.py": {
+        "tensorflow": {}
+    },
+    "code/Hierarchical-SP/utils.py": {
+        "tensorflow": {}
+    }
+}

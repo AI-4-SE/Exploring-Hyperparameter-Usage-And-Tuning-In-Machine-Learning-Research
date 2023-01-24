@@ -1,0 +1,303 @@
+{
+    "sim.py": {
+        "tensorflow": {
+            "placeholder_188": {
+                "variable": {
+                    "value": "space_and_time_description_placehoder",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                },
+                "shape": {
+                    "value": "[dimension_image, dimension_image, nrof_sigma_centers]",
+                    "type": "List",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_192": {
+                "variable": {
+                    "value": "space_and_time_description",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "space_and_time_description_placehoder",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.placeholder(tf.float32, [dimension_image, dimension_image, nrof_sigma_centers])",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "constant_183": {
+                "value": {
+                    "value": "spatially_integrated_Gaussian()",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_195": {
+                "variable": {
+                    "value": "discrete_kernels",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "tf.constant(discrete_kernels, dtype=tf.float32)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "depthwise_conv2d_197": {
+                "variable": {
+                    "value": "conv",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "space_and_time_description",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "np.empty([nrof_pixels, nrof_pixels, sigma_lims.size - 1])",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(space_and_time_description_placehoder, axis=0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filter": {
+                    "value": "discrete_kernels",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.expand_dims(tf.constant(discrete_kernels, dtype=tf.float32), axis=3)",
+                            "Call"
+                        ],
+                        [
+                            "discrete_kernels",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "strides": {
+                    "value": "[1, 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "SAME",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_202": {
+                "variable": {
+                    "value": "image_pure",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "tf.reduce_sum(conv, 3)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "axis": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "conv2d_205": {
+                "variable": {
+                    "value": "image_without_noise",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "input": {
+                    "value": "image_pure",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.expand_dims(tf.reduce_sum(conv, 3), axis=3)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "filters": {
+                    "value": "tf.expand_dims(tf.expand_dims(optical_kernel, axis=2), axis=3)",
+                    "type": "Call",
+                    "possible_values": []
+                },
+                "strides": {
+                    "value": "[1, 1, 1, 1]",
+                    "type": "List",
+                    "possible_values": []
+                },
+                "padding": {
+                    "value": "SAME",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "minimum_214": {
+                "variable": {
+                    "value": "image_final",
+                    "type": "variable",
+                    "possible_values": []
+                },
+                "x": {
+                    "value": "255 * tf.maximum(image_without_noise + tf.random_normal(image_without_noise.shape, mean=0, stddev=standard_deviation), 0)",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "255",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "name_scope_193": {
+                "name": {
+                    "value": "forward_operator",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "name_scope_203": {
+                "name": {
+                    "value": "physical_flaws",
+                    "type": "str",
+                    "possible_values": []
+                }
+            },
+            "squeeze_217": {
+                "input": {
+                    "value": "space_and_time_description",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "np.empty([nrof_pixels, nrof_pixels, sigma_lims.size - 1])",
+                            "Call"
+                        ],
+                        [
+                            "tf.expand_dims(space_and_time_description_placehoder, axis=0)",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "constant_195": {
+                "value": {
+                    "value": "discrete_kernels",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.expand_dims(tf.constant(discrete_kernels, dtype=tf.float32), axis=3)",
+                            "Call"
+                        ],
+                        [
+                            "discrete_kernels",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "dtype": {
+                    "value": "tf.float32",
+                    "type": "Attribute",
+                    "possible_values": []
+                }
+            },
+            "reduce_sum_202": {
+                "input_tensor": {
+                    "value": "conv",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.depthwise_conv2d(input=space_and_time_description, filter=discrete_kernels, strides=[1, 1, 1, 1], padding='SAME')",
+                            "Call"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "3",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "expand_dims_206": {
+                "input": {
+                    "value": "optical_kernel",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.constant(spatially_integrated_Gaussian()",
+                            "Method Argument"
+                        ]
+                    ]
+                },
+                "axis": {
+                    "value": "2",
+                    "type": "int",
+                    "possible_values": []
+                }
+            },
+            "reduce_max_210": {
+                "input_tensor": {
+                    "value": "image_without_noise",
+                    "type": "variable",
+                    "possible_values": [
+                        [
+                            "tf.nn.conv2d(image_pure, tf.expand_dims(tf.expand_dims(optical_kernel, axis=2), axis=3), strides=[1, 1, 1, 1], padding='SAME')",
+                            "Call"
+                        ],
+                        [
+                            "normalization * image_without_noise",
+                            "BinOp"
+                        ]
+                    ]
+                }
+            },
+            "maximum_214": {
+                "x": {
+                    "value": "image_without_noise + tf.random_normal(image_without_noise.shape, mean=0, stddev=standard_deviation)",
+                    "type": "BinOp",
+                    "possible_values": []
+                },
+                "y": {
+                    "value": "0",
+                    "type": "int",
+                    "possible_values": []
+                }
+            }
+        }
+    }
+}
