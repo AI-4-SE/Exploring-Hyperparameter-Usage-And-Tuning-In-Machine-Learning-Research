@@ -5,7 +5,7 @@ This repository provides additional material for our paper: "Parameter Usage and
 
 ## API Crawler
 
-We developed an API crawler for three popular and widely used ML libraries, namely scikit-learn, TensorFlow and Pytorch. The scripts can be found [here](https://anonymous.4open.science/r/ml-config-options-75C1/)
+We developed an API crawler for three popular and widely used ML libraries, namely scikit-learn, TensorFlow and Pytorch. The scripts can be found [here](https://anonymous.4open.science/r/ml-config-options-75C1/).
 
 ## Code Repository Analysis
 
@@ -32,4 +32,4 @@ The [data/](data/) directory contains all the data used in this paper, while the
 - [src/cross_validation/](src/cross-validation/): contains the script to calculate the inter-annotator agreement
 - [src/dblp_results/](src/dblp_results/): contains the script the calculate the number of papers dealing with hyperparameter importance and tuning
 - [src/library_stats/](src/library_stats//): contains the script the calculate the total number of API calls and parameter for each library
-- [src/](src): contains the script to process the data extracted from the code repostories and respective research papers
+- [src/](src): contains the scripts to process the data extracted from the code repostories and respective research papers
