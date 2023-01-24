@@ -2,8 +2,8 @@ import pandas as pd
 from sklearn.metrics import cohen_kappa_score
 
 
-def main():
-    df = pd.read_csv("annotator-agreement.csv")
+def agreement_research_questions():
+    df = pd.read_csv("../../data/paper_analysis/annotator-agreement.csv")
 
     model_parameter_rating1 = df["model parameter"].tolist()
     model_parameter_rating2 = df["model parameter 2"].tolist()
@@ -22,11 +22,23 @@ def main():
     hyperparameter_score = cohen_kappa_score(hyperparameter_rating1, hyperparameter_rating2)
     technique_score = cohen_kappa_score(technique_rating1, technique_rating2)
 
-    print("Score Question Model Parameter: ", model_parameter_score)
-    print("Score Question Final Values: ", final_values_score)
-    print("Score Question Hyperparameter: ", hyperparameter_score)
-    print("Score Question Technique: ", technique_score)
+    print("Score Question Model Parameter: ", round(model_parameter_score, 2))
+    print("Score Question Final Values: ", round(final_values_score, 2))
+    print("Score Question Hyperparameter: ", round(hyperparameter_score, 2))
+    print("Score Question Technique: ", round(technique_score, 2))
+
+
+def agreement_domains():
+    df = pd.read_csv("../../data/paper_analysis/cross-validation-domains_new.csv")
+
+    domains_rating1 = df["annotator 1"].tolist()
+    domains_rating2 = df["annotator 2"].tolist()
+
+    domains_score = cohen_kappa_score(domains_rating1, domains_rating2)
+
+    print("Score Domains: ", round(domains_score, 2))
 
 
 if __name__ == "__main__":
-    main()
+    agreement_research_questions()
+    agreement_domains()
