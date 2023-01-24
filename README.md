@@ -9,7 +9,7 @@ We developed an API crawler for three popular and widely used ML libraries, name
 
 ## Code Repository Analysis
 
-Note that we developed plugins for the each ML library, which apply static code-analysis and control- and data-flow analyis to locate API calls from the corresponding library and extract their configuration settings. The plugins are integrated into the CfgNet. Our analysis script relies on the CfgNet and assumes that it's run on our Slurm cluster if the hostname is `tesla` or starts with `brown`. You can find our evaluation script in [`analysis/`](analysis).
+Note that we developed plugins for the each ML library, which apply static code-analysis and control- and data-flow analyis to locate API calls from the corresponding library and extract their configuration settings. The plugins are integrated into the CfgNet. Its implementation can be found [here](https://anonymous.4open.science/r/CfgNet-3D67/). Our analysis script relies on the CfgNet and assumes that it is run on our Slurm cluster if the hostname is `tesla` or starts with `brown`. You can find our evaluation script in [`analysis/`](analysis).
 
 You can start the analysis by running `run.sh`.
 It takes an optional parameter which is a Git tree-ish (e.g. `main`) that can be used to get a certain version of CfgNet.
@@ -18,8 +18,6 @@ It takes an optional parameter which is a Git tree-ish (e.g. `main`) that can be
 
 The result files will be in `results/`.
 You can find the modified repositories in `out/`.
-
-
 
 
 ## Data and Scripts
@@ -33,5 +31,4 @@ The [data/](data/) directory contains all the data used in this paper, while the
 
 - [src/cross_validation](src/cross-validation/): contains the script to calculate the inter-annotator agreement
 - [src/dblp_results](src/dblp_results/): contains the script the calculate the number of papers dealing with hyperparameter importance and tuning
-- [src/](src): contains the script to process the data extracted from the code repostories and respective research paper
-
+- [src/](src): contains the script to process the data extracted from the code repostories and respective research papers
