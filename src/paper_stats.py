@@ -384,6 +384,9 @@ def create_paper_per_year_absolute_numbers():
 
 
 def create_paper_per_year_absolute_numbers_and_dbl_count():
+    # trigger core fonts for PDF backend
+    plt.rcParams["pdf.use14corefonts"] = True
+
     data = []
 
     dates = get_date_values()
@@ -451,7 +454,7 @@ def create_paper_per_year_absolute_numbers_and_dbl_count():
     ax2.set_ylim(0, 150)
     ax2.yaxis.set_tick_params(labelright=True)
     ax2.set_ylabel('DBLP Count')
-    ax2.set_yticks(np.array([0, 25, 50, 75, 100, 125, 150]))
+    ax2.set_yticks(np.array([0, 25, 50, 75, 100, 125, 150, 175]))
     ax2.plot(np.arange(len(dblp_data)), dblp_data["Count"], '-o', color='#000000', label='DBLP Count')
     ax2.legend(loc='upper center', bbox_to_anchor=(0.57, 1))
         
@@ -460,7 +463,8 @@ def create_paper_per_year_absolute_numbers_and_dbl_count():
     ax.set_title('Reporting Practices of Hyperparameter in Research Papers')
 
     #plt.show()
-    plt.savefig("paper_per_year_absolute_and_dblp_count.png",bbox_inches='tight',  pad_inches=0)
+    #plt.savefig("paper_per_year_absolute_and_dblp_count.png",bbox_inches='tight',  pad_inches=0)
+    fig.savefig("paper_per_year_absolute_and_dblp_count.pdf", format="pdf", bbox_inches='tight',  pad_inches=0)
 
 
 
@@ -559,6 +563,6 @@ if __name__ == "__main__":
 
     #create_paper_per_year_percentage()
     #create_paper_per_year_absolute_numbers()
-    #create_paper_per_year_absolute_numbers_and_dbl_count()
+    create_paper_per_year_absolute_numbers_and_dbl_count()
 
-    store_statistic_files_per_year()
+    #store_statistic_files_per_year()
