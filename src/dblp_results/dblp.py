@@ -3,9 +3,9 @@ from aquarel import load_theme
 import matplotlib.pyplot as plt
 import json
 
-hyperparameter_importance = "../data/dblp/hyperparameter_importance.json"
-hyperparameter_tuning = "../data/dblp/hyperparameter_tuning.json"
-hyperparameter_optimization = "../data/dblp/hyperparameter_optimization.json"
+hyperparameter_importance = "../../data/dblp/hyperparameter_importance.json"
+hyperparameter_tuning = "../../data/dblp/hyperparameter_tuning.json"
+hyperparameter_optimization = "../../data/dblp/hyperparameter_optimization.json"
 
 files = [hyperparameter_importance, hyperparameter_tuning, hyperparameter_optimization]
 
@@ -28,7 +28,7 @@ def get_hits_by_year(year: str) -> int:
 
     return len(matches)
 
-def create_histogram():
+def create_bar_chart():
     
     data = [
         get_hits_by_year("2015"), 
@@ -46,11 +46,12 @@ def create_histogram():
     #with load_theme("boxy_light"):
     fig, ax = plt.subplots()
 
-    ax.bar(labels, data)
+    ax.bar(labels, data, color='#1f77b4')
 
     ax.set_xlabel('Year')
     ax.set_ylabel('Number of Papers')
     ax.grid(axis='x')
+    ax.set_axisbelow(True)
 
     plt.grid()
 
@@ -70,4 +71,5 @@ def main():
 
 
 if __name__ == "__main__":
-    create_histogram()
+    create_bar_chart()
+    #main()
