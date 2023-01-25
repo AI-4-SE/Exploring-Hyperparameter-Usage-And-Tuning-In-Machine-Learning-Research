@@ -1,6 +1,6 @@
-# Parameter Usage and Tuning in Machine Learning Research: An Exploratory Study
+# Exploring Hyperparameter Usage and Tuning in Machine Learning Research
 
-This repository provides additional material for our paper: "Parameter Usage and Tuning in Machine Learning Research: An Exploratory Study".
+This repository provides additional material for our paper: "Explroing Hyperparameter Usage and Tuning in Machine Learning Research".
 
 
 ## API Crawler

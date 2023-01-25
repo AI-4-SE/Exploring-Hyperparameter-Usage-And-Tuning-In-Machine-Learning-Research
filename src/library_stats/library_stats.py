@@ -9,12 +9,15 @@ def get_library_statistics(library_file_path) -> None:
     with open(library_file_path, "r", encoding="utf-8") as src:
         data = json.load(src)
 
-    total_api_call = len(data)
+    total_api_call = 0
     total_params = 0
 
     for item in data:
-        params = item["params"]
-        total_params += len(params)
+        name = item["name"]
+        if name[0].isupper():
+            total_api_call += 1
+            params = item["params"]
+            total_params += len(params)
 
     return total_api_call, total_params
 
