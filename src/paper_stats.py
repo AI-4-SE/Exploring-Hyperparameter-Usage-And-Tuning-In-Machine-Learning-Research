@@ -252,6 +252,8 @@ def get_paper_per_year(year: str):
     }
 
 def create_paper_per_year_percentage():
+     # trigger core fonts for PDF backend
+    plt.rcParams["pdf.use14corefonts"] = True
     data = []
 
     dates = get_date_values()
@@ -308,10 +310,12 @@ def create_paper_per_year_percentage():
 
     # Show the plot
     #plt.show()
-    plt.savefig("paper_per_year_percentage.png",bbox_inches='tight',  pad_inches=0)
+    plt.savefig("paper_per_year_percentage.pdf",bbox_inches='tight',  pad_inches=0)
 
 
 def create_paper_per_year_absolute_numbers():
+     # trigger core fonts for PDF backend
+    plt.rcParams["pdf.use14corefonts"] = True
     data = []
 
     dates = get_date_values()
@@ -372,7 +376,7 @@ def create_paper_per_year_absolute_numbers():
 
     # Add the line chart
     #ax.plot(np.arange(len(hp_data)), hp_data.sum(axis=1), '-o', color='#000000', label='Total HP')
-    ax.plot(np.arange(len(fv_data)), fv_data.sum(axis=1), '-o', color='#000000')
+    #ax.plot(np.arange(len(fv_data)), fv_data.sum(axis=1), '-o', color='#000000')
     
     ax.set_ylabel('Number of Research Papers')
     ax.set_xlabel('Year')
@@ -380,7 +384,7 @@ def create_paper_per_year_absolute_numbers():
 
     # Show the plot
     #plt.show()
-    plt.savefig("paper_per_year_absolute.png",bbox_inches='tight',  pad_inches=0)
+    plt.savefig("paper_per_year_absolute.pdf",bbox_inches='tight',  pad_inches=0)
 
 
 def create_paper_per_year_absolute_numbers_and_dbl_count():
@@ -393,15 +397,24 @@ def create_paper_per_year_absolute_numbers_and_dbl_count():
     for date in dates[8:]:
         data.append(get_paper_per_year(date))
 
-    #for x in data:
-    #    print(x)
-
     labels = [x["year"] for x in data]
     hp_yes = [x["hp_yes"] for x in data]
     hp_no = [x["hp_no"] for x in data]
     fv_yes = [x["fv_yes"] for x in data]
     fv_no = [x["fv_no"] for x in data]
 
+    count = [x["count"] for x in data]
+    print(count)
+    default = [0.12, 0.1, 0.02, 0.14, 0.24, 0.05, 0.1]
+    custom = [0.88, 0.90, 0.98, 0.86, 0.76, 0.95, 0.90]
+    
+    default_data = []
+    custom_data = []
+
+    for x, y, z in zip(default, custom, count):
+        default_data.append(round(x*z))
+        custom_data.append(round(y*z))
+    
     hp_data = pd.DataFrame({
         "Report HP Tuning: Yes": hp_yes,
         "Report HP Tuning: No": hp_no,
@@ -411,6 +424,13 @@ def create_paper_per_year_absolute_numbers_and_dbl_count():
     fv_data = pd.DataFrame({
         "Report HP Values: Yes": fv_yes,
         "Report HP Values: No": fv_no,
+        }, index=labels
+    )
+
+
+    default_custom_data = pd.DataFrame({
+        "Default": default_data,
+        "Customized": custom_data,
         }, index=labels
     )
 
@@ -427,12 +447,16 @@ def create_paper_per_year_absolute_numbers_and_dbl_count():
     bar_space = 0.025
 
     # Create the bars for hp_data
-    hp_yes = ax.bar(np.arange(len(hp_data)) - bar_width/2 - bar_space, hp_data["Report HP Tuning: Yes"], bar_width, color = '#1f77b4', label="Report HP Tuning: Yes")
-    hp_no = ax.bar(np.arange(len(hp_data)) - bar_width/2 - bar_space, hp_data["Report HP Tuning: No"], bar_width, bottom=hp_data["Report HP Tuning: Yes"], color = '#1f77b4', alpha=0.5, label="Report HP Tuning: No")
+    ax.bar(np.arange(len(hp_data)) - bar_width/2 - bar_space, hp_data["Report HP Tuning: Yes"], bar_width, color = '#009e73', label="Report HP Tuning: Yes")
+    ax.bar(np.arange(len(hp_data)) - bar_width/2 - bar_space, hp_data["Report HP Tuning: No"], bar_width, bottom=hp_data["Report HP Tuning: Yes"], color = '#009e73', alpha=0.5, label="Report HP Tuning: No")
 
     # Create the bars for fv_data
-    fv_yes = ax.bar(np.arange(len(fv_data)) + bar_width/2 + bar_space, fv_data["Report HP Values: Yes"], bar_width, color = '#009e73', label="Report HP Values: Yes")
-    fv_no = ax.bar(np.arange(len(fv_data)) + bar_width/2 + bar_space, fv_data["Report HP Values: No"], bar_width, bottom=fv_data["Report HP Values: Yes"], color = '#009e73', alpha=0.5, label="Report HP Values: No")
+    ax.bar(np.arange(len(fv_data)) + bar_width/2 + bar_space, fv_data["Report HP Values: Yes"], bar_width, color = '#1f77b4', label="Report HP Values: Yes")
+    ax.bar(np.arange(len(fv_data)) + bar_width/2 + bar_space, fv_data["Report HP Values: No"], bar_width, bottom=fv_data["Report HP Values: Yes"], color = '#1f77b4', alpha=0.5, label="Report HP Values: No")
+
+    # Create the bars for default_custom_data
+    #ax.bar(np.arange(len(default_custom_data)) + bar_width/3 + bar_space, default_custom_data["Default"], bar_width, color = '#cc79a7', label="Default HP Values")
+    #ax.bar(np.arange(len(default_custom_data)) + bar_width/3 + bar_space, default_custom_data["Customized"], bar_width, bottom=default_custom_data["Default"], color = '#cc79a7', alpha=0.5, label="Customized HP Values")
 
     # Set the x-axis labels
     ax.set_xticks(np.arange(len(hp_data)))

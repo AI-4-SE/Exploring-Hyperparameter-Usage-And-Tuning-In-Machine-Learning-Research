@@ -30,6 +30,8 @@ def get_hits_by_year(year: str) -> int:
 
 def create_bar_chart():
     
+    plt.rcParams["pdf.use14corefonts"] = True
+
     data = [
         get_hits_by_year("2015"), 
         get_hits_by_year("2016"), 
@@ -49,7 +51,7 @@ def create_bar_chart():
     ax.bar(labels, data, color='#1f77b4')
 
     ax.set_xlabel('Year')
-    ax.set_ylabel('Number of Papers')
+    ax.set_ylabel('Number of Research Papers')
     ax.grid(axis='x')
     ax.set_axisbelow(True)
 
@@ -57,7 +59,7 @@ def create_bar_chart():
 
     #plt.tight_layout(pad=0)
     #plt.show()
-    plt.savefig("papers_per_year.svg",bbox_inches='tight',  pad_inches=0)
+    plt.savefig("papers_per_year.pdf",bbox_inches='tight',  pad_inches=0)
 
 def main():
     print("Matches 2015: ", get_hits_by_year("2015"))
