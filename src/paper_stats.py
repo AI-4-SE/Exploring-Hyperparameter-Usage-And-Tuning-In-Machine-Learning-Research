@@ -183,8 +183,14 @@ def hyperparameter_tuning_techniques():
 
     print("Length techniques: ", len(counter_techniques.most_common()))
 
+    data = []
+
     for x in counter_techniques.most_common():
-        print(x)
+        #print(x[0], x[1])
+        data.append({x[0]: x[1]})
+    
+    with open("../data/paper_analysis/hp_tuning_techniques_count.json", "w", encoding="utf-8") as dest:
+        json.dump(data, dest, sort_keys=True, indent=4)
 
 
 def sample_set_domain_analysis():
@@ -583,10 +589,10 @@ if __name__ == "__main__":
     #hyperparameter_tuning_per_field()
     #plot_hyperparameter_tuning_per_field()
     #hyperparameter_per_field_table()
-    #hyperparameter_tuning_techniques()
+    hyperparameter_tuning_techniques()
 
     #create_paper_per_year_percentage()
     #create_paper_per_year_absolute_numbers()
-    create_paper_per_year_absolute_numbers_and_dbl_count()
+    #create_paper_per_year_absolute_numbers_and_dbl_count()
 
     #store_statistic_files_per_year()
