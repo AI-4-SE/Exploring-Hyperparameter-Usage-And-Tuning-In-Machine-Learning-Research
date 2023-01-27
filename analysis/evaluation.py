@@ -9,8 +9,6 @@ import json
 # The folder where we store our results.
 EVALUATION_FOLDER = "out"
 
-NOTEBOOK_REPO = ["https://github.com/simisimon/kaggle-notebooks"]
-
 def get_repos():
     file_name = "final_sample_set_urls.json"
 
