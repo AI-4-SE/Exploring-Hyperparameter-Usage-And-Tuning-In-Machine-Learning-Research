@@ -1,6 +1,6 @@
 # Exploring Hyperparameter Usage and Tuning in Machine Learning Research
 
-This repository provides additional material for our paper: "Exploring Hyperparameter Usage and Tuning in Machine Learning Research", including metadata for the research paper and the code statistics of the analyzed code repositories.
+This repository provides additional material for our paper: "Exploring Hyperparameter Usage and Tuning in Machine Learning Research", including metadata for the research papers and the statistics of the analyzed code repositories.
 
 
 ## API Crawler
