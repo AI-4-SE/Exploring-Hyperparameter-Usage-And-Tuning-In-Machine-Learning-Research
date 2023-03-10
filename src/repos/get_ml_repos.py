@@ -24,13 +24,13 @@ PYTORCH_FROM_REGEX = re.compile(r"from torch[a-zA-z._]* import [a-zA-Z_]*")
 directory_parts = os.path.dirname(os.path.abspath(__file__)).split("\\")
 directory_parts = directory_parts[:-2]
 BASE = "\\".join(directory_parts)
-SAMPLE_SET = "\\src\\repos\\sample_set_5000.txt"
+SAMPLE_SET = "\\src\\repos\\sample_set_2000.txt"
 
 def create_sample_set(number):
     for _, _, files in os.walk(target_dir):
         sample = set(random.sample(files, number))
         
-    with open("sample_set_5000.txt", "w") as sample_set:
+    with open("sample_set_2000.txt", "w") as sample_set:
         for file in sample:
             sample_set.write(file + "\n")
 
@@ -147,10 +147,10 @@ def check_python_version(url, url_final):
 
 def get_sample_set():
     sample_data_set = []
-    with bz2.BZ2File("../../data/5000/pswc_repos_papers.jsonl.bz2") as file:
+    with bz2.BZ2File("../../data/pswc_repos_papers.jsonl.bz2") as file:
         json_list = list(file)
 
-    sample_data = random.sample(json_list, 5000)
+    sample_data = random.sample(json_list, 2000)
 
     for json_str in sample_data:
         data = json.loads(json_str)
@@ -244,7 +244,7 @@ def check_methods():
 
 
 if __name__ == "__main__":
-    #create_sample_set(5000)
+    #create_sample_set(2000)
     #find_ml_repos("\\src\\repos\\ml_samples_5000.txt")
     #get_urls("\\src\\repos\\ml_samples_5000.txt", "\\src\\repos\\ml_samples_url_5000.csv")
 
