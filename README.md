@@ -2,19 +2,18 @@
 
 This repository provides additional material for our paper: "Exploring Hyperparameter Usage and Tuning in Machine Learning Research", including metadata for the research papers and the statistics of the analyzed code repositories.
 
-
 ## API Crawler
 
-We developed an API crawler for three popular and widely used ML libraries, namely scikit-learn, TensorFlow and Pytorch. The API crawler can be found [here](https://anonymous.4open.science/r/ml-config-options-75C1/).
+We developed an API crawler for three popular and widely used ML libraries: scikit-learn, TensorFlow and PyTorch. The API crawler can be found [here](https://github.com/mj-support/ml-config-options).
 
 ## Code Repository Analysis
 
-Note that we developed plugins for the each ML library, which apply static code-analysis as well as control- and data-flow analyis to locate API calls from the corresponding library and extract their configuration settings. The plugins are integrated into the CfgNet. Its implementation can be found [here](https://anonymous.4open.science/r/CfgNet-3D67/). Our analysis script relies on the CfgNet and assumes that it is run on our Slurm cluster if the hostname is `tesla` or starts with `brown`. You can find our evaluation script in [`analysis/`](analysis).
+Note that we developed plugins for the each ML library, which apply static code-analysis as well as control- and data-flow analysis to locate API calls from the corresponding library and extract their configuration settings. The plugins are integrated into the CfgNet. Its implementation can be found [here](https://anonymous.4open.science/r/CfgNet-3D67/). Our analysis script relies on the CfgNet and assumes that it is run on our Slurm cluster if the hostname is `tesla` or starts with `brown`. You can find our evaluation script in [`analysis/`](analysis).
 
 You can start the analysis by running `run.sh`.
 It takes an optional parameter which is a Git tree-ish (e.g. `main`) that can be used to get a certain version of CfgNet.
 
-**For this analysis, it is required to use the `ml` branch of the CfgNet, because only this branch contains the ML library plugins and extractes the API calls.**
+**For this analysis, it is required to use the `ml` branch of the CfgNet, because only this branch contains the ML library plugins and extracts the API calls.**
 
 The result files will be in `results/`.
 You can find the modified repositories in `out/`.
